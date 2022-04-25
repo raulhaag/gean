@@ -1,0 +1,85 @@
+
+:root {
+    --main-bg-color: #454d66;
+    --main-contrast-color: #f6a361;
+    --main-transparent-color: #f6a361;
+
+  }
+*{
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+}
+
+body{
+    background-color: var(--main-bg-color);
+    color: #fff;
+}
+h1{
+    margin: 10px;
+}
+
+.selected{
+    border: 2px solid var(--main-contrast-color);
+}
+
+.cat_container{
+    background-color: #0002;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.cat_container__list{
+    display: grid;
+    gap: 10px;
+    grid-auto-rows: 220px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.cat_container__media{
+    display:flex;
+    background-image: url("timg/timg1.jpg");
+    background-size: 100% 100%;
+    background-position: center;
+    width: 150px;
+    height: 220px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    align-items: flex-end;
+}
+
+.cat_container__media_title{
+    padding: 10px;
+    width: 100%;
+    font-size: 20px;
+    background-color:   #000A;
+    border-radius: 10px;
+}
+
+.servers_container{
+    display: inline-flex;
+}
+
+.servers_container__item{
+    background-color: #0002;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 10px;
+    margin-right: 10px;
+}
+.servers_container__item_selected{
+    background-color: rgba(61, 37, 170, 0.527);
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 10px;
+    margin-right: 10px;
+    border-top: var(--main-contrast-color) solid 2px;
+}
+
+.servers_container__section{
+    background-color: rgba(61, 37, 170, 0.527);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 0px;
+    border-bottom: var(--main-contrast-color) solid 2px;
+}
