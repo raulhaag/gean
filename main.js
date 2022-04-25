@@ -15,3 +15,11 @@ document.addEventListener("DOMContentLoaded", function(){
     })
 });
 
+serverClick = function(e, sname){
+    vinetas = document.getElementsByClassName("servers_container__item");
+    for (var i = 0; i < vinetas.length; i++) {
+        vinetas[i].className = 'servers_container__item'
+    }
+    e.className = 'servers_container__item server_selected'
+}
+

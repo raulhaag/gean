@@ -67,14 +67,6 @@ h1{
     padding: 10px;
     margin-right: 10px;
 }
-.servers_container__item_selected{
-    background-color: rgba(61, 37, 170, 0.527);
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    padding: 10px;
-    margin-right: 10px;
-    border-top: var(--main-contrast-color) solid 2px;
-}
 
 .servers_container__section{
     background-color: rgba(61, 37, 170, 0.527);
@@ -82,4 +74,13 @@ h1{
     border-bottom-right-radius: 5px;
     padding: 0px;
     border-bottom: var(--main-contrast-color) solid 2px;
+}
+
+.server_selected{
+    background-color: rgba(61, 37, 170, 0.527);
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 10px;
+    margin-right: 10px;
+    border-top: var(--main-contrast-color) solid 2px;
 }

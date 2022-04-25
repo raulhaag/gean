@@ -24,6 +24,9 @@ class handler(SimpleHTTPRequestHandler):
         if path[1] == "json":
             self.return_response(200, json.dumps(tdis))
             return
+        if path[1] == "accion":
+            self.return_response(200, json.dumps(tdis))
+            return
         if(os.path.exists('.' + self.path)):
             #read file to string
             return SimpleHTTPRequestHandler.do_GET(self)
