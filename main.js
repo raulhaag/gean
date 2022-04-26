@@ -21,5 +21,14 @@ serverClick = function(e, sname){
         vinetas[i].className = 'servers_container__item'
     }
     e.className = 'servers_container__item server_selected'
+    fetch('http://127.0.0.1:8080/action/' + sname + '/getFrontPage')
+    .then((response) => response.text())
+    .then((result) => {
+        ss = document.getElementsByClassName("servers_container__section");
+        ss[0].innerHTML = result;
+    })
+    .catch((error) => {
+        console.log(error)
+    })
 }
 

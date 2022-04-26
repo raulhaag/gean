@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
 import time, json, os
+from actions import getResponseAction
 
 serve = None
 alive = True
@@ -24,10 +25,10 @@ class handler(SimpleHTTPRequestHandler):
         if path[1] == "json":
             self.return_response(200, json.dumps(tdis))
             return
-        if path[1] == "accion":
-            self.return_response(200, json.dumps(tdis))
+        if path[1] == "action":
+            self.return_response(200, getResponseAction(path))
             return
-        if(os.path.exists('.' + self.path)):
+        if(os.path.exists('.' + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico"]):
             #read file to string
             return SimpleHTTPRequestHandler.do_GET(self)
         else:
