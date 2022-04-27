@@ -1,6 +1,10 @@
 console.log("javascript");
+let loading;
+let jk;
 
 document.addEventListener("DOMContentLoaded", function(){
+    loading = document.getElementsByClassName("lds-group")[0];
+    jk = new JKAnime();
     fetch('http://127.0.0.1:8080/json/a.json')
     .then((response) => response.json())
     .then((jsonresult) => {
@@ -15,7 +19,11 @@ document.addEventListener("DOMContentLoaded", function(){
     })
 });
 
+
+
 serverClick = function(e, sname){
+    loading.style.visibility = 'visible';
+
     vinetas = document.getElementsByClassName("servers_container__item");
     for (var i = 0; i < vinetas.length; i++) {
         vinetas[i].className = 'servers_container__item'
@@ -24,10 +32,27 @@ serverClick = function(e, sname){
     fetch('http://127.0.0.1:8080/action/' + sname + '/getFrontPage')
     .then((response) => response.text())
     .then((result) => {
+        loading.style.visibility = 'hidden';
         ss = document.getElementsByClassName("servers_container__section");
         ss[0].innerHTML = result;
     })
     .catch((error) => {
+        loading.style.visibility = 'hidden';
+        console.log(error)
+    })/*
+    jk.getFrontPage();
+    loading.style.visibility = 'hidden';*/
+}
+
+mediaClick = function(e, path){
+    fetch('http://127.0.0.1:8080/action/' + path)
+    .then((response) => response.text())
+    .then((result) => {
+        loading.style.visibility = 'hidden';
+        openInNewTab(result);
+    })
+    .catch((error) => {
+        loading.style.visibility = 'hidden';
         console.log(error)
     })
 }

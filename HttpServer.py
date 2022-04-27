@@ -1,6 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
+import re
 import time, json, os
-from actions import getResponseAction
+import requests
+from actions import getResponseAction, getResponseGet
 
 serve = None
 alive = True
@@ -21,6 +23,9 @@ class handler(SimpleHTTPRequestHandler):
         if(path[1] == "shutdown"):
             self.return_response(200, "Apagando")
             server.server_close()
+            return
+        if path[1] == "get":
+            self.return_response(200, getResponseGet(path))
             return
         if path[1] == "json":
             self.return_response(200, json.dumps(tdis))
@@ -50,6 +55,8 @@ class handler(SimpleHTTPRequestHandler):
 
 server = HTTPServer(('', 8080), handler)
 try:
+    os.system(r"load.html")
     server.serve_forever()
 except:
     pass
+

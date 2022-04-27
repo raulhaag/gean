@@ -1,8 +1,10 @@
 import json
 from jkanime import JKAnime
 from coder import Coder
+import base64, requests
 servers = {"jkanime": JKAnime()}
 coder = Coder()
+
 def getResponseAction(path = []):
     if path[2] not in servers:
         return ""
@@ -15,4 +17,8 @@ def getResponseAction(path = []):
     if hasattr(coder, path[3]):
         return getattr(coder, path[3])(val)
     else:
-        return json.dumps(val)
+        return val
+
+def getResponseGet(path = []):
+    web = base64.b64decode(path[2].encode('utf-8')).decode('utf-8')
+    return requests.get(web).text

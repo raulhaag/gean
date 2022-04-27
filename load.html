@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&display=swap" rel="stylesheet"> 
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(){
+            window.location.href = "http://127.0.0.1:8080/main.html";
+        })
+    </script>
+    <meta charset="UTF-8">
+    <title>Cargando</title>
+    <style type="text/css">
+        .lds-circle {
+  display: inline-block;
+  transform: translateZ(1px);
+}
+*{
+    font-family: 'Nunito Sans', sans-serif;
+    color: #fff;
+    font-weight: 800;
+}
+
+body{
+    background-color: #454d66;
+}
+
+.lds-text {
+    display: box;
+    align-items: center;
+ }
+.lds-group{
+    background-color: rgba(61, 37, 170, 0.527);
+    width: 200px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    border : 3px solid #f6a361;
+    transform: translate(-50%, -50%);
+}
+.lds-dual-ring {
+  margin-left: 57px;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+</style>
+</head>
+<body class="main">
+    <div class="lds-group">
+    <div class="lds-dual-ring"></div><p class="lds-text"><center>Cargando...</center></p>
+    </div>
+</body>
+</html>

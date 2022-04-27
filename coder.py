@@ -24,7 +24,7 @@ class Coder:
         </div>'''
         itemshtml = ""
         for item in items:
-            itemshtml += '<div class="cat_container__media" style="background-image: url(\'{}\')"><div class="cat_container__media_title">{}</div></div>'.format(item["image"],item["name"])
+            itemshtml += '<div class="cat_container__media" style="background-image: url(\'{}\')" onclick="{{mediaClick(this, \'{}\')}}"><div class="cat_container__media_title">{}</div></div>'.format(item["image"],item["path"], item["name"])
         return '<div class="cat_container"><h1 class="cat_container__title">{}</h1><div class="cat_container__list">{}</div></div>'.format(name, itemshtml)
 
     def tansformFavorites(self, items):

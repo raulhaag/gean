@@ -1,4 +1,5 @@
 
+@import "normalize.css";
 :root {
     --main-bg-color: #454d66;
     --main-contrast-color: #f6a361;
@@ -8,6 +9,12 @@
 *{
     font-family: 'Nunito Sans', sans-serif;
     font-weight: 800;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently*/
 }
 
 body{
@@ -86,4 +93,102 @@ h1{
     padding: 10px;
     margin-right: 10px;
     border-top: var(--main-contrast-color) solid 2px;
+}
+
+
+.center_message_container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/*links page*/
+.links_container{
+    margin: auto;
+    border: 3px solid var(--main-contrast-color);
+    border-radius: 10px;
+    width: 800px;
+}
+.links_title{
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin: 10px;
+}
+.links_bar{
+    display: flex;
+    background-color: #0002;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    justify-content: flex-end;
+    align-items: center;
+}
+.links_close{
+    height: 10px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--main-bg-color);
+    line-height: 50%;
+}
+
+li{
+    padding: 10px;
+    display: block;
+}
+
+li:hover, .links_close:hover{
+    background-color: rgba(61, 37, 170, 0.527);
+    border-radius: 10px;
+    outline: 2px solid var(--main-contrast-color);
+}
+
+ul{
+    margin: 0px;
+    padding: 0px;
+}
+
+
+/*  loading messages */
+.lds-text {
+    display: box;
+    align-items: center;
+ }
+.lds-group{
+    visibility: hidden;
+    background-color: rgba(61, 37, 170, 0.527);
+    width: 200px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    border : 3px solid #f6a361;
+    transform: translate(-50%, -50%);
+}
+.lds-dual-ring {
+  margin-left: 57px;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

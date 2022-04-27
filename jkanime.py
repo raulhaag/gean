@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import base64
 import re
 class JKAnime(AnimeServer):
-    name = "JKAnime"
+    name = "jkanime"
 
     def getFrontPage(self):
         r = requests.get("https://jkanime.net/").text
@@ -24,6 +24,17 @@ class JKAnime(AnimeServer):
             path = JKAnime.name + '/getInfo/' + base64.b64encode(n.select_one("a")["href"].encode("utf-8")).decode("utf-8")
             nas.append({"name":name, "image":image, "path":path})
         return {"Últimos episodios":ncs, "Últimos animes":nas}
+
+    def getLinks(self, path):
+        web = base64.b64decode(path[0].encode('utf-8')).decode('utf-8')
+        data = requests.get(web).text
+        links = []
+        links.append("https://www.fembed.com/v/" + re.findall('jkfembed\.php\?u=(.+?)"', data)[0])
+        if len(links) == 1:
+            from download_servers.fembed import Fembed
+            return Fembed.getDDL(links[0])
+        else:
+            return links
 
 
 if __name__ == "__main__":
