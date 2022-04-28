@@ -42,7 +42,7 @@ h1{
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 }
 
-.cat_container__media{
+.cat_container__media, .details_image{
     display:flex;
     /*background-image: url("timg/timg1.jpg");*/
     background-size: 100% 100%;
@@ -100,7 +100,29 @@ h1{
     position: absolute;
     top: 50%;
     left: 50%;
+    max-height: 90%;
     transform: translate(-50%, -50%);
+}
+
+/* details page */
+.details{
+    overflow: inherit;
+}
+
+.details_container{
+    display: flex;
+    outline: 2px solid var(--main-contrast-color);
+}
+
+.details_data{
+    width: 100%;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /*links page*/
