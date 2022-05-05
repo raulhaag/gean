@@ -20,5 +20,17 @@ def getResponseAction(path = []):
         return val
 
 def getResponseGet(path = []):
+    headers = {}
+    if len(path) == 4:
+        headers =  json.dumps(base64.b64decode(path[3].encode('utf-8')).decode('utf-8'))
     web = base64.b64decode(path[2].encode('utf-8')).decode('utf-8')
-    return requests.get(web).text
+    return requests.get(web, headers=headers).text
+
+def getResponsePost(path = []):
+    headers = {}
+    params = {}
+    if len(path) == 5:
+        headers =  json.dumps(base64.b64decode(path[3].encode('utf-8')).decode('utf-8'))
+        params =  json.dumps(base64.b64decode(path[3].encode('utf-8')).decode('utf-8'))
+    web = base64.b64decode(path[2].encode('utf-8')).decode('utf-8')
+    return requests.post(web, headers=headers, params=params).text

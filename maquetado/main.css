@@ -4,8 +4,8 @@
     --main-bg-color: #454d66;
     --main-contrast-color: #f6a361;
     --main-transparent-color: #f6a361;
-
   }
+
 *{
     font-family: 'Nunito Sans', sans-serif;
     font-weight: 800;
@@ -15,12 +15,42 @@
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently*/
+    padding: 0;
+    margin: 0;
+}
+
+/* menu styles */
+
+.menu{
+    display: flex;
+    flex-direction: column;
+    top :0;
+    width: 100%;
+    background-color: #0005;
+    color: var(--main-contrast-color);
+    position: fixed;
+    height: 50px;
+    padding: 0;
+    align-items: flex-end;
+}
+.menu__item{
+    padding: 15px;
+    height: 50px;
+    display: inline;
+}
+
+.content{
+    padding: 20px;
+    margin: auto;
+    margin-top: 70px;
+    max-width: 1000px;
 }
 
 body{
     background-color: var(--main-bg-color);
     color: #fff;
 }
+
 h1{
     margin: 10px;
 }
@@ -152,7 +182,6 @@ ul{
 
 /*  loading messages */
 .lds-text {
-    display: box;
     align-items: center;
  }
 .lds-group{
