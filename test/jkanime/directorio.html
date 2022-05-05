@@ -1,0 +1,1171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml">
+    <head>
+        <title>Directorio  </title>
+                                                                                    <link href="https://cdn.jkanime.net/assets2/css/img/favicon.ico" rel="icon" type="image/x-icon">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+            <meta http-equiv="content-language" content="es" />
+            <meta content="width=device-width, initial-scale=1" name="viewport" />
+            
+            <link rel="alternate" type="application/rss+xml" title="Jkanime RSS Feed" href="https://feeds.feedburner.com/jkanime"/>
+<script src="https://cdn.jkanime.net/assets2/js/jquery-3.3.1.min.js"></script>
+               <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/plyr.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/nice-select.css?=v1.0" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/slicknav.min.css" type="text/css">
+	<link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/jquery-confirm.css" type="text/css">
+	<link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/jquery.toast.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/style.css?=v5.1" type="text/css">
+
+            <link rel="dns-prefetch" href="//connect.facebook.net">
+            <link rel="dns-prefetch" href="//facebook.com">
+            <link rel="dns-prefetch" href="//apis.google.com">
+            <link rel="dns-prefetch" href="//google-analytics.com">
+            
+                <script>
+    function crear_cookie(cname,cvalue,exMins){var d=new Date();d.setTime(d.getTime()+(exMins*60*1000));var expires="expires="+d.toUTCString();document.cookie=cname+"="+cvalue+";"+expires+";path=/";}
+    function leer_cookie(cname){var name=cname+"=";var decodedCookie=decodeURIComponent(document.cookie);var ca=decodedCookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i];while(c.charAt(0)==' '){c=c.substring(1);}
+if(c.indexOf(name)==0){return c.substring(name.length,c.length);}}
+return "";}
+ $(function(){
+$('#darkswitch').change(function() {
+        if ($(this).is(':checked')) {
+         crear_cookie("darkmode","true",43200);
+         $('head').append('<link id="darkcss" rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/dark.css?=v3.8" type="text/css" />');
+         $(".header__logo img").attr("src", $(".header__logo img").attr("src").replace(".png","-dark.png"));
+        } else {
+           $('#darkcss').remove();
+           crear_cookie("darkmode","false",-1);
+           $(".header__logo img").attr("src", $(".header__logo img").attr("src").replace("-dark.png",".png"));
+        }
+      });
+
+if(leer_cookie("darkmode")) {
+$( "#darkswitch" ).prop( "checked", true );
+$(".header__logo img").attr("src", $(".header__logo img").attr("src").replace(".png","-dark.png"));
+
+}
+
+    });
+ 
+ function darkmode() {
+if(!$("#darkcss").length) {
+$('head').append('<link id="darkcss" rel="stylesheet" href="https://cdn.jkanime.net/assets2/css/dark.css?=v3.8" type="text/css" />');
+darkmode();
+}
+}
+if(leer_cookie("darkmode")) {
+darkmode();
+}
+</script>
+
+
+            <style type="text/css">
+                .fb_iframe_widget iframe {
+                    position: relative !important;
+                }
+            </style>
+            <script type="text/javascript">
+$(function () {
+    
+});
+</script>
+<style>
+#filtro_div .activo, a#loadmore.activo {
+    background: #85b2c7;
+    pointer-events: none;
+}
+div#botones {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+div#filtro_div {
+    float: right;
+    display: inline-block;
+}
+div#filtro_div .nice-select {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    height: 40px;
+    line-height: 40px;
+}
+.nice-select {clear: inherit;}
+
+div#filtro_div .nice-select .list {
+    z-index: 100;
+}
+</style>
+                                
+    </head>
+    <body>
+        <div id="modal"></div>
+    
+     <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="header__logo">
+                        <a href="/">
+                            <img src="https://cdn.jkanime.net/assets2/css/img/logo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                   <div class="header__nav">
+                        <nav class="header__menu mobile-menu">
+                            <ul class="addmenu">
+                                <li class="active"><a href="/">Inicio</a></li>
+                                <li class="active"><a href="/directorio/">Directorio</a></li>
+                                <li class="active"><a href="/horario/">Horario</a></li>
+                                <li class="active"><a href="/top/">Top</a></li>
+                                <li class="active hentai tip"><a href="https://hentaijk.com/" target="_blank">Hentai <span>+18</span></a></li>
+                                
+                            </ul>
+                        </nav>
+						
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__right">
+					
+						
+						
+						<form role="search" autocomplete="off" id="form_search_ajax" class="form_search2" action="/buscar/q/" method="get">
+                             
+                                <input type="search" id="buscanime" class="buscanime solopc" name="q" class="form_control" rel="Buscar Anime" placeholder="Buscar Anime..." value="" required/>
+                                
+<button class="buton-form solopc" id="btn_qsubmit" type="submit"><i class="search"></i></button>
+									<div style="display: none;" id="search_results"><div id="qloader" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>							
+                            </form>
+                            
+					<b class="screen-overlay"></b>
+					<button data-trigger="#navbar_main" class="d-lg-none btn btn-light navbar-light" type="button">  <span class="navbar-toggler-icon"></span></button>
+					
+							<button class="usr-menu" type="submit"><i class="fa not fa-user-circle"></i></button>	
+							<ul style="display: none;" id="authmenu">
+							<li class="auth"><a href="/perfil">Mi perfil</a></li>
+							<li class="auth"><a href="/guardado">Guardado</a></li>
+							<li class="auth"><a class="logdom salir" href="/salir">Salir</a></li>
+							<li class="noauth logdom"><a class="logdom entrar" href="#entrar">Entrar</a></li>
+							<li class="noauth logdom"><a class="logdom" href="/register">Registrarme</a></li>
+							</ul>
+
+						<nav id="navbar_main" class="solomovil mobile-offcanvas navbar navbar-expand-lg navbar-dark bg-primary">
+						  <div class="offcanvas-header">  
+							<form role="search" id="form_search_ajax" class="form_search2 mob" action="/buscar/q/" method="get">
+                             
+                                <input type="search" id="buscanime" class="buscanime" name="q" class="form_control" rel="Buscar Anime" placeholder="Buscar Anime..." value="" required/>
+                                
+<button class="buton-form" id="btn_qsubmit" type="submit"><i class="search"></i></button>
+											
+											<div style="display: none;" class="mob" id="search_results"><div id="qloader" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>				
+																
+                            </form>
+						  </div>
+						  
+					
+
+					
+						</nav>
+						                    	
+
+                    </div>
+                    
+
+                </div>
+                
+
+
+
+		
+            </div>
+			
+	
+
+
+			
+			
+        </div>
+
+                       </header> 
+                    
+     <section class="solopc" style="display: none;">
+	
+        <div class="menupc">
+		<div class="row">
+		<div class="letras-box addmenu">
+                        <ul>
+                            <li><a class="letra-link" href="/letra/A/" rel="nofollow">A</a></li>
+                            <li><a class="letra-link" href="/letra/B/" rel="nofollow">B</a></li>
+                            <li><a class="letra-link" href="/letra/C/" rel="nofollow">C</a></li>
+                            <li><a class="letra-link" href="/letra/D/" rel="nofollow">D</a></li>
+                            <li><a class="letra-link" href="/letra/E/" rel="nofollow">E</a></li>
+                            <li><a class="letra-link" href="/letra/F/" rel="nofollow">F</a></li>
+                            <li><a class="letra-link" href="/letra/G/" rel="nofollow">G</a></li>
+                            <li><a class="letra-link" href="/letra/H/" rel="nofollow">H</a></li>
+                            <li><a class="letra-link" href="/letra/I/" rel="nofollow">I</a></li>
+                            <li><a class="letra-link" href="/letra/J/" rel="nofollow">J</a></li>
+                            <li><a class="letra-link" href="/letra/K/" rel="nofollow">K</a></li>
+                            <li><a class="letra-link" href="/letra/L/" rel="nofollow">L</a></li>
+                            <li><a class="letra-link" href="/letra/M/" rel="nofollow">M</a></li>
+                            <li><a class="letra-link" href="/letra/N/" rel="nofollow">N</a></li>
+                            <li><a class="letra-link" href="/letra/O/" rel="nofollow">O</a></li>
+                            <li><a class="letra-link" href="/letra/P/" rel="nofollow">P</a></li>
+                            <li><a class="letra-link" href="/letra/Q/" rel="nofollow">Q</a></li>
+                            <li><a class="letra-link" href="/letra/R/" rel="nofollow">R</a></li>
+                            <li><a class="letra-link" href="/letra/S/" rel="nofollow">S</a></li>
+                            <li><a class="letra-link" href="/letra/T/" rel="nofollow">T</a></li>
+                            <li><a class="letra-link" href="/letra/U/" rel="nofollow">U</a></li>
+                            <li><a class="letra-link" href="/letra/V/" rel="nofollow">V</a></li>
+                            <li><a class="letra-link" href="/letra/W/" rel="nofollow">W</a></li>
+                            <li><a class="letra-link" href="/letra/X/" rel="nofollow">X</a></li>
+                            <li><a class="letra-link" href="/letra/Y/" rel="nofollow">Y</a></li>
+                            <li><a class="letra-link" href="/letra/Z/" rel="nofollow">Z</a></li>
+                            <li><a class="letra-link" href="/letra/0-9/" rel="nofollow">0-9</a></li>
+                            <li class="box-link tp"><a href="#tipoint" rel="nofollow">Por Tipo ↓</a></li>
+                            <li class="box-link lt"><a href="#letrasint" rel="nofollow">Por Genero ↓</a></li>
+                        </ul>
+                    </div>
+		</div>
+
+
+ 
+					
+					<div class="type-list addmenu">
+                        <h3>Animes por Tipo:</h3>
+                        <ul>
+                           <li><a href="/tipo/ova/" title="Ovas de anime">Ovas</a></li>
+                            <li><a href="/tipo/pelicula/" title="Peliculas de anime">Peliculas</a></li>
+
+                        </ul>
+                    </div>
+					
+					<div class="genre-list addmenu">
+									
+						<h3>Animes por Idioma:</h3>
+                        <ul>
+                            <li><a href="/genero/latino/">Español latino</a></li>
+                        </ul><br><br><br>
+                        
+                        
+                        <h3>Animes por Genero:</h3>
+                        <ul>
+                          <li><a href="/genero/accion/" title="Animes de Accion">Accion</a></li>
+                            <li><a href="/genero/artes-marciales/" title="Animes de Artes Marciales">Artes Marciales</a></li>
+                            <li><a href="/genero/autos/" title="Animes de Autos">Autos</a></li>
+                            <li><a href="/genero/aventura/" title="Animes de Aventura">Aventura</a></li>
+                            <li><a href="/genero/colegial/" title="Animes de Colegial">Colegial</a></li>
+                            <li><a href="/genero/comedia/" title="Animes de Comedia">Comedia</a></li>
+                            <li><a href="/genero/cosas-de-la-vida/" title="Animes de Cosas de la vida">Cosas de la vida</a></li>
+                            <li><a href="/genero/dementia/" title="Animes de Dementia">Dementia</a></li>
+                            <li><a href="/genero/demonios/" title="Animes de Demonios">Demonios</a></li>
+                            <li><a href="/genero/deportes/" title="Animes de Deportes">Deportes</a></li>
+                            <li><a href="/genero/drama/" title="Animes de Drama">Drama</a></li>
+                            <li><a href="/genero/ecchi/" title="Animes de Ecchi">Ecchi</a></li>
+                            <li><a href="/genero/fantasa/" title="Animes de Fantasia">Fantasia</a></li>
+                            <li><a href="/genero/harem/" title="Animes de Harem">Harem</a></li>
+                            <li><a href="/genero/historico/" title="Animes de Historico">Historico</a></li>
+                            <li><a href="/genero/josei/" title="Animes de Josei">Josei</a></li>
+                            <li><a href="/genero/juegos/" title="Animes de Juegos">Juegos</a></li>
+                            <li><a href="/genero/magia/" title="Animes de Magia">Magia</a></li>
+                            <li><a href="/genero/mecha/" title="Animes de Mecha">Mecha</a></li>
+                            <li><a href="/genero/militar/" title="Animes de Militar">Militar</a></li>
+                            <li><a href="/genero/misterio/" title="Animes de Misterio">Misterio</a></li>
+                            <li><a href="/genero/musica/" title="Animes de Musica">Musica</a></li>
+                            <li><a href="/genero/nios/" title="Animes de Niños">Niños</a></li>
+                            <li><a href="/genero/parodia/" title="Animes de Parodia">Parodia</a></li>
+                            <li><a href="/genero/policial/" title="Animes de Policial">Policial</a></li>
+                            <li><a href="/genero/psicologico/" title="Animes de Psicologico">Psicologico</a></li>
+                            <li><a href="/genero/romance/" title="Animes de Romance">Romance</a></li>
+                            <li><a href="/genero/samurai/" title="Animes de Samurai">Samurai</a></li>
+                            <li><a href="/genero/sci-fi/" title="Animes de Sci-fi">Sci-fi</a></li>
+                            <li><a href="/genero/seinen/" title="Animes de Seinen">Seinen</a></li>
+                            <li><a href="/genero/shoujo/" title="Animes de Shoujo">Shoujo</a></li>
+                            <li><a href="/genero/shoujo-ai/" title="Animes de Shoujo ai">Shoujo ai</a></li>
+                            <li><a href="/genero/shounen/" title="Animes de Shounen">Shounen</a></li>
+                            <li><a href="/genero/shounen-ai/" title="Animes de Shounen ai">Shounen ai</a></li>
+                            <li><a href="/genero/sobrenatural/" title="Animes de Sobrenatural">Sobrenatural</a></li>
+                            <li><a href="/genero/space/" title="Animes de Space">Space</a></li>
+                            <li><a href="/genero/super-poderes/" title="Animes de Super poderes">Super poderes</a></li>
+                            <li><a href="/genero/terror/" title="Animes de Terror">Terror</a></li>
+                            <li><a href="/genero/thriller/" title="Animes de Thriller">Thriller</a></li>
+                            <li><a href="/genero/vampiros/" title="Animes de Vampiros">Vampiros</a></li>
+                            <li><a href="/genero/yaoi/" title="Animes de Yaoi">Yaoi</a></li>
+                            <li><a href="/genero/yuri/" title="Animes de Yuri">Yuri</a></li>
+                        </ul>
+                    </div>
+
+                    
+                    
+	</div>    
+                    
+	</section>
+	
+
+         
+
+       
+                
+
+<div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+   
+   
+   <section class="contenido spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="anime__page__content">
+                        <div class="anime__page__title">
+                            <div class="row">
+                                <div class="col-lg-8 col-md-8 col-sm-6">
+                                    <div class="section-title">
+                                        <h4><i class="fa fa-home"></i>  Lista completa de Animes </h4>
+                                    </div>
+                                </div>
+    
+                            </div>
+                        </div>
+                        
+                        
+                          <section id="dirmenu">
+	
+        <div class="menupc">
+		<div class="row">
+		<div class="letras-box addmenu">
+                        <ul>
+                            <li><a class="letra-link" href="/letra/A/" rel="nofollow">A</a></li>
+                            <li><a class="letra-link" href="/letra/B/" rel="nofollow">B</a></li>
+                            <li><a class="letra-link" href="/letra/C/" rel="nofollow">C</a></li>
+                            <li><a class="letra-link" href="/letra/D/" rel="nofollow">D</a></li>
+                            <li><a class="letra-link" href="/letra/E/" rel="nofollow">E</a></li>
+                            <li><a class="letra-link" href="/letra/F/" rel="nofollow">F</a></li>
+                            <li><a class="letra-link" href="/letra/G/" rel="nofollow">G</a></li>
+                            <li><a class="letra-link" href="/letra/H/" rel="nofollow">H</a></li>
+                            <li><a class="letra-link" href="/letra/I/" rel="nofollow">I</a></li>
+                            <li><a class="letra-link" href="/letra/J/" rel="nofollow">J</a></li>
+                            <li><a class="letra-link" href="/letra/K/" rel="nofollow">K</a></li>
+                            <li><a class="letra-link" href="/letra/L/" rel="nofollow">L</a></li>
+                            <li><a class="letra-link" href="/letra/M/" rel="nofollow">M</a></li>
+                            <li><a class="letra-link" href="/letra/N/" rel="nofollow">N</a></li>
+                            <li><a class="letra-link" href="/letra/O/" rel="nofollow">O</a></li>
+                            <li><a class="letra-link" href="/letra/P/" rel="nofollow">P</a></li>
+                            <li><a class="letra-link" href="/letra/Q/" rel="nofollow">Q</a></li>
+                            <li><a class="letra-link" href="/letra/R/" rel="nofollow">R</a></li>
+                            <li><a class="letra-link" href="/letra/S/" rel="nofollow">S</a></li>
+                            <li><a class="letra-link" href="/letra/T/" rel="nofollow">T</a></li>
+                            <li><a class="letra-link" href="/letra/U/" rel="nofollow">U</a></li>
+                            <li><a class="letra-link" href="/letra/V/" rel="nofollow">V</a></li>
+                            <li><a class="letra-link" href="/letra/W/" rel="nofollow">W</a></li>
+                            <li><a class="letra-link" href="/letra/X/" rel="nofollow">X</a></li>
+                            <li><a class="letra-link" href="/letra/Y/" rel="nofollow">Y</a></li>
+                            <li><a class="letra-link" href="/letra/Z/" rel="nofollow">Z</a></li>
+                            <li><a class="letra-link" href="/letra/0-9/" rel="nofollow">0-9</a></li>
+                            <li class="box-link tp"><a href="#tipoint" rel="nofollow">Por Tipo ↓</a></li>
+                            <li class="box-link lt"><a href="#letrasint" rel="nofollow">Por Genero ↓</a></li>
+                        </ul>
+                    </div>
+		</div>
+
+
+ 
+					
+					<div class="type-list addmenu">
+                        <h3>Animes por Tipo:</h3>
+                        <ul>
+                           <li><a href="/tipo/ova/" title="Ovas de anime">Ovas</a></li>
+                            <li><a href="/tipo/pelicula/" title="Peliculas de anime">Peliculas</a></li>
+
+                        </ul>
+                    </div>
+					
+					<div class="genre-list addmenu">
+									
+						<h3>Animes por Idioma:</h3>
+                        <ul>
+                            <li><a href="/genero/latino/">Español latino</a></li>
+                        </ul><br><br><br>
+                        
+                        
+                        <h3>Animes por Genero:</h3>
+                        <ul>
+                          <li><a href="/genero/accion/" title="Animes de Accion">Accion</a></li>
+                            <li><a href="/genero/artes-marciales/" title="Animes de Artes Marciales">Artes Marciales</a></li>
+                            <li><a href="/genero/autos/" title="Animes de Autos">Autos</a></li>
+                            <li><a href="/genero/aventura/" title="Animes de Aventura">Aventura</a></li>
+                            <li><a href="/genero/colegial/" title="Animes de Colegial">Colegial</a></li>
+                            <li><a href="/genero/comedia/" title="Animes de Comedia">Comedia</a></li>
+                            <li><a href="/genero/cosas-de-la-vida/" title="Animes de Cosas de la vida">Cosas de la vida</a></li>
+                            <li><a href="/genero/dementia/" title="Animes de Dementia">Dementia</a></li>
+                            <li><a href="/genero/demonios/" title="Animes de Demonios">Demonios</a></li>
+                            <li><a href="/genero/deportes/" title="Animes de Deportes">Deportes</a></li>
+                            <li><a href="/genero/drama/" title="Animes de Drama">Drama</a></li>
+                            <li><a href="/genero/ecchi/" title="Animes de Ecchi">Ecchi</a></li>
+                            <li><a href="/genero/fantasa/" title="Animes de Fantasia">Fantasia</a></li>
+                            <li><a href="/genero/harem/" title="Animes de Harem">Harem</a></li>
+                            <li><a href="/genero/historico/" title="Animes de Historico">Historico</a></li>
+                            <li><a href="/genero/josei/" title="Animes de Josei">Josei</a></li>
+                            <li><a href="/genero/juegos/" title="Animes de Juegos">Juegos</a></li>
+                            <li><a href="/genero/magia/" title="Animes de Magia">Magia</a></li>
+                            <li><a href="/genero/mecha/" title="Animes de Mecha">Mecha</a></li>
+                            <li><a href="/genero/militar/" title="Animes de Militar">Militar</a></li>
+                            <li><a href="/genero/misterio/" title="Animes de Misterio">Misterio</a></li>
+                            <li><a href="/genero/musica/" title="Animes de Musica">Musica</a></li>
+                            <li><a href="/genero/nios/" title="Animes de Niños">Niños</a></li>
+                            <li><a href="/genero/parodia/" title="Animes de Parodia">Parodia</a></li>
+                            <li><a href="/genero/policial/" title="Animes de Policial">Policial</a></li>
+                            <li><a href="/genero/psicologico/" title="Animes de Psicologico">Psicologico</a></li>
+                            <li><a href="/genero/romance/" title="Animes de Romance">Romance</a></li>
+                            <li><a href="/genero/samurai/" title="Animes de Samurai">Samurai</a></li>
+                            <li><a href="/genero/sci-fi/" title="Animes de Sci-fi">Sci-fi</a></li>
+                            <li><a href="/genero/seinen/" title="Animes de Seinen">Seinen</a></li>
+                            <li><a href="/genero/shoujo/" title="Animes de Shoujo">Shoujo</a></li>
+                            <li><a href="/genero/shoujo-ai/" title="Animes de Shoujo ai">Shoujo ai</a></li>
+                            <li><a href="/genero/shounen/" title="Animes de Shounen">Shounen</a></li>
+                            <li><a href="/genero/shounen-ai/" title="Animes de Shounen ai">Shounen ai</a></li>
+                            <li><a href="/genero/sobrenatural/" title="Animes de Sobrenatural">Sobrenatural</a></li>
+                            <li><a href="/genero/space/" title="Animes de Space">Space</a></li>
+                            <li><a href="/genero/super-poderes/" title="Animes de Super poderes">Super poderes</a></li>
+                            <li><a href="/genero/terror/" title="Animes de Terror">Terror</a></li>
+                            <li><a href="/genero/thriller/" title="Animes de Thriller">Thriller</a></li>
+                            <li><a href="/genero/vampiros/" title="Animes de Vampiros">Vampiros</a></li>
+                            <li><a href="/genero/yaoi/" title="Animes de Yaoi">Yaoi</a></li>
+                            <li><a href="/genero/yuri/" title="Animes de Yuri">Yuri</a></li>
+                        </ul>
+                    </div>
+
+                    
+                    
+	</div>    
+                    
+	</section>
+	
+	
+                                   <div id="botones">   
+                         <div id="filtro_div">
+	<form action="" method="get">
+
+	<select name="filtro">
+	<option  value="fecha">Por fecha</option>
+	<option  value="nombre">Por nombre</option>
+	</select>
+            
+            
+	<select name="tipo">
+		<option value="none">Todo</option>
+		<option  value="TV">Animes</option>
+		<option  value="Movie">Peliculas</option>
+		<option  value="Special">Especiales</option>
+		<option  value="OVA">Ovas</option>
+		<option  value="ONA">Onas</option>
+	</select>
+	
+
+	<select name="estado">
+		<option value="none">Cualquiera</option>
+		<option  value="1">En emisión</option>
+		<option  value="2">Finalizado</option>
+	</select>
+	
+	<select name="fecha">
+		<option value="none">Año</option>
+		<option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option><option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option><option>2009</option><option>2008</option><option>2007</option><option>2006</option><option>2005</option><option>2004</option><option>2003</option><option>2002</option><option>2001</option><option>2000</option><option>1999</option><option>1998</option><option>1997</option><option>1996</option><option>1995</option><option>1994</option><option>1993</option><option>1992</option><option>1991</option><option>1990</option><option>1989</option><option>1988</option><option>1987</option><option>1986</option><option>1985</option><option>1984</option><option>1983</option><option>1982</option><option>1981</option>
+	</select>
+	
+	<select name="temporada">
+		<option value="none">Temporada</option>
+		<option value='invierno' >Invierno</option><option value='primavera' >Primavera</option><option value='verano' >Verano</option><option value='otoño' >Otoño</option>
+	</select>
+	
+	<select name="orden">
+		<option value="none">Ascendente</option>
+		<option  value="desc">Descendente</option>
+	</select>
+	
+<button class="btn btn-primary"> <i class="fa fa-filter"></i> Filtrar</button>
+</form>
+                            </div>
+                              </div>
+                            
+                        <div class="row row-cols-md-3 custom_flex">
+                        
+                        <!-- <div class="col custom_item">
+    <div class="card h-100">
+      <div class="custom_thumb"><a href="URL"><img src="THUMB" class="card-img-top" alt="..."></a></div>
+      <div class="card-body">
+        <h5 class="card-title"><a href="URL">TITULO</a></h5>
+        <div class="card-info"><p class="card-status ESTADO">ESTADO </p><p class="card-txt">TIPO</p></div>
+        <p class="card-text synopsis">SINOPSIS</p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Emitido FECHA</small>
+      </div>
+    </div>
+  </div>
+   -->
+   
+                         
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/ashita-no-joe/"><img src="https://cdn.jkanime.net/assets/images/animes/image/ashita-no-joe.jpg" class="img-fluid rounded-start" alt="Ashita no Joe"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/ashita-no-joe/">Ashita no Joe</a></h5>
+        
+         <p class="card-text ep">79 Eps, <small class="text-muted">Emitido Mar 31 de 1970</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Ashita no Joe nos cuenta la historia de un boxeador, Joe Yabuki. Joe no es un boxeador como otros: es un huérfano que pasaba su vida en la calle hasta el día en el que encuentra a un viejo borracho llamado Danpei Tange. Danpei, boxeador profesional retirado, se queda asombrado porla fuerza bruta de Joe y decide hacer de él un gran boxeador. Joe no le hace caso y sus fechorias finalmente le llevan aun reformatorio para jovenes delicuentes. Ese es el lugar en el que conoce a Toru Rikiishi,una joven promesa del boxeo injustamente recluido . Joe decide entonces dedicarse al boxeo con el fin de derrotar a este gran rival.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/lupin-iii/"><img src="https://cdn.jkanime.net/assets/images/animes/image/lupin-iii.jpg" class="img-fluid rounded-start" alt="Lupin III"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/lupin-iii/">Lupin III</a></h5>
+        
+         <p class="card-text ep">23 Eps, <small class="text-muted">Emitido Oct 24 de 1971</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Lupin III es el sucesor de una familia de ladrones (Arsenio Lupin y Arsenio Lupin II), quien está empeñado en realizar espectaculares robos. Para ello cuenta con dos colaboradores, Oscar y Francis, que son un pistolero profesional y un guerrero samurai respectivamente. También se une a ellos en ocasiones esporádicas, y siempre por intereses personales, el amor platónico de Lupin... Patricia. Es una auténtica maestra del engaño, y muchas veces hará perder la cabeza e incluso arriesgar su vida a Lupin.
+
+A esto debe añadirse la intervención del Inspector Basilio, de la Interpol, que perseguirá a Lupin en todos y cada uno de sus actos, pero nunca logra detenerlo. ¿O si? </p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/mazinger-z/"><img src="https://cdn.jkanime.net/assets/images/animes/image/mazinger-z.jpg" class="img-fluid rounded-start" alt="Mazinger Z"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/mazinger-z/">Mazinger Z</a></h5>
+        
+         <p class="card-text ep">92 Eps, <small class="text-muted">Emitido Dic 3 de 1972</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">El villano Dr. Hell ha acumulado un ejercito de bestias mecanicas en su escondite secreto, la isla de Bardos ubicada en el Mar Egeo. Es capaz de controlar a las bestias mecanizadas con su baston y les indica que desaten ataques devastadores. Sin embargo, el Dr. Hell no hace todo el trabajo sucio solo; el tiene su fiel secuaz, el baron Ashura, para llevar a cabo sus planes diabólicos.
+
+Tambien hay quienes veran que el mal no prevalezca. Kouji Kabuto es el joven y luchador adolescente con una cuenta pendiente: su objetivo es vengar el asesinato de su abuelo por el Dr. Hell. Y podria ser capaz de lograrlo, ya que es el piloto de Mazinger Z, un poderoso robot gigante hecho de un metal indestructible conocido como Super-Alloy Z.
+
+Mazinger Z cuenta con varios ataques especiales poderosos. Al canalizar la energia fotonica a traves de sus ojos y al liberar el haz de Koushiryoku, puede causar una gran destruccion. Pero las cosas se ponen realmente geniales cuando Mazinger Z lanza su ataque Rocket Punch. ¡El Dr. Hell y sus secuaces podrian haber encontrado su pareja!</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/alps-no-shoujo-heidi/"><img src="https://cdn.jkanime.net/assets/images/animes/image/alps-no-shoujo-heidi.jpg" class="img-fluid rounded-start" alt="Alps no Shoujo Heidi"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/alps-no-shoujo-heidi/">Alps no Shoujo Heidi</a></h5>
+        
+         <p class="card-text ep">52 Eps, <small class="text-muted">Emitido Ene 6 de 1974</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Después de quedarse huérfana, Heidi se ve obligada a vivir con su abuelo, que vive en los Alpes. Ella se entera de que es un hombre muy amargado que sólo acepta acogerla a la fuerza. Pero la bondad de Heidi puede abrirle el corazón. Junto con el pastor Peter y la inválida Clara, tiene muchas aventuras.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/candy-candy/"><img src="https://cdn.jkanime.net/assets/images/animes/image/candy-candy.jpg" class="img-fluid rounded-start" alt="Candy Candy"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/candy-candy/">Candy Candy</a></h5>
+        
+         <p class="card-text ep">115 Eps, <small class="text-muted">Emitido Oct 1 de 1976</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Cuenta la historia de una niña llamada Candy White, quien es abandonada en un hogar para niños huerfanos junnto a otro bebe el cual es llamado Annie, conforme esta niña va creciendo va teniendo nuevas aventuras, amores,amigos y mas.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/mobile-suit-gundam/"><img src="https://cdn.jkanime.net/assets/images/animes/image/mobile-suit-gundam.jpg" class="img-fluid rounded-start" alt="Mobile Suit Gundam"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/mobile-suit-gundam/">Mobile Suit Gundam</a></h5>
+        
+         <p class="card-text ep">43 Eps, <small class="text-muted">Emitido Abr 7 de 1979</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Debido a la sobrepoblación mundial, las guerras y el hambre, los humanos emigran al espacio exterior buscando mejores expectativas de vida. Comienza la construcción de cientos de gigantescas colonias espaciales que son agrupadas en Sides (grupos de entre 35 y 80 colonias), comienza un nuevo calendario para la humanidad, el UNIVERSAL CENTURY.
+
+Es el año 0079 del Universal Century (U.C.0079), las colonias espaciales de Side 3, el Side más alejado de la Tierra, se proclaman a sí mismas como el Principado de Zeon, iniciando una feroz guerra de independencia contra el Gobierno de la Federación Terrestre.
+
+Amuro Ray es un perezoso joven amante de las máquinas que vive en una de las colonias de Side 7. Poco sabe Amuro del proyecto secreto que se desarrolla en su colonia, el nuevo Mobile Suit modelo Gundam de la Federación Terrestre, cosa que traerá la guerra hasta las puertas de su casa y al mismísimo Char Aznable, piloto As de Zeon.
+
+Víctima de las circunstancias, Amuro se ve frente a los controles del Gundam. Ahora, él deberá encargarse de pilotar el arma definitiva de la humanidad para salvar a sus seres queridos y su propia vida...</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/rose-of-versailles/"><img src="https://cdn.jkanime.net/assets/images/animes/image/rose-of-versailles.jpg" class="img-fluid rounded-start" alt="Rose of Versailles"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/rose-of-versailles/">Rose of Versailles</a></h5>
+        
+         <p class="card-text ep">40 Eps, <small class="text-muted">Emitido Oct 10 de 1979</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">lady oscar Criada desde su nacimiento como un varón, Lady Oscar comanda a los guardias del palacio de Versalles en los años anteriores a la Revolución Francesa. Su belleza y noble espiritu la convierten en una figura destacada ante los ojos tanto de hombres como mujeres, aunque debe luchar entre su vida de de servicio y deber al país y los impulsos de su corazón. Ella vive como un noble entre la opulencia de Versalles, sin embargo sus agudos sentidos y compasión no estan cegados a la pobreza de la gente de Francia.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/ashita-no-joe-2/"><img src="https://cdn.jkanime.net/assets/images/animes/image/ashita-no-joe-2.jpg" class="img-fluid rounded-start" alt="Ashita no Joe 2"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/ashita-no-joe-2/">Ashita no Joe 2</a></h5>
+        
+         <p class="card-text ep">47 Eps, <small class="text-muted">Emitido Oct 12 de 1980</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Yabuki Joe queda desanimado y sin esperanza después de cierto evento trágico. En un intento por dejar atrás el pasado, Joe deja atrás el gimnasio y comienza a deambular. En sus viajes se encuentra con gente como Wolf Kanagushi y Goromaki Gondo, hombres que involuntariamente avivan las brasas agonizantes dentro de él, lo que lo lleva a poner fin a sus vagabundeos. Su regreso a casa vuelve a poner a Joe en el camino del boxeo, pero sin que él ni su entrenador lo supieran, ahora sufre problemas profundos que le impiden pelear. En un intento por solucionar esos problemas, Carlos Rivera, un boxeador de renombre mundial, es invitado desde Venezuela para ayudar a Joe a recuperarse.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/macross/"><img src="https://cdn.jkanime.net/assets/images/animes/image/macross.jpg" class="img-fluid rounded-start" alt="Macross"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/macross/">Macross</a></h5>
+        
+         <p class="card-text ep">36 Eps, <small class="text-muted">Emitido Oct 3 de 1982</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Una nave alienígena ha caido a la tierra causando una gran conmoción es el año de 1999, dentro de ella los secretos de la protocultura y una nueva tecnología para la raza humana. Es la historia de la vida de algunos jóvenes pilotos, amores, desamores ya aventuras figuran en este gran serie.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/capitan-tsubasa/"><img src="https://cdn.jkanime.net/assets/images/animes/image/capitan-tsubasa.jpg" class="img-fluid rounded-start" alt="Capitan Tsubasa"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/capitan-tsubasa/">Capitan Tsubasa</a></h5>
+        
+         <p class="card-text ep">128 Eps, <small class="text-muted">Emitido Oct 13 de 1983</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Tsubasa Osora (Oliver Atom) es un joven con grandes ambiciones en el mundo futbolistico, su mas grande meta es jugar en la copa del mundo con su selección para eso debera afrontar numerosos retos junto con sus amigos Genzo Wakabaihashi (Benji Price), Mizaki(Tom), Hyuga(Stiff)entre otros, vivira todas las alegrias y tristesas de un jugador de futbol profecional en su camino para convertirse en el mejor.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/fist-of-the-north-star/"><img src="https://cdn.jkanime.net/assets/images/animes/image/fist-of-the-north-star.jpg" class="img-fluid rounded-start" alt="fist of the north star"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/fist-of-the-north-star/">fist of the north star</a></h5>
+        
+         <p class="card-text ep">109 Eps, <small class="text-muted">Emitido Oct 4 de 1984</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Después de la Tercera Guerra Mundial, el planeta se volvió un lugar desolado, y el agua se convirtió en el recurso más apetecido por las personas alrededor del mundo. Ya no es la inteligencia ni la habilidad es lo que reina en este mundo, sino que la fuerza, específicamente, la fuerza bruta. Es por eso que son los más fuertes los que dominan el mundo. Esto cambiará cuando El Puño de la Estrella Del Norte llegue a esas tierras, este personaje, descendiente de la más fuerte Arte Marcial nunca conocida, se encarga de ayudar a los pobladores a conseguir una vida más digna.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/mobile-suit-zeta-gundam/"><img src="https://cdn.jkanime.net/assets/images/animes/image/mobile-suit-zeta-gundam.jpg" class="img-fluid rounded-start" alt="Mobile Suit Zeta Gundam"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/mobile-suit-zeta-gundam/">Mobile Suit Zeta Gundam</a></h5>
+        
+         <p class="card-text ep">50 Eps, <small class="text-muted">Emitido Mar 2 de 1985</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Tras ser definitivo el término de la guerra de un año, UC 0087. Siete años después, la libertad aun se escucha en voz alta por parte de los pobladores de las colonias, exigiendo justicia y libertad pero parece no importarle el tema a la corrupta Federación Terrestre, haciendo todo lo contrario enviando a sus fuerzas llamados &#039;Titans&#039; para reprimirlos con violencia. Esto hace que un grupo de rebeldes cobre fuerza llamados AEUG quienes ya se encuentran listos para combatir. Lanzado el primer ataque por parte de los &#039;AEUG&#039; sobre el cuartel de los &#039;Titans&#039; esto se convierte en una guerra civil dejando de ser un tema exclusivamente político. Un intrépido joven se une al conflicto, Camille Bidan que se convertirá en el piloto &#039;Gundam&#039; de una nueva era. </p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/dragon-ball/"><img src="https://cdn.jkanime.net/assets/images/animes/image/dragon-ball.jpg" class="img-fluid rounded-start" alt="Dragon Ball"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/dragon-ball/">Dragon Ball</a></h5>
+        
+         <p class="card-text ep">153 Eps, <small class="text-muted">Emitido Feb 26 de 1986</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Con Goku como protagonista principal de la historia, el argumento se centra en la búsqueda de las legendarias esferas del dragon, un total de siete que al ser reunidas daban lugar a la aparición del dragón sagrado que puede conceder cualquier deseo. Goku, con la ayuda de su compañera Bulma además de  otros personajes que se irán uniendo con el paso de la historia, se adentrará en la búsqueda de las esferas del dragon y desafiará a todo tipo de villanos para convertirse en el hombre más fuerte del mundo. También se hará especial incapié al Budokai Tenkaichi, un gran Torneo Mundial de Artes Marciales en el que los mejores luchadores de todo el Mundo se darán cita, batiéndose en Duelo a fin de demostrar quien es el mas fuerte luchador sobre la Tierra.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/mobile-suit-gundam-zz/"><img src="https://cdn.jkanime.net/assets/images/animes/image/mobile-suit-gundam-zz.jpg" class="img-fluid rounded-start" alt="Mobile Suit Gundam ZZ"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/mobile-suit-gundam-zz/">Mobile Suit Gundam ZZ</a></h5>
+        
+         <p class="card-text ep">47 Eps, <small class="text-muted">Emitido Mar 8 de 1986</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Secuela inmediata de Mobile Suit Z Gundam. Es el año 0088 del Universal Century, luego de la terrible batalla final contra los Titans, la nave Argama del AEUG, vuela por suministros y mantencion a la colonia Shangri-La en Side 1. Al llegar, Juadu Ashta, y su grupo de amigos adolescentes recolectores de Chatarra, ven con la llegada del Argama una oportunidad de hacer dinero robando uno de sus Mobile Suits, el Z Gundam.
+Pero durante el robo, las cosas salen mal y Judau acaba conociendo a Kamille Bidan, un joven Newtype que hace que Judau cambie la perceción de las cosas que pasan a su alrededor. Pero no hay mucho tiempo para meditar, ya que las Fuerzas de Neo Zeon, al mando de la implacable Haman Karn, surgen desde el Asteroide Axis para reconquistar la Esfera Terrestre y reestablecer la perdida gloria de Zeon y la Familia Zabi. </p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/saint-seiya/"><img src="https://cdn.jkanime.net/assets/images/animes/image/saint-seiya.jpg" class="img-fluid rounded-start" alt="Saint Seiya"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/saint-seiya/">Saint Seiya</a></h5>
+        
+         <p class="card-text ep">114 Eps, <small class="text-muted">Emitido Oct 11 de 1986</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Cuenta la historia de un grupo de jovenes guerreros denominados Santos (o caballeros en varias traducciones), quienes luchan por proteger a la diosa griega Atenea de las fuerzas del mal. Para luchar, los Santos sólo utilizan su energía interior (denominada cosmos), sus puños y armaduras que les sirven de protección y que además están inspiradas en constelaciones o seres de la mitología griega y escandinava.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/grave-of-the-fireflies/"><img src="https://cdn.jkanime.net/assets/images/animes/image/grave-of-the-fireflies.jpg" class="img-fluid rounded-start" alt="Grave of the Fireflies"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/grave-of-the-fireflies/">Grave of the Fireflies</a></h5>
+        
+         <p class="card-text ep">1 Ep, <small class="text-muted">Emitido Abr 15 de 1988</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Pelicula
+                                        </p></div>
+        <p class="card-text synopsis">El joven Seita y su pequeña hermana Setsuko son hijos de un oficial de la marina japonesa. Durante la Segunda Guerra Mundial, ambos viven con su madre, pero un día, en un bombardeo, ellos se retrasan y no consiguen llegar al bunker donde ella los espera. Después del bombardeo los dos hermanos buscan a su madre, y Seita la encuentra muy malherida en la escuela que ha sido convertida en un hospital de urgencia. Poco después la madre muere y, tras una breve estancia en casa de su tía, ambos vagarán sin casa y sin rumbo, en una época donde la comida y la ayuda escasean.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/my-neighbor-totoro/"><img src="https://cdn.jkanime.net/assets/images/animes/image/my-neighbor-totoro.jpg" class="img-fluid rounded-start" alt="My Neighbor Totoro"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/my-neighbor-totoro/">My Neighbor Totoro</a></h5>
+        
+         <p class="card-text ep">1 Ep, <small class="text-muted">Emitido Abr 16 de 1988</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Pelicula
+                                        </p></div>
+        <p class="card-text synopsis">La película es un retrato de la vida rural japonesa en los años cincuenta. Un profesor universitario se muda junto a sus dos hijas a una casa cerca de un bosque mientras su mujer se recupera de tuberculosis en un sanatorio rural. Sus hijas descubren la existencia de los &quot;conejillos de polvo&quot;, de este modo aprenden que hay seres que no todos pueden ver, como los espíritus del bosque, solamente aquellos de corazón puro. Mei, de cuatro años de edad, resulta fascinada al encontrar dos pequeños espíritus y se determina a encontrar al rey del bosque, Totoro.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/samurais-warrios/"><img src="https://cdn.jkanime.net/assets/images/animes/image/ronin-warriors.jpg" class="img-fluid rounded-start" alt="Ronin Warriors"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/samurais-warrios/">Ronin Warriors</a></h5>
+        
+         <p class="card-text ep">39 Eps, <small class="text-muted">Emitido Abr 30 de 1988</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Talpa, el señor demonio del Netherworld, está empeñado en conquistar el mundo mortal. Junto con sus cuatro señores oscuros de la guerra son los cinco samurais, cada uno en posesión de armas y armaduras místicas. Son asistidos por Mia Koji, un joven estudiante-profesor, y un misterioso monje-guerrero conocido sólo como El Anciano.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/akira/"><img src="https://cdn.jkanime.net/assets/images/animes/image/akira.jpg" class="img-fluid rounded-start" alt="Akira"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/akira/">Akira</a></h5>
+        
+         <p class="card-text ep">1 Ep, <small class="text-muted">Emitido Jul 16 de 1988</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Pelicula
+                                        </p></div>
+        <p class="card-text synopsis">2019: sobre las ruinas de Tokio se alza la metrópolis de Neo-Tokio, una ciudad opresiva e inhumana donde la violencia, el terrorismo y la droga son problemas cotidianos. Las sectas religiosas y los grupos extremistas, aprovechándose de la insatisfacción de los ciudadanos, cultivan el mito de AKIRA, un &quot;niño cobaya&quot; depositario de la &quot;energía absoluta&quot; cuya resurrección significaría para Japón el amanecer de una nueva era. El gobierno experimenta sobre niños con poderes psíquicos para represar la ciudad. Mientras la historia se centra en dos motociclistas callejeros, Kaneda y Tetsuo, muy buenos amigos que, cuando Tetsuo sufre un choque contra un niño psíquico en una pelea de bandas, obtiene poderes que poco a poco se incrementan, provocándole alucinaciones y poderes paranormales increíbles. Mientras Tetsuo Libera caos en la ciudad y descontrol total para demostrar sus poderes creyéndose un Dios, Kaneda lo intenta detener antes que sea su fin, o del mismo Neo-Tokio.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/ranma-/"><img src="https://cdn.jkanime.net/assets/images/animes/image/ranma-.jpg" class="img-fluid rounded-start" alt="Ranma ½"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/ranma-/">Ranma ½</a></h5>
+        
+         <p class="card-text ep">161 Eps, <small class="text-muted">Emitido Abr 15 de 1989</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">Los padres de Ranma Saotome y Acane Tendo decidieron que ellos se tendrían que casar sin preguntarles. El problema es que ellos no se llevan muy bien al contrario se llevan pésimo, aparte que Ranma tiene un gran problema el que no sabrán hasta que vean la serie.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/dragon-ball-z/"><img src="https://cdn.jkanime.net/assets/images/animes/image/dragon-ball-z.jpg" class="img-fluid rounded-start" alt="Dragon Ball Z (Original)"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/dragon-ball-z/">Dragon Ball Z (Original)</a></h5>
+        
+         <p class="card-text ep">291 Eps, <small class="text-muted">Emitido Abr 26 de 1989</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Anime
+                                        </p></div>
+        <p class="card-text synopsis">En Dragon ball Z Goku se ha convertido en un adulto y está casado con Milk, con la que tiene un hijo llamado Gohan. En esta segunda saga de Dragon ball Goku descubrirá que no es un terricola, sino que pertenece a una raza de guerreros conocida por ser una de las más poderosas de la galaxia, para posteriormente dar paso a los verdaderos enemigos de la serie. Para poder vencer a los nuevos enemigos que irán surgiendo, Goku y sus amigos tendrán que viajar por otros planetas e incluso al cielo y al infierno. Cada enemigo será más fuerte que el anterior, por lo que tendrán que entrenar muy duro para poder derrotarlos además de que se les irán uniendo nuevos personajes que les ayudarán a vencerlos.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/dragon-ball-z-movie-01-the-deadzone/"><img src="https://cdn.jkanime.net/assets/images/animes/image/dragon-ball-z-movie-01-the-deadzone.jpg" class="img-fluid rounded-start" alt="Dragon Ball Z Movie 01: The Deadzone"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/dragon-ball-z-movie-01-the-deadzone/">Dragon Ball Z Movie 01: The Deadzone</a></h5>
+        
+         <p class="card-text ep">1 Ep, <small class="text-muted">Emitido Jul 15 de 1989</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Pelicula
+                                        </p></div>
+        <p class="card-text synopsis">Hace muchos siglos, Kamisama compitió con Garlic para ser el sucesor del Dios de la Tierra. Éste les pidió que expulsaran la maldad de sus espíritus, y Kamisama fue el único que lo logró; irritado, Garlic se rebeló contra Dios, pero fue desterrado. Ahora su hijo, Garlic Jr., quien ha vuelto para vengarse, decide reunir las esferas del dragón para desear ser inmortal. Por el camino, secuestra Gohan, y tiene la intención de convertirlo en su discípulo.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/kikis-delivery-service/"><img src="https://cdn.jkanime.net/assets/images/animes/image/kikis-delivery-service.jpg" class="img-fluid rounded-start" alt="Kiki&#039;s Delivery Service"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/kikis-delivery-service/">Kiki&#039;s Delivery Service</a></h5>
+        
+         <p class="card-text ep">1 Ep, <small class="text-muted">Emitido Jul 29 de 1989</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Pelicula
+                                        </p></div>
+        <p class="card-text synopsis">Conocida también como Kiki: entregas a domicilio y Nicky, la aprendiz de bruja es una película que cuenta las peripecias de una pequeña bruja de 13 años llamada Nicky (Kiki en la versión original). En esta obra Hayao Miyazaki muestra el comienzo del camino a la edad adulta del personaje, con la responsabilidad que ello conlleva.  Por tradición de las brujas al cumplir los 13 años deben abandonar la casa de los padres y buscar una ciudad donde sus servicios sean requeridos, y quedarse allí durante algún tiempo. De esta manera, Kiki comenzará el camino que la llevará a convertirse definitivamente en bruja. Este viaje lo realiza junto a su amigo Jiji, un gato negro que se encargará de la mayoría de los gags, y montada en su escoba voladora. Su viaje iniciático la llevará a instalarse en una ciudad marítima donde comenzará a conocer el mundo y a conocerse a sí misma.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                
+ 
+  <div class="card mb-3 custom_item2">
+  <div class="row g-0">
+    <div class="col-md-5 custom_thumb2">
+      <a href="https://jkanime.net/dragon-ball-z-movie-02-the-worlds-strongest/"><img src="https://cdn.jkanime.net/assets/images/animes/image/dragon-ball-z-movie-02-the-worlds-strongest.jpg" class="img-fluid rounded-start" alt="Dragon Ball Z Movie 02: The World&#039;s Strongest"></a>
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title"><a href="https://jkanime.net/dragon-ball-z-movie-02-the-worlds-strongest/">Dragon Ball Z Movie 02: The World&#039;s Strongest</a></h5>
+        
+         <p class="card-text ep">1 Ep, <small class="text-muted">Emitido Mar 10 de 1990</small></p>
+        
+         <div class="card-info"><p class="card-status finished">Concluido </p><p class="card-txt"> Pelicula
+                                        </p></div>
+        <p class="card-text synopsis">La situación empieza con el doctor Uiro, quien es revivido por el doctor Cochin (su compañero) con ayuda de las Dragon Balls, debido a que el primero se encontraba cautivo en el hielo de las montañas Tsumisumbri. Ya que desde hacia varios años su cerebro sobrevivía en un cuerpo robótico decidió robar el cuerpo al hombre más fuerte del mundo, pero debido a estar todos estos años encerrado en el hielo el seguía pensando que este era Kame Sen&#039;nin. Gokū y sus amigos van al laboratorio de los doctores con el objetivo de salvar a Kame Sen&#039;nin, y al llegar se tendrán que enfrentar contra los robots más poderosos creados por la mente ambiciosa de los científicos.</p>
+        <p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+                                
+                
+                   
+                            
+                          
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    </div>
+                    </div>
+                    
+                     <div class="navigation">
+                                                                <a class="text nav-next" href="https://jkanime.net/directorio/2/" rel="nofollow">Resultados Siguientes &raquo;</a>
+                                    </div>
+
+            
+            
+                </div>
+</div>
+</div>
+</section>
+
+
+  
+		 
+                                
+
+
+        </div>
+        
+        
+                 <!--   adnum 1 -->
+
+
+            
+
+
+ 
+ 
+
+<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://iclickcdn.com/tag.min.js',4136440,document.body||document.documentElement)</script>
+
+
+
+
+
+
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-K46KCYF6E9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-K46KCYF6E9');
+</script>
+        
+
+<script src="https://cdn.jkanime.net/assets2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/player.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/jquery.nice-select.min.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/mixitup.min.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/jquery.slicknav.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/owl.carousel.min.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/jquery.simplemodal.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/jquery.toast.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/jquery-confirm.js"></script>
+<script src="https://cdn.jkanime.net/assets2/js/main.js?=v5.3"></script>
+
+
+<footer class="footer">
+    <div class="page-up">
+        <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
+    </div>
+    <div class="container">
+        <div class="row">
+		
+            <div class="col-lg-9">
+                <div class="footer__nav">
+                    <ul>
+                        <li class="active"><a href="#">Inicio</a></li>
+                        <li><a href="#">Categorias</a></li>
+                        <li><a href="#">Anime Episodios</a></li>
+                        <li><a href="#">Episodio</a></li>
+                        <li><a href="https://discord.otakudesho.net/">Chat</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="footer__logo">
+                    <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                </div>
+            </div>
+          </div>
+      </div>
+  </footer>
+
+    </body>
+</html>
