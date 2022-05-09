@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHan
 import re
 import time, json, os
 import requests
-from actions import getResponseAction, getResponseGet, getResponsePost
+from actions import getRedirectPost, getResponseAction, getResponseGet, getResponsePost
 
 serve = None
 alive = True
@@ -10,7 +10,7 @@ favs = []
 
 class handler(SimpleHTTPRequestHandler):
     def do_GET(self):
-        print(self.path.split('/'))
+        #print(self.path.split('/'))
         path = self.path.split('/')
         if(path[1] == "shutdown"):
             self.return_response(200, "Apagando")
@@ -23,6 +23,10 @@ class handler(SimpleHTTPRequestHandler):
 
         if path[1] == "post":
             self.return_response(200, getResponsePost(path))
+            return
+
+        if path[1] == "rpost":
+            self.return_response(200, getRedirectPost(path))
             return
 
         if path[1] == "action":

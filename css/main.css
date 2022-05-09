@@ -3,9 +3,9 @@
 :root {
     --main-bg-color: #454d66;
     --main-contrast-color: #f6a361;
-    --main-transparent-color: #f6a361;
-
+    --main-sc-color: rgba(61, 37, 170, 0.527);
   }
+
 *{
     font-family: 'Nunito Sans', sans-serif;
     font-weight: 800;
@@ -15,12 +15,50 @@
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently*/
+    padding: 0;
+    margin: 0;
+}
+/*windosw placeholder*/
+.windows_placeholder{
+    position: fixed;
+    top: 3%;
+    left: 0;
+    right: 0;
+    bottom: 2%;
+}
+
+/* menu styles */
+.menu{
+    display: flex;
+    flex-direction: column;
+    top :0;
+    width: 100%;
+    background-color: #000F;
+    color: var(--main-contrast-color);
+    position: fixed;
+    height: 50px;
+    padding: 0;
+    align-items: flex-end;
+    z-index:99999;
+}
+.menu__item{
+    padding: 15px;
+    height: 50px;
+    display: inline;
+}
+
+.content{
+    padding: 20px;
+    margin: auto;
+    margin-top: 70px;
+    max-width: 1000px;
 }
 
 body{
     background-color: var(--main-bg-color);
     color: #fff;
 }
+
 h1{
     margin: 10px;
 }
@@ -67,10 +105,13 @@ h1{
 }
 
 .servers_container{
+    margin-right: 10px;
+    margin-left: 10px;
     display: inline-flex;
 }
 
 .servers_container__item{
+    display: block;
     background-color: #0002;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
@@ -78,8 +119,12 @@ h1{
     margin-right: 10px;
 }
 
+.servers_container__item:hover{
+    background-color: #0005;
+}
+
+
 .servers_container__section{
-    background-color: rgba(61, 37, 170, 0.527);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     padding: 0px;
@@ -108,7 +153,8 @@ h1{
     margin: auto;
     border: 3px solid var(--main-contrast-color);
     border-radius: 10px;
-    width: 800px;
+    max-width: 800px;
+    background-color: var(--main-bg-color)
 }
 .links_title{
     width: 100%;
@@ -152,7 +198,6 @@ ul{
 
 /*  loading messages */
 .lds-text {
-    display: box;
     align-items: center;
  }
 .lds-group{

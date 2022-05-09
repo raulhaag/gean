@@ -3,7 +3,7 @@
 :root {
     --main-bg-color: #454d66;
     --main-contrast-color: #f6a361;
-    --main-transparent-color: #f6a361;
+    --main-sc-color: rgba(61, 37, 170, 0.527);
   }
 
 *{

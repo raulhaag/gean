@@ -706,8 +706,8 @@ a#votar {float: right;}
         var invertir = false;var vistos = false;var default_page;
 	$(document).ready(function () {
 	
-	//Ultimo episodio
-	if($('.enemision.currently').length) {
+	//Ultimo episodioe
+	if($('.enmision.currently').length) {
 	$('#proxep.ul').show();
 	$.get('/ajax/last_episode/1467/', function( data ) {
                 $.each(JSON.parse(data),function(i, item) {

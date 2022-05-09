@@ -6,40 +6,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="maquetado/items.css" />
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/details.css">
+    <link rel="stylesheet" href="css/items.css" />
     <!--<script type="text/javascript" src="servers.js"></script>-->
-    <script type="module" src="main.js"></script>
+    <script type="module" src="js/main.js"></script>
 </head>
 <body>
-    <div class="cat_container">
-    <h1 class="cat_container__title">Favoritos</h1>
-    <div class="cat_container__list" id="favorites_list">
-    </div>
-    </div>
-    <h1>Servidores</h1>
+    <div class="menu"><div class="menu__item">(Q)</div></div>
+    <div class="content">
+    <div class="recent_placeholder"></div>
+    <div class="fav_placeholder"></div>
+    <!---<h1>Servidores</h1>+--->
     <div class="servers_container">
         <div class="servers_container__item" onclick="{serverClick(this, 'tioanime')}">TioAnime</div>
         <div class="servers_container__item server_selected" onclick="{serverClick(this, 'jkanime')}">JKAnime</div>
         <div class="servers_container__item" onclick="{serverClick(this, 'sololatino')}">SoloLatino</div>
     </div>
-    <div class="servers_container__section">
-        <div class="cat_container">
-            <h1 class="cat_container__title">Nuevos capítulos</h1>
-            <div class="cat_container__list">
-                <div class="cat_container__media" style= "background-image: url('timg/timg1.jpg')">
-                    <div class="cat_container__media_title">Moshuko tensei</div>
-                </div>
-                <div class="cat_container__media">
-                    <div class="cat_container__media_title">Moshuko tensei</div>
-                </div>
-                <div class="cat_container__media">
-                    <div class="cat_container__media_title">Moshuko tensei</div>
-                </div>
-            </div>
-        </div>
-        <br/>
+    <div class="servers_container__section"></div>
+    <div class="lds-group"><div class="lds-dual-ring"></div><p class="lds-text"><center>Cargando...</center></p></div>
     </div>
-        <div class="lds-group"><div class="lds-dual-ring"></div><p class="lds-text"><center>Cargando...</center></p></div>
+    <div class="windows_placeholder"></div>
 </body>
 </html>

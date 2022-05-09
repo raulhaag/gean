@@ -20,6 +20,10 @@
     height: 250Px;
 }
 
+.item:hover{
+    border-radius: 10px;
+    outline: 3px solid var(--main-contrast-color);
+}
 .item img{
     border-radius: 10px;
     object-fit: cover;
@@ -29,13 +33,17 @@
 }
 .item__title{
     position: absolute;
+    overflow:hidden;
+    white-space: wrap;
+    text-overflow: ellipsis;
     font-size: 20px;
     background: linear-gradient(to top, #000a, #0005);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     left: 0;
-    bottom: -17px;
+    bottom: 0px;
     right: 0;
     max-height: 250px;
     padding: 10px;
+    text-align: center;
 }
