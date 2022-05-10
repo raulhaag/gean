@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", function(){
     ph = document.getElementsByClassName("windows_placeholder")[0];
     loading = document.getElementsByClassName("lds-group")[0];
     try{
-        favorites = JSON.parse(localStorage.getItem('favorites'));
+        //favorites = JSON.parse(localStorage.getItem('favorites'));
         updateFavorites();
     }catch(e){}
     try{
-        recent = JSON.parse(localStorage.getItem('recent'));
+        //recent = JSON.parse(localStorage.getItem('recent'));
         updateRecents();
     }catch(e){}
 
@@ -27,16 +27,27 @@ document.addEventListener("DOMContentLoaded", function(){
    hidePlaceholder();
 });
 
+window.indexOfProperty = function(array, property, value){
+    return array.map(function(x){return x[property]}).indexOf(value);
+}
+
 window.add_fab = function(name, image, path) {
+    let idx = indexOfProperty(recent, 'path', path);
+    if(idx > -1){
+        recent.splice(idx, 1);
+    }
     favorites.unshift({'name': name, 'image': image, 'path': path});
     updateFavorites();
 }
 
 let add_recent = function(item) {
+    let idx = indexOfProperty(recent, 'path', item.path);
+    if(idx > -1){
+        recent.splice(idx, 1);
+    }
     recent.unshift(item);
     updateRecents();
 }
-
 
 let updateFavorites = function(){
     if (favorites != null){
@@ -129,6 +140,7 @@ let openPlayer = function(options){
 }
 
 window.mediaClick = function(e, path){
+    loading.style.visibility = 'visible';
     let fpath = path.split('/');
     let server = getServer(fpath[0]);
     let action = fpath[1];
@@ -145,6 +157,8 @@ window.mediaClick = function(e, path){
     }else if(action == 'getLinks'){
         server.getLinks(posLinks, error, fpath[2]);
         server.getParent(add_recent, fpath[2]);
+    }else{
+        loading.style.visibility = 'hidden';
     }
 
     /*

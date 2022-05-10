@@ -24,7 +24,7 @@ export function generateDescription(options) {
     result += '<div class="details__add" onclick="{add_fab(\'' + options['name'] + '\', \'' + options['image'] + '\',\'' + options['path'] + '\')}">Agregar a favoritos</div>';
     result += '</div></div><div class="details__chapters">';
     for(let i = 0; i < options['chapters'].length; i++){
-        result += '<div class="details__chapter">' + options['chapters'][i]['name'] + "</div>";
+        result += '<div class="details__chapter" onclick="{mediaClick(self, \'' + options['chapters'][i]["path"] + '\')}">' + options['chapters'][i]['name'] + "</div>";
     }
     result += '</div></div></div>';
     return result;
