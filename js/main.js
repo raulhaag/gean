@@ -1,4 +1,4 @@
-import {openInNewTab, getResponse, getServer} from './servers.js';
+import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
 import {dragElement} from './uit.js';
@@ -148,7 +148,7 @@ let openPlayer = function(options){
 window.mediaClick = function(e, path){
     loading.style.visibility = 'visible';
     let fpath = path.split('/');
-    let server = getServer(fpath[0]);
+    let server = getSource(fpath[0]);
     let action = fpath[1];
     let params;
     if (fpath.length == 3){
