@@ -1,14 +1,20 @@
 import {openInNewTab, getResponse, getServer} from './servers.js';
-import {generateCategory, generateCategories, generateDescription, getPlayer} from './coder.js';
+import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
+import {dragElement} from './uit.js';
 
 let loading;
-let ph;
+let dp, vp, pp, sp;
 let favorites = [];
 let recent = [];
+window.serverHost = "http://127.0.0.1:8080/";
 
 document.addEventListener("DOMContentLoaded", function(){
-    ph = document.getElementsByClassName("windows_placeholder")[0];
+    window.serverHost = "http://" + window.location.hostname + ":8080/"
+    vp = document.getElementsByClassName("video_placeholder")[0];
+    dp = document.getElementsByClassName("details_placeholder")[0];
+    pp = document.getElementsByClassName("pages_placeholder")[0];
+    sp = document.getElementsByClassName("search_placeholder")[0];
     loading = document.getElementsByClassName("lds-group")[0];
     try{
         //favorites = JSON.parse(localStorage.getItem('favorites'));
@@ -24,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function(){
     }catch(e){
         serverClick(null, "jkanime");
     }
-   hidePlaceholder();
 });
 
 window.indexOfProperty = function(array, property, value){
@@ -93,14 +98,14 @@ window.serverClick = function (e, sname){
         for (var i = 0; i < vinetas.length; i++) {
             vinetas[i].className = 'servers_container__item'
         }
-        e.className = 'servers_container__item server_selected';
+        e.parentNode.className = 'servers_container__item server_selected';
     }
     getResponse(sname, posServerClick, error);
 }
 
 let posDescription = function(response){
-    ph.innerHTML = generateDescription(response);
-    ph.style.display =  'block';
+    dp.innerHTML = generateDescription(response);
+    dp.style.display =  'block';
     loading.style.visibility = 'hidden';
 }
 
@@ -124,8 +129,8 @@ let posLinks = function(linkList){
 }
 
 let openPlayer = function(options){
-    ph.innerHTML = getPlayer(options);
-    ph.style.display =  'block';
+    vp.innerHTML = getPlayer(options);
+    vp.style.display =  'block';
     loading.style.visibility = 'hidden';
     var elem = document.getElementsByClassName("videoview")[0];
     if (elem.requestFullscreen) {
@@ -137,6 +142,7 @@ let openPlayer = function(options){
      } else if (elem.mozRequestFullScreen) { /* Firefox */
         elem.mozRequestFullScreen();
     }
+    dragElement("player", "player_bar");
 }
 
 window.mediaClick = function(e, path){
@@ -157,26 +163,41 @@ window.mediaClick = function(e, path){
     }else if(action == 'getLinks'){
         server.getLinks(posLinks, error, fpath[2]);
         server.getParent(add_recent, fpath[2]);
+    }else if(action == 'search'){
+        let term = document.getElementById("search_term").value;
+        server.getSearch(posSearh, error, term);
     }else{
         loading.style.visibility = 'hidden';
     }
-
-    /*
-    fetch('http://127.0.0.1:8080/action/' + path)
-    .then((response) => response.text())
-    .then((result) => {
-        loading.style.visibility = 'hidden';
-        openInNewTab(result);
-    })
-    .catch((error) => {
-        loading.style.visibility = 'hidden';
-        console.log(error)
-    })*/
 }
 
+let posSearh = function(response){
+    let rc = document.getElementById("results_container");
+    rc.innerHTML = generateCategory("Resultados", response);
+    loading.style.visibility = 'hidden';
+}
 
+window.search = function(e){
+    sp.innerHTML = getSearch(e)
+    sp.style.display =  'block';
+}
 
-window.hidePlaceholder = function(){
-    ph.style.display = 'none';
-    ph.innerHTML = '';
+window.hideSearch = function(){
+    sp.style.display = 'none';
+    sp.innerHTML = '';
+}
+
+window.hidePages = function(){
+    pp.style.display = 'none';
+    pp.innerHTML = '';
+}
+
+window.hideVideo = function(){
+    vp.style.display = 'none';
+    vp.innerHTML = '';
+}
+
+window.hideDetails = function(){
+    dp.style.display = 'none';
+    dp.innerHTML = '';
 }

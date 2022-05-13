@@ -3,7 +3,7 @@ export class JKAnime {
     self.name = "jkanime";
   }
   getFrontPage(after, error) {
-    fetch("http://127.0.0.1:8080/get/" + btoa("https://jkanime.net/"))
+    fetch(window.serverHost + "get/" + btoa("https://jkanime.net/"))
       .then((response) => response.text())
       .then((result) => {
         var parser = new DOMParser();
@@ -77,7 +77,7 @@ export class JKAnime {
       });
   }
   getInfo(after, onError, path, page = 0, ) {
-    fetch("http://127.0.0.1:8080/get/" + path)
+    fetch(window.serverHost + "get/" + path)
       .then((response) => response.text())
       .then((result) => {
         var parser = new DOMParser();
@@ -100,15 +100,46 @@ export class JKAnime {
   getParent(after, path) {
     let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path})};
     let dpath = (atob(path)).split("/");
-    this.getInfo(reduce, console.log, btoa(dpath.slice(0, dpath.length - 2).join("/") + "/"));
+    this.getInfo(reduce, console.log, btoa(dpath.slice(0, dpath.length - 2).join("/")));
   }
 
-  getList(page, query = "", filter = "") {
+  getList(page, filter = "") {
+    if(filter == ""){
+      fetch(window.serverHost + "get/" + btoa("https://jkanime.net/directorio/"))
+      .then((response) => response.text())
+      .then((result) => {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(result, "text/html");
+        let flis = doc.querySelectorAll("html body section.contenido.spad div.container div.row div.col-lg-12 div.anime__page__content section#dirmenu div.menupc div.genre-list.addmenu ul li a");
+        let glist = [];
+        for (var i = 0; i < flis.length; i++) {
+          glist.push({"name": flis[i].textContent.trim(), "path": self.name + "/getList/" + btoa(flis[i].getAttribute("href"))});
+        }
+      }).catch((nerror) => {
+        console.log(nerror);
+      });
+    }
+  }
 
+  getSearch(after, onError, query) {
+    fetch(window.serverHost + "get/" + btoa("https://jkanime.net/ajax/ajax_search/?q=" + query))
+    .then((response) => response.json()).then((result) => {
+      console.log(result["animes"]);
+      let rList = [];
+      for (let i = 0; i < result["animes"].length; i++) {
+        rList.push({"name": result["animes"][i].title,
+                    "path": self.name + "/getDescription/" + btoa("https://jkanime.net/" + result["animes"][i].slug), 
+                    "image": result["animes"][i].image});
+      }
+      after(rList);
+    })
+    .catch((nerror) => {
+      onError(nerror);
+    });
   }
 
   getLinks(after, onError, path) {
-      fetch("http://127.0.0.1:8080/get/" + path)
+      fetch(window.serverHost + "get/" + path)
         .then((response) => response.text())
         .then((result) => {
           let fames = [...result.matchAll(/video\[\d+\] = '<iframe.+?src="([^"]+)/gm)]

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/details.css">
     <link rel="stylesheet" href="css/items.css" />
+    <link rel="stylesheet" href="css/pages.css" />
     <!--<script type="text/javascript" src="servers.js"></script>-->
     <script type="module" src="js/main.js"></script>
 </head>
@@ -19,13 +20,26 @@
     <div class="fav_placeholder"></div>
     <!---<h1>Servidores</h1>+--->
     <div class="servers_container">
-        <div class="servers_container__item" onclick="{serverClick(this, 'tioanime')}">TioAnime</div>
-        <div class="servers_container__item server_selected" onclick="{serverClick(this, 'jkanime')}">JKAnime</div>
-        <div class="servers_container__item" onclick="{serverClick(this, 'sololatino')}">SoloLatino</div>
+        <div class="servers_container__item">
+          <div onclick="{serverClick(this, 'tioanime')}">TioAnime</div>
+          <div class="servers_container__more button" onclick="{pages('tioanime')}"><div class="servers_container__more__text">+</div></div>
+        <div class="servers_container__search button" onclick="{search('tioanime')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
+        </div>
+        <div class="servers_container__item">
+          <div onclick="{serverClick(this, 'jkanime')}">JkAnime</div>
+          <div class="servers_container__more button" onclick="{pages('jkanime')}"><div class="servers_container__more__text">+</div></div>
+          <div class="servers_container__search button" onclick="{search('jkanime')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
+      </div>
+        <div class="servers_container__item"><div onclick="{serverClick(this, 'sololatino')}">Solo latino</div><div class="servers_container__more button" onclick="{pages('sololatino')}"><div class="servers_container__more__text">+</div></div>
+        <div class="servers_container__search button" onclick="{search('sololatino')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
     </div>
+      </div>
     <div class="servers_container__section"></div>
     <div class="lds-group"><div class="lds-dual-ring"></div><p class="lds-text"><center>Cargando...</center></p></div>
     </div>
-    <div class="windows_placeholder"></div>
+    <div class="search_placeholder"></div>
+    <div class="pages_placeholder"></div>
+    <div class="details_placeholder"></div>
+    <div class="video_placeholder"></div>
 </body>
 </html>
