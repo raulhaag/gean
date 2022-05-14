@@ -5,11 +5,11 @@ export class Fembed {
     let path = web.split("/");
     let id = path[path.indexOf("v") + 1];
     let rqs =
-      btoa("https://www.fembed.com/api/source/" + id) +
+      window.enc("https://www.fembed.com/api/source/" + id) +
       "/" +
-      btoa(JSON.stringify(headers)) + //headers
+      window.enc(JSON.stringify(headers)) + //headers
       "/" +
-      btoa("{}"); //post params
+      window.enc("{}"); //post params
     fetch(window.serverHost + "post/" + rqs)
       .then((response) => response.json())
       .then((result) => {

@@ -32,6 +32,14 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 });
 
+window.enc = function(e){
+    return  btoa(e).replaceAll('/', '_');
+}
+
+window.dec = function(e){
+    return atob(decodeURIComponent(e));
+}
+
 window.indexOfProperty = function(array, property, value){
     return array.map(function(x){return x[property]}).indexOf(value);
 }

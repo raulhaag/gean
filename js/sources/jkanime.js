@@ -1,9 +1,9 @@
 export class JKAnime {
   constructor() {
-    self.name = "jkanime";
+    this.name = "jkanime";
   }
   getFrontPage(after, error) {
-    fetch(window.serverHost + "get/" + btoa("https://jkanime.net/"))
+    fetch(window.serverHost + "get/" + window.enc("https://jkanime.net/"))
       .then((response) => response.text())
       .then((result) => {
         var parser = new DOMParser();
@@ -15,7 +15,7 @@ export class JKAnime {
           for (var i = 0; i < flis.length; i++) {
             let name =
               flis[i].getElementsByTagName("h5")[0].textContent + " - " + flis[i].getElementsByTagName("h6")[0].textContent.replace(/\s+/gm, " ").trim();
-            let epath = self.name + "/getLinks/" + btoa(flis[i].getAttribute("href"));
+            let epath = this.name + "/getLinks/" + window.enc(flis[i].getAttribute("href"));
             ncs.push({
               "name": name,
               "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
@@ -30,7 +30,7 @@ export class JKAnime {
           flis = doc.querySelectorAll("html body section.contenido.spad div.container div.row div.col-lg-8 div.trending__anime div.row div.col-lg-3.col-md-6.col-sm-6 div.anime__item");
           for (var i = 0; i < flis.length; i++) {
             let name = flis[i].getElementsByTagName("h5")[0].textContent.trim();
-            let epath = self.name + "/getDescription/" + btoa(flis[i].firstChild.nextSibling.getAttribute("href"));
+            let epath = this.name + "/getDescription/" + window.enc(flis[i].firstChild.nextSibling.getAttribute("href"));
             nas.push({
               "name": name,
               "image": flis[i]
@@ -51,9 +51,9 @@ export class JKAnime {
             let epath;
             if (flis[i].getElementsByTagName("a")[0].getAttribute("href").match(/\/\d+\/$/) != null) {
               epath =
-                self.name + "/getLinks/" + btoa(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
+                this.name + "/getLinks/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
             } else {
-              epath = self.name + "/getDescription/" + btoa(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
+              epath = this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
             }
             etc.push({
               "name": name,
@@ -89,9 +89,9 @@ export class JKAnime {
         let chapters = [];
         let clen = parseInt([...result.matchAll(/#pag\d*" rel="nofollow">.+?(\d+)<\/a>[\s]+?<\/div/gm)][0][1]);
         for (let i = 1; i <= clen; i++) {
-          chapters.push({"name": "Capítulo " + i, "path": self.name + "/getLinks/" + btoa(atob(path) + "/" + i + "/")});
+          chapters.push({"name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(atob(path) + "/" + i + "/")});
         }
-        after({"name": sname, "path": self.name + "/getDescription/" + path, "image": image, "items":[description, genres], "chapters": chapters});
+        after({"name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items":[description, genres], "chapters": chapters});
       }).catch((nerror) => {
         onError(nerror);
       });
@@ -100,12 +100,12 @@ export class JKAnime {
   getParent(after, path) {
     let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path})};
     let dpath = (atob(path)).split("/");
-    this.getInfo(reduce, console.log, btoa(dpath.slice(0, dpath.length - 2).join("/")));
+    this.getInfo(reduce, console.log, window.enc(dpath.slice(0, dpath.length - 2).join("/")));
   }
 
   getList(page, filter = "") {
     if(filter == ""){
-      fetch(window.serverHost + "get/" + btoa("https://jkanime.net/directorio/"))
+      fetch(window.serverHost + "get/" + window.enc("https://jkanime.net/directorio/"))
       .then((response) => response.text())
       .then((result) => {
         var parser = new DOMParser();
@@ -113,7 +113,7 @@ export class JKAnime {
         let flis = doc.querySelectorAll("html body section.contenido.spad div.container div.row div.col-lg-12 div.anime__page__content section#dirmenu div.menupc div.genre-list.addmenu ul li a");
         let glist = [];
         for (var i = 0; i < flis.length; i++) {
-          glist.push({"name": flis[i].textContent.trim(), "path": self.name + "/getList/" + btoa(flis[i].getAttribute("href"))});
+          glist.push({"name": flis[i].textContent.trim(), "path": this.name + "/getList/" + window.enc(flis[i].getAttribute("href"))});
         }
       }).catch((nerror) => {
         console.log(nerror);
@@ -122,13 +122,13 @@ export class JKAnime {
   }
 
   getSearch(after, onError, query) {
-    fetch(window.serverHost + "get/" + btoa("https://jkanime.net/ajax/ajax_search/?q=" + query))
+    fetch(window.serverHost + "get/" + window.enc("https://jkanime.net/ajax/ajax_search/?q=" + query))
     .then((response) => response.json()).then((result) => {
       console.log(result["animes"]);
       let rList = [];
       for (let i = 0; i < result["animes"].length; i++) {
         rList.push({"name": result["animes"][i].title,
-                    "path": self.name + "/getDescription/" + btoa("https://jkanime.net/" + result["animes"][i].slug), 
+                    "path": this.name + "/getDescription/" + window.enc("https://jkanime.net/" + result["animes"][i].slug), 
                     "image": result["animes"][i].image});
       }
       after(rList);

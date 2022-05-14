@@ -3,16 +3,16 @@ export class JKAPI {
     getDDL(after, onError, web, rt = true) {
       let headers = { Referer: web };
       let rqs =
-        btoa(web) +
+        window.enc(web) +
         "/" +
-        btoa(JSON.stringify(headers)); //headers
+        window.enc(JSON.stringify(headers)); //headers
       fetch(window.serverHost + "get/" + rqs)
         .then((response) => response.text())
         .then((result) => {
             let data = [...result.matchAll(/"data"\s+value="(.+?)"/gm)][0][1];
             let params = {"data": data};
             headers["Content-Type"]= "application/x-www-form-urlencoded";
-            rqs = btoa("https://jkanime.net/gsplay/redirect_post.php") + "/" + btoa(JSON.stringify(headers)) + "/" + btoa(JSON.stringify(params));
+            rqs = window.enc("https://jkanime.net/gsplay/redirect_post.php") + "/" + window.enc(JSON.stringify(headers)) + "/" + window.enc(JSON.stringify(params));
             fetch(window.serverHost +"rpost/" + rqs)
 
             .then((response) => response.text())
@@ -20,7 +20,7 @@ export class JKAPI {
                 let v = result.split('#')[1];
                 let headers = { };
                 params = {"v": v};
-                rqs = btoa('https://jkanime.net/gsplay/api.php') + "/" + btoa(JSON.stringify(headers)) + "/" + btoa(JSON.stringify(params));
+                rqs = window.enc('https://jkanime.net/gsplay/api.php') + "/" + window.enc(JSON.stringify(headers)) + "/" + window.enc(JSON.stringify(params));
                 fetch(window.serverHost + "post/" + rqs)
                 .then((response) => response.json())
                 .then((result) => {
