@@ -42,7 +42,7 @@ div{
 }
 
 /*windosw placeholder*/
-.pages_placeholder, .video_placeholder, .details_placeholder{
+.search_placeholder, .pages_placeholder, .video_placeholder, .details_placeholder{
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -221,11 +221,9 @@ body{
     border-radius: 50%;
 }
 
-
 .servers_container__item:hover{
     background-color: #0005;
 }
-
 
 .servers_container__section{
     border-bottom-left-radius: 5px;
@@ -242,7 +240,6 @@ body{
     margin-right: 10px;
     border-top: var(--main-contrast-color) solid 2px;
 }
-
 
 .center_message_container{
     position: absolute;

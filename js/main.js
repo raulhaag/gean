@@ -7,6 +7,7 @@ let loading;
 let dp, vp, pp, sp;
 let favorites = [];
 let recent = [];
+let backStack = [];
 window.serverHost = "http://127.0.0.1:8080/";
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -31,6 +32,24 @@ document.addEventListener("DOMContentLoaded", function(){
         serverClick(null, "jkanime");
     }
 });
+
+window.backClick = function(e){
+    if(backStack.length > 0){
+        let last = backStack.pop();
+        last.style.display = 'none';
+        last.innerHTML = '';
+        if(backStack.length == 0){
+            document.getElementById("back_button").style.display = 'none';
+        }
+    }
+}
+
+let addBackStack = function(e){
+    if(backStack.length == 0){
+        document.getElementById("back_button").style.display = 'block';
+    }
+    backStack.push(e);
+}
 
 window.enc = function(e){
     return  btoa(e).replaceAll('/', '_');
@@ -115,6 +134,7 @@ let posDescription = function(response){
     dp.innerHTML = generateDescription(response);
     dp.style.display =  'block';
     loading.style.visibility = 'hidden';
+    addBackStack(dp);
 }
 
 let linkError = function(error_message){
@@ -150,6 +170,7 @@ let openPlayer = function(options){
      } else if (elem.mozRequestFullScreen) { /* Firefox */
         elem.mozRequestFullScreen();
     }
+    addBackStack(vp);
     dragElement("player", "player_bar");
 }
 
@@ -182,30 +203,15 @@ window.mediaClick = function(e, path){
 let posSearh = function(response){
     let rc = document.getElementById("results_container");
     rc.innerHTML = generateCategory("Resultados", response);
+    addBackStack(rc);
     loading.style.visibility = 'hidden';
 }
 
 window.search = function(e){
     sp.innerHTML = getSearch(e)
     sp.style.display =  'block';
+    addBackStack(sp);
+    document.getElementsByClassName("search__text")[0].focus();
 }
 
-window.hideSearch = function(){
-    sp.style.display = 'none';
-    sp.innerHTML = '';
-}
 
-window.hidePages = function(){
-    pp.style.display = 'none';
-    pp.innerHTML = '';
-}
-
-window.hideVideo = function(){
-    vp.style.display = 'none';
-    vp.innerHTML = '';
-}
-
-window.hideDetails = function(){
-    dp.style.display = 'none';
-    dp.innerHTML = '';
-}

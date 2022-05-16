@@ -4,16 +4,16 @@
 }
 
 .search{
-    margin: 10px;
-    padding: 10px;
+    background-color: var(--main-bg-color);
+    height: 100vh;
+    margin: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    box-shadow: 0px 0px 2px #FFFA;
-    background-color: #0002;
 }
+
 .search__text{
+    width: 60%;
     border: none;
     outline:none;
     margin: 10px;
@@ -21,7 +21,12 @@
     background-color: #0002;
     color: #FFF;
     border-radius: 10px;
-    box-shadow: 0px 0px 2px #FFFA;
+    box-shadow: 0px 0px 1px #FFFA;
+}
+.search .button{
+    max-width: 20%;
+    min-width: 10%;
+    text-align: center;
 }
 .search__text:focus{
     background-color: #aaa2;

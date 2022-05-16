@@ -35,14 +35,11 @@ export function getPlayer(options){
 }
 
 export function getSearch(server){
-    return `<div class="links_container center_message_container ">
-    <div class="links_bar"> <div class="links_title">Búsqueda</div><b class="links_close" onclick="{hideSearch()}">x</b></div>
-    <div class="search">
+    return `<div class="search placeholder">
         <input id="search_term" class="search__text" type="text"></input>
         <div class="button" onclick="{mediaClick(self, '`+ server +`/search')}">Buscar</div>
     </div>
-    <div id="results_container"></div>
-    </div>`;
+    <div id="results_container"></div>`;
 }
 
 

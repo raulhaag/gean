@@ -89,7 +89,7 @@ export class JKAnime {
         let chapters = [];
         let clen = parseInt([...result.matchAll(/#pag\d*" rel="nofollow">.+?(\d+)<\/a>[\s]+?<\/div/gm)][0][1]);
         for (let i = 1; i <= clen; i++) {
-          chapters.push({"name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(path + "/" + i + "/")});
+          chapters.push({"name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(window.dec(path) + "/" + i + "/")});
         }
         after({"name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items":[description, genres], "chapters": chapters});
       }).catch((nerror) => {
