@@ -33,6 +33,16 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 });
 
+window.shutdown = function(){
+    if (confirm("¿Desea apagar el servidor?")) {
+        fetch(serverHost + "shutdown")
+        .then(response => response.text())
+        .then(text => {
+            document.body.innerHTML = "Ya puede cerrar esta ventana";
+        });
+    }
+}
+
 window.backClick = function(e){
     if(backStack.length > 0){
         let last = backStack.pop();
