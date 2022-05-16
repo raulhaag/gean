@@ -10,27 +10,31 @@
     <link rel="stylesheet" href="css/details.css">
     <link rel="stylesheet" href="css/items.css" />
     <link rel="stylesheet" href="css/pages.css" />
-    <!--<script type="text/javascript" src="servers.js"></script>-->
     <script type="module" src="js/main.js"></script>
 </head>
 <body>
-    <div class="menu"><div class="menu__item">(Q)</div></div>
+    <div class="menu">
+      <img class="menu__item back" src="../images/back.png"></img>
+      <img class="menu__item" src="../images/settings.png"></img>
+      <img class="menu__item" src="../images/power.png"></img>
+    </div>
     <div class="content">
     <div class="recent_placeholder"></div>
     <div class="fav_placeholder"></div>
     <!---<h1>Servidores</h1>+--->
     <div class="servers_container">
-        <div class="servers_container__item">
+        <!--<div class="servers_container__item">
           <div onclick="{serverClick(this, 'tioanime')}">TioAnime</div>
           <div class="servers_container__more button" onclick="{pages('tioanime')}"><div class="servers_container__more__text">+</div></div>
         <div class="servers_container__search button" onclick="{search('tioanime')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
-        </div>
+        </div>-->
         <div class="servers_container__item">
-          <div onclick="{serverClick(this, 'jkanime')}">JkAnime</div>
+          <div class="servers_container__text" onclick="{serverClick(this, 'jkanime')}">JkAnime</div>
           <div class="servers_container__more button" onclick="{pages('jkanime')}"><div class="servers_container__more__text">+</div></div>
           <div class="servers_container__search button" onclick="{search('jkanime')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
       </div>
-        <div class="servers_container__item"><div onclick="{serverClick(this, 'sololatino')}">Solo latino</div><div class="servers_container__more button" onclick="{pages('sololatino')}"><div class="servers_container__more__text">+</div></div>
+        <div class="servers_container__item">
+        <div class="servers_container__text" onclick="{serverClick(this, 'sololatino')}">Solo latino</div><div class="servers_container__more button" onclick="{pages('sololatino')}"><div class="servers_container__more__text">+</div></div>
         <div class="servers_container__search button" onclick="{search('sololatino')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
     </div>
       </div>

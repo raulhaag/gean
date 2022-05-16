@@ -42,3 +42,10 @@ export class JKAPI {
         });
     }
 }
+
+export class JKXtreme{
+    constructor() {}
+    getDDL(after, onError, web) {
+      after({"video": web.replace("jk.php?u=", "")});
+    }
+}

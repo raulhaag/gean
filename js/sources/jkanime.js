@@ -76,7 +76,7 @@ export class JKAnime {
         error(nerror);
       });
   }
-  getInfo(after, onError, path, page = 0, ) {
+  getDescription(after, onError, path, page = 0, ) {
     fetch(window.serverHost + "get/" + path)
       .then((response) => response.text())
       .then((result) => {
@@ -89,7 +89,7 @@ export class JKAnime {
         let chapters = [];
         let clen = parseInt([...result.matchAll(/#pag\d*" rel="nofollow">.+?(\d+)<\/a>[\s]+?<\/div/gm)][0][1]);
         for (let i = 1; i <= clen; i++) {
-          chapters.push({"name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(atob(path) + "/" + i + "/")});
+          chapters.push({"name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(path + "/" + i + "/")});
         }
         after({"name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items":[description, genres], "chapters": chapters});
       }).catch((nerror) => {
@@ -124,7 +124,6 @@ export class JKAnime {
   getSearch(after, onError, query) {
     fetch(window.serverHost + "get/" + window.enc("https://jkanime.net/ajax/ajax_search/?q=" + query))
     .then((response) => response.json()).then((result) => {
-      console.log(result["animes"]);
       let rList = [];
       for (let i = 0; i < result["animes"].length; i++) {
         rList.push({"name": result["animes"][i].title,

@@ -12,7 +12,11 @@
     <link rel="stylesheet" href="../css/main.css" />
   </head>
   <body>
-    <div class="menu"><div class="menu__item">(Q)</div></div>
+    <div class="menu">
+      <img class="menu__item back" src="../images/back.png"></img>
+      <img class="menu__item" src="../images/settings.png"></img>
+      <img class="menu__item" src="../images/power.png"></img>
+    </div>
     <div class="content">
       <div class="cat_container">
         <h1 class="cat_container__title">Favoritos</h1>
@@ -31,15 +35,15 @@
       <h1>Servidores</h1>
       <div class="servers_container">
         <div class="servers_container__item">
-          <div onclick="{serverClick(this, 'tioanime')}">TioAnime</div>
+          <div class="servers_container__text" onclick="{serverClick(this, 'tioanime')}">TioAnime</div>
           <div class="servers_container__more button" onclick="{alert('tioanime')}"><div class="servers_container__more__text">+</div></div>
         <div class="servers_container__search button" onclick="{alert('')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
         </div>
         <div class="servers_container__item">
-          <div onclick="{serverClick(this, 'jkanime')}">JkAnime</div>
+          <div class="servers_container__text" onclick="{serverClick(this, 'jkanime')}">JkAnime</div>
           <div class="servers_container__more button" onclick="{alert('jkanime')}"><div class="servers_container__more__text">+</div></div>
       </div>
-        <div class="servers_container__item"><div onclick="{serverClick(this, 'sololatino')}">Solo latino</div><div class="servers_container__more button" onclick="{alert('sololatino')}"><div class="servers_container__more__text">+</div></div></div>
+        <div class="servers_container__item"><div class="servers_container__text" onclick="{serverClick(this, 'sololatino')}">Solo latino</div><div class="servers_container__more button" onclick="{alert('sololatino')}"><div class="servers_container__more__text">+</div></div></div>
       </div>
       <div class="servers_container__section">
         <div class="cat_container">

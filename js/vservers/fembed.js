@@ -1,7 +1,10 @@
 export class Fembed {
   constructor() {}
-  getDDL(after, onError, web) {
+  getDDL(after, onError, web, customReferer = "") {
     let headers = { Referer: web };
+    if (customReferer.length > 0) {
+      headers["Referer"] = customReferer;
+    }
     let path = web.split("/");
     let id = path[path.indexOf("v") + 1];
     let rqs =

@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", function(){
     sp = document.getElementsByClassName("search_placeholder")[0];
     loading = document.getElementsByClassName("lds-group")[0];
     try{
-        //favorites = JSON.parse(localStorage.getItem('favorites'));
+        favorites = JSON.parse(localStorage.getItem('favorites'));
         updateFavorites();
     }catch(e){}
     try{
-        //recent = JSON.parse(localStorage.getItem('recent'));
+        recent = JSON.parse(localStorage.getItem('recent'));
         updateRecents();
     }catch(e){}
 
@@ -167,7 +167,7 @@ window.mediaClick = function(e, path){
     }else if(action == 'getCategory'){
         //server.getCategory(params, posServerClick, error);
     }else if(action == 'getDescription'){
-        server.getInfo(posDescription, error, fpath[2]);
+        server.getDescription(posDescription, error, fpath[2]);
     }else if(action == 'getLinks'){
         server.getLinks(posLinks, error, fpath[2]);
         server.getParent(add_recent, fpath[2]);
