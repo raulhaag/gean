@@ -203,7 +203,7 @@ window.mediaClick = function(e, path){
         server.getLinks(posLinks, error, fpath[2]);
         server.getParent(add_recent, fpath[2]);
     }else if(action == 'search'){
-        let term = document.getElementById("search_term").value;
+        let term = document.getElementById("search__text").value;
         server.getSearch(posSearh, error, term);
     }else{
         loading.style.visibility = 'hidden';
@@ -213,7 +213,6 @@ window.mediaClick = function(e, path){
 let posSearh = function(response){
     let rc = document.getElementById("results_container");
     rc.innerHTML = generateCategory("Resultados", response);
-    addBackStack(rc);
     loading.style.visibility = 'hidden';
 }
 
@@ -221,7 +220,14 @@ window.search = function(e){
     sp.innerHTML = getSearch(e)
     sp.style.display =  'block';
     addBackStack(sp);
-    document.getElementsByClassName("search__text")[0].focus();
+    var si = document.getElementById("search__text");
+    si.focus();
+    si.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        
+    }
+}); 
+
+
 }
-
-
