@@ -5,6 +5,7 @@ import {dragElement} from './uit.js';
 
 let loading;
 let dp, vp, pp, sp;
+let ss; // server selection
 let favorites = [];
 let recent = [];
 let backStack = [];
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function(){
     dp = document.getElementsByClassName("details_placeholder")[0];
     pp = document.getElementsByClassName("pages_placeholder")[0];
     sp = document.getElementsByClassName("search_placeholder")[0];
+    ss = document.getElementById("server_select");
+
     loading = document.getElementsByClassName("lds-group")[0];
     try{
         favorites = JSON.parse(localStorage.getItem('favorites'));
@@ -25,12 +28,11 @@ document.addEventListener("DOMContentLoaded", function(){
         recent = JSON.parse(localStorage.getItem('recent'));
         updateRecents();
     }catch(e){}
-
-    try{
-        serverClick(null, localStorage.getItem('lastServer'));
-    }catch(e){
-        serverClick(null, "jkanime");
+    let lastServer = localStorage.getItem('lastServer');
+    if(lastServer != null){
+        ss.value = lastServer;
     }
+    server_selected();
 });
 
 window.shutdown = function(){
@@ -127,16 +129,10 @@ let error = function(error_message){
     loading.style.visibility = 'hidden';
 }
 
-window.serverClick = function (e, sname){
+window.server_selected = function (){
+    let sname = ss.value;
     loading.style.visibility = 'visible';
     localStorage.setItem('lastServer', sname)
-    if(e != null){
-        let vinetas = document.getElementsByClassName("servers_container__item");
-        for (var i = 0; i < vinetas.length; i++) {
-            vinetas[i].className = 'servers_container__item'
-        }
-        e.parentNode.className = 'servers_container__item server_selected';
-    }
     getResponse(sname, posServerClick, error);
 }
 
@@ -162,7 +158,7 @@ let posLinks = function(linkList){
     if (best.length > 0){
         getDDL(openPlayer, linkError, best[0]);
     } else {
-        alert("No supported servers");
+        error("No supported servers");
     }
 }
 
@@ -211,23 +207,40 @@ window.mediaClick = function(e, path){
 }
 
 let posSearh = function(response){
+    let search = document.getElementById("search");
+    search.style.marginTop = 50 + 'px';
     let rc = document.getElementById("results_container");
     rc.innerHTML = generateCategory("Resultados", response);
     loading.style.visibility = 'hidden';
 }
 
-window.search = function(e){
-    sp.innerHTML = getSearch(e)
+window.markViewed = function(e, spath, path){
+    let vc = [];
+    try{
+        vc = JSON.parse(localStorage.getItem(spath));
+        if(vc == null){
+            vc = [];
+        }
+    }catch(e){
+    }
+    if(vc.indexOf(path) == -1){
+        e.classList.add("viewed");
+        vc.push(path);
+        localStorage.setItem(spath, JSON.stringify(vc));
+    }
+}
+
+window.search = function(){
+    let sname = document.getElementById("server_select").value;
+    sp.innerHTML = getSearch(sname)
     sp.style.display =  'block';
     addBackStack(sp);
     var si = document.getElementById("search__text");
     si.focus();
     si.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        
-    }
-}); 
-
-
+        if (event.key === "Enter") {
+            event.preventDefault();
+            mediaClick(self, ss.value + '/search')
+        }
+    });
 }

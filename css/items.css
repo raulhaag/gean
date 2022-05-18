@@ -2,9 +2,14 @@
 .items{
     padding: 10px;
     background-color: #0003;
-    border-radius: 10px;
+    border-radius: 3px;
     margin-bottom: 10px;
 }
+
+.items__title{
+    margin: 10px;
+}
+
 .items__list{
     margin: auto;
     display: grid;
@@ -21,25 +26,25 @@
 }
 
 .item:hover{
-    border-radius: 10px;
+    border-radius: 3px;
     outline: 3px solid var(--main-contrast-color);
 }
 .item img{
-    border-radius: 10px;
+    border-radius: 3px;
     object-fit: cover;
     object-position: center;
     width: 100%;
     background-color: #0005;
 }
+
 .item__title{
     position: absolute;
     overflow:hidden;
-    white-space: wrap;
     text-overflow: ellipsis;
     font-size: 20px;
     background: linear-gradient(to top, #000a, #0005);
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
     left: 0;
     bottom: 0px;
     right: 0;

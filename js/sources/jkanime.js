@@ -100,7 +100,7 @@ export class JKAnime {
   getParent(after, path) {
     let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path})};
     let dpath = (atob(path)).split("/");
-    this.getInfo(reduce, console.log, window.enc(dpath.slice(0, dpath.length - 2).join("/")));
+    this.getDescription(reduce, console.log, window.enc(dpath.slice(0, dpath.length - 2).join("/")));
   }
 
   getList(page, filter = "") {

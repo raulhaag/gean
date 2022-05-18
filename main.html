@@ -12,40 +12,35 @@
     <link rel="stylesheet" href="css/details.css">
     <link rel="stylesheet" href="css/items.css" />
     <link rel="stylesheet" href="css/pages.css" />
+    <link rel="stylesheet" href="css/search.css" />
+    <link rel="stylesheet" href="css/video.css" />
     <script type="module" src="js/main.js"></script>
 </head>
 <body>
     <div class="menu">
       <img onclick='{backClick()}' id="back_button" class="menu__item back" src="../images/back.png"></img>
+      <div class="menu__server">
+        <select id="server_select" onchange="{server_selected()}">
+          <option value='jkanime'>JkAnime</option>
+          <option value='sololatino'>SoloLatino</option>
+        </select>
+        <div class="servers_container__more button" onclick="{pages()}"><div class="servers_container__more__text">+</div></div>
+        <div class="servers_container__search button" onclick="{search()}"><img class="servers_container__search__img" src="../images/search.png"/></div>
+      </div>
       <img class="menu__item" src="../images/settings.png"></img>
       <img onclick='{shutdown()}' class="menu__item" src="../images/power.png"></img>
     </div>
     <div class="content">
-    <div class="recent_placeholder"></div>
-    <div class="fav_placeholder"></div>
-    <!---<h1>Servidores</h1>+--->
-    <div class="servers_container">
-        <!--<div class="servers_container__item">
-          <div onclick="{serverClick(this, 'tioanime')}">TioAnime</div>
-          <div class="servers_container__more button" onclick="{pages('tioanime')}"><div class="servers_container__more__text">+</div></div>
-        <div class="servers_container__search button" onclick="{search('tioanime')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
-        </div>-->
-        <div class="servers_container__item">
-          <div class="servers_container__text" onclick="{serverClick(this, 'jkanime')}">JkAnime</div>
-          <div class="servers_container__more button" onclick="{pages('jkanime')}"><div class="servers_container__more__text">+</div></div>
-          <div class="servers_container__search button" onclick="{search('jkanime')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
-      </div>
-        <div class="servers_container__item">
-        <div class="servers_container__text" onclick="{serverClick(this, 'sololatino')}">Solo latino</div><div class="servers_container__more button" onclick="{pages('sololatino')}"><div class="servers_container__more__text">+</div></div>
-        <div class="servers_container__search button" onclick="{search('sololatino')}"><img class="servers_container__search__img" src="../images/search.png"/></div>
+      <div class="main-content">
+      <div class="recent_placeholder"></div>
+      <div class="fav_placeholder"></div>
+      <div class="servers_container__section"></div>
     </div>
-      </div>
-    <div class="servers_container__section"></div>
     <div class="lds-group"><div class="lds-dual-ring"></div><p class="lds-text"><center>Cargando...</center></p></div>
     </div>
-    <div class="search_placeholder"></div>
-    <div class="pages_placeholder"></div>
-    <div class="details_placeholder"></div>
-    <div class="video_placeholder"></div>
+    <div class="content search_placeholder"></div>
+    <div class="content pages_placeholder"></div>
+    <div class="content details_placeholder"></div>
+    <div class="content video_placeholder"></div>
 </body>
 </html>

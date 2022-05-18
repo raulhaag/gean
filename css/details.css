@@ -4,7 +4,10 @@
     overflow-y: auto;
 }
 .details{
+    margin: max(auto, 10px);
     padding: 10px;
+    border-radius: 3px;
+    background-color: #0003;
 }
 
 .details__container{

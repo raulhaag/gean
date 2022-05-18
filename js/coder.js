@@ -16,7 +16,13 @@ export function generateCategory(title, items) {
 }
 
 export function generateDescription(options) {
-    let result = '<div class="links_container center_message_container"><div class="links_bar"> <div class="links_title">Detalles</div><b class="links_close" onclick="{hideDetails()}">x</b></div><div class="details"><div class="details__container">';
+    let vieweds = [];
+    try {
+        vieweds = JSON.parse(localStorage.getItem(options.path));
+    }catch (e) {
+        vieweds = [];
+    }
+    let result = '<div class="main-content"><div class="details"><div class="details__container">';
     result += '<img class="details__image" src="'+ options['image'] + '" alt="" class=><div class="details__items"><div class="details__item"><h2>'+ options['name'] +'</div>';
     for(let i = 0; i < options['items'].length; i++){
         result += '<div class="details__item">'+ options['items'][i] +'</div>';
@@ -24,22 +30,29 @@ export function generateDescription(options) {
     result += '<div class="details__add" onclick="{add_fab(\'' + options['name'] + '\', \'' + options['image'] + '\',\'' + options['path'] + '\')}">Agregar a favoritos</div>';
     result += '</div></div><div class="details__chapters">';
     for(let i = 0; i < options['chapters'].length; i++){
-        result += '<div class="button" onclick="{mediaClick(self, \'' + options['chapters'][i]["path"] + '\')}">' + options['chapters'][i]['name'] + "</div>";
+        if(vieweds.indexOf(options['chapters'][i]['path']) == -1){
+            result += '<div class="button" onclick="{markViewed(this,\'' + options['path'] + '\', \'' + options['chapters'][i]["path"] + '\') ;mediaClick(self, \'' + options['chapters'][i]["path"] + '\')}">' + options['chapters'][i]['name'] + "</div>";
+        }else{
+            result += '<div class="button viewed" onclick="{mediaClick(this, \'' + options['chapters'][i]["path"] + '\')}">' + options['chapters'][i]['name'] + "</div>";
+        }
     }
-    result += '</div></div></div>';
+    result += '</div></div>';
     return result;
 }
 
 export function getPlayer(options){
-    return '<div id="player" class="links_container center_message_container"><div class="links_bar" id="player_bar"> <div class="links_title">Reproduciendo...</div><b class="links_close" onclick="{hideVideo()}">x</b></div><video class="videoview" controls autoplay><source src="' + options["video"]+ '"></video></div>';
+    return '<div class="video_container"><video class="videoview" controls autoplay><source src="' + options["video"]+ '"></video></div>';
 }
 
 export function getSearch(server){
-    return `<div class="search">
-    <input id="search__text" type="text"></input>
-    <div class="button"><div>Buscar</div></div>
+    return `<div id="search">
+    <div id="search__box">
+    <input id="search__text" type="text" onkeypress="{}"></input>
+    <div class="button" onclick="{mediaClick(self, '`+ server + `/search')}"><div>Buscar</div></div>
     </div>
-    <div class="results_container"></div>`;
+    <div id="results_container"></div>
+    </div>
+   `;
 }
 
 
