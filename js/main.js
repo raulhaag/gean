@@ -1,7 +1,6 @@
 import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
-import {dragElement} from './uit.js';
 
 let loading;
 let dp, vp, pp, sp;
@@ -34,6 +33,36 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     server_selected();
 });
+
+window.mediaClick = function(e, path){
+    loading.style.visibility = 'visible';
+    let fpath = path.split('/');
+    let server = getSource(fpath[0]);
+    let action = fpath[1];
+    let params;
+    if (fpath.length == 3){
+        params = atob(fpath[2]);
+    }
+    if(action == 'getFrontPage'){
+        server.getFrontPage(posServerClick, error);
+    }else if(action == 'getCategory'){
+        //server.getCategory(params, posServerClick, error);
+    }else if(action == 'getDescription'){
+        server.getDescription(posDescription, error, fpath[2]);
+    }else if(action == 'getLinks'){
+        server.getLinks(posLinks, error, fpath[2]);
+        let ppf = function(item){
+            add_recent(item);
+            markViewed(null, item['path'], path);
+        };
+        server.getParent(ppf, fpath[2]);
+    }else if(action == 'search'){
+        let term = document.getElementById("search__text").value;
+        server.getSearch(posSearh, error, term);
+    }else{
+        loading.style.visibility = 'hidden';
+    }
+}
 
 window.shutdown = function(){
     if (confirm("¿Desea apagar el servidor?")) {
@@ -177,34 +206,8 @@ let openPlayer = function(options){
         elem.mozRequestFullScreen();
     }
     addBackStack(vp);
-    dragElement("player", "player_bar");
 }
 
-window.mediaClick = function(e, path){
-    loading.style.visibility = 'visible';
-    let fpath = path.split('/');
-    let server = getSource(fpath[0]);
-    let action = fpath[1];
-    let params;
-    if (fpath.length == 3){
-        params = atob(fpath[2]);
-    }
-    if(action == 'getFrontPage'){
-        server.getFrontPage(posServerClick, error);
-    }else if(action == 'getCategory'){
-        //server.getCategory(params, posServerClick, error);
-    }else if(action == 'getDescription'){
-        server.getDescription(posDescription, error, fpath[2]);
-    }else if(action == 'getLinks'){
-        server.getLinks(posLinks, error, fpath[2]);
-        server.getParent(add_recent, fpath[2]);
-    }else if(action == 'search'){
-        let term = document.getElementById("search__text").value;
-        server.getSearch(posSearh, error, term);
-    }else{
-        loading.style.visibility = 'hidden';
-    }
-}
 
 let posSearh = function(response){
     let search = document.getElementById("search");
@@ -221,10 +224,12 @@ window.markViewed = function(e, spath, path){
         if(vc == null){
             vc = [];
         }
-    }catch(e){
+    }catch(error){
     }
     if(vc.indexOf(path) == -1){
-        e.classList.add("viewed");
+        if(e != null){
+            e.classList.add("viewed");
+        }
         vc.push(path);
         localStorage.setItem(spath, JSON.stringify(vc));
     }

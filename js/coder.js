@@ -19,6 +19,9 @@ export function generateDescription(options) {
     let vieweds = [];
     try {
         vieweds = JSON.parse(localStorage.getItem(options.path));
+        if(vieweds == null){
+            vieweds = [];
+        }
     }catch (e) {
         vieweds = [];
     }
