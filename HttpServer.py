@@ -32,6 +32,15 @@ class handler(SimpleHTTPRequestHandler):
         else:
             self.return_response(404, "Not Found")
 
+    def end_headers(self):
+        self.send_my_headers()
+        SimpleHTTPRequestHandler.end_headers(self)
+
+    def send_my_headers(self):
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        self.send_header("Pragma", "no-cache")
+        self.send_header("Expires", "0")
+
     def return_response(self, code, message):
         self.send_response(code)
         self.send_header('Content-type','text/html')

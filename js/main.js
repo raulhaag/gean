@@ -58,7 +58,7 @@ window.mediaClick = function(e, path){
         server.getParent(ppf, fpath[2]);
     }else if(action == 'search'){
         let term = document.getElementById("search__text").value;
-        server.getSearch(posSearh, error, term);
+        server.getSearch(posSearch, error, term);
     }else{
         loading.style.visibility = 'hidden';
     }
@@ -205,11 +205,12 @@ let openPlayer = function(options){
      } else if (elem.mozRequestFullScreen) { /* Firefox */
         elem.mozRequestFullScreen();
     }
+    elem.focus();
     addBackStack(vp);
 }
 
 
-let posSearh = function(response){
+let posSearch = function(response){
     let search = document.getElementById("search");
     search.style.marginTop = 50 + 'px';
     let rc = document.getElementById("results_container");
