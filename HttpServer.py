@@ -78,6 +78,8 @@ def check_for_update():
 
         #download file to disk
         print("Actualizado, reinicie la aplicación")
+        return True
+    return False
 
 def download_file(url, filename):
     try:
