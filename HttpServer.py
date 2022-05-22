@@ -1,4 +1,5 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from zipfile import ZipFile
 import os
 import requests
 
@@ -59,7 +60,6 @@ class handler(SimpleHTTPRequestHandler):
         self.wfile.write(message)
 
 def check_for_update():
-    
     c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
     c_version = [int(x) for x in c_version]
     c_version = c_version[0] * 100000000 + c_version[1] * 100000 + c_version[2]
@@ -67,20 +67,31 @@ def check_for_update():
     r_version = [int(x) for x in r_version]
     r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
     if c_version < r_version:
-        print("Update available")
-        print("Current version: " + str(c_version))
-        print("New version: " + str(r_version))
+        print("Actualizando...")
+        download_file("https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip")
+        with ZipFile("update.zip", "r") as zip:
+            zip.extractall()
+        #download file to disk
+        print("Actualizado, reinicie la aplicación")
+
+def download_file(url, filename):
+    try:
+        response = requests.get(url)
+    except:
+        print(str("Error downloading file: " + url))
+        return
+    with open(filename, "wb") as f:
+        f.write(response.content)
 
 server = HTTPServer(('', 8080), handler)
 
 try:
-    try:
-        #os.system(r"load.html")
-        pass
-    except Exception as e:
-        print(e)
-    check_for_update()
-    server.serve_forever()
+    if(not check_for_update()):
+        try:
+            os.system(r"load.html")
+        except Exception as e:
+            print(e)
+        server.serve_forever()
 except Exception as e:
     print(e)
 
