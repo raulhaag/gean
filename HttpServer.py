@@ -69,8 +69,13 @@ def check_for_update():
     if c_version < r_version:
         print("Actualizando...")
         download_file("https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip")
-        with ZipFile("update.zip", "r") as zip:
-            zip.extractall()
+        with ZipFile('update.zip', 'r') as zipf:
+            zipinfos = zipf.infolist()
+            for zipinfo in zipinfos:
+                zipinfo.filename = zipinfo.filename.replace('gean-master/', '')
+                if len(zipinfo.filename) > 0:
+                    zipf.extract(zipinfo)
+
         #download file to disk
         print("Actualizado, reinicie la aplicación")
 
