@@ -25,7 +25,7 @@
     height: 250Px;
 }
 
-.item:hover{
+.item:hover, .focus{
     border-radius: 3px;
     outline: 3px solid var(--main-contrast-color);
 }

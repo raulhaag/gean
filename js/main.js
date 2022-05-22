@@ -3,12 +3,15 @@ import {generateCategory, generateCategories, generateDescription, getPlayer, ge
 import {getDDL, getPreferer} from './vservers/vserver.js';
 
 let loading;
-let dp, vp, pp, sp;
+let dp, vp, pp, sp, content;
 let ss; // server selection
 let favorites = [];
 let recent = [];
 let backStack = [];
+let cfocus = null;
 window.serverHost = "http://127.0.0.1:8080/";
+
+
 
 document.addEventListener("DOMContentLoaded", function(){
     window.serverHost = "http://" + window.location.hostname + ":8080/"
@@ -17,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function(){
     pp = document.getElementsByClassName("pages_placeholder")[0];
     sp = document.getElementsByClassName("search_placeholder")[0];
     ss = document.getElementById("server_select");
+    content = document.getElementsByClassName("content")[0];
 
     loading = document.getElementsByClassName("lds-group")[0];
     try{
@@ -32,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function(){
         ss.value = lastServer;
     }
     server_selected();
+    document.onkeydown = arrowNav;
 });
 
 window.mediaClick = function(e, path){
@@ -62,6 +67,98 @@ window.mediaClick = function(e, path){
     }else{
         loading.style.visibility = 'hidden';
     }
+}
+
+window.updatePositions = function(){
+    let items = document.getElementsByClassName("item");//focusable next??
+    let ctop = items[0].offsetTop;
+    let rc = 0, cc = 0;
+    for(let i = 0; i < items.length; i++){
+        if(items[i].offsetTop != ctop){
+            ctop = items[i].offsetTop;
+            rc++;
+            cc = 0;
+        }
+        items[i].id = "item_" + rc + "_" + cc;
+        cc++;
+    }
+}
+
+let arrowNav = function(e){
+    e = e || window.event;
+    if(cfocus != null){
+        let itempos = cfocus.id.split("_");
+        let cc = parseInt(itempos[2]);
+        let cr = parseInt(itempos[1]);
+        let newpos = null;
+        if (e.keyCode == '38') {
+            // up arrow
+            if(cr >= 1){
+                let desph = cc;
+                while(desph >= 0){
+                    if(itemExists((cr - 1), desph)){
+                        newpos = "item_" + (cr - 1) + "_" + desph;
+                        break;
+                    }
+                    desph--;
+                }
+            }
+        }
+        else if (e.keyCode == '40') {
+            // down arrow
+            let desph = cc;
+            while(desph >= 0){
+                if(itemExists((cr + 1), desph)){
+                    newpos = "item_" + (cr + 1) + "_" + desph;
+                    break;
+                }
+                desph--;
+            }
+        }
+        else if (e.keyCode == '37') {
+        // left arrow
+            if(cc >= 1){
+                newpos = "item_" + cr + "_" + (cc - 1);
+            }
+        }
+        else if (e.keyCode == '39') {
+        // right arrow
+            if(itemExists(cr, (cc + 1))){
+                newpos = "item_" + cr + "_" + (cc + 1);
+            }
+        }
+        else if (e.keyCode == '13') {
+        // enter
+            var clickEvent = new MouseEvent("click", {
+                "view": window,
+                "bubbles": true,
+                "cancelable": false
+            });
+            cfocus.dispatchEvent(clickEvent);
+        }
+        try{
+            if(newpos != null){
+                let nselect = document.getElementById(newpos);
+                cfocus.classList.remove("focus");
+                nselect.classList.add("focus");
+                cfocus = nselect;
+                content.scrollTop = nselect.offsetTop - 70;
+            }
+        }catch{
+            //position not found
+        }
+    }else{
+        cfocus = document.getElementById("item_0_0");
+        cfocus.classList.add("focus");
+    }
+}
+
+let itemExists = function(row, column){
+    let item = document.getElementById("item_" + row + "_" + column);
+    if(item != null){
+        return true;
+    }
+    return false;
 }
 
 window.shutdown = function(){
@@ -151,6 +248,7 @@ let posServerClick = function(response){
     let ss = document.getElementsByClassName("servers_container__section");
     ss[0].innerHTML = generateCategories(response);
     loading.style.visibility = 'hidden';
+    updatePositions();
 }
 
 let error = function(error_message){
