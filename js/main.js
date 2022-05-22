@@ -1,17 +1,16 @@
 import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
+import{arrowNav, updatePositions} from './keynav.js';
 
 let loading;
 let dp, vp, pp, sp, content;
 let ss; // server selection
 let favorites = [];
 let recent = [];
-let backStack = [];
+window.backStack = [];
 let cfocus = null;
 window.serverHost = "http://127.0.0.1:8080/";
-
-
 
 document.addEventListener("DOMContentLoaded", function(){
     window.serverHost = "http://" + window.location.hostname + ":8080/"
@@ -62,103 +61,11 @@ window.mediaClick = function(e, path){
         };
         server.getParent(ppf, fpath[2]);
     }else if(action == 'search'){
-        let term = document.getElementById("search__text").value;
+        let term = document.getElementsByClassName("search__text")[0].value;
         server.getSearch(posSearch, error, term);
     }else{
         loading.style.visibility = 'hidden';
     }
-}
-
-window.updatePositions = function(){
-    let items = document.getElementsByClassName("item");//focusable next??
-    let ctop = items[0].offsetTop;
-    let rc = 0, cc = 0;
-    for(let i = 0; i < items.length; i++){
-        if(items[i].offsetTop != ctop){
-            ctop = items[i].offsetTop;
-            rc++;
-            cc = 0;
-        }
-        items[i].id = "item_" + rc + "_" + cc;
-        cc++;
-    }
-}
-
-let arrowNav = function(e){
-    e = e || window.event;
-    if(cfocus != null){
-        let itempos = cfocus.id.split("_");
-        let cc = parseInt(itempos[2]);
-        let cr = parseInt(itempos[1]);
-        let newpos = null;
-        if (e.keyCode == '38') {
-            // up arrow
-            if(cr >= 1){
-                let desph = cc;
-                while(desph >= 0){
-                    if(itemExists((cr - 1), desph)){
-                        newpos = "item_" + (cr - 1) + "_" + desph;
-                        break;
-                    }
-                    desph--;
-                }
-            }
-        }
-        else if (e.keyCode == '40') {
-            // down arrow
-            let desph = cc;
-            while(desph >= 0){
-                if(itemExists((cr + 1), desph)){
-                    newpos = "item_" + (cr + 1) + "_" + desph;
-                    break;
-                }
-                desph--;
-            }
-        }
-        else if (e.keyCode == '37') {
-        // left arrow
-            if(cc >= 1){
-                newpos = "item_" + cr + "_" + (cc - 1);
-            }
-        }
-        else if (e.keyCode == '39') {
-        // right arrow
-            if(itemExists(cr, (cc + 1))){
-                newpos = "item_" + cr + "_" + (cc + 1);
-            }
-        }
-        else if (e.keyCode == '13') {
-        // enter
-            var clickEvent = new MouseEvent("click", {
-                "view": window,
-                "bubbles": true,
-                "cancelable": false
-            });
-            cfocus.dispatchEvent(clickEvent);
-        }
-        try{
-            if(newpos != null){
-                let nselect = document.getElementById(newpos);
-                cfocus.classList.remove("focus");
-                nselect.classList.add("focus");
-                cfocus = nselect;
-                content.scrollTop = nselect.offsetTop - 70;
-            }
-        }catch{
-            //position not found
-        }
-    }else{
-        cfocus = document.getElementById("item_0_0");
-        cfocus.classList.add("focus");
-    }
-}
-
-let itemExists = function(row, column){
-    let item = document.getElementById("item_" + row + "_" + column);
-    if(item != null){
-        return true;
-    }
-    return false;
 }
 
 window.shutdown = function(){
@@ -172,21 +79,22 @@ window.shutdown = function(){
 }
 
 window.backClick = function(e){
-    if(backStack.length > 0){
-        let last = backStack.pop();
+    if(window.backStack.length > 0){
+        let last = window.backStack.pop();
         last.style.display = 'none';
         last.innerHTML = '';
-        if(backStack.length == 0){
+        if(window.backStack.length == 0){
             document.getElementById("back_button").style.display = 'none';
         }
+        arrowNav(null);
     }
 }
 
 let addBackStack = function(e){
-    if(backStack.length == 0){
+    if(window.backStack.length == 0){
         document.getElementById("back_button").style.display = 'block';
     }
-    backStack.push(e);
+    window.backStack.push(e);
 }
 
 window.enc = function(e){
@@ -248,7 +156,6 @@ let posServerClick = function(response){
     let ss = document.getElementsByClassName("servers_container__section");
     ss[0].innerHTML = generateCategories(response);
     loading.style.visibility = 'hidden';
-    updatePositions();
 }
 
 let error = function(error_message){
@@ -314,6 +221,7 @@ let posSearch = function(response){
     let rc = document.getElementById("results_container");
     rc.innerHTML = generateCategory("Resultados", response);
     loading.style.visibility = 'hidden';
+    updatePositions();
 }
 
 window.markViewed = function(e, spath, path){
@@ -339,7 +247,7 @@ window.search = function(){
     sp.innerHTML = getSearch(sname)
     sp.style.display =  'block';
     addBackStack(sp);
-    var si = document.getElementById("search__text");
+    var si = document.getElementsByClassName("search__text")[0];
     si.focus();
     si.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {

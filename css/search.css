@@ -13,7 +13,7 @@
     align-items: center;
     justify-content: center;
 }
-#search__text{
+.search__text{
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
     width: 65%;
@@ -45,7 +45,7 @@
 #search .button div{
     margin:auto;
 }
-#search__text:focus{
+.search__text:focus{
     background-color: #aaa2;
 }
 
