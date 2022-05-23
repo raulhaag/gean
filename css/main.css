@@ -123,11 +123,16 @@ div{
     z-index: 1000;
     margin: 0px;
 }
-.menu__item{
-    padding: 15px;
-    height: 50px;
+
+.menu__item{    
     display: inline;
+    margin-left: 10px;
+    padding: 5px;
+    object-fit: cover;
+    width: 40px;
+    height: 40px;
 }
+
 .menu__server{
     margin-left: 65px;
     display: flex;
@@ -135,17 +140,19 @@ div{
     justify-content: center;
     align-items: center;
 }
-.menu__server select, .menu__server option{
+.menu__server div{
+    padding: 0px 10px;
+    line-height: 50px;
+    display: block;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 25px;
     font-weight: bold;
-    padding: 10px;
     color: #FFF;
     background-color: #000F;
     border: none;
     height: 50px;
 }
-.menu__server select:hover{
+.menu__server div:hover{
     color: #FFF;
     background-color: var(--main-sc-color);
 }
@@ -154,13 +161,7 @@ div{
 .menu__item:hover, .mfocus{
     background-color: var(--main-sc-color);
 }
-.menu__item{
-    margin-left: 10px;
-    padding: 5px;
-    object-fit: cover;
-    width: 40px;
-    height: 40px;
-}
+
 .back{
     position: absolute;
     left: 0px;

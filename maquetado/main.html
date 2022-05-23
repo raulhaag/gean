@@ -13,9 +13,18 @@
   </head>
   <body>
     <div class="menu">
-      <img class="menu__item back" src="../images/back.png"></img>
-      <img class="menu__item" src="../images/settings.png"></img>
-      <img class="menu__item" src="../images/power.png"></img>
+      <img onclick='{backClick()}' id="back_button" class="menu__item back" src="../images/back.png"></img>
+      <div class="menu__server">
+        <div id="select_server">JkAnime</div>
+        <img class="menu__item" id="search_button" onclick="{search()}" src="../images/search.png"/>
+        <img class="menu__item" id="more_button" onclick="{pages()}" src="../images/plus.png"/>
+      </div>
+      <img id="settings_button" class="menu__item" src="../images/settings.png"></img>
+      <img onclick='{shutdown()}' id="shutdown_button" class="menu__item" src="../images/power.png"></img>
+    </div>
+    <div class="server_select">
+      <div class="button" id="jkanime">JkAnime</div>
+      <div class="button" id="sololatino">SoloLatino Anime</div>
     </div>
     <div class="content">
       <div class="cat_container">
