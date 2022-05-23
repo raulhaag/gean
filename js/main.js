@@ -156,6 +156,7 @@ let posServerClick = function(response){
     let ss = document.getElementsByClassName("servers_container__section");
     ss[0].innerHTML = generateCategories(response);
     loading.style.visibility = 'hidden';
+    updatePositions();
 }
 
 let error = function(error_message){
@@ -221,7 +222,7 @@ let posSearch = function(response){
     let rc = document.getElementById("results_container");
     rc.innerHTML = generateCategory("Resultados", response);
     loading.style.visibility = 'hidden';
-    updatePositions();
+    updatePositions("results_container");
 }
 
 window.markViewed = function(e, spath, path){

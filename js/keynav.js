@@ -3,7 +3,61 @@ let lastPos = {};
 let currentLastPos = "content";
 let firstInit = false;
 let container = null;
+let menucapture = false;
+let lastMenu = null;
+let menubuttons = [
+    "back_button",
+    "server_select",
+    "search_button",
+    "more_button",
+    "settings_button",
+    "shutdown_button"
+];
 
+function manageMenu(keyCode){
+    if(keyCode == null){
+        menucapture = true;
+        lastPos[currentLastPos].classList.remove("focus");
+        if(document.getElementById("back_button").style.display == "none"){
+           lastMenu = document.getElementById("server_select"); 
+        }else{
+            lastMenu = document.getElementById("back_button");
+        }
+        lastMenu.classList.add("focus");
+    }else if(keyCode == 40){
+        //down
+        menucapture = false;
+        lastMenu.classList.remove("mfocus");
+        arrowNav(null);
+    }else if(keyCode == 37){
+        //left
+        let aindex = menubuttons.indexOf(lastMenu.id);
+        if(aindex > 0){
+            if(aindex == 1 && document.getElementById("back_button").style.display == "none"){
+                return;
+            }
+            lastMenu.classList.remove("mfocus");
+            lastMenu = document.getElementById(menubuttons[aindex - 1]);
+            lastMenu.classList.add("mfocus");
+        }
+    }else if(keyCode == 39){
+        //right
+        let aindex = menubuttons.indexOf(lastMenu.id);
+        if(aindex < menubuttons.length - 1){
+            lastMenu.classList.remove("mfocus");
+            lastMenu = document.getElementById(menubuttons[aindex + 1]);
+            lastMenu.classList.add("mfocus");
+        }
+    }else if (keyCode == '13') {
+        // enter
+            var clickEvent = new MouseEvent("click", {
+                "view": window,
+                "bubbles": true,
+                "cancelable": false
+            });
+            lastMenu.dispatchEvent(clickEvent);
+        }
+}
 
 export function updatePositions(containerCN = "content"){
     currentLastPos = containerCN;
@@ -23,6 +77,11 @@ export function updatePositions(containerCN = "content"){
 }
 
 export function arrowNav(e){
+    if(menucapture && e != null){
+        e.preventDefault();
+        manageMenu((e || window.event).keyCode);
+        return;
+    }
     if(window.backStack.length > 0){
         if(currentLastPos != window.backStack.at(-1).classList[0]){
             updatePositions(window.backStack.at(-1).classList[0]);
@@ -36,6 +95,7 @@ export function arrowNav(e){
     }
     if (e == null){
         container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
+        lastPos[currentLastPos].classList.add("focus");
         return;
     }
     e = e || window.event;
@@ -55,6 +115,8 @@ export function arrowNav(e){
                     }
                     desph--;
                 }
+            }else{
+                manageMenu(null);
             }
         }
         else if (e.keyCode == '40') {
@@ -72,6 +134,8 @@ export function arrowNav(e){
         // left arrow
             if(cc >= 1){
                 newpos = currentLastPos + "_" + cr + "_" + (cc - 1);
+            }else{
+                manageMenu(null);
             }
         }
         else if (e.keyCode == '39') {

@@ -151,7 +151,7 @@ div{
 }
 
 
-.menu__item:hover{
+.menu__item:hover, .mfocus{
     background-color: var(--main-sc-color);
 }
 .menu__item{
