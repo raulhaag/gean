@@ -7,23 +7,30 @@ let menucapture = false;
 let lastMenu = null;
 let menubuttons = [
     "back_button",
-    "server_select",
+    "select_server",
     "search_button",
     "more_button",
     "settings_button",
     "shutdown_button"
 ];
+let ssmenucapture = false;
+let lastServerSelected = null;
+let serverList = [];
 
 function manageMenu(keyCode){
+    if(ssmenucapture){
+        serverSelectMenu(keyCode);
+        return;
+    }
     if(keyCode == null){
         menucapture = true;
         lastPos[currentLastPos].classList.remove("focus");
-        if(document.getElementById("back_button").style.display == "none"){
-           lastMenu = document.getElementById("server_select"); 
+        if(document.getElementById("back_button").style.display != "block"){
+           lastMenu = document.getElementById("select_server");
         }else{
             lastMenu = document.getElementById("back_button");
         }
-        lastMenu.classList.add("focus");
+        lastMenu.classList.add("mfocus");
     }else if(keyCode == 40){
         //down
         menucapture = false;
@@ -33,7 +40,7 @@ function manageMenu(keyCode){
         //left
         let aindex = menubuttons.indexOf(lastMenu.id);
         if(aindex > 0){
-            if(aindex == 1 && document.getElementById("back_button").style.display == "none"){
+            if(aindex == 1 && document.getElementById("back_button").style.display != "block"){
                 return;
             }
             lastMenu.classList.remove("mfocus");
@@ -50,14 +57,64 @@ function manageMenu(keyCode){
         }
     }else if (keyCode == '13') {
         // enter
+        var clickEvent = new MouseEvent("click", {
+            "view": window,
+            "bubbles": true,
+            "cancelable": false
+        });
+        lastMenu.dispatchEvent(clickEvent);
+        let aindex = menubuttons.indexOf(lastMenu.id);
+        if(aindex == 1){
+            ssmenucapture = true;
+            serverSelectMenu(null);
+        }
+    }
+}
+
+function serverSelectMenu(keyCode){
+    if(keyCode == null){
+        if(serverList.length == 0){
+            let server = document.getElementsByClassName("menu__server__item");
+            for(let i = 0; i < server.length; i++){
+                serverList.push(server[i]);
+            }
+            lastServerSelected = server[0];
+        }
+        lastServerSelected.classList.add("mfocus");
+    }else if(keyCode == 40){
+        //down
+        let aindex = serverList.indexOf(lastServerSelected);
+        if(aindex < serverList.length - 1){
+            lastServerSelected.classList.remove("mfocus");
+            lastServerSelected = serverList[aindex + 1];
+            lastServerSelected.classList.add("mfocus");
+        }
+    }else if(keyCode == 38){
+        //up
+        let aindex = serverList.indexOf(lastServerSelected);
+        if(aindex == 0){
+            lastServerSelected.classList.remove("mfocus");
+            document.getElementById("server__select__menu").style.display = "none";
+            ssmenucapture = false;
+
+        }else if(aindex >= 1){
+            lastServerSelected.classList.remove("mfocus");
+            lastServerSelected = serverList[aindex - 1];
+            lastServerSelected.classList.add("mfocus");
+        }
+    }else if (keyCode == '13') {
+        // enter
+        lastServerSelected.classList.remove("mfocus");
             var clickEvent = new MouseEvent("click", {
                 "view": window,
                 "bubbles": true,
                 "cancelable": false
             });
-            lastMenu.dispatchEvent(clickEvent);
-        }
+            lastServerSelected.dispatchEvent(clickEvent);
+            ssmenucapture = false;
+    }
 }
+
 
 export function updatePositions(containerCN = "content"){
     currentLastPos = containerCN;

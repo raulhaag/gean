@@ -6,10 +6,10 @@ import{arrowNav, updatePositions} from './keynav.js';
 let loading;
 let dp, vp, pp, sp, content;
 let ss; // server selection
+let sn; // server name
 let favorites = [];
 let recent = [];
 window.backStack = [];
-let cfocus = null;
 window.serverHost = "http://127.0.0.1:8080/";
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function(){
     dp = document.getElementsByClassName("details_placeholder")[0];
     pp = document.getElementsByClassName("pages_placeholder")[0];
     sp = document.getElementsByClassName("search_placeholder")[0];
-    ss = document.getElementById("server_select");
     content = document.getElementsByClassName("content")[0];
 
     loading = document.getElementsByClassName("lds-group")[0];
@@ -31,10 +30,15 @@ document.addEventListener("DOMContentLoaded", function(){
         updateRecents();
     }catch(e){}
     let lastServer = localStorage.getItem('lastServer');
-    if(lastServer != null){
-        ss.value = lastServer;
+    let lastServerName = localStorage.getItem('lastServerName');
+    if(lastServer != null && lastServerName != null){
+        ss = lastServer;
+        sn = lastServerName;
+    }else{
+        ss = "jkanime";
+        sn = "JkAnime";
     }
-    server_selected();
+    server_selected(ss, sn);
     document.onkeydown = arrowNav;
 });
 
@@ -164,11 +168,19 @@ let error = function(error_message){
     loading.style.visibility = 'hidden';
 }
 
-window.server_selected = function (){
-    let sname = ss.value;
+window.server_selected_click = function(e){
+    let sid = e.id;
+    let sname = e.innerHTML;
+    server_selected(sid, sname);
+}
+
+let server_selected = function (sid, sn){
+    document.getElementById("server__select__menu").style.display = 'none';
+    document.getElementById("select_server").innerHTML = sn;
     loading.style.visibility = 'visible';
-    localStorage.setItem('lastServer', sname)
-    getResponse(sname, posServerClick, error);
+    localStorage.setItem('lastServer', sid)
+    localStorage.setItem('lastServerName', sn)
+    getResponse(sid, posServerClick, error);
 }
 
 let posDescription = function(response){
@@ -244,8 +256,7 @@ window.markViewed = function(e, spath, path){
 }
 
 window.search = function(){
-    let sname = document.getElementById("server_select").value;
-    sp.innerHTML = getSearch(sname)
+    sp.innerHTML = getSearch(sn)
     sp.style.display =  'block';
     addBackStack(sp);
     var si = document.getElementsByClassName("search__text")[0];
@@ -256,4 +267,13 @@ window.search = function(){
             mediaClick(self, ss.value + '/search')
         }
     });
+}
+
+window.toggleView = function(name){
+    var mdiv = document.getElementById(name);
+    if (mdiv.style.display === "none") {
+        mdiv.style.display = "block";
+    }else{
+        mdiv.style.display = "none";
+    }
 }

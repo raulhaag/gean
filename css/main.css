@@ -124,9 +124,8 @@ div{
     margin: 0px;
 }
 
-.menu__item{    
+.menu__item{
     display: inline;
-    margin-left: 10px;
     padding: 5px;
     object-fit: cover;
     width: 40px;
@@ -140,9 +139,11 @@ div{
     justify-content: center;
     align-items: center;
 }
-.menu__server div{
+
+.menu__server div, .menu__server__item{
     padding: 0px 10px;
     line-height: 50px;
+    text-align: center;
     display: block;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 25px;
@@ -152,14 +153,29 @@ div{
     border: none;
     height: 50px;
 }
-.menu__server div:hover{
+.menu__server div::after{
+    content: "ˇ";
+    margin-left: 10px;
+}
+
+.menu__server div:hover, .menu__server__item:hover{
     color: #FFF;
     background-color: var(--main-sc-color);
 }
 
-
 .menu__item:hover, .mfocus{
-    background-color: var(--main-sc-color);
+    background-color: var(--main-sc-color) !important;
+}
+
+#server__select__menu{
+    display: none;
+    justify-content: center;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    background-color: #000F;
+    z-index: 1000;
 }
 
 .back{
