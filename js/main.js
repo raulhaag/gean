@@ -5,7 +5,7 @@ import{arrowNav, updatePositions} from './keynav.js';
 
 let loading;
 let dp, vp, pp, sp, content;
-let ss; // server selection
+let sid; // server selection
 let sn; // server name
 let favorites = [];
 let recent = [];
@@ -14,6 +14,8 @@ window.serverHost = "http://127.0.0.1:8080/";
 
 document.addEventListener("DOMContentLoaded", function(){
     window.serverHost = "http://" + window.location.hostname + ":8080/"
+    document.getElementById("search_button").style.display = 'block';
+    document.getElementById("more_button").style.display = 'block';
     vp = document.getElementsByClassName("video_placeholder")[0];
     dp = document.getElementsByClassName("details_placeholder")[0];
     pp = document.getElementsByClassName("pages_placeholder")[0];
@@ -32,13 +34,13 @@ document.addEventListener("DOMContentLoaded", function(){
     let lastServer = localStorage.getItem('lastServer');
     let lastServerName = localStorage.getItem('lastServerName');
     if(lastServer != null && lastServerName != null){
-        ss = lastServer;
+        sid = lastServer;
         sn = lastServerName;
     }else{
-        ss = "jkanime";
+        sid = "jkanime";
         sn = "JkAnime";
     }
-    server_selected(ss, sn);
+    server_selected(sid, sn);
     document.onkeydown = arrowNav;
 });
 
@@ -89,6 +91,8 @@ window.backClick = function(e){
         last.innerHTML = '';
         if(window.backStack.length == 0){
             document.getElementById("back_button").style.display = 'none';
+            document.getElementById("search_button").style.display = 'block';
+            document.getElementById("more_button").style.display = 'block';
         }
         arrowNav(null);
     }
@@ -97,6 +101,8 @@ window.backClick = function(e){
 let addBackStack = function(e){
     if(window.backStack.length == 0){
         document.getElementById("back_button").style.display = 'block';
+        document.getElementById("search_button").style.display = 'none';
+        document.getElementById("more_button").style.display = 'none';
     }
     window.backStack.push(e);
 }
@@ -234,7 +240,7 @@ let posSearch = function(response){
     let rc = document.getElementById("results_container");
     rc.innerHTML = generateCategory("Resultados", response);
     loading.style.visibility = 'hidden';
-    updatePositions("results_container");
+    updatePositions("search_placeholder");
 }
 
 window.markViewed = function(e, spath, path){
@@ -256,7 +262,7 @@ window.markViewed = function(e, spath, path){
 }
 
 window.search = function(){
-    sp.innerHTML = getSearch(sn)
+    sp.innerHTML = getSearch(sid)
     sp.style.display =  'block';
     addBackStack(sp);
     var si = document.getElementsByClassName("search__text")[0];
@@ -264,7 +270,7 @@ window.search = function(){
     si.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            mediaClick(self, ss.value + '/search')
+            mediaClick(self, sid + '/search')
         }
     });
 }

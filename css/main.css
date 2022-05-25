@@ -125,7 +125,7 @@ div{
 }
 
 .menu__item{
-    display: inline;
+    display: block;
     padding: 5px;
     object-fit: cover;
     width: 40px;

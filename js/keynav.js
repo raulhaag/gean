@@ -43,16 +43,24 @@ function manageMenu(keyCode){
             if(aindex == 1 && document.getElementById("back_button").style.display != "block"){
                 return;
             }
+            let desp = 1;
+            if(aindex == 4 && document.getElementById("more_button").style.display != "block"){
+                desp = 3;
+            }
             lastMenu.classList.remove("mfocus");
-            lastMenu = document.getElementById(menubuttons[aindex - 1]);
+            lastMenu = document.getElementById(menubuttons[aindex - desp]);
             lastMenu.classList.add("mfocus");
         }
     }else if(keyCode == 39){
         //right
         let aindex = menubuttons.indexOf(lastMenu.id);
         if(aindex < menubuttons.length - 1){
+            let desp = 1;
+            if(aindex == 1 && document.getElementById("more_button").style.display != "block"){
+                desp = 3;
+            }
             lastMenu.classList.remove("mfocus");
-            lastMenu = document.getElementById(menubuttons[aindex + 1]);
+            lastMenu = document.getElementById(menubuttons[aindex + desp]);
             lastMenu.classList.add("mfocus");
         }
     }else if (keyCode == '13') {
@@ -96,7 +104,6 @@ function serverSelectMenu(keyCode){
             lastServerSelected.classList.remove("mfocus");
             document.getElementById("server__select__menu").style.display = "none";
             ssmenucapture = false;
-
         }else if(aindex >= 1){
             lastServerSelected.classList.remove("mfocus");
             lastServerSelected = serverList[aindex - 1];
@@ -192,7 +199,9 @@ export function arrowNav(e){
             if(cc >= 1){
                 newpos = currentLastPos + "_" + cr + "_" + (cc - 1);
             }else{
-                manageMenu(null);
+                if(currentLastPos != "video_placeholder"){
+                    manageMenu(null);
+                }
             }
         }
         else if (e.keyCode == '39') {
