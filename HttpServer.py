@@ -69,7 +69,7 @@ def check_for_update():
         r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
         if c_version < r_version:
             return True
-        
+
     print("Actualizando...")
     download_file("https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip")
     with ZipFile('update.zip', 'r') as zipf:
