@@ -199,7 +199,7 @@ let linkError = function(error_message){
     }
 }
 
-let posLinks = function(linkList){
+window.posLinks = function(linkList){
     let best = getPreferer(linkList);
     window.lastLink = best;
     if (best.length > 0){

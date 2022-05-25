@@ -60,26 +60,28 @@ class handler(SimpleHTTPRequestHandler):
         self.wfile.write(message)
 
 def check_for_update():
-    c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
-    c_version = [int(x) for x in c_version]
-    c_version = c_version[0] * 100000000 + c_version[1] * 100000 + c_version[2]
-    r_version = requests.get("https://raw.githubusercontent.com/raulhaag/gean/master/version").text.strip().split(".")
-    r_version = [int(x) for x in r_version]
-    r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
-    if c_version < r_version:
-        print("Actualizando...")
-        download_file("https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip")
-        with ZipFile('update.zip', 'r') as zipf:
-            zipinfos = zipf.infolist()
-            for zipinfo in zipinfos:
-                zipinfo.filename = zipinfo.filename.replace('gean-master/', '')
-                if len(zipinfo.filename) > 0:
-                    zipf.extract(zipinfo)
+    if os.path.exists("version"):
+        c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
+        c_version = [int(x) for x in c_version]
+        c_version = c_version[0] * 100000000 + c_version[1] * 100000 + c_version[2]
+        r_version = requests.get("https://raw.githubusercontent.com/raulhaag/gean/master/version").text.strip().split(".")
+        r_version = [int(x) for x in r_version]
+        r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
+        if c_version < r_version:
+            return True
+        
+    print("Actualizando...")
+    download_file("https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip")
+    with ZipFile('update.zip', 'r') as zipf:
+        zipinfos = zipf.infolist()
+        for zipinfo in zipinfos:
+            zipinfo.filename = zipinfo.filename.replace('gean-master/', '')
+            if len(zipinfo.filename) > 0:
+                zipf.extract(zipinfo)
 
-        #download file to disk
-        print("Actualizado, reinicie la aplicación")
-        return True
-    return False
+    #download file to disk
+    print("Actualizado, reinicie la aplicación")
+    return True
 
 def download_file(url, filename):
     try:
