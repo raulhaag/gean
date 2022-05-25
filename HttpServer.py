@@ -67,8 +67,8 @@ def check_for_update():
         r_version = requests.get("https://raw.githubusercontent.com/raulhaag/gean/master/version").text.strip().split(".")
         r_version = [int(x) for x in r_version]
         r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
-        if c_version < r_version:
-            return True
+        if c_version >= r_version:
+            return False
 
     print("Actualizando...")
     download_file("https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip")
