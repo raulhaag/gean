@@ -16,7 +16,7 @@
 .search__text{
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    width: 65%;
+    width: 55%;
     border: none;
     outline:none;
     margin: 10px;
@@ -37,7 +37,7 @@
     border-radius: 0px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    width: 10%;
+    width: 20%;
     text-align: center;
     justify-items: center;
     align-items: center;

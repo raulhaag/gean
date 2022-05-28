@@ -95,7 +95,11 @@ export class SoloLatino {
     });
   }
 
-  getParent(after, path) {}
+  getParent(after, path) {
+    let dpath = (window.dec(path)).replace("episodios", "animes").replace(/-[^-]+?\/$/gm, "/");
+    let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path}, path)};
+    this.getDescription(reduce, console.log, window.enc(dpath));
+  }
 
   getList(page, filter = "") {}
 
@@ -128,18 +132,26 @@ export class SoloLatino {
     fetch(window.serverHost + "get/" + path)
       .then((response) => response.text())
       .then((result) => {
-        let id = result.match(/embed\.php\?id=([^"]+)/gm)[0];
+        let web = [...result.matchAll(/"pframe"><iframe class="[^"]+" src="([^"]+)/gm)][0][1];
         fetch(
           window.serverHost +
             "get/" +
-            window.enc("https://re.sololatino.net/" + id)
+            window.enc(web)
         )
           .then((response) => response.text())
           .then((result) => {
-            let linkh = [...result.matchAll(/go_to_player\('(.+?)'/gm)];
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(result, "text/html");
+            var lis = doc.getElementsByTagName("li");
             let links = [];
-            for (const link of linkh) {
-              links.push(link[1]);
+            for (const link of lis) {
+              try{
+                if(link.hasAttribute("data-r")){
+                  links.push(atob(link.getAttribute("data-r")));
+                }else{
+                  links.push([...lis[1].getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
+                }
+              }catch(e){}//continue
             }
             after(links);
           });

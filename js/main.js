@@ -1,10 +1,10 @@
 import {getResponse, getSource} from './sources/sources.js';
-import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch} from './coder.js';
+import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch, getSettings} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
 import{arrowNav, updatePositions} from './keynav.js';
 
 let loading;
-let dp, vp, pp, sp, content;
+let dp, vp, pp, sp, setp, content;
 let sid; // server selection
 let sn; // server name
 let favorites = [];
@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function(){
     dp = document.getElementsByClassName("details_placeholder")[0];
     pp = document.getElementsByClassName("pages_placeholder")[0];
     sp = document.getElementsByClassName("search_placeholder")[0];
+    setp = document.getElementsByClassName("settings_placeholder")[0];
     content = document.getElementsByClassName("content")[0];
 
     loading = document.getElementsByClassName("lds-group")[0];
@@ -186,7 +187,11 @@ let server_selected = function (sid, sn){
     loading.style.visibility = 'visible';
     localStorage.setItem('lastServer', sid)
     localStorage.setItem('lastServerName', sn)
-    getResponse(sid, posServerClick, error);
+    if(!window.getStorageDefault("lockfronpage", true)){
+        getResponse(sid, posServerClick, error);
+    }else{
+        loading.style.visibility = 'hidden';
+    }
 }
 
 let posDescription = function(response){
@@ -282,4 +287,30 @@ window.toggleView = function(name){
     }else{
         mdiv.style.display = "none";
     }
+}
+
+window.settings = function(){
+    setp.innerHTML = getSettings(sid)
+    setp.style.display =  'block';
+    addBackStack(setp);
+}
+
+window.getStorageDefault = function(key, defa){
+    let val = localStorage.getItem(key);
+    if(val == null){
+        val = defa;
+        localStorage.setItem(key, val);
+    }
+    if(val == 'true'){
+        return true;
+    }else if(val == 'false'){
+        return false;
+    }
+    return val;
+}
+
+window.optionClicked = function(e){
+    let key = e.id;
+    let val = e.checked;
+    localStorage.setItem(key, val);
 }

@@ -58,4 +58,26 @@ export function getSearch(server){
    `;
 }
 
+export function getSettings(){
+    let options = {"lockfronpage":" Bloquear pagina principal", "fullscreen": " Iniciar video en pantalla completa", "autoplay": " Autoplay de video"};
+    const defv = ["false", "true", "true"];
+    let result = '<div class="container"><div class="settings_group main-content">';
+    let aval = false;
+    var i = 0;
+    let extra = "";
+    for(var key in options){
+        aval = localStorage.getItem(key);
+        if(aval == null){
+            aval = defv[i];
+        }
+        if(aval == "true"){
+            extra = "checked";
+        }else{
+            extra = "";
+        }
+        result += '<div class="setting_option"><label><input type="checkbox" id="'+ key + '" value="'+ key + '" ' + extra + ' onclick=\'{optionClicked(this)}\'>' + options[key] + '</label></div>';
+        i++;
+    }
+    return result + '</div></div>';
+}
 

@@ -44,6 +44,42 @@ body{
     background-color: var(--main-vw-color);
 }
 
+.settings_group{
+    padding: 10px;
+    max-width: 1200px;
+    min-width: 200px;
+    height: 400px;
+    margin: 0 auto;
+    justify-content: space-between;
+    background-color: #0002;
+    border-radius: 0px 0px 3px 3px ;
+}
+.setting_option{
+    position: relative;
+    display: block;
+    justify-items: center;
+    margin: 10px;
+    width: 100%;
+    padding: 10px;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.setting_option input{
+    height: 25px;
+    width: 25px;
+}
+
+.setting_option label{
+    display: block;
+    margin-left: 10px;
+    padding-left: 10px;
+    font-size: 25px;
+}
+
+.settings_group label{
+}
+
 
 div{
     -webkit-touch-callout: none; /* iOS Safari */
@@ -55,7 +91,7 @@ div{
 }
 
 /*windosw placeholder*/
-.search_placeholder, .pages_placeholder, .video_placeholder, .details_placeholder{
+.search_placeholder, .pages_placeholder, .video_placeholder, .details_placeholder, .settings_placeholder{
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -81,6 +117,13 @@ div{
     max-height: 95vh;
     z-index: 900;
 }
+.settings_placeholder{
+    animation-name: fadein;
+    animation-duration: 0.3s;
+    background-color: var(--main-bg-color);
+    z-index: 990;
+}
+
 .pages_placeholder{
     animation-name: fadein;
     animation-duration: 0.3s;
@@ -282,7 +325,6 @@ div{
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     padding: 0px;
-    border-bottom: var(--main-contrast-color) solid 2px;
 }
 
 .server_selected{

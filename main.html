@@ -24,8 +24,8 @@
       <img class="menu__item" id="search_button" onclick="{search()}" src="../images/search.png"/>
       <img class="menu__item" id="more_button" onclick="{pages()}" src="../images/plus.png"/>
     </div>
-    <img id="settings_button" class="menu__item" src="../images/settings.png"></img>
-    <img onclick='{shutdown()}' id="shutdown_button" class="menu__item" src="../images/power.png"></img>
+    <img id="settings_button" class="menu__item" src="../images/settings.png" onclick="{settings()}"></img>
+    <img id="shutdown_button" class="menu__item" src="../images/power.png" onclick='{shutdown()}'></img>
   </div>
   <div id="server__select__menu">
     <div class="menu__server__item" id="jkanime" onclick="{server_selected_click(this)}">JkAnime</div>
@@ -43,5 +43,6 @@
     <div class="pages_placeholder content"></div>
     <div class="details_placeholder content"></div>
     <div class="video_placeholder content"></div>
+    <div class="settings_placeholder content"></div>
 </body>
 </html>
