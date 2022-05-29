@@ -1,0 +1,22 @@
+.video_container{
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000D;
+    position: fixed;
+}
+
+.videoview{
+    position: relative;
+    aspect-ratio: 16/9;
+    z-index: 9999;
+    width: 100%;
+    max-height: calc(100% - 100px);
+    padding: auto;
+    margin: auto;
+    background-color: #000;
+}

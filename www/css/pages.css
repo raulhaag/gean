@@ -1,0 +1,11 @@
+.pages{
+    max-height: 90vh;
+    overflow: scroll;
+}
+
+.pages__index{
+    padding: 5px;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}

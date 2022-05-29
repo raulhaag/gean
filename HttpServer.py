@@ -6,6 +6,7 @@ import base64, requests
 
 serve = None
 alive = True
+web_path = "./www"
 favs = []
 
 class handler(SimpleHTTPRequestHandler):
@@ -28,7 +29,8 @@ class handler(SimpleHTTPRequestHandler):
             self.return_response(200, getRedirectPost(path))
             return
 
-        if(os.path.exists('.' + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico"]):
+        if(os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico"]):
+            self.path = web_path + self.path
             #read file to string
             return SimpleHTTPRequestHandler.do_GET(self)
         else:
@@ -103,6 +105,7 @@ def check_for_update():
             if len(zipinfo.filename) > 0:
                 zipf.extract(zipinfo)
 
+    os.remove("update.zip")
     #download file to disk
     print("Actualizado, reinicie la aplicación")
     return True
