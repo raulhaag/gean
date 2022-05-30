@@ -37,14 +37,16 @@
     border-radius: 0px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    width: 20%;
+    width: 10%;
     text-align: center;
     justify-items: center;
     align-items: center;
 }
+
 #search .button div{
     margin:auto;
 }
+
 .search__text:focus{
     background-color: #aaa2;
 }
@@ -65,4 +67,16 @@
     width: 100%;
     align-items: center;
     justify-content: center;
+}
+
+@media screen and (max-width: 800px) {
+    #search .button{
+        width: 20%;
+    }
+
+}
+@media screen and (min-width: 1600px) {
+    #search .button{
+        width: 5%;
+    }
 }

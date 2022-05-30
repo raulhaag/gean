@@ -7,7 +7,7 @@ let loading;
 let dp, vp, pp, sp, setp, content;
 let sid; // server selection
 let sn; // server name
-let favorites = [];
+window.favorites = [];
 let recent = [];
 window.backStack = [];
 window.serverHost = "http://127.0.0.1:8080/";
@@ -42,8 +42,16 @@ document.addEventListener("DOMContentLoaded", function(){
         sn = "JkAnime";
     }
     server_selected(sid, sn);
-    document.onkeydown = arrowNav;
+    document.onkeydown = lauchKeyNav;
 });
+
+let lauchKeyNav = function(e){
+    let code = e || window.event;
+    if(code.keyCode >= 37 && code.keyCode <= 40){
+        document.onkeydown = arrowNav;
+        arrowNav(e);
+    }
+}
 
 window.mediaClick = function(e, path){
     loading.style.visibility = 'visible';
@@ -120,12 +128,17 @@ window.indexOfProperty = function(array, property, value){
     return array.map(function(x){return x[property]}).indexOf(value);
 }
 
-window.add_fab = function(name, image, path) {
-    let idx = indexOfProperty(recent, 'path', path);
+window.switch_fab = function(e, name, image, path) {
+    let idx = indexOfProperty(favorites, 'path', path);
     if(idx > -1){
-        recent.splice(idx, 1);
+        favorites.splice(idx, 1);
+        e.classList.remove('favorite');
+        e.innerHTML = "Agregar a favoritos";
+    }else{
+        favorites.unshift({'name': name, 'image': image, 'path': path});
+        e.classList.add('favorite');
+        e.innerHTML = "Quitar de favoritos";
     }
-    favorites.unshift({'name': name, 'image': image, 'path': path});
     updateFavorites();
 }
 

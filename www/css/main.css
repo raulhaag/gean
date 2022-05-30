@@ -35,6 +35,10 @@ body{
     right: 0;
 }
 
+.favorite{
+    background-color: var(--main-sc-color) !important;
+}
+
 .button:hover{
     outline: 3px solid var(--main-contrast-color);
     background-color: var(--main-sc-color);

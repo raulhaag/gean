@@ -30,7 +30,12 @@ export function generateDescription(options) {
     for(let i = 0; i < options['items'].length; i++){
         result += '<div class="details__item">'+ options['items'][i] +'</div>';
     }
-    result += '<div class="details__add focusable" onclick="{add_fab(\'' + options['name'] + '\', \'' + options['image'] + '\',\'' + options['path'] + '\')}">Agregar a favoritos</div>';
+    let idx = indexOfProperty(favorites, 'path', options.path);
+    if(idx > -1){
+        result += '<div class="details__add focusable favorite" onclick="{switch_fab(this, \'' + options['name'] + '\', \'' + options['image'] + '\',\'' + options['path'] + '\')}">Quitar de favoritos</div>';
+    }else{
+        result += '<div class="details__add focusable" onclick="{switch_fab(this, \'' + options['name'] + '\', \'' + options['image'] + '\',\'' + options['path'] + '\')}">Agregar a favoritos</div>';
+    }
     result += '</div></div><div class="details__chapters">';
     for(let i = 0; i < options['chapters'].length; i++){
         if(vieweds.indexOf(options['chapters'][i]['path']) == -1){

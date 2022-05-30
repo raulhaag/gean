@@ -1,3 +1,4 @@
 {
-    "liveServer.settings.multiRootWorkspaceName": "gean"
+    "liveServer.settings.multiRootWorkspaceName": "gean",
+    "liveServer.settings.root": "/www"
 }
