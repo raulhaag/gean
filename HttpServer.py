@@ -6,6 +6,7 @@ from urllib import request, parse
 serve = None
 alive = True
 web_path = "./www"
+defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
 favs = []
 
 class handler(SimpleHTTPRequestHandler):
@@ -65,6 +66,7 @@ def getResponseGet(path = []):
     headers = {}
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
+    headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
     req =  request.Request(web, headers=headers)
     resp = request.urlopen(req)
@@ -80,6 +82,7 @@ def getPost(path = []):
     if len(path) == 5:
         headers =  json.loads(decode(path[3]))
         data =  json.loads(decode(path[4]))
+    headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
     data = parse.urlencode(data).encode()
     req =  request.Request(web, data=data, headers=headers)
