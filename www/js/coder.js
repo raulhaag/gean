@@ -49,7 +49,7 @@ export function generateDescription(options) {
 }
 
 export function getPlayer(options){
-    return '<div class="video_container"><video class="videoview focusable" controls autoplay><source src="' + options["video"]+ '"></video></div>';
+    return '<div class="video_container"><video id="player" class="videoview focusable" controls autoplay><source src="' + options["video"]+ '"></video></div>';
 }
 
 export function getSearch(server){

@@ -20,3 +20,8 @@
     margin: auto;
     background-color: #000;
 }
+
+#player, #video_placeholder_0_0{
+    border-radius: 0px;
+    outline: none !important;
+}

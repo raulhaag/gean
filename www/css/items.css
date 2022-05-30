@@ -31,6 +31,7 @@
         outline: 3px solid var(--main-contrast-color);
     }   
 }
+
 .focus{
     border-radius: 3px;
     outline: 3px solid var(--main-contrast-color);
