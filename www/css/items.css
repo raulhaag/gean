@@ -25,10 +25,17 @@
     height: 250Px;
 }
 
-.item:hover, .focus{
+@media (hover: hover) and (pointer: fine) {
+    .item:hover{
+        border-radius: 3px;
+        outline: 3px solid var(--main-contrast-color);
+    }   
+}
+.focus{
     border-radius: 3px;
     outline: 3px solid var(--main-contrast-color);
 }
+
 .item img{
     border-radius: 3px;
     object-fit: cover;

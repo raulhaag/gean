@@ -40,10 +40,11 @@
     box-shadow: 0px 0px 2px #FFFA;
     text-align: center;
 }
-
-.details__add:hover{
-    background-color: var(--main-sc-color);
-    outline: 3px solid var(--main-contrast-color);
+@media (hover: hover) and (pointer: fine) {
+    .details__add:hover{
+        background-color: var(--main-sc-color);
+        outline: 3px solid var(--main-contrast-color);
+    }
 }
 
 .details__image{
