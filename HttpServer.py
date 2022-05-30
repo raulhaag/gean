@@ -1,8 +1,7 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from zipfile import ZipFile
-import os
-import json
-import base64, requests
+import base64, os, json
+from urllib import request, parse
 
 serve = None
 alive = True
@@ -67,7 +66,9 @@ def getResponseGet(path = []):
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
     web = decode(path[2])
-    return requests.get(web, headers=headers).text
+    req =  request.Request(web, headers=headers)
+    resp = request.urlopen(req)
+    return resp.read().decode('utf-8')
 
 def getRedirectPost(path = []):
     resp =  getPost(path)
@@ -75,22 +76,26 @@ def getRedirectPost(path = []):
 
 def getPost(path = []):
     headers = {}
-    params = {}
+    data = {}
     if len(path) == 5:
         headers =  json.loads(decode(path[3]))
-        params =  json.loads(decode(path[4]))
+        data =  json.loads(decode(path[4]))
     web = decode(path[2])
-    return requests.post(web, headers=headers, data=params)
+    data = parse.urlencode(data).encode()
+    req =  request.Request(web, data=data, headers=headers)
+    resp = request.urlopen(req)
+    return resp
 
 def getResponsePost(path = []):
-    return getPost(path).text
+    return getPost(path).read().decode('utf-8')
 
 def check_for_update():
     if os.path.exists("version"):
         c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
         c_version = [int(x) for x in c_version]
         c_version = c_version[0] * 100000000 + c_version[1] * 100000 + c_version[2]
-        r_version = requests.get("https://raw.githubusercontent.com/raulhaag/gean/master/version").text.strip().split(".")
+        req =  request.Request("https://raw.githubusercontent.com/raulhaag/gean/master/version")
+        r_version = request.urlopen(req).read().decode('utf-8').strip().split(".")
         r_version = [int(x) for x in r_version]
         r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
         if c_version >= r_version:
@@ -111,13 +116,7 @@ def check_for_update():
     return True
 
 def download_file(url, filename):
-    try:
-        response = requests.get(url)
-    except:
-        print(str("Error downloading file: " + url))
-        return
-    with open(filename, "wb") as f:
-        f.write(response.content)
+    request.urlretrieve(url, filename)
 
 server = HTTPServer(('', 8080), handler)
 
