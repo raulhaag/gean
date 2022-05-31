@@ -236,11 +236,11 @@ window.posLinks = function(linkList){
 
 let openPlayer = function(options){
     if(getStorageDefault("external_player", false)){
-        fetch(window.serverHost + "/view/" + window.enc(options["video"]))
+        fetch(window.serverHost + "view/" + window.enc(options["video"]))
         .then((response) => response.text())
         .then((result) => {
-            if(result != ""){
-                error("Error al abrir reproductor externo")
+            if(result.trim() != "ok"){
+                error("Error al abrir reproductor externo: \n" + result);
             }
       })
       loading.style.visibility = 'hidden';
