@@ -230,10 +230,22 @@ window.posLinks = function(linkList){
         getDDL(openPlayer, linkError, best[0]);
     } else {
         error("No supported servers");
+
     }
 }
 
 let openPlayer = function(options){
+    if(getStorageDefault("external_player", false)){
+        fetch(window.serverHost + "/view/" + window.enc(options["video"]))
+        .then((response) => response.text())
+        .then((result) => {
+            if(result != ""){
+                error("Error al abrir reproductor externo")
+            }
+      })
+      loading.style.visibility = 'hidden';
+      return;
+    }
     vp.innerHTML = getPlayer(options);
     vp.style.display =  'block';
     loading.style.visibility = 'hidden';
