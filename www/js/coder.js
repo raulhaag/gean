@@ -55,7 +55,7 @@ export function getPlayer(options){
 export function getSearch(server){
     return `<div id="search">
     <div id="search__box">
-    <input class="search__text focusable" type="text" onkeypress="{}"></input>
+    <input autoComplete='none' class="search__text focusable" type="text" onkeypress="{}"></input>
     <div class="button focusable" onclick="{mediaClick(self, '`+ server + `/search')}"><div>Buscar</div></div>
     </div>
     <div id="results_container"></div>
@@ -76,11 +76,11 @@ export function getSettings(){
             aval = defv[i];
         }
         if(aval == "true"){
-            extra = "checked";
+            extra = "✓";
         }else{
-            extra = "";
+            extra = "✗";
         }
-        result += '<div class="setting_option"><label><input type="checkbox" id="'+ key + '" value="'+ key + '" ' + extra + ' onclick=\'{optionClicked(this)}\'>' + options[key] + '</label></div>';
+        result += '<div class="setting_option focusable" onclick="{toggleOption(this)}"><div class="setting_label">' + options[key] + '</div><div class="setting_state" id="'+ key + '">' + extra + '</div></div>';
         i++;
     }
     return result + '</div></div>';

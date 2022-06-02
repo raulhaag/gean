@@ -7,6 +7,7 @@ let loading;
 let dp, vp, pp, sp, setp, content;
 let sid; // server selection
 let sn; // server name
+let isKeyNav = false;
 window.favorites = [];
 let recent = [];
 window.backStack = [];
@@ -49,6 +50,7 @@ let lauchKeyNav = function(e){
     let code = e || window.event;
     if(code.keyCode >= 37 && code.keyCode <= 40){
         document.onkeydown = arrowNav;
+        isKeyNav = true;
         arrowNav(e);
     }
 }
@@ -102,16 +104,23 @@ window.backClick = function(e){
             document.getElementById("back_button").style.display = 'none';
             document.getElementById("search_button").style.display = 'block';
             document.getElementById("more_button").style.display = 'block';
+            document.getElementById("settings_button").style.display = 'block';
+            document.getElementById("select_server").classList.add("select_server_active");
         }
-        arrowNav(null);
+        if(isKeyNav){
+            updatePositions(null);
+        }
     }
 }
 
 let addBackStack = function(e){
     if(window.backStack.length == 0){
+        document.getElementById("server__select__menu").style.display = 'none';
         document.getElementById("back_button").style.display = 'block';
         document.getElementById("search_button").style.display = 'none';
         document.getElementById("more_button").style.display = 'none';
+        document.getElementById("settings_button").style.display = 'none';
+        document.getElementById("select_server").classList.remove("select_server_active");
     }
     window.backStack.push(e);
 }
@@ -263,7 +272,6 @@ let openPlayer = function(options){
     addBackStack(vp);
 }
 
-
 let posSearch = function(response){
     let search = document.getElementById("search");
     search.style.marginTop = 50 + 'px';
@@ -318,6 +326,16 @@ window.settings = function(){
     setp.innerHTML = getSettings(sid)
     setp.style.display =  'block';
     addBackStack(setp);
+}
+
+window.toggleOption = function(e){
+    if(e.children[1].innerText == "✓"){
+        e.children[1].innerText = "✗"
+        localStorage.setItem(e.children[1].id, "false");
+    }else{
+        e.children[1].innerText = "✓"
+        localStorage.setItem(e.children[1].id, "true");
+    }
 }
 
 window.getStorageDefault = function(key, defa){

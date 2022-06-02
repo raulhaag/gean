@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="css/main.css">
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+<script>
+    let toggleOption = function(e){
+        if(e.children[1].innerText == "✓"){
+            e.children[1].innerText = "✗"
+            console.log(e.children[1].innerText, e.children[1].id)
+        }else{
+            e.children[1].innerText = "✓"
+            console.log(e.children[1].innerText, e.children[1].id)
+        }
+    }
+</script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="settings_group main-content">
+            <div class="setting_option" onclick="{toggleOption(this)}"><div class="setting_label">Opcion 1</div><div class="setting_state" id="id1">✓</div></div>
+            <div class="setting_option" onclick="{toggleOption(this)}"><div class="setting_label">Opcion 2</div><div class="setting_state" value="false" id="id2">✗</div></div>
+            <div class="setting_option" onclick="{toggleOption(this)}"><div class="setting_label">Opcion 3</div><div class="setting_state" value="true" id="id3">✓</div></div>
+            <div class="setting_option" onclick="{toggleOption(this)}"><div class="setting_label">Opcion 4</div><div class="setting_state" value="false" id="id4">✗</div></div>
+            <div class="setting_option" onclick="{toggleOption(this)}"><div class="setting_label">Opcion 5</div><div class="setting_state" value="true" id="id5">✓</div></div>
+            <div class="setting_option" onclick="{toggleOption(this)}"><div class="setting_label">Opcion 6</div><div class="setting_state" value="true" id="id6">✓</div></div>
+        </div>
+    </div>
+</body>
+</html>

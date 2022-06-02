@@ -1,4 +1,4 @@
-
+const left = 37; const up = 38; const right = 39; const down = 40; const enter = 13;
 let lastPos = {};
 let currentLastPos = "content";
 let firstInit = false;
@@ -16,6 +16,7 @@ let menubuttons = [
 let ssmenucapture = false;
 let lastServerSelected = null;
 let serverList = [];
+let contPool = [];
 
 function manageMenu(keyCode){
     if(ssmenucapture){
@@ -24,57 +25,58 @@ function manageMenu(keyCode){
     }
     if(keyCode == null){
         menucapture = true;
-        lastPos[currentLastPos].classList.remove("focus");
+        if(lastPos[currentLastPos] != null){
+            lastPos[currentLastPos].classList.remove("focus");
+        }
         if(document.getElementById("back_button").style.display != "block"){
            lastMenu = document.getElementById("select_server");
         }else{
             lastMenu = document.getElementById("back_button");
         }
         lastMenu.classList.add("mfocus");
-    }else if(keyCode == 40){
-        //down
+    }else if(keyCode == down){
         menucapture = false;
         lastMenu.classList.remove("mfocus");
         arrowNav(null);
-    }else if(keyCode == 37){
-        //left
+    }else if(keyCode == left){
         let aindex = menubuttons.indexOf(lastMenu.id);
-        if(aindex > 0){
-            if(aindex == 1 && document.getElementById("back_button").style.display != "block"){
-                return;
+        if(document.getElementById("back_button").style.display != "block"){
+            if(aindex > 1){
+                lastMenu.classList.remove("mfocus");
+                lastMenu = document.getElementById(menubuttons[aindex - 1]);
+                lastMenu.classList.add("mfocus");
             }
-            let desp = 1;
-            if(aindex == 4 && document.getElementById("more_button").style.display != "block"){
-                desp = 3;
+        }else{
+            if(aindex != 0){
+                lastMenu.classList.remove("mfocus");
+                lastMenu = document.getElementById("back_button");
+                lastMenu.classList.add("mfocus");
             }
-            lastMenu.classList.remove("mfocus");
-            lastMenu = document.getElementById(menubuttons[aindex - desp]);
-            lastMenu.classList.add("mfocus");
         }
-    }else if(keyCode == 39){
-        //right
+    }else if(keyCode == right){
         let aindex = menubuttons.indexOf(lastMenu.id);
-        if(aindex < menubuttons.length - 1){
-            let desp = 1;
-            if(aindex == 1 && document.getElementById("more_button").style.display != "block"){
-                desp = 3;
+        if(document.getElementById("back_button").style.display != "block"){
+            if(aindex < menubuttons.length - 1){
+                lastMenu.classList.remove("mfocus");
+                lastMenu = document.getElementById(menubuttons[aindex + 1]);
+                lastMenu.classList.add("mfocus");
             }
-            lastMenu.classList.remove("mfocus");
-            lastMenu = document.getElementById(menubuttons[aindex + desp]);
-            lastMenu.classList.add("mfocus");
+        }else{
+            if(aindex != menubuttons.length - 1){
+                lastMenu.classList.remove("mfocus");
+                lastMenu = document.getElementById("shutdown_button");
+                lastMenu.classList.add("mfocus");
+            }
         }
-    }else if (keyCode == '13') {
-        // enter
-        var clickEvent = new MouseEvent("click", {
-            "view": window,
-            "bubbles": true,
-            "cancelable": false
-        });
-        lastMenu.dispatchEvent(clickEvent);
-        let aindex = menubuttons.indexOf(lastMenu.id);
-        if(aindex == 1){
+    }else if (keyCode == enter) {
+        clickOn(lastMenu);
+        if(lastMenu.id == "select_server"){
             ssmenucapture = true;
             serverSelectMenu(null);
+        }else{
+            lastMenu.classList.remove("mfocus");
+            menucapture = false;
+            lastMenu = null;
         }
     }
 }
@@ -89,16 +91,14 @@ function serverSelectMenu(keyCode){
             lastServerSelected = server[0];
         }
         lastServerSelected.classList.add("mfocus");
-    }else if(keyCode == 40){
-        //down
+    }else if(keyCode == down){
         let aindex = serverList.indexOf(lastServerSelected);
         if(aindex < serverList.length - 1){
             lastServerSelected.classList.remove("mfocus");
             lastServerSelected = serverList[aindex + 1];
             lastServerSelected.classList.add("mfocus");
         }
-    }else if(keyCode == 38){
-        //up
+    }else if(keyCode == up){
         let aindex = serverList.indexOf(lastServerSelected);
         if(aindex == 0){
             lastServerSelected.classList.remove("mfocus");
@@ -109,21 +109,25 @@ function serverSelectMenu(keyCode){
             lastServerSelected = serverList[aindex - 1];
             lastServerSelected.classList.add("mfocus");
         }
-    }else if (keyCode == '13') {
-        // enter
+    }else if (keyCode == enter) {
         lastServerSelected.classList.remove("mfocus");
-            var clickEvent = new MouseEvent("click", {
-                "view": window,
-                "bubbles": true,
-                "cancelable": false
-            });
-            lastServerSelected.dispatchEvent(clickEvent);
+            clickOn(lastServerSelected);
             ssmenucapture = false;
     }
 }
 
 
 export function updatePositions(containerCN = "content"){
+    if(containerCN == null){
+        if(contPool.length > 1){
+            contPool.pop();
+            containerCN = contPool.at(-1);
+        }else{
+            containerCN = "content";
+        }
+    }else{
+        contPool.push(containerCN);
+    }
     currentLastPos = containerCN;
     container = document.getElementsByClassName(containerCN)[0];
     let items = container.getElementsByClassName("focusable");//focusable next??
@@ -168,8 +172,7 @@ export function arrowNav(e){
         let cc = parseInt(itempos.at(-1));
         let cr = parseInt(itempos.at(-2));
         let newpos = null;
-        if (e.keyCode == '38') {
-            // up arrow
+        if (e.keyCode == up) {
             if(cr >= 1){
                 let desph = cc;
                 while(desph >= 0){
@@ -180,11 +183,11 @@ export function arrowNav(e){
                     desph--;
                 }
             }else{
+                e.preventDefault();
                 manageMenu(null);
             }
         }
-        else if (e.keyCode == '40') {
-            // down arrow
+        else if (e.keyCode == down) {
             let desph = cc;
             while(desph >= 0){
                 if(itemExists((cr + 1), desph)){
@@ -194,8 +197,7 @@ export function arrowNav(e){
                 desph--;
             }
         }
-        else if (e.keyCode == '37') {
-        // left arrow
+        else if (e.keyCode == left) {
             if(cc >= 1){
                 newpos = currentLastPos + "_" + cr + "_" + (cc - 1);
             }else{
@@ -204,20 +206,13 @@ export function arrowNav(e){
                 }
             }
         }
-        else if (e.keyCode == '39') {
-        // right arrow
+        else if (e.keyCode == right) {
             if(itemExists(cr, (cc + 1))){
                 newpos = currentLastPos + "_" + cr + "_" + (cc + 1);
             }
         }
-        else if (e.keyCode == '13') {
-        // enter
-            var clickEvent = new MouseEvent("click", {
-                "view": window,
-                "bubbles": true,
-                "cancelable": false
-            });
-            lastPos[currentLastPos].dispatchEvent(clickEvent);
+        else if (e.keyCode == enter) {
+            clickOn(lastPos[currentLastPos]);
         }
         try{
             if(newpos != null){
@@ -226,6 +221,7 @@ export function arrowNav(e){
                 nselect.classList.add("focus");
                 lastPos[currentLastPos] = nselect;
                 container.scrollTop = nselect.offsetTop - 70;
+                e.preventDefault();
             }
         }catch{
             //position not found
@@ -244,3 +240,13 @@ let itemExists = function(row, column){
     }
     return false;
 }
+
+let clickOn = function(e) {
+    var clickEvent = new MouseEvent("click", {
+        "view": window,
+        "bubbles": true,
+        "cancelable": false
+    });
+    e.dispatchEvent(clickEvent);
+}
+

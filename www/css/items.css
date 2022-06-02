@@ -29,7 +29,7 @@
     .item:hover{
         border-radius: 3px;
         outline: 3px solid var(--main-contrast-color);
-    }   
+    }
 }
 
 .focus{
