@@ -251,15 +251,7 @@ let openPlayer = function(options){
     vp.style.display =  'block';
     loading.style.visibility = 'hidden';
     var elem = document.getElementsByClassName("videoview")[0];
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) { /* Safari */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE11 */
-        elem.msRequestFullscreen();
-     } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen();
-    }
+    requestFullScreen(elem);
     elem.focus();
     addBackStack(vp);
 }
@@ -349,3 +341,30 @@ window.optionClicked = function(e){
     let val = e.checked;
     localStorage.setItem(key, val);
 }
+
+window.requestFullScreen = function(elem) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullScreen) {
+      elem.webkitRequestFullScreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else {
+      console.warn("Did not find a requestFullScreen method on this element", elem);
+    }
+  }
+  
+  window.exitFullScreen = function() {
+    const document = window.document;
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
