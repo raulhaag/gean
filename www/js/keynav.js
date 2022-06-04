@@ -116,7 +116,6 @@ function serverSelectMenu(keyCode){
     }
 }
 
-
 export function updatePositions(containerCN = "content"){
     if(containerCN == null){
         if(contPool.length > 1){
@@ -167,7 +166,47 @@ export function arrowNav(e){
         return;
     }
     e = e || window.event;
-    if(lastPos[currentLastPos] != null){
+    if(currentLastPos == "video_placeholder"){
+        let vplayer = document.getElementById("video_placeholder_0_0");
+        switch(e.keyCode){
+            case up:
+                if(isFullscreen()){
+                    exitFullScreen();
+                }else{
+                    manageMenu(null);
+                }
+                e.preventDefault();
+                break;
+            case down:
+                if(isFullscreen()){
+                    if(vplayer.paused){
+                        vplayer.play();
+                    }else{
+                        vplayer.pause();
+                    }  
+                }else{
+                    requestFullScreen(vplayer);
+                }
+                e.preventDefault();
+                break;
+            case left:
+                vplayer.currentTime -= 30;
+                break;  
+            case right:
+                vplayer.currentTime += 30;
+                e.preventDefault();
+                break;
+            case enter:
+                if(vplayer.paused){
+                    vplayer.play();
+                }else{
+                    vplayer.pause();
+                }  
+                e.preventDefault();
+                break;
+        }
+        return;
+    }else if(lastPos[currentLastPos] != null){
         let itempos = lastPos[currentLastPos].id.split("_");
         let cc = parseInt(itempos.at(-1));
         let cr = parseInt(itempos.at(-2));
@@ -250,3 +289,4 @@ let clickOn = function(e) {
     e.dispatchEvent(clickEvent);
 }
 
+let isFullscreen = () => !! document.fullscreenElement;
