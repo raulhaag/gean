@@ -190,9 +190,9 @@ let error = function(error_message){
 }
 
 window.server_selected_click = function(e){
-    let sid = e.id;
-    let sname = e.innerHTML;
-    server_selected(sid, sname);
+    sid = e.id;
+    sn = e.innerHTML;
+    server_selected(sid, sn);
 }
 
 let server_selected = function (sid, sn){
@@ -218,7 +218,7 @@ let posDescription = function(response){
 let linkError = function(error_message){
     if (window.lastLink.length > 1){
         window.lastLink.shift();
-        postLink(window.lastLink);
+        posLinks(window.lastLink);
     }else{
         error(error_message);
     }
@@ -351,11 +351,9 @@ window.requestFullScreen = function(elem) {
       elem.webkitRequestFullScreen();
     } else if (elem.msRequestFullscreen) {
       elem.msRequestFullscreen();
-    } else {
-      console.warn("Did not find a requestFullScreen method on this element", elem);
     }
   }
-  
+
   window.exitFullScreen = function() {
     const document = window.document;
     if (document.exitFullscreen) {

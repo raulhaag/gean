@@ -125,7 +125,7 @@ export class JKAnime {
 
   async getSearch(after, onError, query) {
     try{
-      let response = await fGet("https://jkanime.net/ajax/ajax_search/?q=" + query);
+      let response = await fGet("https://jkanime.net/ajax/ajax_search/?q=" + encodeURIComponent(query));
       if (response.indexOf("error") == 0) {
         onError(response);
         return;

@@ -89,6 +89,10 @@ export class SoloLatino {
                        "path": this.name + "/getLinks/" + window.enc(ch[i].firstChild.getAttribute("href"))});
       }
 
+      if(chapters.length == 0){
+        chapters.push({"name":"Película", "path": this.name + "/getLinks/" + path});
+      }
+
       after({"name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items":[description], "chapters": chapters});
     }).catch((nerror) => {
       onError(nerror);
@@ -108,7 +112,7 @@ export class SoloLatino {
     fetch(
       window.serverHost +
         "get/" +
-        window.enc("https://sololatino.net/?s=" + query)
+        window.enc("https://sololatino.net/?s=" + encodeURIComponent(query))
     )
       .then((response) => response.text())
       .then((result) => {

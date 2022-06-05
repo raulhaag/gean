@@ -16,15 +16,13 @@ window.fGet = async function (url, header = {}) {
 }
 
 window.fPost = async function (url, header, data) {
-
-    var request = new XMLHttpRequest();
-    request.open('GET', window.serverHost + "get/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(data)), false);  // `false` makes the request synchronous
-    request.send(null);
-    if (request.status === 200) {
-        return request.responseText;
+    var response = await fetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(data)));  // `false` makes the request synchronous
+  if (response.status === 200) {
+        return await response.text();
     }else{
-        return "error " + request.status;
+        return "error " + response.status;
     }
+
 }
 
 window.fetchRedirectPost = async function (url, header) {

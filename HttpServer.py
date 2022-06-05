@@ -28,11 +28,11 @@ class handler(SimpleHTTPRequestHandler):
         if path[1] == "rpost":
             self.return_response(200, getRedirectPost(path))
             return
-        
+
         if path[1] == "view":
             self.return_response(200, "Solo soportado por android, quita esta cofiguración de tus opciones.")
             return
-        
+
         if(os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico"]):
             self.path = web_path + self.path
             #read file to string
