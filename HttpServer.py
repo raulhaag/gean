@@ -28,6 +28,10 @@ class handler(SimpleHTTPRequestHandler):
             if path[1] == "rpost":
                 self.return_response(200, getRedirectPost(path))
                 return
+            
+            if path[1] == "rget":
+                self.return_response(200, getRedirectGet(path))
+                return
 
             if path[1] == "view":
                 self.return_response(200, "Solo soportado por android, quita esta cofiguración de tus opciones.")
@@ -68,14 +72,20 @@ def decode(input):
     return base64.b64decode(input.replace("_", "/").encode('utf-8')).decode('utf-8')
 
 def getResponseGet(path = []):
+    return getGet(path).read().decode('utf-8')
+
+def getGet(path = []):
     headers = {}
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
     headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
     req =  request.Request(web, headers=headers)
-    resp = request.urlopen(req)
-    return resp.read().decode('utf-8')
+    return request.urlopen(req)
+
+def getRedirectGet(path = []):
+    resp =  getGet(path)
+    return resp.url
 
 def getRedirectPost(path = []):
     resp =  getPost(path)
