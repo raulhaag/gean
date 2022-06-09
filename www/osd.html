@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    const left = 37;
+    const up = 38;
+    const right = 39;
+    const down = 40;
+    const enter = 13;
+    const increments = [5, 10, 15, 30, 30, 60, 300, 600]
+    const waitTime = 500;
+    let incIndex = 0;
+    let videoLenght = 60*24 + 30;
+    let currentTime = 0;
+    let currentInc = 5;
+    let lastIncTime = 0;
+    let lastIncAction = 0;
+    let osdTimeOut = null;
+
+    function timeOutOSD(){
+        clearTimeout(osdTimeOut);
+        osdTimeOut = setTimeout(function(){
+            document.getElementById('OSD').classList.remove("active");
+            let video = document.getElementById('video');
+            video.currentTime = currentTime;
+        }, 1200);
+    }
+
+    function toHHMMSS(time){
+        let hours   = Math.floor(time / 3600);
+        let minutes = Math.floor((time - (hours * 3600)) / 60);
+        let seconds = time - (hours * 3600) - (minutes * 60);
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        if(hours == "00"){
+            return minutes+':'+seconds;
+        }
+        return hours+':'+minutes+':'+seconds;
+    }
+
+
+    document.onkeydown = function (event) {
+        let keyCode = (event || window.event).keyCode;
+        let ctime = new Date().getTime() - lastIncTime;
+        lastIncTime = new Date().getTime();
+        if(lastIncAction == keyCode && ctime < waitTime){
+            if (incIndex < increments.length - 1) {
+                incIndex++;
+            }
+        }else{
+            incIndex = 0;
+        }
+        if (keyCode == left) {
+            currentInc = -increments[incIndex];
+        }else if (keyCode == right) {
+            currentInc = increments[incIndex];
+        }else{
+            return;
+        }
+        let player = document.getElementById('video');
+        currentTime = parseInt(player.currentTime);
+        videoLenght = parseInt(player.duration);
+        currentTime += currentInc;
+        if(currentTime < 0){
+            currentTime = 0;
+        }else if(currentTime > videoLenght){
+            currentTime = videoLenght;
+        }
+        document.getElementById('OSD').classList.add("active");
+        lastIncAction = keyCode;
+        event.preventDefault();
+        let osd = document.getElementById('osd-time');
+        osd.innerHTML = toHHMMSS(currentTime) + "/" + toHHMMSS(videoLenght);
+        let progress = document.getElementById('osd-progress');
+        progress.style.width = (currentTime/videoLenght)*100 + "%";
+        timeOutOSD();
+    }
+
+    let checkIncrement =(keyCode =>{
+        if(lastIncAction == keyCode && ctime < waitTime){
+                if (incIndex < increments.length - 1) {
+                    incIndex++;
+                }
+        }else{
+            incIndex = 0;
+        }
+    });
+</script>
+<style>
+    #OSD{
+        width: 50%;
+        margin: 0 auto;
+        background-color: transparent ;
+        color: white;
+        align-items: center;
+        text-align: center;
+        font-size: 45px;
+        transition: opacity 150ms linear;
+        opacity: 0;
+        z-index: 99999;
+    }
+    #OSD.active{
+        opacity: 0.9;
+    }
+    #osd-time{
+        stroke: 1px tomato;
+    }
+    #osd-progress-containen{
+        outline: 1px solid white;
+        height: 20px;
+        width: 100%;
+        align-items: flex-start;
+    }
+    #osd-progress{
+        height: 100%;
+        background-color: white;
+        width: 10%;
+    }
+    #videoandosd{
+        display: flex;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+
+    .inner-container {
+        display: inline-block;
+        position: relative;
+    }
+    .video-overlay {
+        position: absolute;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+    video {
+        width: 100%;
+        height: 100%;
+    }
+
+</style>
+<body style="background-color: #777;">
+
+<div id="videoandosd">
+    <div class="inner-container">
+        <div class="video-overlay">
+            <div id="OSD">
+                <div id="osd-time">12:30/24:30</div>
+                <div id="osd-progress-containen"><div id="osd-progress"></div></div>
+            </div>
+        </div>
+        <video id="video" controls>
+            <source src="https://blog.addpipe.com/static/short.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>
+</body>
+</html>

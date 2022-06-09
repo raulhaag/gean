@@ -183,25 +183,23 @@ export function arrowNav(e){
                         vplayer.play();
                     }else{
                         vplayer.pause();
-                    }  
+                    }
                 }else{
+                    switchPlayer(vplayer)
                     requestFullScreen(vplayer);
+                    switchPlayer(vplayer)
                 }
                 e.preventDefault();
                 break;
             case left:
                 vplayer.currentTime -= 30;
-                break;  
+                break;
             case right:
                 vplayer.currentTime += 30;
                 e.preventDefault();
                 break;
             case enter:
-                if(vplayer.paused){
-                    vplayer.play();
-                }else{
-                    vplayer.pause();
-                }  
+                switchPlayer(vplayer)
                 e.preventDefault();
                 break;
         }
@@ -290,3 +288,11 @@ let clickOn = function(e) {
 }
 
 let isFullscreen = () => !! document.fullscreenElement;
+
+let switchPlayer = (vplayer) => {
+    if(vplayer.paused){
+        vplayer.play();
+    }else{
+        vplayer.pause();
+    }
+}
