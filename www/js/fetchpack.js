@@ -3,7 +3,7 @@ window.enc = function(e){
 }
 
 window.dec = function(e){
-    return atob(decodeURIComponent(e));
+    return atob(e.replaceAll('_', '/'));
 }
 
 window.fGet = async function (url, header = {}) {
@@ -40,4 +40,9 @@ window.fRGet = async function (url, header = {}) {
     }else{
         return "error " + response.status;
     }
+}
+
+window.singleMatch = function (regex, string) {
+    var match = regex.exec(string);
+    return match ? match[1] : null;
 }

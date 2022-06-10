@@ -18,6 +18,16 @@ let lastServerSelected = null;
 let serverList = [];
 let contPool = [];
 
+const increments = [5, 10, 15, 30, 30, 60, 300, 600]
+const waitTime = 500;
+let incIndex = 0;
+let videoLenght = 60*24 + 30;
+let currentTime = 0;
+let currentInc = 5;
+let lastIncTime = 0;
+let lastIncAction = 0;
+let osdTimeOut = null;
+
 function manageMenu(keyCode){
     if(ssmenucapture){
         serverSelectMenu(keyCode);
@@ -125,6 +135,9 @@ export function updatePositions(containerCN = "content"){
             containerCN = "content";
         }
     }else{
+        if(contPool.indexOf(containerCN) != -1){
+            contPool.splice(contPool.indexOf(containerCN), 1);
+        }
         contPool.push(containerCN);
     }
     currentLastPos = containerCN;
@@ -168,6 +181,7 @@ export function arrowNav(e){
     e = e || window.event;
     if(currentLastPos == "video_placeholder"){
         let vplayer = document.getElementById("video_placeholder_0_0");
+        let pcont = document.getElementsByClassName("inner-container")[0];
         switch(e.keyCode){
             case up:
                 if(isFullscreen()){
@@ -186,17 +200,46 @@ export function arrowNav(e){
                     }
                 }else{
                     switchPlayer(vplayer)
-                    requestFullScreen(vplayer);
+                    requestFullScreen(pcont);
                     switchPlayer(vplayer)
                 }
                 e.preventDefault();
                 break;
             case left:
-                vplayer.currentTime -= 30;
-                break;
             case right:
-                vplayer.currentTime += 30;
+                let keyCode = (event || window.event).keyCode;
+                let ctime = new Date().getTime() - lastIncTime;
+                lastIncTime = new Date().getTime();
+                if(lastIncAction == keyCode && ctime < waitTime){
+                    if (incIndex < increments.length - 1) {
+                        incIndex++;
+                    }
+                }else{
+                    incIndex = 0;
+                }
+                if (keyCode == left) {
+                    currentInc = -increments[incIndex];
+                }else if (keyCode == right) {
+                    currentInc = increments[incIndex];
+                }else{
+                    return;
+                }
+                currentTime = parseInt(vplayer.currentTime);
+                videoLenght = parseInt(vplayer.duration);
+                currentTime += currentInc;
+                if(currentTime < 0){
+                    currentTime = 0;
+                }else if(currentTime > videoLenght){
+                    currentTime = videoLenght;
+                }
+                document.getElementById('OSD').classList.add("active");
+                lastIncAction = keyCode;
                 e.preventDefault();
+                let osd = document.getElementById('osd-time');
+                osd.innerHTML = toHHMMSS(currentTime) + "/" + toHHMMSS(videoLenght);
+                let progress = document.getElementById('osd-progress');
+                progress.style.width = (currentTime/videoLenght)*100 + "%";
+                timeOutOSD();
                 break;
             case enter:
                 switchPlayer(vplayer)
@@ -296,3 +339,35 @@ let switchPlayer = (vplayer) => {
         vplayer.pause();
     }
 }
+
+function timeOutOSD(){
+    clearTimeout(osdTimeOut);
+    osdTimeOut = setTimeout(function(){
+        document.getElementById('OSD').classList.remove("active");
+        let video = document.getElementById('video_placeholder_0_0');
+        video.currentTime = currentTime;
+    }, 1200);
+}
+
+function toHHMMSS(time){
+    let hours   = Math.floor(time / 3600);
+    let minutes = Math.floor((time - (hours * 3600)) / 60);
+    let seconds = time - (hours * 3600) - (minutes * 60);
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    if(hours == "00"){
+        return minutes+':'+seconds;
+    }
+    return hours+':'+minutes+':'+seconds;
+}
+
+let checkIncrement =(keyCode =>{
+    if(lastIncAction == keyCode && ctime < waitTime){
+            if (incIndex < increments.length - 1) {
+                incIndex++;
+            }
+    }else{
+        incIndex = 0;
+    }
+});

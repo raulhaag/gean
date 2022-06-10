@@ -2,7 +2,6 @@ import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch, getSettings} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
 import{arrowNav, updatePositions} from './keynav.js';
-import{YourUpload} from './vservers/yourupload.js';
 
 let loading;
 let dp, vp, pp, sp, setp, content;
@@ -45,13 +44,11 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     server_selected(sid, sn);
     document.onkeydown = lauchKeyNav;
-    let yu = new YourUpload();
-    yu.getDDL(console.log, console.log,"https://www.yourupload.com/watch/LDOk8Y102uf6");
 });
 
 let lauchKeyNav = function(e){
     let code = e || window.event;
-    if(code.keyCode >= 37 && code.keyCode <= 40){
+    if(code.keyCode >= 37 && code.keyCode <= 40 && !document.activeElement.classList.contains("search__text")){
         document.onkeydown = arrowNav;
         isKeyNav = true;
         arrowNav(e);
@@ -253,7 +250,7 @@ let openPlayer = function(options){
     vp.innerHTML = getPlayer(options);
     vp.style.display =  'block';
     loading.style.visibility = 'hidden';
-    var elem = document.getElementsByClassName("videoview")[0];
+    var elem = document.getElementsByClassName(isKeyNav ? "inner-container" : "videoview")[0];
     requestFullScreen(elem);
     elem.focus();
     addBackStack(vp);

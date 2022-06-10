@@ -28,7 +28,7 @@ class handler(SimpleHTTPRequestHandler):
             if path[1] == "rpost":
                 self.return_response(200, getRedirectPost(path))
                 return
-            
+
             if path[1] == "rget":
                 self.return_response(200, getRedirectGet(path))
                 return

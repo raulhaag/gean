@@ -124,23 +124,47 @@ export class JKAnime {
   }
 
   async getSearch(after, onError, query) {
-    try{
-      let response = await fGet("https://jkanime.net/ajax/ajax_search/?q=" + encodeURIComponent(query));
+    let fres = [];
+    let cidx = 1;
+    while(true){
+      let response = await fGet("https://jkanime.net/buscar/" + encodeURIComponent(query) + "/" + cidx);
       if (response.indexOf("error") == 0) {
         onError(response);
         return;
       }
-      let result = JSON.parse(response);
-      let rList = [];
-      for (let i = 0; i < result["animes"].length; i++) {
-        rList.push({"name": result["animes"][i].title,
-                    "path": this.name + "/getDescription/" + window.enc("https://jkanime.net/" + result["animes"][i].slug), 
-                    "image": result["animes"][i].image});
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(response, "text/html");
+      let res = [];
+      try {
+        let flis = doc.querySelectorAll("div.anime__item");
+        for (var i = 0; i < flis.length; i++) {
+          let name =
+            flis[i].getElementsByTagName("h5")[0].textContent.trim() + " - " + flis[i].getElementsByTagName("li")[0].textContent.replace(/\s+/gm, " ").trim();
+          let epath;
+          if (flis[i].getElementsByTagName("a")[0].getAttribute("href").match(/\/\d+\/$/) != null) {
+            epath =
+              this.name + "/getLinks/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
+          } else {
+            epath = this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
+          }
+          res.push({
+            "name": name,
+            "image": flis[i]
+              .getElementsByTagName("div")[0]
+              .getAttribute("data-setbg"),
+            "path": epath,
+          });
+        }
+      } catch (nerror) {
+        onError(nerror);
       }
-      after(rList);
-    } catch (error) {
-      onError(error);
+      fres = fres.concat(res);
+      if(res.length != 12){
+        break;
+      }
+      cidx++;
     }
+    after(fres);
   }
 
   async getLinks(after, onError, path) {
