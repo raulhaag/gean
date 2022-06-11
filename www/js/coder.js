@@ -49,22 +49,7 @@ export function generateDescription(options) {
 }
 
 export function getPlayer(options){
-    return `
-    <div id="videoandosd">
-        <div class="inner-container">
-            <div class="video-overlay">
-                <div id="OSD">
-                    <div id="osd-time"></div>
-                    <div id="osd-progress-containen"><div id="osd-progress"></div></div>
-                </div>
-            </div>
-            <video id="video" class="videoview focusable" controls autoplay>
-                <source src="`+ options["video"] +`">
-            </video>
-        </div>
-    </div>
-    `
-    //return '<div class="video_container"><video id="player" class="videoview focusable" controls autoplay><source src="' + options["video"]+ '"></video></div>';
+    return '<div class="video_container"><video id="player" class="videoview focusable" controls autoplay><source src="' + options["video"]+ '"></video></div>';
 }
 
 export function getSearch(server){

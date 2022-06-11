@@ -141,7 +141,8 @@ server = HTTPServer(('', 8080), handler)
 try:
     if(not check_for_update()):
         try:
-            os.system(r"load.html")
+            import webbrowser
+            webbrowser.open("load.html")
         except Exception as e:
             print(e)
         server.serve_forever()

@@ -250,7 +250,7 @@ let openPlayer = function(options){
     vp.innerHTML = getPlayer(options);
     vp.style.display =  'block';
     loading.style.visibility = 'hidden';
-    var elem = document.getElementsByClassName(isKeyNav ? "inner-container" : "videoview")[0];
+    var elem = document.getElementsByClassName("videoview")[0];
     requestFullScreen(elem);
     elem.focus();
     addBackStack(vp);

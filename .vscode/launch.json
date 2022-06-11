@@ -19,10 +19,10 @@
         "webRoot": "${workspaceFolder}/www"
     },
         {
-            "name": "Python: Archivo actual",
+            "name": "Python: server",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/HttpServer.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
