@@ -5,6 +5,12 @@
     --main-vw-color: #272;
   }
 
+@font-face {
+    font-family: 'Nunito Sans';
+    src: url("Nunito.woff2");
+}
+
+
 *{
     font-family: 'Nunito Sans', sans-serif;
     font-weight: 800;

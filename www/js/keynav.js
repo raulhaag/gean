@@ -19,14 +19,11 @@ let serverList = [];
 let contPool = [];
 
 const increments = [5, 10, 15, 30, 30, 60, 300, 600]
-const waitTime = 500;
+const waitTime = 800;
 let incIndex = 0;
-let videoLenght = 60 * 24 + 30;
-let currentTime = 0;
 let currentInc = 5;
 let lastIncTime = 0;
 let lastIncAction = 0;
-let osdTimeOut = null;
 
 function manageMenu(keyCode){
     if(ssmenucapture){
@@ -199,7 +196,7 @@ export function arrowNav(e){
                     }
                 }else{
                     switchPlayer(vplayer)
-                    requestFullScreen(pcont);
+                    requestFullScreen(vplayer);
                     switchPlayer(vplayer)
                 }
                 e.preventDefault();
@@ -327,6 +324,17 @@ let switchPlayer = (vplayer) => {
     }
 }
 
-let showControls = function(vplayer){
-    
+let showControls = function(e){
+    var clickEvent = new MouseEvent("mousemove", {
+        "view": window,
+        "bubbles": true,
+        "cancelable": false
+    });
+    e.dispatchEvent(clickEvent);
+    var clickEvent = new MouseEvent("mouseover", {
+        "view": window,
+        "bubbles": true,
+        "cancelable": false
+    });
+    e.dispatchEvent(clickEvent);
 }
