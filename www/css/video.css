@@ -15,6 +15,7 @@
     aspect-ratio: 16/9;
     z-index: 9999;
     width: 100%;
+    max-height: calc(100vh - 100px);
     padding: auto;
     margin: auto;
     background-color: #000;

@@ -1,4 +1,5 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+import urllib
 from zipfile import ZipFile
 import base64, os, json
 from urllib import request, parse
@@ -35,6 +36,10 @@ class handler(SimpleHTTPRequestHandler):
 
             if path[1] == "view":
                 self.return_response(200, "Solo soportado por android, quita esta cofiguración de tus opciones.")
+                return
+
+            if path[1] == "file":
+                getResponseFile(path, self)
                 return
         except Exception as e:
             print("Error: " + str(e) + "en" + decode(path[2]))
@@ -73,6 +78,30 @@ def decode(input):
 
 def getResponseGet(path = []):
     return getGet(path).read().decode('utf-8')
+
+def getResponseFile(path = [], server = None):
+
+    headers = {}
+    if len(path) == 4:
+        headers =  json.loads(decode(path[3]))
+    headers["User-Agent"] = defaultUserAgent
+    ho = []
+    for key in headers:
+        ho.append((key, headers[key]))
+    web = decode(path[2])
+    opener = urllib.request.build_opener()
+    opener.addheaders = ho
+    urllib.request.install_opener(opener)
+    res = urllib.request.urlopen(web)
+    server.send_response(200)
+    server.send_my_headers()
+    length = res.headers['content-length']
+    while True:
+        chunk = res.read(4096)
+        if not chunk:
+            break
+        server.wfile.write(chunk)
+    urllib.request.urlcleanup()
 
 def getGet(path = []):
     headers = {}
