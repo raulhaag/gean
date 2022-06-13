@@ -15,6 +15,7 @@ let recent = [];
 window.backStack = [];
 window.serverHost = "http://127.0.0.1:8080/";
 
+
 document.addEventListener("DOMContentLoaded", function(){
     window.serverHost = "http://" + window.location.hostname + ":8080/"
     document.getElementById("search_button").style.display = 'block';
@@ -378,3 +379,12 @@ window.getFirstMatch = function(regex, str){
     }
     return m[1];
 }
+
+function loadm2 () {
+    let exta = (window.getStorageDefault("modo_2", "false"))? "_m2": "";
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "css/items"+ exta +".css";
+    document.getElementsByTagName("head")[0].appendChild(link);
+}
+loadm2();

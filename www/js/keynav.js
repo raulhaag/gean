@@ -282,9 +282,10 @@ export function arrowNav(e){
             if(newpos != null){
                 let nselect = document.getElementById(newpos);
                 lastPos[currentLastPos].classList.remove("focus");
-                nselect.classList.add("focus");
                 lastPos[currentLastPos] = nselect;
                 container.scrollTop = nselect.offsetTop - 70;
+                nselect.parentElement.scrollLeft = nselect.offsetLeft - nselect.parentElement.offsetLeft- nselect.parentElement.offsetWidth  / 3 + nselect.offsetWidth;
+                nselect.classList.add("focus");
                 e.preventDefault();
             }
         }catch{

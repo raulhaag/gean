@@ -69,8 +69,8 @@ export function getSearch(server){
 }
 
 export function getSettings(){
-    let options = {"lockfronpage":" Bloquear pagina principal", "fullscreen": " Iniciar video en pantalla completa", "autoplay": " Autoplay de video", "external_player":"Usar reproductor externo(Solo Android)"};
-    const defv = ["false", "true", "true", "false"];
+    let options = {"lockfronpage":" Bloquear pagina principal", "fullscreen": " Iniciar video en pantalla completa", "autoplay": " Autoplay de video", "external_player":"Usar reproductor externo(Solo Android)", "modo_2":"Usar modo de vista 2(necesita recargar la pagina)"};
+    const defv = ["false", "true", "true", "false", "false"];
     let result = '<div class="container"><div class="settings_group main-content">';
     let aval = false;
     var i = 0;
