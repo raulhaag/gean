@@ -3,6 +3,7 @@
     --main-contrast-color: #f6a361;
     --main-sc-color: rgba(61, 37, 170, 0.527);
     --main-vw-color: #272;
+    --modo: 2;
   }
 
 @font-face {
@@ -43,12 +44,7 @@ body{
 .favorite{
     background-color: var(--main-sc-color) !important;
 }
-@media (hover: hover) and (pointer: fine) {
-    .button:hover{
-        outline: 3px solid var(--main-contrast-color);
-        background-color: var(--main-sc-color);
-    }
-}
+
 .viewed{
     background-color: var(--main-vw-color);
 }
@@ -199,15 +195,11 @@ div{
     content: "ˇ";
     margin-left: 10px;
 }
-@media (hover: hover) and (pointer: fine) {
-    .menu__item:hover, .select_server_active:hover, .menu__server__item:hover, .setting_option:hover{
-        color: #FFF;
-        background-color: var(--main-sc-color) !important;
-    }
-}
+
 .mfocus{
     background-color: var(--main-sc-color) !important;
 }
+
 #server__select__menu{
     display: none;
     justify-content: center;
@@ -360,13 +352,6 @@ li{
     display: block;
 }
 
-@media (hover: hover) and (pointer: fine) {
-    li:hover, .links_close:hover{
-        background-color: rgba(61, 37, 170, 0.527);
-        border-radius: 10px;
-        outline: 2px solid var(--main-contrast-color);
-    }
-}
 
 ul{
     margin: 0px;
@@ -415,4 +400,8 @@ ul{
   100% {
     transform: rotate(360deg);
   }
+}
+
+.no_mouse{
+    cursor: none;
 }

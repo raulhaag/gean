@@ -50,6 +50,21 @@ document.addEventListener("DOMContentLoaded", function(){
 let lauchKeyNav = function(e){
     let code = e || window.event;
     if(code.keyCode >= 37 && code.keyCode <= 40 && !document.activeElement.classList.contains("search__text")){
+        const mc = document.getElementsByTagName("body")[0];
+        mc.classList.add("no_mouse");
+        mc.addEventListener("mousemove", e => {
+            const timer = mc.getAttribute("timer");
+            if (timer) {
+                clearTimeout(timer);
+                mc.setAttribute("timer", "");
+            }
+            const t = setTimeout(() => {
+                mc.setAttribute("timer", "");
+                mc.classList.add("no_mouse");
+            }, 3500);
+            mc.setAttribute("timer", t);
+            mc.classList.remove("no_mouse");
+        });
         document.onkeydown = arrowNav;
         isKeyNav = true;
         arrowNav(e);

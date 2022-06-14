@@ -26,7 +26,7 @@ export function generateDescription(options) {
         vieweds = [];
     }
     let result = '<div class="main-content"><div class="details"><div class="details__container">';
-    result += '<img class="details__image" src="'+ options['image'] + '" alt="" class=><div class="details__items"><div class="details__item"><h2>'+ options['name'] +'</div>';
+    result += '<img class="details__image" src="'+ options['image'] + '" alt="" class=><div class="details__items"><div class="details__item"><h2 class="focusable">'+ options['name'] +'</div>';
     for(let i = 0; i < options['items'].length; i++){
         result += '<div class="details__item">'+ options['items'][i] +'</div>';
     }

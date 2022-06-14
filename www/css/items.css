@@ -60,3 +60,29 @@
     padding: 10px;
     text-align: center;
 }
+
+
+@media (hover: hover) and (pointer: fine){
+    .item:hover{
+        border-radius: 3px;
+        outline: 3px solid var(--main-contrast-color);
+    }
+    .button:hover{
+        outline: 3px solid var(--main-contrast-color);
+        background-color: var(--main-sc-color);
+    }
+    li:hover, .links_close:hover{
+        background-color: rgba(61, 37, 170, 0.527);
+        border-radius: 10px;
+        outline: 2px solid var(--main-contrast-color);
+    }
+    .menu__item:hover, .select_server_active:hover, .menu__server__item:hover, .setting_option:hover{
+        color: #FFF;
+        background-color: var(--main-sc-color) !important;
+    }
+    .details__add:hover{
+        background-color: var(--main-sc-color);
+        outline: 3px solid var(--main-contrast-color);
+    }
+}
+
