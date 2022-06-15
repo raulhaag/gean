@@ -46,6 +46,9 @@ export class JKAPI {
 export class JKXtreme{
     constructor() {}
     getDDL(after, onError, web) {
+      if(web.indexOf("https://jkanime.net/") == -1 ){
+        web = "https://jkanime.net/" + web;
+      }
       after({"video": web.replace("jk.php?u=", "")});
     }
 }
