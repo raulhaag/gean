@@ -52,7 +52,7 @@ export function getName(web) {
 }
 
 export function getPreferer(list){
-    let preferer = ["/um2.php?e=", "jk.php?u=stream", "fembed", "zplayer.live", "https://sololatino.xyz/v/", "https://re.sololatino.net/p/embed.php", "yourupload"];
+    let preferer = ["/um2.php?e=", "jk.php?u=stream",  "fembed", "zplayer.live", "https://sololatino.xyz/v/", "https://re.sololatino.net/p/embed.php", "yourupload"];
     let ordered = [];
     for(let i = 0; i < preferer.length; i++){
         for(let j = 0; j < list.length; j++){

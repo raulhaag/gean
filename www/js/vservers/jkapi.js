@@ -1,6 +1,9 @@
 export class JKAPI {
     constructor() {}
     getDDL(after, onError, web, rt = true) {
+      if(web.indexOf("https://jkanime.net/") == -1 ){
+        web = "https://jkanime.net/" + web;
+      }
       let headers = { Referer: web };
       let rqs =
         window.enc(web) +
