@@ -1,9 +1,9 @@
 window.enc = function(e){
-    return  btoa(e).replaceAll('/', '_');
+    return  btoa(e).replace(/\//g, '_');
 }
 
 window.dec = function(e){
-    return atob(e.replaceAll('_', '/'));
+    return atob(e.replace(/_/g, '/'));
 }
 
 window.fGet = async function (url, header = {}) {
