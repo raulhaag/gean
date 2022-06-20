@@ -250,8 +250,7 @@ window.posLinks = function(linkList){
 
     }
 }
-
-let openPlayer = function(options){
+window.openPlayer = function(options){
     if(getStorageDefault("external_player", false)){
         fetch(window.serverHost + "view/" + window.enc(options["video"]))
         .then((response) => response.text())
