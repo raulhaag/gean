@@ -81,9 +81,10 @@ def getResponseGet(path = []):
 
 def getResponseFile(path = [], server = None):
     headers = {}    
-    headers["User-Agent"] = defaultUserAgent
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
+    if "User-Agent" not in headers:
+        headers["User-Agent"] = defaultUserAgent
     ho = []
     for key in headers:
         ho.append((key, headers[key]))
@@ -104,9 +105,10 @@ def getResponseFile(path = [], server = None):
 
 def getGet(path = []):
     headers = {}    
-    headers["User-Agent"] = defaultUserAgent
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
+    if "User-Agent" not in headers:
+        headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
     req =  request.Request(web, headers=headers)
     return request.urlopen(req)
@@ -122,10 +124,11 @@ def getRedirectPost(path = []):
 def getPost(path = []):
     headers = {}
     data = {}
-    headers["User-Agent"] = defaultUserAgent
     if len(path) == 5:
         headers =  json.loads(decode(path[3]))
         data =  json.loads(decode(path[4]))
+    if "User-Agent" not in headers:
+        headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
     data = parse.urlencode(data).encode()
     req =  request.Request(web, data=data, headers=headers)

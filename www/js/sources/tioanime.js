@@ -61,7 +61,7 @@ export class TioAnime {
         let chaptersIndex = [...result.matchAll(/var episodes = \[([^\]]+)\]/gm)][0][1].split(",")
         let chapters = [];
         let basechapter = dec(path).replace("/anime/", "/ver/");
-        for (let i = 1; i < chaptersIndex.length; i++) {
+        for (let i = 0; i < chaptersIndex.length; i++) {
           chapters.unshift({"name": "Capítulo " + chaptersIndex[i], "path": this.name + "/getLinks/" + window.enc(basechapter + "-" + chaptersIndex[i])});
         }
         after({"name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items":[description, genres], "chapters": chapters});
