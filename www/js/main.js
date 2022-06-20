@@ -2,6 +2,7 @@ import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch, getSettings} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
 import{arrowNav, updatePositions} from './keynav.js';
+import{OkRu} from './vservers/okru.js';
 
 let loading;
 let dp, vp, pp, sp, setp, content;
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     server_selected(sid, sn);
     document.onkeydown = lauchKeyNav;
+    new OkRu().getDDL(openPlayer, alert, "https://ok.ru/videoembed/4009191410255");
 });
 
 let lauchKeyNav = function(e){
@@ -389,6 +391,10 @@ window.getFirstMatch = function(regex, str){
         return "";
     }
     return m[1];
+}
+
+window.getAllMatches = function(regex, str){
+    return [...str.matchAll(regex)];
 }
 
 function loadm2 () {
