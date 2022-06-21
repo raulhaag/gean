@@ -11,6 +11,7 @@
     display: flex;
     overflow: hidden;
 }
+
 .items__list::after, .items__list::before{
     content: '.....';
     color: transparent;
@@ -83,6 +84,11 @@
     overflow: hidden;
 }
 
+@media not (pointer: fine) {
+    .items__list{
+        overflow: auto;
+    }    
+}
 
 
 

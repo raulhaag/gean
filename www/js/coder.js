@@ -88,6 +88,6 @@ export function getSettings(){
         result += '<div class="setting_option focusable" onclick="{toggleOption(this)}"><div class="setting_label">' + options[key] + '</div><div class="setting_state" id="'+ key + '">' + extra + '</div></div>';
         i++;
     }
-    return result + '</div></div><div><p style="position: absolute;bottom: 10px;text-align: center;">'+ window.navigator.userAgent +'</p></div>';
+    return result + '</div></div><div><p style="position: absolute;bottom: 10px;text-align: center; width:100%">'+ window.navigator.userAgent +'</p></div>';
 }
 
