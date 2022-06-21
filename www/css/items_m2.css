@@ -86,7 +86,8 @@
 
 @media not (pointer: fine) {
     .items__list{
-        overflow: auto;
+        overflow: scroll !important;
+        overflow: scroll !important;
     }    
 }
 
