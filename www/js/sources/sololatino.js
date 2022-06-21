@@ -115,7 +115,7 @@ export class SoloLatino {
                 if(link.hasAttribute("data-r")){
                   links.push(atob(link.getAttribute("data-r")));
                 }else{
-                  links.push([...lis[1].getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
+                  links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
                 }
               }catch(e){}//continue
             }

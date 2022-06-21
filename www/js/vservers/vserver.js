@@ -1,6 +1,6 @@
 import {Fembed} from "./fembed.js";
 import {JKAPI, JKXtreme} from "./jkapi.js";
-import {ReSololatino, SololatinoXYZ} from "./re_sololatino.js";
+import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
 import{YourUpload}from "./yourupload.js";
 import{OkRu}from "./okru.js";
@@ -11,7 +11,9 @@ let servers = {"fembed": new Fembed(),
                "sololatinoxyz": new SololatinoXYZ(),
                 "zplayer.live": new ZPlayer(),
                 "yourupload": new YourUpload(),
-                "okru": new OkRu()};
+                "okru": new OkRu(),
+                "owodeuwu.xyz" : new OwodeuwuXYZ()
+            };
 
 export function getDDL(after, onError, web) {
     if(web.indexOf("jk.php?u=stream") != -1) {
@@ -31,6 +33,8 @@ export function getDDL(after, onError, web) {
         return servers["yourupload"].getDDL(after, onError, web);
     }else if(web.indexOf("ok.ru") != -1) {
         return servers["okru"].getDDL(after, onError, web);
+    }else if(web.indexOf("owodeuwu.xyz") != -1) {
+        return servers["owodeuwu.xyz"].getDDL(after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -52,13 +56,15 @@ export function getName(web) {
         return "YourUpload";
     }else if(web.indexOf("ok.ru") != -1) {
         return "OkRu";
+    }else if(web.indexOf("owodeuwu.xyz") != -1) {
+        return "owodeuwu.xyz";
     }else {
         return "";
     }
 }
 
 export function getPreferer(list){
-    let preferer = ["/um2.php?e=", "jk.php?u=stream",  "fembed", "zplayer.live", "https://sololatino.xyz/v/", "https://re.sololatino.net/p/embed.php", "ok.ru" ,"yourupload"];
+    let preferer = ["/um2.php?e=", "jk.php?u=stream",  "fembed", "https://sololatino.xyz/v/", "https://re.sololatino.net/p/embed.php", "owodeuwu.xyz" ,"zplayer.live",  "ok.ru" ,"yourupload"];
     let ordered = [];
     for(let i = 0; i < preferer.length; i++){
         for(let j = 0; j < list.length; j++){
