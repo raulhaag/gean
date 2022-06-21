@@ -2,6 +2,14 @@
 	--modo: 2;
 }
 
+ ::-webkit-scrollbar {
+    display: none;
+  }
+* {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;
+} 
+
 .items__title{
     margin: 0;
     padding: 10px;
@@ -9,7 +17,8 @@
 
 .items__list{
     display: flex;
-    overflow: hidden;
+    overflow: scroll;
+    overflow-y: hidden;
 }
 
 .items__list::after, .items__list::before{
@@ -80,17 +89,5 @@
     max-width: 100%;
     background-color: transparent;
 }
-.content{
-    overflow: hidden;
-}
-
-@media not (pointer: fine) {
-    .items__list{
-        overflow: scroll !important;
-        overflow: scroll !important;
-    }    
-}
-
-
 
 
