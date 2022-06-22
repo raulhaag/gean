@@ -156,7 +156,7 @@ def check_for_update():
         zipinfos = zipf.infolist()
         for zipinfo in zipinfos:
             zipinfo.filename = zipinfo.filename.replace('gean-master/', '')
-            if len(zipinfo.filename) > 0:
+            if len(zipinfo.filename and not ("test/" in zipinfo.filename)) > 0:
                 zipf.extract(zipinfo)
 
     os.remove("update.zip")

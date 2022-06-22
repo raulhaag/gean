@@ -13,6 +13,7 @@ window.favorites = [];
 let recent = [];
 window.backStack = [];
 window.serverHost = "http://127.0.0.1:8080/";
+let reload = false;
 
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -114,6 +115,7 @@ window.shutdown = function(){
 }
 
 window.backClick = function(e){
+    if(reload){window.location.reload()}
     if(window.backStack.length > 0){
         let last = window.backStack.pop();
         last.style.display = 'none';
@@ -330,6 +332,7 @@ window.settings = function(){
 }
 
 window.toggleOption = function(e){
+    reload = true;
     if(e.children[1].innerText == "✓"){
         e.children[1].innerText = "✗"
         localStorage.setItem(e.children[1].id, "false");
