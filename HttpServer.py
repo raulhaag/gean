@@ -3,8 +3,9 @@ import urllib
 from zipfile import ZipFile
 import base64, os, json
 from urllib import request, parse
-
-serve = None
+thread = None
+server = None
+window = None
 alive = True
 web_path = "./www"
 defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
@@ -16,7 +17,9 @@ class handler(SimpleHTTPRequestHandler):
         if(path[1] == "shutdown"):
             self.return_response(200, "Apagando")
             server.server_close()
-            return
+            if window != None:
+                window.destroy() 
+            exit(0)       
         try:
             if path[1] == "get":
                 self.return_response(200, getResponseGet(path))
@@ -156,11 +159,10 @@ def check_for_update():
         zipinfos = zipf.infolist()
         for zipinfo in zipinfos:
             zipinfo.filename = zipinfo.filename.replace('gean-master/', '')
-            if len(zipinfo.filename and not ("test/" in zipinfo.filename)) > 0:
+            if len(zipinfo.filename) > 0 and not ("test/" in zipinfo.filename) :
                 zipf.extract(zipinfo)
 
     os.remove("update.zip")
-    #download file to disk
     print("Actualizado, reinicie la aplicación")
     return True
 
@@ -169,14 +171,17 @@ def download_file(url, filename):
 
 server = HTTPServer(('', 8080), handler)
 
-try:
+try:    
     if(not check_for_update()):
+        from threading import Thread
+        thread = Thread(target = server.serve_forever, args=())
+        thread.start()
         try:
             import webbrowser
-            webbrowser.open("load.html")
+            window = webbrowser.open("http://127.0.0.1:8080/main.html")
         except Exception as e:
             print(e)
-        server.serve_forever()
+        thread.join()
 except Exception as e:
     print(e)
 
