@@ -74,7 +74,8 @@ export class SoloLatino {
   }
 
   async getParent(after, path) {
-    let dpath = (window.dec(path)).replace("episodios", "animes").replace(/-[^-]+?\/$/gm, "/");
+    let dpath = (window.dec(path)).replace("episodios", "animes").replace(/-[^-]+?\d\/$/gm, "/");
+    
     let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path}, path)};
     this.getDescription(reduce, console.log, window.enc(dpath));
   }
