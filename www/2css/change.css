@@ -1,0 +1,43 @@
+.change-main{
+    position: absolute;
+    left: 70px;
+    width: calc(100vw - 70px);
+    height: 100vh;
+}
+.change-title{
+    text-align: center;
+    padding: 40px;
+    font-size: 50px;
+    width: calc(100vw - 70px);
+}
+.change-list-container{
+    align-items: center;
+    position: relative;
+    top: calc(50% - 60px);
+    transform: translate(0,-50%);
+}
+.change-list{
+    display: flex;
+    justify-content: center;
+}
+.change-item{
+    margin:10px;
+    font-size: 5vh;
+    text-align: center;
+    border-radius: 50%;
+    min-height: 30vh;
+    max-height: 30vh;
+    min-width: 30vh;
+    max-width: 30vh;
+    line-height: 30vh;
+    border: #FFF4 solid 5px;
+    overflow: hidden;
+}
+
+.change-item-selected{
+    background-color: #FFF2;
+}
+
+.change-item-focus{
+    border: #FFF solid 5px;
+}

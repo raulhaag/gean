@@ -171,19 +171,28 @@ def check_for_update():
 def download_file(url, filename):
     request.urlretrieve(url, filename)
 
+
 server = HTTPServer(('', 8080), handler)
 
-try:    
-    if(not check_for_update()):
-        from threading import Thread
-        thread = Thread(target = server.serve_forever, args=())
-        thread.start()
-        try:
-            import webbrowser
-            window = webbrowser.open("http://127.0.0.1:8080/main.html")
-        except Exception as e:
-            print(e)
-        thread.join()
-except Exception as e:
-    print(e)
+def sf(path):
+    web_path = path
+    server.serve_forever()
 
+
+def main(path = "./www"):
+    web_path = path
+    try:    
+        if(not check_for_update()):
+            from threading import Thread
+            thread = Thread(target = sf, args=(path,))
+            thread.start()    
+            try:
+                import webbrowser
+                window = webbrowser.open("http://127.0.0.1:8080/main.html")
+            except Exception as e:
+                print(e)
+            thread.join()
+    except Exception as e:
+        print(e)
+if __name__ == "__main__":
+    main()

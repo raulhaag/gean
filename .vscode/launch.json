@@ -25,6 +25,14 @@
             "program": "${workspaceFolder}/HttpServer.py",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "Python: server2",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HttpServer_w2.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }

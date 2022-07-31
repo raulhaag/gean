@@ -1,0 +1,39 @@
+.settings{
+    position: absolute;
+    height: 100vh;
+    left: 80px;
+    width: calc(100vw - 80px);
+}
+
+.settings-title{
+    text-align: center;
+    padding: 40px;
+    font-size: 50px;
+}
+
+.setting{
+    display: flex;
+    font-size: 25px;
+    width: calc(100% - 50px);
+    margin: 0px 10px;
+    border-bottom: 1px lightslategray solid;
+    padding: 10px;
+}
+
+.setting-text{
+    width: calc(100%);
+}
+
+.setting.active::after{
+    content: "o";
+    color: aquamarine; 
+}
+
+.setting::after{
+    content: "x";
+    color: red; 
+}
+
+.setting.selected{
+    background-color: #fff4;
+}

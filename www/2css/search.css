@@ -1,0 +1,113 @@
+#search{
+    position: absolute;
+    top: 0px;
+    left: 80px;
+    width:calc(100% - 80px);
+    background-color: #000;
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+    height: 100vh;
+    z-index: 1000000;
+}
+
+.search-box{
+    position: absolute;
+    top: 0px;
+    left: 80px;
+    height: 100%;
+    width: 310px;
+    background-color: #000;
+}
+.search-results{
+    position: absolute;
+    top: 0px;
+    left: 390px;
+    max-width: calc(100% - 390px);
+    min-width: calc(100% - 390px);
+    height: 100%;
+}
+.search-text{
+    width: calc(100% - 20px);
+    margin: 10px;
+    font-size: 35px;
+    border: none;
+    background-color: #000;
+    color: aliceblue;
+    line-height: 35px;
+    min-height: 35px;
+}
+.search-keypad{
+    margin: 5px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.search-key{
+    border: #555 1px solid;
+    margin: 5px;
+    height: 40px;
+    width: 40px;
+    font-size: 30px;
+    text-align: center;
+    line-height: 40px;
+    background-color: #333;
+}
+
+.search-double-key{
+    width: 90px;
+}
+
+.search_items{
+    background-color: #0003;
+}
+
+.search-results-ph{
+    width: 100%;
+    overflow: hidden;
+}
+.search_items__title{
+    margin: 5px;
+}
+
+.search_items__list{
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-gap:10px;
+    overflow: hidden;
+    max-height: calc(100vh - 55px);
+}
+
+.search_items__list .search_item{
+    display: flex;
+    position: relative;
+    max-width: 220px;
+    min-width: 140px;
+    height: 250Px;
+}
+
+.search_item:hover{
+    border-radius: 3px;
+    outline: 3px solid var(--main-contrast-color);
+}
+.search_item img{
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    background-color: #0005;
+}
+
+.search_item__title{
+    position: absolute;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    font-size: 20px;
+    background: linear-gradient(to top, #000a, #0005);
+    left: 0;
+    bottom: 0px;
+    right: 0;
+    max-height: 250px;
+    padding: 10px;
+    text-align: center;
+}
+
+
