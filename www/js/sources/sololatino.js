@@ -120,6 +120,9 @@ export class SoloLatino {
                 }
               }catch(e){}//continue
             }
+            if(links.length == 0 && web.includes("xyz")){
+              links.push(web)
+            }
             after(links);
     }catch(error){
         onError(error);

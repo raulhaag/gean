@@ -14,4 +14,5 @@ export function getResponse(name, callback, error_callback) {
 }
 
 export function getLinks(path, callback, error_callback) {
+    
 }

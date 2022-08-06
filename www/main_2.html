@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="2css/search.css"/>
     <link rel="stylesheet" href="2css/change.css"/>
     <link rel="stylesheet" href="2css/settings.css"/>
+    <script type="text/javascript" src="js/fetchpack.js"></script>
     <script type="module" src="2js/main_k.js"></script>
 
     <title>TODO</title>
@@ -16,56 +17,20 @@
     <div class="home" id="home">
         <div class="info">
             <div class="info-collum">
-                <div class="info-title">Titulo</div>
-                <div class="info-data">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita nesciunt reprehenderit sint at itaque repellat error magnam iusto ut totam. Hic iusto culpa, earum repellendus omnis reprehenderit accusantium voluptates doloremque?</div>
+                <div class="info-title"></div>
+                <div class="info-data"></div>
                 <!--<div class="info-play">Ver ahora ▶</div>-->
             </div>
             <div class="info-image-ph">
-                <img class="info-image" src="https://es.web.img3.acsta.net/pictures/18/09/28/09/34/1699413.jpg">
+                <img class="info-image" src="">
                 <div class="info-image-overlap"></div>
             </div>
         </div>
-        <div class="info-capitulos info-capitulos-hide">
-            <div class="info-capitulo">Titulo capítulo 1</div>
-            <div class="info-capitulo">Titulo capítulo 2</div>
-            <div class="info-capitulo">Titulo capítulo 3 se vuelve mas largo</div>
-            <div class="info-capitulo">Titulo capítulo 4 se pasa de largo este capítulo con su título que esta de mas 1</div>
-            <div class="info-capitulo">Titulo capítulo 5</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
-            <div class="info-capitulo">Titulo capítulo 6 y muchos</div>
+        <div class="info-capitulos info-capitulos-hide" id="chapters">
+            <div class="info-capitulo"> <- Volver</div>
+
         </div>
-        <div class="videos">
+        <div class="videos" id="videos">
             <div class="initial-gap"></div>
             <div class="title">Recientes</div>
             <div class="item_list"> </div>

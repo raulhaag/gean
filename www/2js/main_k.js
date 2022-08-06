@@ -1,35 +1,13 @@
-let testdata = [{
-    "name": "Tate no Yuusha no Nariagari Season 2",
-    "path": "jkanime/getDescription/aHR0cHM6Ly9qa2FuaW1lLm5ldC90YXRlLW5vLXl1dXNoYS1uby1uYXJpYWdhcmktc2Vhc29uLTI=",
-    "image": "https://cdn.jkdesu.com/assets/images/animes/image/tate-no-yuusha-no-nariagari-season-2.jpg",
-    "items": [
-      "Segunda temporada de Tate no Yuusha no Nariagari .",
-      "Tipo: Serie"
-    ]
-  },
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"},
-{"name":"Star Trek Extraños Nuevos Mundos","image":"https://image.tmdb.org/t/p/w154/iwIdajr5Y4zq2ibvq75VnDAJBr.jpg","path":"sololatino/getDescription/aHR0cHM6Ly9zb2xvbGF0aW5vLm5ldC9zZXJpZXMvc3Rhci10cmVrLWV4dHJhbm9zLW51ZXZvcy1tdW5kb3Mv"}];
+import {getResponse, getSource} from '../js/sources/sources.js';
+import {getDDL, getPreferer} from '../js/vservers/vserver.js';
+
 
 let settings = {
     "lockfronpage": [false, "Bloquear pagina principal"],
     "fullscreen": [true,"Iniciar video en pantalla completa"],
     "autoplay": [false,"Autoplay de video"]
 }
+
 let info = {title: null, resume:null, play:null, image:null};
 let up = 38, right = 39, down = 40, left = 37, enter = 13;
 let container, searchtext;
@@ -37,10 +15,37 @@ let last = {chapter: null, setting: null, media: null, key: null, video:null};
 let placeholders = {chapter: null, setting: null, media: null, key: null, video:null};
 let tempSerieCache = {};
 let items_gap = 80, inigap = 0;
+let sid, sn;
+let favorites = [];
+let recent = [];
 
 let servers = null;
 let serverSelectedIdx = 0;
 
+document.addEventListener("DOMContentLoaded",function(){
+window.serverHost = "http://" + window.location.hostname + ":8080/"
+try{
+    favorites = JSON.parse(localStorage.getItem('favorites'));
+}catch(e){}
+try{
+    recent = JSON.parse(localStorage.getItem('recent'));
+}catch(e){}
+let lastServer = localStorage.getItem('lastServer');
+let lastServerName = localStorage.getItem('lastServerName');
+    if(lastServer != null && lastServerName != null){
+        sid = lastServer;
+        sn = lastServerName;
+    }else{
+        sid = "jkanime";
+        sn = "JkAnime";
+    }
+    placeholders.chapter = document.getElementById('chapters');
+    placeholders.home = document.getElementById("home"); 
+    placeholders.video = document.getElementById("videos");
+    placeholders.search = document.getElementById("search");
+    placeholders.change = document.getElementById("change");
+    initHome();
+});
 
 
 //menu
@@ -49,14 +54,6 @@ let lastNoMenu = null;
 let optionsId = ["menu-home", "menu-search", "menu-change", "menu-settings"];
 let optionsDivs = [];
 let selectedMenuIdx = 0, lastMenuOpened = 0;
-
-
-document.addEventListener("DOMContentLoaded",function(){
- // TODO loadHomeData();
- document.getElementsByClassName("videos")[0].innerHTML= "<div class='initial-gap'></div>" + generateCategory("Nuevos", testdata) + generateCategory("Recientes", testdata)  + generateCategory("Recomendados", testdata) + generateCategory("Otros", testdata) + "<div class='initial-gap'></div>";
- 
- initHome();
-});
 
 let menu_nav = (event) =>{
     if(event == null){
@@ -136,6 +133,18 @@ let initHome = () => {
     optionsDivs.push(document.getElementById("search"));
     optionsDivs.push(document.getElementById("change"));
     optionsDivs.push(document.getElementById("settings"));
+    getResponse(sid, fillVideos, error);
+}
+
+let fillVideos = (videos)=>{
+    let videoContent = "<" 
+    videoContent += generateCategory("Favoritos", favorites)
+    videoContent += generateCategory("Recientes", recent)
+    let titles = Object.keys(videos);
+    for (var i = 0; i < titles.length; i++) {
+        videoContent += generateCategory(titles[i], videos[titles[i]]);
+    }
+    document.getElementsByClassName("videos")[0].innerHTML= "<div class='initial-gap'></div>" + videoContent + "<div class='initial-gap'></div>";
     updatePositions("videos");
 }
 
@@ -216,6 +225,7 @@ let videos_nav = function(event){
         case enter:
             loadChapters(last.video.dataset.path);
             last.video.classList.remove("focus");
+            route(last.video.dataset.path)
             break;
         default:
             return;
@@ -355,6 +365,7 @@ let unsetLoadingInfo = ()=>{
 let loadData = () => {
     info.title.innerHTML = last.video.dataset.name;
     info.image.src = last.video.dataset.image;
+    info.resume.innerHTML = "";
     if(last.video.dataset.path in tempSerieCache){
         
     }
@@ -369,13 +380,7 @@ let setSerieInfo = (info) => {
 }
 
 let loadChapters = (path) =>{
-    //TODO load real data and set on div
-    document.getElementsByClassName('info-capitulos')[0].classList.remove("info-capitulos-hide");
-    document.getElementsByClassName('videos')[0].classList.add("videos-hide");
-    tease_menu(false);
-    document.onkeydown = chapter_nav;
-    //after load sucess
-    last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
+
 }
 
 export function generateCategories(options) {
@@ -670,7 +675,6 @@ function initChange(){
 }
 
 // Settings
-
 let navSettings = (event) => {
     if(event == null){
         last.setting.classList.add("selected");
@@ -767,4 +771,56 @@ function getSettings(){
         i++;
     }
     return result + '</div></div>';
+}
+
+let error = function(error_message){
+    alert(error_message);
+    loading.style.visibility = 'hidden';
+}
+
+function posDescription(resp){
+    last.chapter = null;
+    let chapters = resp.chapters;
+    let ach = "";
+    chapters.forEach(c =>
+        ach +=  '<div class="info-capitulo" data-path="' + c.path+ '">'+ c.name +'</div>'
+    );
+    placeholders.chapter.scrollTop = 0;
+    placeholders.chapter.innerHTML = ach;
+    placeholders.chapter.classList.remove("info-capitulos-hide");
+    placeholders.video.classList.add("videos-hide");
+    tease_menu(false);
+    document.onkeydown = chapter_nav;
+    info.resume.innerHTML = resp.items[0]
+    //after load sucess
+    last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
+}
+
+window.route = function(path){
+    let fpath = path.split('/');
+    let server = getSource(fpath[0]);
+    let action = fpath[1];
+    let params;
+    if (fpath.length == 3){
+        params = atob(fpath[2]);
+    }
+    if(action == 'getFrontPage'){
+        server.getFrontPage(posServerClick, error);
+    }else if(action == 'getCategory'){
+        //server.getCategory(params, posServerClick, error);
+    }else if(action == 'getDescription'){
+        server.getDescription(posDescription, error, fpath[2]);
+    }else if(action == 'getLinks'){
+        server.getLinks(posLinks, error, fpath[2]);
+        let ppf = function(item){
+            add_recent(item);
+            markViewed(null, item['path'], path);
+        };
+        server.getParent(ppf, fpath[2]);
+    }else if(action == 'search'){
+        let term = document.getElementsByClassName("search__text")[0].value;
+        server.getSearch(posSearch, error, term);
+    }else{
+        loading.style.visibility = 'hidden';
+    }
 }
