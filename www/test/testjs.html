@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="../js/fetchpack.js"></script>
+    <script type="text/javascript" src="../js/vservers/zplayer.js"></script>
+    <script type="module">
+        window.getFirstMatch = function(regex, str){
+            var m = regex.exec(str);
+            if(m == null){
+                return "";
+            }
+            return m[1];
+        }
+
+        window.getAllMatches = function(regex, str){
+            return [...str.matchAll(regex)];
+        }
+        window.serverHost = "http://127.0.0.1:8080/";
+        import {ZPlayer} from "../js/vservers/zplayer.js"
+        new ZPlayer().getDDL((a)=>{
+            console.log(a.video)}, console.log, "https://v2.zplayer.live/embed/j3eolmm9l8ae");
+    </script>
+</head>
+<body>
+    <div id="app"></div>
+
+    
+</body>
+</html>

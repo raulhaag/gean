@@ -12,14 +12,22 @@ defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 favs = []
 
 class handler(SimpleHTTPRequestHandler):
+    def log_message(self, format, *args):
+        return
+
     def do_GET(self):
         path = self.path.split('/')
+        try:
+            dp = path[1] + " -> " + ', '.join([decode(p) for p in path[2:]])
+            print(dp)
+        except:
+            pass
         if(path[1] == "shutdown"):
             self.return_response(200, "Apagando")
             server.server_close()
             if window != None:
                 window.destroy() 
-            exit(0)       
+            exit(0)  
         try:
             if path[1] == "get":
                 self.return_response(200, getResponseGet(path))

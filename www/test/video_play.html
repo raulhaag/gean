@@ -7,9 +7,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/main.css">    <title>Document</title>
     <link rel="stylesheet" href="../css/video.css">    <title>Document</title>
+    <script>
+        function changeVideo(ori){
+            var video = ori.dataset.src;
+            let vv = document.getElementsByClassName("videoview")[0]
+            vv.src = video;
+            vv.play();
+        }
+    </script>
 </head>
 <body>
     <div class="video_container">
+        <div class="source_list">
+            <div class="source_item" data-src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4" onclick="{changeVideo(this)}">Jkt</div>
+            <div class="source_item" data-src="https://media.w3.org/2010/05/sintel/trailer.mp4" onclick="{changeVideo(this)}">fembed</div>
+        </div>
         <video class="videoview" controls>
             <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4">
         </video>

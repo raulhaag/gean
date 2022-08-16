@@ -246,15 +246,18 @@ let linkError = function(error_message){
 
 window.posLinks = function(linkList){
     let best = getPreferer(linkList);
+    let mask = (value) => {
+        openPlayer(value,best);
+    }
     window.lastLink = best;
     if (best.length > 0){
-        getDDL(openPlayer, linkError, best[0]);
+        getDDL(mask, linkError, best[0]);
     } else {
         error("No supported servers");
 
     }
 }
-window.openPlayer = function(options){
+window.openPlayer = function(options, items = []){
     if(getStorageDefault("external_player", false)){
         fetch(window.serverHost + "view/" + window.enc(options["video"]))
         .then((response) => response.text())
@@ -266,7 +269,7 @@ window.openPlayer = function(options){
       loading.style.visibility = 'hidden';
       return;
     }
-    vp.innerHTML = getPlayer(options);
+    vp.innerHTML = getPlayer(options, items);
     vp.style.display =  'block';
     loading.style.visibility = 'hidden';
     var elem = document.getElementsByClassName("videoview")[0];

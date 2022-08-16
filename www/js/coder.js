@@ -1,3 +1,5 @@
+import {getName} from './vservers/vserver.js';
+
 export function generateCategories(options) {
     let result = "";
     let titles = Object.keys(options);
@@ -48,13 +50,25 @@ export function generateDescription(options) {
     return result;
 }
 
-export function getPlayer(options){
+export function getPlayer(options, items = []){
+    if(items.length < 2){
     return `<div class="video_container">
             <video id="player" class="videoview focusable" controls autoplay>
             <source src="` + options["video"]+ `">
             </video>
             </div>
             `;
+    }else{
+        let rv = '<div class="video_container"><div class="source_list">'
+        items.forEach(function(item){
+            rv += '<div class="source_item" data-src="'+ item +'">' + getName(item) + '</div>';
+        });
+        rv += `</div><video id="player" class="videoview focusable" controls autoplay>
+                <source src="` + options["video"]+ `">
+                </video>
+                </div>`
+        return rv;
+    }
 }
 
 export function getSearch(server){

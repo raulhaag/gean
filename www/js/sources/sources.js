@@ -1,11 +1,12 @@
 import { JKAnime } from "./jkanime.js";
 import{SoloLatino} from "./sololatino.js";
+import{SoloLatinoSyP} from "./sololatinosyp.js";
 import { TioAnime } from "./tioanime.js";
 export function openInNewTab(url) {
     window.open(url, '_blank').focus();
 }
 
-let servers = {"jkanime": new JKAnime(), "sololatino": new SoloLatino(), "tioanime": new TioAnime()};
+let servers = {"jkanime": new JKAnime(), "sololatino": new SoloLatino(), "tioanime": new TioAnime(), "sololatinosyp": new SoloLatinoSyP()};
 
 export function getSource(name) {return servers[name];}
 
