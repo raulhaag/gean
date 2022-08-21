@@ -1,7 +1,7 @@
 import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch, getSettings} from './coder.js';
 import {getDDL, getPreferer} from './vservers/vserver.js';
-import{arrowNav, updatePositions} from './keynav.js';
+import{arrowNav, updatePositions, initVideoNav} from './keynav.js';
 //import{SbFull} from './vservers/sbfull.js'
 
 let loading;
@@ -257,7 +257,18 @@ window.posLinks = function(linkList){
 
     }
 }
-window.openPlayer = function(options, items = []){
+window.openPlayer = function(options, items = [], res = true){
+    if(Object.keys(options).length > 1 && res) {
+        if(localStorage.getItem("resSelect") == "true"){
+            optionSelection("Elige una resolución apropiada", options, 
+            (selection, options)=>{
+                options.video = selection;
+                openPlayer(options, items, false);
+            });
+            return;
+        }
+    }
+
     if(getStorageDefault("external_player", false)){
         fetch(window.serverHost + "view/" + window.enc(options["video"]))
         .then((response) => response.text())
@@ -268,15 +279,18 @@ window.openPlayer = function(options, items = []){
       })
       loading.style.visibility = 'hidden';
       return;
-    }
+    }  
     vp.innerHTML = getPlayer(options, items);
     vp.style.display =  'block';
     loading.style.visibility = 'hidden';
-    var elem = document.getElementsByClassName("videoview")[0];
+    var elem = document.getElementsByClassName("videoview")[0];    
+    initVideoNav();    
     requestFullScreen(elem);
     elem.focus();
     addBackStack(vp);
+
 }
+
 
 let posSearch = function(response){
     let search = document.getElementById("search");
@@ -402,6 +416,17 @@ window.getAllMatches = function(regex, str){
     return [...str.matchAll(regex)];
 }
 
+window.changeSrcRes = function(src){
+    let player = document.getElementsByTagName("video")[0];
+    let currentTime = player.currentTime;
+    player.src = src.dataset.src;
+    player.currentTime = currentTime;
+}
+
+window.changeSrc = function(src){
+    posLinks([src.dataset.src]);
+}
+
 function loadm2 () {
     let exta = (window.getStorageDefault("modo_2", "false"))? "_m2": "";
     var link = document.createElement("link");
@@ -410,4 +435,63 @@ function loadm2 () {
     document.getElementsByTagName("head")[0].appendChild(link);
 
 }
+
 loadm2();
+
+// selection message start 
+let navOptions = (event) => {
+    if(!(event.keyCode === 38 || event.keyCode === 40 || event.keyCode === 13)) {
+        return;
+    }
+    let options = document.getElementsByClassName("optionSelection__option");
+    let selected = document.getElementsByClassName("optionSelection__focused")[0];
+    let cidx = (Array.from(options)).indexOf(selected);
+    switch (event.keyCode) {
+        case 40: // down arrow
+            if(cidx + 1 < options.length) {
+                selected.classList.remove("optionSelection__focused");
+                options[cidx + 1].classList.add("optionSelection__focused");
+            }
+            break;
+        case 38: // up arrow
+            if(cidx -1 >= 0) {
+                selected.classList.remove("optionSelection__focused");
+                options[cidx - 1].classList.add("optionSelection__focused");
+            }
+            break;
+        case 13:
+            document.body.removeChild(document.__optionsDiv);
+            document.onkeydown = document.__selectPrekeydown;
+            document.__selectpostSelect(selected.dataset.src);
+            break;
+    }
+};
+
+function optionSelection(title, options, postSelect) {
+    let postSelectPP = (value) => {
+        postSelect(value, document.__selectpostSelectOptions);
+    }
+    document.__selectpostSelect = postSelectPP;
+    document.__selectpostSelectOptions = options;
+    document.__selectPrekeydown = document.onkeydown;
+    document.onkeydown = navOptions;
+    var div = document.createElement("div");
+    let content =`<div class="optionSelection">
+    <div class="optionSelection__title">` + title + `</div>
+    <div class="optionSelection__options">`;
+    for(var key in options){
+        content += '<div class="optionSelection__option" onclick="{onOptionSelectionSelected(this)}" data-src="' + options[key] + '">' + key + '</div>';
+    }
+    content += '</div>';
+    div.innerHTML = content;
+    div.getElementsByClassName("optionSelection__option")[0].classList.add("optionSelection__focused");
+    document.body.appendChild(div);
+    document.__optionsDiv = div;
+}
+
+document.onOptionSelectionSelected = (option) => {
+    document.body.removeChild(document.__optionsDiv);
+    document.onkeydown = document.__selectPrekeydown;
+    document.__selectpostSelect(option.dataset.src);
+}
+// selection message end

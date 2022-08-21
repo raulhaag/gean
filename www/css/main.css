@@ -405,3 +405,27 @@ ul{
 .no_mouse{
     cursor: none;
 }
+
+.optionSelection{
+    background-color: #242a3b;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px #FFF5 solid;
+    z-index: 10100;
+}
+.optionSelection__title {
+    padding: 20px;
+    background-color: #fff1;
+}
+
+.optionSelection__option{
+    padding: 10px;
+}
+.optionSelection__option.optionSelection__focused{
+    background-color: #FFF5;
+}

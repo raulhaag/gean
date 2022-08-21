@@ -6,8 +6,7 @@ export class ReSololatino {
       fetch(window.serverHost + "get/" + rqs)
         .then((response) => response.text())
         .then((result) => {
-          let data = [...result.matchAll(/file: '(.+?)'/gm)][0][1];
-          after({"video": data});
+          after(parseVideoFe(result));
         })
         .catch((error) => {
           onError(error);
@@ -29,10 +28,9 @@ export class SololatinoXYZ {
       "/" +
       window.enc(JSON.stringify(data)); //post data
     fetch(window.serverHost + "post/" + rqs)
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((result) => {
-        let response = {"video": result.data[result.data.length-1].file}
-        after(response);
+        after(parseVideoFe(result));
       })
       .catch((error) => {
         onError(error);
@@ -47,7 +45,18 @@ export class OwodeuwuXYZ {
     let data = {"r":"", "d": "owodeuwu.xyz"};
     let id = path[path.indexOf("v") + 1];
     let headers = {"Referer": "https://owodeuwu.xyz/v/" + id}
-    let response = JSON.parse(await fPost("https://owodeuwu.xyz/api/source/" + id, headers, data));
-    after({"video": response.data[response["data"].length-1].file})
+    let response = await fPost("https://owodeuwu.xyz/api/source/" + id, headers, data);
+    after(parseVideoFe(response));
   }
+}
+
+function parseVideoFe(rtext){
+  let response = JSON.parse(rtext);
+  let vdata = response["data"];
+  let vlist = {};
+  for (let i = 0; i < vdata.length; i++) {
+    vlist[vdata[i].label] = vdata[i].file;
+  }
+  vlist.video = response.data[response["data"].length-1].file;
+  return vlist;
 }

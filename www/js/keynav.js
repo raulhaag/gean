@@ -19,11 +19,15 @@ let serverList = [];
 let contPool = [];
 
 const increments = [5, 10, 15, 30, 30, 60, 300, 600]
-const waitTime = 800;
-let incIndex = 0;
-let currentInc = 5;
-let lastIncTime = 0;
-let lastIncAction = 0;
+let currentVSFocus = null;
+let doublepress = false;
+const timeoutdoublepress = 500;
+let lastPressedKeyCode = -1;
+let lastPressedTime = -1;
+let doubleAccumulator = 0;
+let player = null;
+const maxDoubleAccumulator = 7;
+
 
 function manageMenu(keyCode){
     if(ssmenucapture){
@@ -177,60 +181,8 @@ export function arrowNav(e){
     }
     e = e || window.event;
     if(currentLastPos == "video_placeholder"){
-        let vplayer = document.getElementById("video_placeholder_0_0");
-        switch(e.keyCode){
-            case up:
-                if(isFullscreen()){
-                    exitFullScreen();
-                }else{
-                    manageMenu(null);
-                }
-                e.preventDefault();
-                break;
-            case down:
-                if(isFullscreen()){
-                    if(vplayer.paused){
-                        vplayer.play();
-                    }else{
-                        vplayer.pause();
-                    }
-                }else{
-                    switchPlayer(vplayer)
-                    requestFullScreen(vplayer);
-                    switchPlayer(vplayer)
-                }
-                e.preventDefault();
-                break;
-            case left:
-            case right:
-                showControls(vplayer);
-                e.preventDefault();
-                let keyCode = (e || window.event).keyCode;
-                let ctime = new Date().getTime() - lastIncTime;
-                lastIncTime = new Date().getTime();
-                if(lastIncAction == keyCode && ctime < waitTime){
-                    if (incIndex < increments.length - 1) {
-                        incIndex++;
-                    }
-                }else{
-                    incIndex = 0;
-                }
-                if (keyCode == left) {
-                    currentInc = -increments[incIndex];
-                }else if (keyCode == right) {
-                    currentInc = increments[incIndex];
-                }else{
-                    return;
-                }
-                vplayer.currentTime += currentInc;
-                lastIncAction = keyCode;
-                break;
-            case enter:
-                switchPlayer(vplayer)
-                e.preventDefault();
-                break;
-        }
-        return;
+       videoNav(e);
+       return;
     }else if(lastPos[currentLastPos] != null){
         let itempos = lastPos[currentLastPos].id.split("_");
         let cc = parseInt(itempos.at(-1));
@@ -293,9 +245,147 @@ export function arrowNav(e){
         }
     }else{
         lastPos[currentLastPos] = document.getElementById(currentLastPos + "_0_0");
-        lastPos[currentLastPos].classList.add("focus");
-        container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
+        if(currentLastPos == "video_placeholder"){
+            try{lastPos[currentLastPos].classList.remove("focus");}catch(e){}
+            lastPos[currentLastPos] = document.getElementsByTagName("video")[0];
+            
+            videoId = lastPos[currentLastPos].id; 
+        }else{        
+            lastPos[currentLastPos].classList.add("focus");
+            container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
+        }
     }
+}
+
+let videoNav = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    doublepress = (lastPressedKeyCode == event.keyCode && 
+                  (new Date().getTime() - lastPressedTime - timeoutdoublepress) < 0);
+    lastPressedKeyCode = event.keyCode;
+    lastPressedTime = new Date().getTime();
+    if (doublepress) {
+        doubleAccumulator += 1;
+        doubleAccumulator = Math.min(maxDoubleAccumulator, doubleAccumulator);
+    }else{
+        doubleAccumulator = 0;
+    }
+
+    if(currentVSFocus == player){
+        switch (event.keyCode) { //control player
+            case up:
+                if(isFullscreen()){
+                    exitFullScreen();
+                }else{
+                    let itempos = currentVSFocus.id.split("_");
+                    let cc = parseInt(itempos.at(-1));
+                    let cr = parseInt(itempos.at(-2));
+                    let newpos = null;
+                    if(itemExists((cr-1),cc)){
+                        currentVSFocus = getItem(cr-1,cc);
+                        currentVSFocus.classList.add("focus");
+                    }
+                }
+                break;
+            case down:
+                if(isFullscreen()){
+                    switchPlayer(player);
+                }else{
+                    switchPlayer(player)
+                    requestFullScreen(player);
+                    switchPlayer(player)
+                }
+                event.preventDefault();
+                break;
+            case left:
+                player.currentTime -= increments[doubleAccumulator];
+                break;
+            case right:
+                player.currentTime += increments[doubleAccumulator];
+                break;
+            case enter:
+                if(doublepress){
+                    switchPlayer(player);
+                    requestFullScreen(player);
+                    switchPlayer(player);
+                    return;
+                }
+                switchPlayer(player)
+                event.preventDefault();
+                break;
+            default:
+                
+                break;
+        }
+    }else{
+        let itempos = currentVSFocus.id.split("_");
+        let cc = parseInt(itempos.at(-1));
+        let cr = parseInt(itempos.at(-2));
+        switch (event.keyCode) { //control nav options
+        
+            case up:
+                if(cr == 0){
+                    manageMenu(null);
+                    return;
+                }
+                let desph = cc;
+                while(desph >= 0){
+                    if(itemExists((cr - 1), desph)){
+                        currentVSFocus.classList.remove("focus");
+                        currentVSFocus = getItem(cr-1, desph);
+                        currentVSFocus.classList.add("focus");
+                        break;
+                    }
+                    desph--;
+                }                        
+                break;
+            case down:
+                let desphd = cc;
+                while(desphd >= 0){
+                    if(itemExists((cr + 1), desphd)){
+                        currentVSFocus.classList.remove("focus");
+                        currentVSFocus = getItem(cr + 1, desphd);
+                        currentVSFocus.classList.add("focus");
+                        break;
+                    }
+                    desphd--;
+                }   
+                break;
+            case left:
+                if(cc == 0){
+                    manageMenu(null);
+                }else{
+                    currentVSFocus.classList.remove("focus");
+                    currentVSFocus = getItem(cr, cc - 1);
+                    currentVSFocus.classList.add("focus");
+                }
+                break;
+            case right:
+                if(itemExists(cr, cc + 1)){
+                    currentVSFocus.classList.remove("focus");
+                    currentVSFocus = getItem(cr, cc + 1);
+                    currentVSFocus.classList.add("focus");
+                }
+                break;
+            case enter:
+                clickOn(currentVSFocus);  
+            default:
+                break;
+        }
+    }
+    
+};
+
+export function initVideoNav() {
+    updatePositions("video_container");
+    player = document.getElementsByTagName("video")[0];
+    currentVSFocus = player;
+    document.onkeydown = videoNav;
+};
+
+let getItem = function(row, column){
+    let item = document.getElementById(currentLastPos + "_" + row + "_" + column);
+    return item;
 }
 
 let itemExists = function(row, column){

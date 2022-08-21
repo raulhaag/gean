@@ -25,18 +25,33 @@
     border-radius: 0px;
     outline: none !important;
 }
+
 .source_list{
     display: flex;
 }
+
 .source_item{
     padding: 10px;
     font-size: 2rem;
-    border: #FFF9 2px solid;
-    width: 30%;
+    border: #FFF5 2px solid;
+    margin-bottom: 10px;
+    width: calc(25vw - 27px);
     height: 3rem;
     text-align: center;
     margin: 2px;
-    margin-left: 0px;
+    overflow: hidden;
+    line-height: 3rem;
 }
+
 .source_item:hover{
     background-color: #FFF1;
+}
+
+.source_item.focus{
+    border: 2px#FFFF solid;
+    outline: 0px;
+}
+
+video.focus{
+    outline: 0px;
+}

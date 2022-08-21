@@ -51,25 +51,24 @@ export function generateDescription(options) {
 }
 
 export function getPlayer(options, items = []){
-    if(items.length < 2){
-    return `<div class="video_container">
-            <video id="player" class="videoview focusable" controls autoplay>
-            <source src="` + options["video"]+ `">
-            </video>
-            </div>
-            `;
-    }else{
         let rv = '<div class="video_container"><div class="source_list">'
         items.forEach(function(item){
-            rv += '<div class="source_item" data-src="'+ item +'">' + getName(item) + '</div>';
+            rv += '<div class="source_item focusable" data-src="'+ item +'" onclick="{changeSrc(this)}">' + getName(item) + '</div>';
+        }); 
+        rv += `</div><div class="source_list">`;
+        Object.keys(options).forEach(function(item){
+            rv += '<div class="source_item focusable" data-src="'+ options[item] +'" onclick="{changeSrcRes(this)}">' + item + '</div>';
         });
-        rv += `</div><video id="player" class="videoview focusable" controls autoplay>
-                <source src="` + options["video"]+ `">
-                </video>
+        rv += `</div><video id="player" class="videoview focusable" controls autoplay>`
+        /*Object.keys(options).forEach(function(option){
+            rv +=  `<source src="` + options[option]+ `" label="` + option + `">`
+        });*/
+        rv +=  `<source src="` + options["video"]+ `" label="` + "video" + `">`
+        rv +=  `</video>
                 </div>`
         return rv;
-    }
 }
+
 
 export function getSearch(server){
     return `<div id="search">
@@ -83,8 +82,8 @@ export function getSearch(server){
 }
 
 export function getSettings(){
-    let options = {"lockfronpage":" Bloquear pagina principal", "fullscreen": " Iniciar video en pantalla completa", "autoplay": " Autoplay de video", "external_player":"Usar reproductor externo(Solo Android)", "modo_2":"Usar modo de vista 2(necesita recargar la pagina)"};
-    const defv = ["false", "true", "true", "false", "false"];
+    let options = {"lockfronpage":" Bloquear pagina principal", "fullscreen": " Iniciar video en pantalla completa", "autoplay": " Autoplay de video", "resSelect": "Selección de resolución manual","external_player":"Usar reproductor externo(Solo Android)", "modo_2":"Usar modo de vista 2(necesita recargar la pagina)"};
+    const defv = ["false", "true", "true", "false","false", "false"];
     let result = '<div class="container"><div class="settings_group main-content">';
     let aval = false;
     var i = 0;
