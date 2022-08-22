@@ -19,7 +19,6 @@ let serverList = [];
 let contPool = [];
 
 const increments = [5, 10, 15, 30, 30, 60, 300, 600]
-let currentVSFocus = null;
 let doublepress = false;
 const timeoutdoublepress = 500;
 let lastPressedKeyCode = -1;
@@ -180,7 +179,7 @@ export function arrowNav(e){
         return;
     }
     e = e || window.event;
-    if(currentLastPos == "video_placeholder"){
+    if(currentLastPos === "video_placeholder"){
        videoNav(e);
        return;
     }else if(lastPos[currentLastPos] != null){
@@ -271,19 +270,19 @@ let videoNav = (event) => {
         doubleAccumulator = 0;
     }
 
-    if(currentVSFocus == player){
+    if(lastPos[currentLastPos] == player){
         switch (event.keyCode) { //control player
             case up:
                 if(isFullscreen()){
                     exitFullScreen();
                 }else{
-                    let itempos = currentVSFocus.id.split("_");
+                    let itempos = lastPos[currentLastPos].id.split("_");
                     let cc = parseInt(itempos.at(-1));
                     let cr = parseInt(itempos.at(-2));
                     let newpos = null;
                     if(itemExists((cr-1),cc)){
-                        currentVSFocus = getItem(cr-1,cc);
-                        currentVSFocus.classList.add("focus");
+                        lastPos[currentLastPos] = getItem(cr-1,cc);
+                        lastPos[currentLastPos].classList.add("focus");
                     }
                 }
                 break;
@@ -318,7 +317,7 @@ let videoNav = (event) => {
                 break;
         }
     }else{
-        let itempos = currentVSFocus.id.split("_");
+        let itempos = lastPos[currentLastPos].id.split("_");
         let cc = parseInt(itempos.at(-1));
         let cr = parseInt(itempos.at(-2));
         switch (event.keyCode) { //control nav options
@@ -331,9 +330,9 @@ let videoNav = (event) => {
                 let desph = cc;
                 while(desph >= 0){
                     if(itemExists((cr - 1), desph)){
-                        currentVSFocus.classList.remove("focus");
-                        currentVSFocus = getItem(cr-1, desph);
-                        currentVSFocus.classList.add("focus");
+                        lastPos[currentLastPos].classList.remove("focus");
+                        lastPos[currentLastPos] = getItem(cr-1, desph);
+                        lastPos[currentLastPos].classList.add("focus");
                         break;
                     }
                     desph--;
@@ -343,9 +342,9 @@ let videoNav = (event) => {
                 let desphd = cc;
                 while(desphd >= 0){
                     if(itemExists((cr + 1), desphd)){
-                        currentVSFocus.classList.remove("focus");
-                        currentVSFocus = getItem(cr + 1, desphd);
-                        currentVSFocus.classList.add("focus");
+                        lastPos[currentLastPos].classList.remove("focus");
+                        lastPos[currentLastPos] = getItem(cr + 1, desphd);
+                        lastPos[currentLastPos].classList.add("focus");
                         break;
                     }
                     desphd--;
@@ -355,20 +354,20 @@ let videoNav = (event) => {
                 if(cc == 0){
                     manageMenu(null);
                 }else{
-                    currentVSFocus.classList.remove("focus");
-                    currentVSFocus = getItem(cr, cc - 1);
-                    currentVSFocus.classList.add("focus");
+                    lastPos[currentLastPos].classList.remove("focus");
+                    lastPos[currentLastPos] = getItem(cr, cc - 1);
+                    lastPos[currentLastPos].classList.add("focus");
                 }
                 break;
             case right:
                 if(itemExists(cr, cc + 1)){
-                    currentVSFocus.classList.remove("focus");
-                    currentVSFocus = getItem(cr, cc + 1);
-                    currentVSFocus.classList.add("focus");
+                    lastPos[currentLastPos].classList.remove("focus");
+                    lastPos[currentLastPos] = getItem(cr, cc + 1);
+                    lastPos[currentLastPos].classList.add("focus");
                 }
                 break;
             case enter:
-                clickOn(currentVSFocus);  
+                clickOn(lastPos[currentLastPos]);  
             default:
                 break;
         }
@@ -377,10 +376,10 @@ let videoNav = (event) => {
 };
 
 export function initVideoNav() {
-    updatePositions("video_container");
+    updatePositions("video_placeholder");
     player = document.getElementsByTagName("video")[0];
-    currentVSFocus = player;
-    document.onkeydown = videoNav;
+    lastPos[currentLastPos] = player;
+ //   document.onkeydown = videoNav;
 };
 
 let getItem = function(row, column){
