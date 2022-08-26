@@ -281,7 +281,7 @@ window.openPlayer = function(options, items = [], res = true){
       return;
     }  
     vp.innerHTML = getPlayer(options, items);
-    vp.style.display =  'block';
+    vp.style.display =  'flex';
     loading.style.visibility = 'hidden';
     var elem = document.getElementsByClassName("videoview")[0];    
     initVideoNav();    

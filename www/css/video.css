@@ -1,24 +1,22 @@
-.video_container{
-    min-height: 100vh;
-    height: 100%;
+
+.video_placeholder{
+    display: none;
+    flex-direction: column;
+}
+.video_container{ 
+    position: relative;
     width: 100%;
-    margin: auto;
-    display: block;
-    align-items: center;
-    justify-content: center;
-    background-color: #000D;
-    position: fixed;
+    height: 100%;
+    background-color: #000;
+    flex-grow: 1;
 }
 
 .videoview{
-    position: relative;
-    aspect-ratio: 16/9;
-    z-index: 9999;
+    position: absolute;
+    z-index: 9999;    
+    height: 100%;
     width: 100%;
-    max-height: calc(100vh - 100px);
-    padding: auto;
-    margin: auto;
-    background-color: #000;
+
 }
 
 #player, #video_placeholder_0_0{
@@ -28,6 +26,8 @@
 
 .source_list{
     display: flex;
+    width: 100%;
+    background-color: #000;
 }
 
 .source_item{

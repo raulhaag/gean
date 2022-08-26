@@ -1,4 +1,5 @@
 const left = 37; const up = 38; const right = 39; const down = 40; const enter = 13;
+let nav_keys = [left, right, down, enter, up];
 let lastPos = {};
 let currentLastPos = "content";
 let firstInit = false;
@@ -157,6 +158,10 @@ export function updatePositions(containerCN = "content"){
 }
 
 export function arrowNav(e){
+    if(!(nav_keys.includes(e.keyCode))){
+        return;
+    }
+    e.preventDefault();
     if(menucapture && e != null){
         e.preventDefault();
         manageMenu((e || window.event).keyCode);

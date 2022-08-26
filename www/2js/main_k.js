@@ -393,6 +393,7 @@ export function generateCategories(options) {
 }
 
 export function generateCategory(title, items) {
+    if(items == null) return "";
     let result = '<div class="items demitransparent"><h2 class="items__title">' + title + '</h2><div class="items__list" value="0"><div class="item_gap"></div>';
     for (let i = 0; i < items.length; i++) {
         result += '<div class="item focusable" data-name="' + items[i]["name"] + '" data-image="' + items[i]["image"] + '" data-path="' + items[i]["path"] + '"><img class="item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="item__title">' + items[i]['name'] + '</h2></div>';

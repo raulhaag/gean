@@ -51,7 +51,7 @@ export function generateDescription(options) {
 }
 
 export function getPlayer(options, items = []){
-        let rv = '<div class="video_container"><div class="source_list">'
+        let rv = '<div class="source_list">'
         items.forEach(function(item){
             rv += '<div class="source_item focusable" data-src="'+ item +'" onclick="{changeSrc(this)}">' + getName(item) + '</div>';
         }); 
@@ -59,7 +59,7 @@ export function getPlayer(options, items = []){
         Object.keys(options).forEach(function(item){
             rv += '<div class="source_item focusable" data-src="'+ options[item] +'" onclick="{changeSrcRes(this)}">' + item + '</div>';
         });
-        rv += `</div><video id="player" class="videoview focusable" controls autoplay>`
+        rv += `</div><div class="video_container"><video id="player" class="videoview focusable" controls autoplay>`
         /*Object.keys(options).forEach(function(option){
             rv +=  `<source src="` + options[option]+ `" label="` + option + `">`
         });*/
