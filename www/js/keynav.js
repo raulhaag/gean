@@ -131,7 +131,7 @@ export function updatePositions(containerCN = "content"){
     if(containerCN == null){
         if(contPool.length > 1){
             contPool.pop();
-            containerCN = contPool.at(-1);
+            containerCN = contPool[contPool.length-1];
         }else{
             containerCN = "content";
         }
@@ -168,8 +168,8 @@ export function arrowNav(e){
         return;
     }
     if(window.backStack.length > 0){
-        if(currentLastPos != window.backStack.at(-1).classList[0]){
-            updatePositions(window.backStack.at(-1).classList[0]);
+        if(currentLastPos != window.backStack[backStack.length - 1].classList[0]){
+            updatePositions(window.backStack[backStack.length - 1].classList[0]);
         }
     }else{
         if(!firstInit || e == null){
@@ -189,8 +189,8 @@ export function arrowNav(e){
        return;
     }else if(lastPos[currentLastPos] != null){
         let itempos = lastPos[currentLastPos].id.split("_");
-        let cc = parseInt(itempos.at(-1));
-        let cr = parseInt(itempos.at(-2));
+        let cc = parseInt(itempos[itempos.length-1]);
+        let cr = parseInt(itempos[itempos.length-2]);
         let newpos = null;
         if (e.keyCode == up) {
             if(cr >= 1){
@@ -282,8 +282,8 @@ let videoNav = (event) => {
                     exitFullScreen();
                 }else{
                     let itempos = lastPos[currentLastPos].id.split("_");
-                    let cc = parseInt(itempos.at(-1));
-                    let cr = parseInt(itempos.at(-2));
+                    let cc = parseInt(itempos[itempos.length-1]);
+                    let cr = parseInt(itempos[itempos.length-2]);
                     let newpos = null;
                     if(itemExists((cr-1),cc)){
                         lastPos[currentLastPos] = getItem(cr-1,cc);
@@ -323,8 +323,8 @@ let videoNav = (event) => {
         }
     }else{
         let itempos = lastPos[currentLastPos].id.split("_");
-        let cc = parseInt(itempos.at(-1));
-        let cr = parseInt(itempos.at(-2));
+        let cc = parseInt(itempos[itempos.length-1]);
+        let cr = parseInt(itempos[itempos.length-2]);
         switch (event.keyCode) { //control nav options
         
             case up:
