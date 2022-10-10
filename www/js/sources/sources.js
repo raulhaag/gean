@@ -2,6 +2,7 @@ import { JKAnime } from "./jkanime.js";
 import{SoloLatino} from "./sololatino.js";
 import{SoloLatinoSyP} from "./sololatinosyp.js";
 import { TioAnime } from "./tioanime.js";
+
 export function openInNewTab(url) {
     window.open(url, '_blank').focus();
 }
@@ -16,4 +17,8 @@ export function getResponse(name, callback, error_callback) {
 
 export function getLinks(path, callback, error_callback) {
     
+}
+
+export function getList(){
+    return Object.keys(servers);
 }

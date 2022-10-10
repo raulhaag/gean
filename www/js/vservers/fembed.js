@@ -14,13 +14,25 @@ export class Fembed {
       "/" +
       window.enc("{}"); //post params
     fetch(window.serverHost + "post/" + rqs)
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((result) => {
-        let response = {"video": result.data[result.data.length-1].file}
-        after(response);
+        after(parseVideoFe(result));
       })
       .catch((error) => {
         onError(error);
       });
   }
+}
+function parseVideoFe(rtext){
+  let response = JSON.parse(rtext);
+  if(response["success"] == false) {
+    return null;
+  }
+  let vdata = response["data"];
+  let vlist = {};
+  for (let i = 0; i < vdata.length; i++) {
+    vlist[vdata[i].label] = vdata[i].file;
+  }
+  vlist.video = response.data[response["data"].length-1].file;
+  return vlist;
 }

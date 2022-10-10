@@ -283,6 +283,7 @@ body{
     color: #555;
 }
 
+
 .menu-item-tease{
     width:70px;
     padding: 5px;
@@ -365,4 +366,45 @@ body{
 .hide{
     opacity: 0 !important;
     z-index: 0;
+}
+
+/* options selector */
+
+.option-selector{
+    z-index: 50000;
+    border-top: 1px solid #ccc;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+}
+.option-selector-title{
+    background-color: #911;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-top: 0px solid #ccc;
+}
+.option-selector-list-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-top: 0px solid #ccc;
+    background: #000
+}
+.option-selector-list-item.selected {
+    background-color: #444;
+}
+
+.option-selector-cancel{
+    background-color: #400;
+    color: #888;
+    margin: 10px;
+    border-radius: 3px;
+    padding: 5px;
+    text-align: center;
+}
+
+.option-selector-cancel.selected{
+    color: #fff;
+    background-color: #911;
 }

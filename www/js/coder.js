@@ -52,12 +52,27 @@ export function generateDescription(options) {
 
 export function getPlayer(options, items = []){
         let rv = '<div class="source_list">'
+        let extra = " selected";
         items.forEach(function(item){
-            rv += '<div class="source_item focusable" data-src="'+ item +'" onclick="{changeSrc(this)}">' + getName(item) + '</div>';
-        }); 
+            let osar = [item];
+            for (let i = 0; i < items.length; i++){
+                if(osar.indexOf(items[i]) == -1){
+                    osar.push(items[i]);
+                }
+            }
+            rv += '<div class="source_item focusable '+ extra +'" data-src=\''+ JSON.stringify(osar) +'\' onclick="{changeSrc(this)}">' + getName(item) + '</div>';
+            extra = "";
+        });
         rv += `</div><div class="source_list">`;
         Object.keys(options).forEach(function(item){
-            rv += '<div class="source_item focusable" data-src="'+ options[item] +'" onclick="{changeSrcRes(this)}">' + item + '</div>';
+            if(item != "video"){
+                if(options["video"] == options[item]){
+                    extra = " selected";
+                }else{
+                    extra = "";
+                }
+                rv += '<div class="source_item focusable'+ extra + '" data-src="'+ options[item] +'" onclick="{changeSrcRes(this)}">' + item + '</div>';
+            }
         });
         rv += `</div><div class="video_container"><video id="player" class="videoview focusable" controls autoplay>`
         /*Object.keys(options).forEach(function(option){

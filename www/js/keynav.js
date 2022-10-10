@@ -158,13 +158,17 @@ export function updatePositions(containerCN = "content"){
 }
 
 export function arrowNav(e){
-    if(!(nav_keys.includes(e.keyCode))){
+    if (e == null){
+        container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
+        lastPos[currentLastPos].classList.add("focus");
         return;
     }
     e.preventDefault();
     if(menucapture && e != null){
-        e.preventDefault();
         manageMenu((e || window.event).keyCode);
+        return;
+    }
+    if(!(nav_keys.includes(e.keyCode))){
         return;
     }
     if(window.backStack.length > 0){
@@ -178,11 +182,7 @@ export function arrowNav(e){
         }
         currentLastPos = "content";
     }
-    if (e == null){
-        container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
-        lastPos[currentLastPos].classList.add("focus");
-        return;
-    }
+
     e = e || window.event;
     if(currentLastPos === "video_placeholder"){
        videoNav(e);

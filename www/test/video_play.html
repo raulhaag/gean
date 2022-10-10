@@ -252,8 +252,9 @@ let switchPlayer = (vplayer) => {
     </script>
 </head>
 <body>
-    <div class="video_placeholder content">
+    <div class="video_placeholder content" style="display: flex !important;">
         <div class="source_list">
+            <div class="source_item focusable" style="border:0px;">Video Server</div>
             <div class="source_item focusable" data-src="http://127.0.0.1:5500/db.mp4" onclick="{changeVideo(this)}">ldb</div>
             <div class="source_item focusable" data-src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4" onclick="{changeVideo(this)}">Jkt</div>
             <div class="source_item focusable" data-src="https://media.w3.org/2010/05/sintel/trailer.mp4" onclick="{changeVideo(this)}">fembed</div>

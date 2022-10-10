@@ -6,7 +6,10 @@ export class ReSololatino {
       fetch(window.serverHost + "get/" + rqs)
         .then((response) => response.text())
         .then((result) => {
-          after(parseVideoFe(result));
+          let ar = parseVideoFe(result)
+          if(ar != null) {
+            after(ar);
+          }
         })
         .catch((error) => {
           onError(error);
@@ -30,7 +33,10 @@ export class SololatinoXYZ {
     fetch(window.serverHost + "post/" + rqs)
       .then((response) => response.text())
       .then((result) => {
-        after(parseVideoFe(result));
+        let ar = parseVideoFe(result)
+        if(ar != null) {
+          after(ar);
+        }
       })
       .catch((error) => {
         onError(error);
@@ -45,13 +51,21 @@ export class OwodeuwuXYZ {
     let data = {"r":"", "d": "owodeuwu.xyz"};
     let id = path[path.indexOf("v") + 1];
     let headers = {"Referer": "https://owodeuwu.xyz/v/" + id}
-    let response = await fPost("https://owodeuwu.xyz/api/source/" + id, headers, data);
-    after(parseVideoFe(response));
+    let result = await fPost("https://owodeuwu.xyz/api/source/" + id, headers, data);
+    let ar = parseVideoFe(result)
+    if(ar != null) {
+      after(ar);
+    }else{
+      onError("Error en servidor");
+    }
   }
 }
 
 function parseVideoFe(rtext){
   let response = JSON.parse(rtext);
+  if(response["success"] == false) {
+    return null;
+  }
   let vdata = response["data"];
   let vlist = {};
   for (let i = 0; i < vdata.length; i++) {

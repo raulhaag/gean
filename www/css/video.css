@@ -52,6 +52,10 @@
     outline: 0px;
 }
 
+.source_item.selected{
+    background-color: #FFF4;
+}
+
 video.focus{
     outline: 0px;
 }

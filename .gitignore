@@ -2,4 +2,4 @@ env/*
 *.pyc
 *.mp4
 update.zip
-www/test_video.mp4
+www/w2/*

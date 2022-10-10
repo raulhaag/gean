@@ -62,7 +62,8 @@ class handler(SimpleHTTPRequestHandler):
             self.return_response(404, "Not Found")
 
     def end_headers(self):
-        self.send_my_headers()
+        if(self.path.endswith(".js")):
+            self.send_my_headers()
         SimpleHTTPRequestHandler.end_headers(self)
 
     def send_my_headers(self):
@@ -116,7 +117,7 @@ def getResponseFile(path = [], server = None):
     urllib.request.urlcleanup()
 
 def getGet(path = []):
-    headers = {}    
+    headers = {}
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
     if "User-Agent" not in headers:

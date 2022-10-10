@@ -142,6 +142,9 @@ let addBackStack = function(e){
         document.getElementById("settings_button").style.display = 'none';
         document.getElementById("select_server").classList.remove("select_server_active");
     }
+    if(window.backStack.indexOf(e) != -1) {
+        window.backStack.remove(e);
+    }
     window.backStack.push(e);
 }
 
@@ -185,8 +188,8 @@ let updateFavorites = function(){
 
 let updateRecents = function(){
     if (recent != null){
-        if(recent.length > 20){
-            recent.slice(0, 20);
+        if(recent.length > 30){
+            recent =  recent.slice(0, 30);
         }
         localStorage.setItem('recent', JSON.stringify(recent));
         if(recent.length > 0){
@@ -244,8 +247,13 @@ let linkError = function(error_message){
     }
 }
 
-window.posLinks = function(linkList){
-    let best = getPreferer(linkList);
+window.posLinks = function(linkList, order = true){
+    let best = null;
+    if(order){
+        best = getPreferer(linkList);
+    }else{
+        best = linkList;
+    }
     let mask = (value) => {
         openPlayer(value,best);
     }
@@ -254,9 +262,9 @@ window.posLinks = function(linkList){
         getDDL(mask, linkError, best[0]);
     } else {
         error("No supported servers");
-
     }
 }
+
 window.openPlayer = function(options, items = [], res = true){
     if(Object.keys(options).length > 1 && res) {
         if(localStorage.getItem("resSelect") == "true"){
@@ -417,6 +425,14 @@ window.getAllMatches = function(regex, str){
 }
 
 window.changeSrcRes = function(src){
+    if(src.classList.contains("selected")){
+        return
+    }
+    let options = src.parentNode.getElementsByClassName("source_item");
+    for(let i = 0; i < options.length; i++){
+        options[i].classList.remove("selected");
+    }
+    src.classList.add("selected");
     let player = document.getElementsByTagName("video")[0];
     let currentTime = player.currentTime;
     player.src = src.dataset.src;
@@ -424,7 +440,7 @@ window.changeSrcRes = function(src){
 }
 
 window.changeSrc = function(src){
-    posLinks([src.dataset.src]);
+    posLinks(JSON.parse(src.dataset.src), false);
 }
 
 function loadm2 () {
@@ -440,6 +456,7 @@ loadm2();
 
 // selection message start 
 let navOptions = (event) => {
+    event.preventDefault();
     if(!(event.keyCode === 38 || event.keyCode === 40 || event.keyCode === 13)) {
         return;
     }
