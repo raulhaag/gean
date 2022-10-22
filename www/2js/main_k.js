@@ -1,4 +1,4 @@
-import {getResponse, getSource} from '../js/sources/sources.js';
+import {getResponse, getSource, getSourceList} from '../js/sources/sources.js';
 import {getDDL, getPreferer, getName} from '../js/vservers/vserver.js';
 
 let settings = {
@@ -8,7 +8,7 @@ let settings = {
 }
 
 let info = {title: null, resume:null, play:null, image:null};
-let up = 38, right = 39, down = 40, left = 37, enter = 13;
+let up = 38, right = 39, down = 40, left = 37, enter = 13, backspace = 8, space = 32;
 let container, searchtext;
 let last = {chapter: null, setting: null, media: null, key: null, video:null, player:null};
 let placeholders = {chapter: null, setting: null, media: null, key: null, video:null, player:null};
@@ -166,6 +166,15 @@ let videos_nav = function(event){
         return;
     }
     let key = event.keyCode;
+    if(last.video == null && key == left){
+        tease_menu(true);
+        lastNoMenu = document.onkeydown;
+        document.onkeydown = menu_nav;
+        menu.classList.remove("menu-closed");
+        teaseMenu.classList.add("menu-tease-only-icons");
+        last.video.classList.remove("focus");
+        return;
+    }
     let itempos = last.video.id.split("_");
     let cc = parseInt(itempos.at(-1));
     let cr = parseInt(itempos.at(-2));
@@ -268,6 +277,16 @@ let chapter_nav = function(event){
             teaseMenu.classList.remove("menu-tease-only-icons");
             last.chapter.classList.add("focus");
         }else if(event.keyCode == enter){
+            if(last.chapter.parentNode.classList.contains("over-search")){ //pos search
+                let remi = document.getElementsByClassName("over-search")[0]; //
+                document.body.removeChild(remi);
+                document.onkeydown = search_result_nav;
+                menu.classList.add("menu-closed");
+                teaseMenu.classList.remove("menu-tease-only-icons");
+                tease_menu(false);
+                backMenuSwitch();
+                return;
+            }
             document.getElementsByClassName('info-capitulos')[0].classList.add("info-capitulos-hide");
             document.getElementsByClassName('videos')[0].classList.remove("videos-hide");
             document.onkeydown = videos_nav;
@@ -279,7 +298,12 @@ let chapter_nav = function(event){
             teaseMenu.classList.remove("menu-tease-only-icons");
             tease_menu(last.video.id.endsWith('_0'));
             backMenuSwitch();
+            setTimeout(() => {
+                let node = document.getElementsByClassName('info-capitulos')[0];
+                document.getElementById("home").removeChild(node);
+            },3000);
         }
+        
         return;
     }
     let key = event.keyCode;
@@ -410,7 +434,6 @@ let setSerieInfo = (info) => {
 }
 
 let loadChapters = (path) =>{
-
 }
 
 export function generateCategories(options) {
@@ -546,8 +569,8 @@ let keys_nav = (event) => {
                     searchtext.innerHTML = searchtext.innerHTML + " ";
                     break;
                 case '✓':
-                    console.log("search " + searchtext.innerHTML);
-                    searchDone(testdata);
+                    let server = getSource(sid);
+                    server.getSearch(searchDone, error, searchtext.innerHTML)
                     break;
                 default:
                     searchtext.innerHTML = searchtext.innerHTML + last.key.innerHTML;
@@ -619,6 +642,7 @@ let search_result_nav = (event) => {
             break;
 
         case enter:
+            route(last.media.dataset.path)
             break;
     }
 };
@@ -633,7 +657,7 @@ let initSearch = () => {
 let code_search_result = (items) => {
     let result = '<div class="search_items"><div class="search_items__list">';
     for (let i = 0; i < items.length; i++) {
-        result += '<div class="search_item focusable" onclick="{mediaClick(self, \'' + items[i]["path"] + '\')}"><img class="search_item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="search_item__title">' + items[i]['name'] + '</h2></div>';
+        result += '<div class="search_item focusable" data-path="' + items[i]["path"].replace("getDescription", "getDescriptionSearch") + '"><img class="search_item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="search_item__title">' + items[i]['name'] + '</h2></div>';
     }
     return result + '</div></div>';
 }
@@ -686,6 +710,7 @@ let change_nav = (event) => {
                 if(serverSelectedIdx === 1){
                     tease_menu(false);
                 }
+                document.getElementById(servers[serverSelectedIdx]).parentNode.scrollLeft = document.getElementById(servers[serverSelectedIdx]).offsetLeft - 80;;
             }
             break;
         case left:
@@ -696,6 +721,8 @@ let change_nav = (event) => {
                 if(serverSelectedIdx === 0){
                     tease_menu(true);
                 }
+                document.getElementById(servers[serverSelectedIdx]).parentNode.scrollLeft = document.getElementById(servers[serverSelectedIdx]).offsetLeft - 80;;
+
             }else{
                 lastNoMenu = change_nav;
                 document.onkeydown = menu_nav;
@@ -704,24 +731,28 @@ let change_nav = (event) => {
                 document.getElementById(servers[serverSelectedIdx]).classList.remove("change-item-focus");
             }
             break;
+        case enter:
+            let sid = document.getElementById(servers[serverSelectedIdx]).id;
+            let sn = document.getElementById(servers[serverSelectedIdx]).textContent;
+            localStorage.setItem('lastServer', sid);
+            localStorage.setItem('lastServerName', sn);
+            location.reload();
     }
-}
-
-function getServers(){
-    return {jkanime:"JKAnime", sololatino:"Solo latino", tioanime:"TioAnime"};
 }
 
 function initChange(){
     let scont = document.getElementsByClassName("change-list")[0];
-    let servers_ = getServers();
+    servers = getSourceList();
     let inner = "";
-    Object.keys(servers_).forEach(key => {
-       inner += '<div class="change-item" id="' + key + '">'+ servers_[key] + '</div>';
+    servers.forEach(key => {
+       inner += '<div class="change-item" id="' + key + '">'+ key + '</div>';
     });
     scont.innerHTML = inner;
-    servers = Object.keys(servers_);
-    document.getElementsByClassName("change-item")[0].classList.add("change-item-focus");
-    serverSelectedIdx = 0;
+    let cs = document.getElementsByClassName("change-item")[servers.indexOf(sid)];
+    cs.classList.add("change-item-focus");
+    cs.classList.add("change-item-selected");
+    cs.parentNode.scrollLeft = cs.offsetLeft;
+    serverSelectedIdx = servers.indexOf(sid);
     document.onkeydown = change_nav;
     lastNoMenu = change_nav;
 }
@@ -834,6 +865,12 @@ function posDescription(resp){
     last.chapter = null;
     let chapters = resp.chapters;
     let ach = "";
+    let ic = document.createElement("div");
+    ic.classList.add("info-capitulos");
+    ic.classList.add("info-capitulos-hide");
+    ic.id = "chapters";
+    document.getElementById("home").appendChild(ic);
+    placeholders.chapter = ic;
     chapters.forEach(c =>
         ach +=  '<div class="info-capitulo" data-path="' + c.path+ '">'+ c.name +'</div>'
     );
@@ -846,6 +883,39 @@ function posDescription(resp){
     document.onkeydown = chapter_nav;
     info.resume.innerHTML = resp.items[0]
     //after load sucess
+    last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
+}
+function posDescriptionSearch(resp){
+    try{
+        placeholders.chapter.innerHTML = "";
+    }catch(e){//ignore
+    }
+    last.chapter = null;
+    let chapters = resp.chapters;
+    let ach = `
+    <div class="info over-search black_background">
+            <div class="info-collum">
+                <div class="info-title">`+ resp.name + `</div>
+                <div class="info-data">` + resp.items[0] + `</div>
+            </div>
+            <div class="info-image-ph">
+                <img class="info-image" src="`+ resp.image +`">
+                <div class="info-image-overlap"></div>
+            </div>
+        </div>
+        <div class="info-capitulos over-search">
+    `;
+    chapters.forEach(c =>
+        ach +=  '<div class="info-capitulo" data-path="' + c.path+ '">'+ c.name +'</div>'
+    );
+    ach += '</div>';
+    tease_menu(true);
+    backMenuSwitch();
+    document.onkeydown = chapter_nav;
+    let sr = document.createElement("div");
+    sr.classList.add("over-search");
+    sr.innerHTML = ach;
+    document.body.appendChild(sr);
     last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
 }
 
@@ -881,6 +951,8 @@ window.route = function(path){
         //server.getCategory(params, posServerClick, error);
     }else if(action == 'getDescription'){
         server.getDescription(posDescription, error, fpath[2]);
+    }else if(action == 'getDescriptionSearch'){
+            server.getDescription(posDescriptionSearch, error, fpath[2]);
     }else if(action == 'getLinks'){
         server.getLinks(posLinks, error, fpath[2]);
         let ppf = function(item){
@@ -985,11 +1057,10 @@ function initPlayerNav() {
 window.openPlayer = function(options, items = [], res = true){
     if(Object.keys(options).length > 1 && res) {
         if(localStorage.getItem("resSelect") == "true"){
-            optionSelection("Elige una resolución apropiada", options, 
-            (selection, options)=>{
+            generateSelectorDialog((selection, label)=>{
                 options.video = selection;
                 openPlayer(options, items, false);
-            });
+            },"Elige una resolución apropiada", options);
             return;
         }
     }
@@ -1187,10 +1258,6 @@ let playerNav = (event) => {
     }
 };
 
-
-
-
-
 /* functions */
 let getItem = function(row, column, prefix = "player-container"){
     let item = document.getElementById(prefix + "_" + row + "_" + column);
@@ -1303,7 +1370,3 @@ window.getFirstMatch = function(regex, str){
 window.getAllMatches = function(regex, str){
     return [...str.matchAll(regex)];
 }
-
-
-
-

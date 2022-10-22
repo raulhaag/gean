@@ -6,6 +6,10 @@ export class ReSololatino {
       fetch(window.serverHost + "get/" + rqs)
         .then((response) => response.text())
         .then((result) => {
+          let fl = getFirstMatch(/file:\s*["|'](.+?)["|']/gm , result);
+          if(fl){
+            after({video: fl});
+          }
           let ar = parseVideoFe(result)
           if(ar != null) {
             after(ar);

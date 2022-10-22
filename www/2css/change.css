@@ -17,9 +17,11 @@
     transform: translate(0,-50%);
 }
 .change-list{
+    width: calc(100vw - 70px);
     display: flex;
-    justify-content: center;
+    overflow: hidden;
 }
+
 .change-item{
     margin:10px;
     font-size: 5vh;

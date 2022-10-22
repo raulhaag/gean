@@ -19,6 +19,6 @@ export function getLinks(path, callback, error_callback) {
     
 }
 
-export function getList(){
+export function getSourceList(){
     return Object.keys(servers);
 }

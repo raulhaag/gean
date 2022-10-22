@@ -7,7 +7,11 @@
     opacity: 1;
     transition: all 0.2s ease-in-out;
     height: 100vh;
-    z-index: 1000000;
+    z-index: 900;
+}
+
+.over-search{
+    z-index: 950;
 }
 
 .search-box{
@@ -85,10 +89,7 @@
     height: 250Px;
 }
 
-.search_item:hover{
-    border-radius: 3px;
-    outline: 3px solid var(--main-contrast-color);
-}
+
 .search_item img{
     object-fit: cover;
     object-position: center;
