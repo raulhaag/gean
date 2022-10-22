@@ -73,14 +73,14 @@ export function getName(web) {
 export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
-                    "fembed", 
-                    "https://sololatino.xyz/v/", 
+                    "fembed",
                     "https://re.sololatino.net/p/embed.php",
+                    "https://sololatino.xyz/v/",
                     "owodeuwu.xyz" ,
                     "ok.ru" ,
                     "zippishare",
                     "yourupload",
-                    "zplayer.live",  
+                    "zplayer.live",
                 ];
     let ordered = [];
     for(let i = 0; i < preferer.length; i++){

@@ -143,7 +143,7 @@ let addBackStack = function(e){
         document.getElementById("select_server").classList.remove("select_server_active");
     }
     if(window.backStack.indexOf(e) != -1) {
-        window.backStack.remove(e);
+        window.backStack.splice(window.backStack.indexOf(e), 1);
     }
     window.backStack.push(e);
 }

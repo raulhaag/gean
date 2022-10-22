@@ -9,11 +9,11 @@ export class ReSololatino {
           let fl = getFirstMatch(/file:\s*["|'](.+?)["|']/gm , result);
           if(fl){
             after({video: fl});
-            return;
-          }
-          let ar = parseVideoFe(result)
-          if(ar != null) {
-            after(ar);
+          }else{
+            let ar = parseVideoFe(result)
+            if(ar != null) {
+              after(ar);
+            }
           }
         })
         .catch((error) => {
