@@ -116,6 +116,10 @@ export class SoloLatino {
                 if(link.hasAttribute("data-r")){
                   links.push(atob(link.getAttribute("data-r")));
                 }else{
+                  try{
+                    let b64link = getFirstMatch(/link=([^&]+)/gm, link.getAttribute("onclick"));
+                    links.push(atob(b64link));
+                  }catch(e){};
                   links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
                 }
               }catch(e){}//continue

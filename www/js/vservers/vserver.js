@@ -5,6 +5,7 @@ import {ZPlayer} from "./zplayer.js";
 import{YourUpload}from "./yourupload.js";
 import{OkRu}from "./okru.js";
 import{ZippyShare} from "./zippy.js";
+import {Mediafire} from "./mfire.js";
 let servers = {"fembed": new Fembed(),
                "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -14,7 +15,8 @@ let servers = {"fembed": new Fembed(),
                 "yourupload": new YourUpload(),
                 "okru": new OkRu(),
                 "owodeuwu.xyz" : new OwodeuwuXYZ(),
-                "zippy": new ZPlayer()
+                "zippy": new ZippyShare(),
+                "mediafire.com": new Mediafire()
             };
 
 export function getDDL(after, onError, web) {
@@ -39,6 +41,8 @@ export function getDDL(after, onError, web) {
         return servers["owodeuwu.xyz"].getDDL(after, onError, web);
     }else if(web.indexOf("zippishare") != -1){
         return servers["zippishare"].getDDL(after, onError, web);
+    }else if(web.indexOf("mediafire.com") != -1) {
+        return servers["mediafire.com"].getDDL(after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -65,6 +69,8 @@ export function getName(web) {
         return "Zippishare";
     }else if(web.indexOf("zplayer.live") != -1) {
         return "ZPlayer live"
+    }else if(web.indexOf("mediafire.com") != -1) {
+        return "MediaFire";
     }else {
         return "";
     }
@@ -73,6 +79,7 @@ export function getName(web) {
 export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
+                    "mediafire.com",
                     "fembed",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",

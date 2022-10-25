@@ -1316,15 +1316,17 @@ let updateRecents = function(){
 let isFullscreen = () => !! document.fullscreenElement;
 
 window.requestFullScreen = function(elem) {
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullScreen) {
-      elem.webkitRequestFullScreen();
-    } else if (elem.msRequestFullscreen) {
-      elem.msRequestFullscreen();
-    }
+    try{
+        if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+        elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullScreen) {
+        elem.webkitRequestFullScreen();
+        } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+        }
+    }catch(err){};//ignore
   }
 
   window.exitFullScreen = function() {
