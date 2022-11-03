@@ -18,10 +18,6 @@ let reload = false;
 
 
 document.addEventListener("DOMContentLoaded", function(){
-    
-
-
-
     window.serverHost = "http://" + window.location.hostname + ":8080/"
     document.getElementById("search_button").style.display = 'block';
     document.getElementById("more_button").style.display = 'block';
@@ -52,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     server_selected(sid, sn);
     document.onkeydown = lauchKeyNav;
-    //new Mediafire().getDDL(openPlayer, error, "https://www.mediafire.com/file/ztryp70m4kcuphk/Magic_Knight_Rayearth_-_2x16.mp4/file");
+    //new Mediafire().getDDL(openPlayer, error, "");
 });
 
 let lauchKeyNav = function(e){

@@ -114,7 +114,11 @@ export class SoloLatino {
             for (const link of lis) {
               try{
                 if(link.hasAttribute("data-r")){
-                  links.push(atob(link.getAttribute("data-r")));
+                  let linkd = atob(link.getAttribute("data-r"));
+                  if(linkd.indexOf("sypl.xyz")){
+                    linkd = linkd.replace("sypl.xyz", "owodeuwu.xyz");
+                  }
+                  links.push(linkd);
                 }else{
                   try{
                     let b64link = getFirstMatch(/link=([^&]+)/gm, link.getAttribute("onclick"));

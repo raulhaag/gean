@@ -18,10 +18,13 @@ export class JKAnime {
         let name =
           flis[i].getElementsByTagName("h5")[0].textContent + " - " + flis[i].getElementsByTagName("h6")[0].textContent.replace(/\s+/gm, " ").trim();
         let epath = this.name + "/getLinks/" + window.enc(flis[i].getAttribute("href"));
+        let pparts = flis[i].getAttribute("href").split("/");
+        let ppath = this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/") + "/");
         ncs.push({
           "name": name,
           "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
           "path": epath,
+          "parentPath": ppath 
         });
       }
     } catch (nerror) {

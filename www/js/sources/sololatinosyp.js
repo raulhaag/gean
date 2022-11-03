@@ -108,7 +108,11 @@ export class SoloLatinoSyP {
             for (const link of lis) {
               try{
                 if(link.hasAttribute("data-r")){
-                  links.push(atob(link.getAttribute("data-r")));
+                  let linkd = atob(link.getAttribute("data-r"));
+                  if(linkd.indexOf("sypl.xyz")){
+                    linkd = linkd.replace("sypl.xyz", "owodeuwu.xyz");
+                  }
+                  links.push(linkd);
                 }else{
                   links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
                 }

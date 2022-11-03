@@ -11,27 +11,28 @@ let info = {title: null, resume:null, play:null, image:null};
 let up = 38, right = 39, down = 40, left = 37, enter = 13, backspace = 8, space = 32;
 let container, searchtext;
 let last = {chapter: null, setting: null, media: null, key: null, video:null, player:null};
-let placeholders = {chapter: null, setting: null, media: null, key: null, video:null, player:null};
-let tempSerieCache = {};
+let placeholders = {chapter: null, setting: null, media: null, key: null, video:null, player:null, favorites:null};
 let items_gap = 80, inigap = 0;
 let sid, sn;
 let favorites = [];
 let recent = [];
-
+let resumes = {};
 let servers = null;
 let serverSelectedIdx = 0;
 
 document.addEventListener("DOMContentLoaded",function(){
 window.serverHost = "http://" + window.location.hostname + ":8080/"
-try{
-    favorites = JSON.parse(getStorageDefault('favorites', "[]"));
-}catch(e){}
-try{
-    recent = JSON.parse(getStorageDefault('recent'), "[]");
-}catch(e){}
-
-let lastServer = localStorage.getItem('lastServer');
-let lastServerName = localStorage.getItem('lastServerName');
+    try{
+        favorites = JSON.parse(getStorageDefault('favorites', "[]"));
+    }catch(e){}
+    try{
+        recent = JSON.parse(getStorageDefault('recent'), "[]");
+    }catch(e){}
+    try{
+        loadResumes();
+    }catch(e){}
+    let lastServer = localStorage.getItem('lastServer');
+    let lastServerName = localStorage.getItem('lastServerName');
     if(lastServer != null && lastServerName != null){
         sid = lastServer;
         sn = lastServerName;
@@ -126,14 +127,13 @@ function mainInit(){
     placeholders.player = document.getElementById("player");
     info.title = document.getElementsByClassName("info-title")[0];
     info.resume = document.getElementsByClassName("info-data")[0];
-    //info.play = document.getElementsByClassName("info-play")[0];
     info.image = document.getElementsByClassName("info-image")[0];
     teaseMenu = document.getElementsByClassName("menu-tease")[0];
     menu = document.getElementsByClassName("menu")[0];
     optionsDivs.push(document.getElementById("home"));
     optionsDivs.push(document.getElementById("search"));
     optionsDivs.push(document.getElementById("change"));
-    optionsDivs.push(document.getElementById("settings"));  
+    optionsDivs.push(document.getElementById("settings"));
     inigap = document.getElementsByClassName("initial-gap")[0].offsetHeight;
 }
 
@@ -145,14 +145,28 @@ let initHome = (reload = true) => {
 
 let fillVideos = (videos)=>{
     let videoContent = "<";
-    if(favorites.length > 0) videoContent += generateCategory("Favoritos", favorites);
-    if(recent.length > 0) videoContent += generateCategory("Recientes", recent);
     let titles = Object.keys(videos);
     for (var i = 0; i < titles.length; i++) {
         videoContent += generateCategory(titles[i], videos[titles[i]]);
     }
+    if(favorites.length > 0){
+        videoContent += ("<div id='favlist'>" + generateCategory("Favoritos", favorites) + "></div>")
+    }else{
+        videoContent += "<div id='favlist'></div>";
+    }
+    if(recent.length > 0) {videoContent += ("<div id='reclist'>" + generateCategory("Recientes", recent) + "></div>")
+    }else{
+        videoContent += "<div id='reclist'></div>";
+    };
     document.getElementsByClassName("videos")[0].innerHTML= "<div class='initial-gap'></div>" + videoContent + "<div class='initial-gap'></div>";
     updatePositions("videos");
+}
+
+let setNewVideoSelected = (newselection) => {
+    last.video.classList.remove("focus");
+    last.video = newselection;
+    last.video.classList.add("focus");
+    loadData();
 }
 
 let videos_nav = function(event){
@@ -175,49 +189,42 @@ let videos_nav = function(event){
         last.video.classList.remove("focus");
         return;
     }
-    let itempos = last.video.id.split("_");
-    let cc = parseInt(itempos.at(-1));
-    let cr = parseInt(itempos.at(-2));
+    let itempos = last.video.id.split("_").reverse();
+    let cc = parseInt(itempos[0]);
+    let cr = parseInt(itempos[1]);
     let newselection;
+    event.preventDefault();
     switch(key){
         case up:
             newselection = document.getElementById("videos_" + (cr - 1) + "_0");
             if(newselection){
                 newselection = document.getElementById("videos_" + (cr - 1) + "_"  + newselection.parentElement.getAttribute("value"));
-                last.video.classList.remove("focus");
                 last.video.parentElement.parentElement.classList.add("demitransparent");
-                last.video = newselection;
-                last.video.classList.add("focus");
-                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap;
+                setNewVideoSelected(newselection);
+                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap - 10;
                 document.getElementsByClassName("videos")[0].scrollTop = last.video.parentElement.offsetTop - inigap - 32;
                 last.video.parentElement.parentElement.classList.remove("transparent");
                 last.video.parentElement.parentElement.classList.remove("demitransparent");
             }
-            event.preventDefault();
             break;
 
         case down:
             newselection = document.getElementById("videos_" + (cr + 1) + "_0");
             if(newselection){
                 newselection = document.getElementById("videos_" + (cr + 1) + "_"  + newselection.parentElement.getAttribute("value"));
-                last.video.classList.remove("focus");
                 last.video.parentElement.parentElement.classList.add("transparent");
-                last.video = newselection;
-                last.video.classList.add("focus");
+                setNewVideoSelected(newselection);
                 document.getElementsByClassName("videos")[0].scrollTop = last.video.parentElement.offsetTop - inigap - 32;
-                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap;
+                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap - 10;
                 last.video.parentElement.parentElement.classList.remove("demitransparent");
             }
-            event.preventDefault();
             break;
 
         case right:
             newselection = document.getElementById("videos_" + cr + "_" + (cc + 1));
             if(newselection){
-                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap;
-                last.video.classList.remove("focus");
-                last.video = newselection;
-                last.video.classList.add("focus");
+                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap - 10;
+                setNewVideoSelected(newselection);
                 newselection.parentElement.setAttribute("value", cc + 1);
             }
             if(cc === 0){
@@ -228,10 +235,8 @@ let videos_nav = function(event){
         case left:
             newselection = document.getElementById("videos_" + cr + "_" + (cc - 1));
             if(newselection){
-                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap;
-                last.video.classList.remove("focus");
-                last.video = newselection;
-                last.video.classList.add("focus");
+                last.video.parentNode.scrollLeft = newselection.offsetLeft - items_gap - 10;
+                setNewVideoSelected(newselection);
                 newselection.parentElement.setAttribute("value",  cc - 1);
             }
             if(cc === 1){
@@ -245,7 +250,10 @@ let videos_nav = function(event){
             }
             break;
         case enter:
-            loadChapters(last.video.dataset.path);
+            let node = document.getElementsByClassName('info-capitulos')[0];
+            if(node != null){
+                document.getElementById("home").removeChild(node);
+            }
             last.video.classList.remove("focus");
             route(last.video.dataset.path)
             break;
@@ -258,13 +266,12 @@ let videos_nav = function(event){
     }else{
         tease_menu(false);
     }
-    loadData();
 }
 
 let chapter_nav = function(event){
-    let itempos = last.chapter.id.split("_");
-    let cc = parseInt(itempos.at(-1));
-    let cr = parseInt(itempos.at(-2));
+    let itempos = last.chapter.id.split("_").reverse();
+    let cc = parseInt(itempos[0]);
+    let cr = parseInt(itempos[1]);
     let newselection;
     if(event == null){
         last.chapter.classList.add("focus");
@@ -298,13 +305,36 @@ let chapter_nav = function(event){
             teaseMenu.classList.remove("menu-tease-only-icons");
             tease_menu(last.video.id.endsWith('_0'));
             backMenuSwitch();
+            last.chapter = null;
+            placeholders.favorites.classList.add("hide");
             setTimeout(() => {
                 let node = document.getElementsByClassName('info-capitulos')[0];
-                document.getElementById("home").removeChild(node);
-            },3000);
+                if(node != null){
+                    document.getElementById("home").removeChild(node);
+                }
+            },800);
         }
-        
         return;
+    }
+    if(last.chapter == placeholders.favorites){
+        switch(event.keyCode){
+            case left:
+                menu.classList.remove("menu-closed");
+                teaseMenu.classList.add("menu-tease-only-icons");
+                last.chapter.classList.remove("focus");
+                return;
+            case down:
+                let fc = document.getElementById("info-capitulos_0_0");
+                if(fc){
+                    last.chapter.classList.remove("focus");
+                    last.chapter = fc;
+                    last.chapter.classList.add("focus");
+                }
+                return;
+            case enter:
+                switch_fab();
+                return;
+        }
     }
     let key = event.keyCode;
     switch(key){
@@ -314,7 +344,11 @@ let chapter_nav = function(event){
                 last.chapter.classList.remove("focus");
                 last.chapter = newselection;
                 last.chapter.classList.add("focus");
-                document.getElementsByClassName("info-capitulos")[0].scrollTop =  last.chapter.offsetTop - inigap - 32;
+                document.getElementsByClassName("info-capitulos")[0].scrollTop =  last.chapter.offsetTop ;
+            }else{
+                last.chapter.classList.remove("focus");
+                last.chapter = placeholders.favorites;
+                last.chapter.classList.add("focus");
             }
             event.preventDefault();
             break;
@@ -332,7 +366,7 @@ let chapter_nav = function(event){
                 last.chapter.classList.remove("focus");
                 last.chapter = newselection;
                 last.chapter.classList.add("focus");
-                document.getElementsByClassName("info-capitulos")[0].scrollTop = last.chapter.offsetTop - inigap - 32;
+                document.getElementsByClassName("info-capitulos")[0].scrollTop = last.chapter.offsetTop;
             }
             event.preventDefault();
             break;
@@ -351,7 +385,6 @@ let chapter_nav = function(event){
             }
             break;
         case enter:
-            //TODO (last.chapter.dataset.path);
             route(last.chapter.dataset.path);
             break;
         default:
@@ -378,7 +411,7 @@ let updatePositions = function (containerCN = "content", className = "focusable"
     }
     last.video.classList.add("focus");
     last.video.parentNode.parentNode.classList.remove("demitransparent");
-    loadData();
+    setNewVideoSelected(last.video);
 }
 
 let updatePositionsLV0 = function (containerCN = "content", className = "focusable"){
@@ -420,20 +453,18 @@ let loadData = () => {
     info.title.innerHTML = last.video.dataset.name;
     info.image.src = last.video.dataset.image;
     info.resume.innerHTML = "";
-    if(last.video.dataset.path in tempSerieCache){
-
-    }
     setLoadingInfo();
-    //console.log(last.video.dataset.path);
+    if(last.video.dataset.path.indexOf("getLinks") == -1) {
+        setResume(last.video.dataset.path);
+    }else if("ppath" in last.video.dataset){
+        setResume(last.video.dataset.ppath);
+    }
     unsetLoadingInfo();
 }
 
 let setSerieInfo = (info) => {
     info.title.innerHTML = info.name;
     info.image.src = info.image;
-}
-
-let loadChapters = (path) =>{
 }
 
 export function generateCategories(options) {
@@ -448,8 +479,14 @@ export function generateCategories(options) {
 export function generateCategory(title, items) {
     if(items == null) return "";
     let result = '<div class="items demitransparent"><h2 class="items__title">' + title + '</h2><div class="items__list" value="0"><div class="item_gap"></div>';
+    let ppath = "";
     for (let i = 0; i < items.length; i++) {
-        result += '<div class="item focusable" data-name="' + items[i]["name"] + '" data-image="' + items[i]["image"] + '" data-path="' + items[i]["path"] + '"><img class="item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="item__title">' + items[i]['name'] + '</h2></div>';
+        if(items[i]["parentPath"]){
+            ppath = '" data-ppath="' + items[i]["parentPath"];
+        }else{
+            ppath = '';
+        }
+        result += '<div class="item focusable" data-name="' + items[i]["name"] + '" data-image="' + items[i]["image"] + '" data-path="' + items[i]["path"] + ppath +'"><img class="item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="item__title">' + items[i]['name'] + '</h2></div>';
     }
     return result + '</div></div>';
 }
@@ -494,9 +531,9 @@ let keys_nav = (event) => {
         last.key.classList.add("focus");
         return;
     }
-    let itempos = last.key.id.split("_");
-    let cc = parseInt(itempos.at(-1));
-    let cr = parseInt(itempos.at(-2));
+    let itempos = last.key.id.split("_").reverse();
+    let cc = parseInt(itempos[0]);
+    let cr = parseInt(itempos[1]);
     let newselection;
     event.preventDefault();
     switch(event.keyCode){
@@ -594,9 +631,9 @@ let keys_nav = (event) => {
 };
 
 let search_result_nav = (event) => {
-    let itempos = last.media.id.split("_");
-    let cc = parseInt(itempos.at(-1));
-    let cr = parseInt(itempos.at(-2));
+    let itempos = last.media.id.split("_").reverse();
+    let cc = parseInt(itempos[0]);
+    let cr = parseInt(itempos[1]);
     let newselection;
     event.preventDefault();
     switch(event.keyCode){
@@ -648,11 +685,68 @@ let search_result_nav = (event) => {
 };
 
 let initSearch = () => {
+    loadSearch();
     last.key = updatePositionsSr("search-box", last.key);
     searchtext = document.getElementsByClassName("search-text")[0];
     document.onkeydown = keys_nav;
     lastNoMenu = keys_nav;
 };
+
+let loadSearch = (clear = false) => {
+    if(clear) {
+        setTimeout(() => {
+            document.getElementById("search").innerHTML = "";
+        }, 800);
+    }else{
+        document.getElementById("search").innerHTML = `<div class="search-box">
+        <div class="search-keypad">
+            <div class="search-key focusable search-double-key"> </div>
+            <div class="search-key focusable search-double-key">🠔</div>
+            <div class="search-key focusable search-double-key">✓</div>
+            <div class="search-key focusable">a</div>
+            <div class="search-key focusable">b</div>
+            <div class="search-key focusable">c</div>
+            <div class="search-key focusable">d</div>
+            <div class="search-key focusable">e</div>
+            <div class="search-key focusable">f</div>
+            <div class="search-key focusable">g</div>
+            <div class="search-key focusable">h</div>
+            <div class="search-key focusable">i</div>
+            <div class="search-key focusable">j</div>
+            <div class="search-key focusable">k</div>
+            <div class="search-key focusable">l</div>
+            <div class="search-key focusable">m</div>
+            <div class="search-key focusable">n</div>
+            <div class="search-key focusable">o</div>
+            <div class="search-key focusable">p</div>
+            <div class="search-key focusable">q</div>
+            <div class="search-key focusable">r</div>
+            <div class="search-key focusable">s</div>
+            <div class="search-key focusable">t</div>
+            <div class="search-key focusable">u</div>
+            <div class="search-key focusable">v</div>
+            <div class="search-key focusable">w</div>
+            <div class="search-key focusable">x</div>
+            <div class="search-key focusable">y</div>
+            <div class="search-key focusable">z</div>
+            <div class="search-key focusable">1</div>
+            <div class="search-key focusable">2</div>
+            <div class="search-key focusable">3</div>
+            <div class="search-key focusable">4</div>
+            <div class="search-key focusable">5</div>
+            <div class="search-key focusable">6</div>
+            <div class="search-key focusable">7</div>
+            <div class="search-key focusable">8</div>
+            <div class="search-key focusable">9</div>
+            <div class="search-key focusable">0</div>
+        </div>
+    </div>
+    <div class="search-results">
+        <div type="text" class="search-text"></div>
+        <div class="search-results-ph" id="search-results-ph"></div>
+    </div>`;
+    }
+}
 
 let code_search_result = (items) => {
     let result = '<div class="search_items"><div class="search_items__list">';
@@ -883,7 +977,27 @@ function posDescription(resp){
     document.onkeydown = chapter_nav;
     info.resume.innerHTML = resp.items[0]
     //after load sucess
-    last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
+    placeholders.favorites = document.getElementsByClassName("info-favorites")[0];
+    let idx = indexOfProperty(favorites, 'path', resp.path);
+    if(idx > -1){
+        placeholders.favorites.classList.add("info-favorites-added");
+        placeholders.favorites.innerHTML = "Quitar de favoritos"
+    }else{
+        placeholders.favorites.classList.remove("info-favorites-added");
+        placeholders.favorites.innerHTML = "Agregar a favoritos";
+
+    }
+    teaseMenu.classList.remove("menu-tease-only-icons")
+    placeholders.favorites.classList.remove("hide");
+    placeholders.favorites.dataset["name"] = resp.name;
+    placeholders.favorites.dataset["image"] = resp.image;
+    placeholders.favorites.dataset["path"] = resp.path;
+    if (chapters.length > 0){
+        last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
+    }else{
+        last.chapter = placeholders.favorites;
+        last.chapter.classList.add("focus")
+    }
 }
 function posDescriptionSearch(resp){
     try{
@@ -894,9 +1008,10 @@ function posDescriptionSearch(resp){
     let chapters = resp.chapters;
     let ach = `
     <div class="info over-search black_background">
-            <div class="info-collum">
+            <div class="info-collum over-search">
                 <div class="info-title">`+ resp.name + `</div>
                 <div class="info-data">` + resp.items[0] + `</div>
+                <div class="info-favorites" id="favorites">Agregar a favoritos</div>
             </div>
             <div class="info-image-ph">
                 <img class="info-image" src="`+ resp.image +`">
@@ -916,7 +1031,23 @@ function posDescriptionSearch(resp){
     sr.classList.add("over-search");
     sr.innerHTML = ach;
     document.body.appendChild(sr);
-    last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
+    placeholders.favorites = document.getElementsByClassName("info-favorites")[1];
+    placeholders.favorites.classList.remove("hide");
+    teaseMenu.classList.remove("menu-tease-only-icons")
+    let idx = indexOfProperty(favorites, 'path', resp.path);
+    if(idx > -1){
+        placeholders.favorites.classList.add("info-favorites-added");
+        placeholders.favorites.innerHTML = "Quitar de favoritos"
+    }
+    placeholders.favorites.dataset["name"] = resp.name;
+    placeholders.favorites.dataset["image"] = resp.image;
+    placeholders.favorites.dataset["path"] = resp.path;
+    if (chapters.length > 0){
+        last.chapter = updatePositionsLV0("info-capitulos", "info-capitulo");
+    }else{
+        last.chapter = placeholders.favorites;
+        last.chapter.classList.add("focus")
+    }
 }
 
 window.markViewed = function(e, spath, path){
@@ -959,12 +1090,12 @@ window.route = function(path){
             add_recent(item);
             markViewed(null, item['path'], path);
         };
-        server.getParent(ppf, fpath[2]);
+        setTimeout(() => {server.getParent(ppf, fpath[2]);}, 5000);
     }else if(action == 'search'){
         let term = document.getElementsByClassName("search__text")[0].value;
         server.getSearch(posSearch, error, term);
     }else{
-        loading.style.visibility = 'hidden';
+        //loading.style.visibility = 'hidden';
     }
 }
 
@@ -1279,6 +1410,24 @@ let switchPlayer = (vplayer) => {
     }
 }
 
+window.switch_fab = function() {
+    let path = placeholders.favorites.dataset["path"];
+    let name = placeholders.favorites.dataset["name"];
+    let image = placeholders.favorites.dataset["image"];
+    let idx = indexOfProperty(favorites, 'path', path);
+    if(idx > -1){
+        favorites.splice(idx, 1);
+        placeholders.favorites.classList.remove('info-favorites-added');
+        placeholders.favorites.innerHTML = "Agregar a favoritos";
+    }else{
+        favorites.unshift({'name': name, 'image': image, 'path': path});
+        placeholders.favorites.classList.add('info-favorites-added');
+        placeholders.favorites.innerHTML = "Quitar de favoritos";
+    }
+    updateFavorites();
+}
+
+
 let add_recent = function(item) {
     let idx = indexOfProperty(recent, 'path', item.path);
     if(idx > -1){
@@ -1288,15 +1437,39 @@ let add_recent = function(item) {
     updateRecents();
 }
 
+let updateAndTryToKeepPos = () =>{
+    let itempos = last.video.id.split('_').reverse();
+    let cc = parseInt(itempos[0]);//column
+    let cr = parseInt(itempos[1]);//line
+    updatePositions("videos");
+    let selection = document.getElementById("video_" + cr + "_" + cc);
+    if(selection == null){
+        if(cc == 0){
+            selection = document.getElementById("video_" + cr - 1 + "_" + cc);
+        }else{
+            selection = document.getElementById("video_" + cr - 1 + "_" + cc);
+        }
+    }
+    if(selection){
+        last.video.classList.remove("focus");
+        last.video = selection;
+        last.video.classList.add("focus");
+    }
+    last.video.parentNode.scrollLeft = last.video.offsetLeft - items_gap - 10;
+    document.getElementsByClassName("videos")[0].scrollTop = last.video.parentElement.offsetTop - inigap - 32;
+}
+
 let updateFavorites = function(){
     if (favorites != null){
         localStorage.setItem('favorites', JSON.stringify(favorites));
         if(favorites.length > 0){
-            document.getElementsByClassName("fav_placeholder")[0].innerHTML = generateCategory("Favoritos", favorites);
+            let favlist = document.getElementById("favlist");
+            favlist.innerHTML = generateCategory("Favoritos", favorites);
         }
     }else{
         favorites = [];
     }
+    updateAndTryToKeepPos();
 }
 
 let updateRecents = function(){
@@ -1306,11 +1479,54 @@ let updateRecents = function(){
         }
         localStorage.setItem('recent', JSON.stringify(recent));
         if(recent.length > 0){
-            document.getElementsByClassName("recent_placeholder")[0].innerHTML = generateCategory("Recientes", recent);
+            let reclis = document.getElementById("reclist")
+            reclis.innerHTML = generateCategory("Recientes", recent);
         }
     }else{
         recent = [];
     }
+    updateAndTryToKeepPos();
+}
+
+let setResume = (seriePath, pg = false) => {
+    if(resumes[seriePath]){
+        if(seriePath == last.video.dataset.path || seriePath == last.video.dataset.ppath){
+            info.resume.innerHTML = resumes[seriePath];
+        }
+    }else{
+        if(pg){
+            return;
+        }
+        if(seriePath == last.video.dataset.path){
+            info.resume.innerHTML =  "Obteniendo sinopsis.";
+        }
+        let pgerr = (info) => {
+            resumes[seriePath] = "Sin sinopsis por el momento".
+            saveResumes();
+            setResume(seriePath, true);
+        };
+        let pgr = (info) => {
+            resumes[seriePath] = info.items[0];
+            saveResumes();
+            setResume(seriePath, true);
+        };
+        let fpath = seriePath.split('/');
+        let server = getSource(fpath[0]);
+        server.getDescription(pgr, console.log, fpath[2]);
+    }
+}
+
+let saveResumes = () => {
+    localStorage.setItem('resumes', JSON.stringify(resumes));
+}
+
+let loadResumes = () => {
+    resumes = JSON.parse(getStorageDefault('resumes', "{}"));
+    Object.keys(resumes).forEach(key => {
+        if(resumes[key] == "Sin sinopsis por el momento"){
+            delete resume[key];
+        }
+    });
 }
 
 let isFullscreen = () => !! document.fullscreenElement;
