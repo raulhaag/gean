@@ -2,8 +2,9 @@
     display: flex;
     position: absolute;
     z-index: 1001;
-    left: 70px;
-    width: calc(100% - 70px);
+    left: 0px;
+    padding-left: 70px;
+    width: 100%;
     height: 100%;
     background: #000;
 }
@@ -61,4 +62,17 @@
 }
 .player-option-list.selected{
     background-color: #FFF4;
+}
+
+.video-js{
+    z-index: 1010;
+    width: 100%;
+    height: 100%;
+    z-index: 1010;
+}
+.vjs-control-bar{
+    z-index: 1010;
+}
+.vjs-texttrack-settings, .vjs-subs-caps-button, .vjs-picture-in-picture-control{
+    display: none;
 }

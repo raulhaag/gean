@@ -1236,8 +1236,9 @@ window.openPlayer = function(options, items = [], res = true){
     placeholders.player = document.createElement("div");
     placeholders.player.innerHTML = getPlayer(options, items);
     document.body.appendChild(placeholders.player);
+    player = videojs('player-container_1_0');
     initPlayerNav();
-    requestFullScreen(last.player);
+    player.isFullscreen(true);
 }
 
 let getPlayer = (options, items) => {
@@ -1264,7 +1265,9 @@ let getPlayer = (options, items) => {
     innerHtml += `<div  class="player-option-title">Video Server</div>
     <div id="player-container_0_` + cc +`" class="player-option-list" data-options='`+ JSON.stringify(sItems) + `'>` + getName(items[0]) + `</div>
     </div><div class="player-video-container">
-            <video id="player-container_1_0" src="` + options["video"] + `" autoplay="true" controls></video>
+            <video id="player-container_1_0" class="video-js" autoplay="true" controls>
+            <source src="` + options["video"] + `"  />
+            </video>
         </div>
     </div></div></div>`;
     return innerHtml;
@@ -1284,19 +1287,14 @@ let playerNav = (event) => {
         doubleAccumulator = 0;
     }
 
-    if(last.player.tagName == 'VIDEO'){
-        let player = last.player;
+    if(last.player.id.indexOf("1_0") !== -1){
         switch (event.keyCode) { //control player
             case up:
                 if(isFullscreen()){
                     exitFullScreen();
                 }else{
-                    let itempos = last.player.id.split("_");
-                    let cc = parseInt(itempos[itempos.length-1]);
-                    let cr = parseInt(itempos[itempos.length-2]);
-                    let newpos = null;
-                    if(itemExists((cr-1),cc)){
-                        last.player = getItem(cr-1, cc);
+                    if(itemExists(0,0)){
+                        last.player = getItem(0, 0);
                         last.player.classList.add("selected");
                     }
                     tease_menu(true);
@@ -1304,28 +1302,28 @@ let playerNav = (event) => {
                 break;
             case down:
                 if(isFullscreen()){
-                    switchPlayer(player);
+                    switchPlayer();
                 }else{
-                    switchPlayer(player)
-                    requestFullScreen(player);
-                    switchPlayer(player)
+                    switchPlayer()
+                    player.requestFullscreen();;
+                    switchPlayer()
                 }
                 event.preventDefault();
                 break;
             case left:
-                player.currentTime -= increments[doubleAccumulator];
+                last.player.currentTime -= increments[doubleAccumulator];
                 break;
             case right:
-                player.currentTime += increments[doubleAccumulator];
+                last.player.currentTime += increments[doubleAccumulator];
                 break;
             case enter:
                 if(doublepress){
-                    switchPlayer(player);
-                    requestFullScreen(player);
-                    switchPlayer(player);
+                    switchPlayer();
+                    player.requestFullscreen();
+                    switchPlayer();
                     return;
                 }
-                switchPlayer(player)
+                switchPlayer()
                 event.preventDefault();
                 break;
             default:
@@ -1363,16 +1361,8 @@ let playerNav = (event) => {
                 }
                 break;
             case down:
-                let desphd = cc;
-                while(desphd >= 0){
-                    if(itemExists((cr + 1), desphd)){
                         last.player.classList.remove("selected");
-                        last.player = getItem(cr + 1, desphd);
-                        last.player.classList.add("selected");
-                        break;
-                    }
-                    desphd--;
-                }
+                        last.player = document.getElementsByTagName("VIDEO")[0];
                 break;
             case left:
                 if(cc == 1){
@@ -1428,11 +1418,11 @@ let itemExists = function(row, column, prefix = "player-container"){
     }
     return false;
 }
-let switchPlayer = (vplayer) => {
-    if(vplayer.paused){
-        vplayer.play();
+let switchPlayer = () => {
+    if(player.paused()){
+        player.play(true);
     }else{
-        vplayer.pause();
+        player.pause(true);
     }
 }
 

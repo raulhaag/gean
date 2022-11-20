@@ -25,7 +25,7 @@
         "type": "chrome",
         "url": "http://localhost:5500/main_2.html",
         "webRoot": "${workspaceFolder}/www",
-        "skipFiles": ["${workspaceFolder}/www/w2/videojs/video.min.js"]
+        "skipFiles": ["${workspaceFolder}/www/w2/videojs/video.min.js", "${workspaceFolder}/www/js/video.min.js"]
     },
         {
             "name": "Python: server",
