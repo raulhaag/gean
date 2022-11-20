@@ -177,6 +177,8 @@ let videos_nav = function(event){
         menu.classList.add("menu-closed");
         teaseMenu.classList.remove("menu-tease-only-icons");
         tease_menu(last.video.id.endsWith("_0"));
+        last.video.parentNode.scrollLeft = last.video.offsetLeft - items_gap - 10;
+        document.getElementsByClassName("videos")[0].scrollTop = last.video.parentElement.offsetTop - inigap - 32;
         return;
     }
     let key = event.keyCode;
@@ -385,6 +387,7 @@ let chapter_nav = function(event){
             }
             break;
         case enter:
+            last.chapter.classList.add("info-capitulo-viewed");
             route(last.chapter.dataset.path);
             break;
         default:
@@ -788,6 +791,7 @@ let updatePositionsSr = function (containerCN = "content", lastsel){
     return lastsel;
 }
 //end search
+
 //change
 let change_nav = (event) => {
     if(event == null){
@@ -849,7 +853,18 @@ function initChange(){
     serverSelectedIdx = servers.indexOf(sid);
     document.onkeydown = change_nav;
     lastNoMenu = change_nav;
+    needCenter()
 }
+let needCenter = () => {
+    let cl = document.getElementsByClassName("change-list")[0];
+    if(cl.clientWidth < cl.scrollWidth ) {
+        cl.classList.remove("center");
+    }else{
+        cl.classList.add("center");
+    }
+}
+
+//end change
 
 // Settings
 let navSettings = (event) => {
@@ -965,9 +980,20 @@ function posDescription(resp){
     ic.id = "chapters";
     document.getElementById("home").appendChild(ic);
     placeholders.chapter = ic;
-    chapters.forEach(c =>
-        ach +=  '<div class="info-capitulo" data-path="' + c.path+ '">'+ c.name +'</div>'
-    );
+    let vieweds = [];
+    try {
+        vieweds = JSON.parse(localStorage.getItem(resp.path));
+        if(vieweds == null){
+            vieweds = [];
+        }
+    }catch (e) {
+        vieweds = [];
+    }
+    let extra = "";
+    chapters.forEach((c) => {
+        (vieweds.indexOf(c['path']) != -1) ? extra = " info-capitulo-viewed": extra = "";
+        ach +=  '<div class="info-capitulo' + extra + '" data-path="' + c.path+ '">'+ c.name +'</div>';
+    });
     placeholders.chapter.scrollTop = 0;
     placeholders.chapter.innerHTML = ach;
     placeholders.chapter.classList.remove("info-capitulos-hide");
@@ -1430,11 +1456,15 @@ window.switch_fab = function() {
 
 let add_recent = function(item) {
     let idx = indexOfProperty(recent, 'path', item.path);
+    let update = true;
     if(idx > -1){
         recent.splice(idx, 1);
+        update = false;
     }
     recent.unshift(item);
-    updateRecents();
+    if(update){
+        updateRecents();
+    }
 }
 
 let updateAndTryToKeepPos = () =>{
@@ -1479,7 +1509,7 @@ let updateRecents = function(){
         }
         localStorage.setItem('recent', JSON.stringify(recent));
         if(recent.length > 0){
-            let reclis = document.getElementById("reclist")
+            let reclis = document.getElementById("reclist");
             reclis.innerHTML = generateCategory("Recientes", recent);
         }
     }else{

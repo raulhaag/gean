@@ -189,7 +189,7 @@ def sf(path):
 
 def main(path = "./www"):
     web_path = path
-    try:    
+    try:
         if(not check_for_update()):
             from threading import Thread
             thread = Thread(target = sf, args=(path,))

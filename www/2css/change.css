@@ -21,6 +21,10 @@
     display: flex;
     overflow: hidden;
 }
+.change-list.center{
+    margin: auto;
+    width: fit-content;
+}
 
 .change-item{
     margin:10px;
