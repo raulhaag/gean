@@ -1037,13 +1037,13 @@ function posDescriptionSearch(resp){
             <div class="info-collum over-search">
                 <div class="info-title">`+ resp.name + `</div>
                 <div class="info-data">` + resp.items[0] + `</div>
-                <div class="info-favorites" id="favorites">Agregar a favoritos</div>
             </div>
             <div class="info-image-ph">
                 <img class="info-image" src="`+ resp.image +`">
                 <div class="info-image-overlap"></div>
             </div>
         </div>
+        <div class="info-favorites over-search" id="favorites">Agregar a favoritos</div>
         <div class="info-capitulos over-search">
     `;
     chapters.forEach(c =>
@@ -1336,6 +1336,7 @@ let playerNav = (event) => {
             last.player.classList.add("selected");
         }else if(event.keyCode == enter){
             document.onkeydown = document.prePlayerKeyManager;
+            player.dispose();
             document.body.removeChild(placeholders.player);
             document.onkeydown(null);
         }
