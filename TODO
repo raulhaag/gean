@@ -8,4 +8,6 @@ x diferenciar vistos
 - load screen a restrain key manager
 ? download
 x move favorites position
-- videojs as player?
+- videojs as player? only hsl?
+- remove all unused while other screen is loaded
+- ? tint color options

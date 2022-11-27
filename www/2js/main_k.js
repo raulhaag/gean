@@ -257,7 +257,7 @@ let videos_nav = function(event){
                 document.getElementById("home").removeChild(node);
             }
             last.video.classList.remove("focus");
-            route(last.video.dataset.path)
+            route(last.video.dataset.path, last.video.dataset.ppath)
             break;
         default:
             return;
@@ -388,7 +388,7 @@ let chapter_nav = function(event){
             break;
         case enter:
             last.chapter.classList.add("info-capitulo-viewed");
-            route(last.chapter.dataset.path);
+            route(last.chapter.dataset.path, last.video.dataset.ppath);
             break;
         default:
             return
@@ -805,7 +805,7 @@ let change_nav = (event) => {
                 document.getElementById(servers[serverSelectedIdx]).classList.remove("change-item-focus");
                 serverSelectedIdx += 1;
                 document.getElementById(servers[serverSelectedIdx]).classList.add("change-item-focus");
-                if(serverSelectedIdx === 1){
+                if(serverSelectedIdx >= 1){
                     tease_menu(false);
                 }
                 document.getElementById(servers[serverSelectedIdx]).parentNode.scrollLeft = document.getElementById(servers[serverSelectedIdx]).offsetLeft - 80;;
@@ -992,7 +992,7 @@ function posDescription(resp){
     let extra = "";
     chapters.forEach((c) => {
         (vieweds.indexOf(c['path']) != -1) ? extra = " info-capitulo-viewed": extra = "";
-        ach +=  '<div class="info-capitulo' + extra + '" data-path="' + c.path+ '">'+ c.name +'</div>';
+        ach +=  '<div class="info-capitulo" data-path="' + c.path+ '" data-ppath="' + resp.path + '">'+ c.name +'</div>'
     });
     placeholders.chapter.scrollTop = 0;
     placeholders.chapter.innerHTML = ach;
@@ -1047,7 +1047,7 @@ function posDescriptionSearch(resp){
         <div class="info-capitulos over-search">
     `;
     chapters.forEach(c =>
-        ach +=  '<div class="info-capitulo" data-path="' + c.path+ '">'+ c.name +'</div>'
+        ach +=  '<div class="info-capitulo" data-path="' + c.path+ '" data-ppath="' + resp.path + '">'+ c.name +'</div>'
     );
     ach += '</div>';
     tease_menu(true);
@@ -1094,7 +1094,7 @@ window.markViewed = function(e, spath, path){
     }
 }
 
-window.route = function(path){
+window.route = function(path, ppath = null){
     let fpath = path.split('/');
     let server = getSource(fpath[0]);
     let action = fpath[1];
@@ -1116,7 +1116,17 @@ window.route = function(path){
             add_recent(item);
             markViewed(null, item['path'], path);
         };
-        setTimeout(() => {server.getParent(ppf, fpath[2]);}, 5000);
+        let idx = indexOfProperty(recent, 'path', ppath);
+        if(idx == -1){
+            setTimeout(() => {
+                server.getParent(ppf, fpath[2]);
+            }, 5000);
+        }else{
+            let item = recent[idx];
+            recent.splice(idx ,1);
+            recent.unshift(item);
+            markViewed(null, ppath, fpath[2]);
+        }
     }else if(action == 'search'){
         let term = document.getElementsByClassName("search__text")[0].value;
         server.getSearch(posSearch, error, term);
