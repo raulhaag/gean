@@ -5,7 +5,8 @@ import {ZPlayer} from "./zplayer.js";
 import{YourUpload}from "./yourupload.js";
 import{OkRu}from "./okru.js";
 import{ZippyShare} from "./zippy.js";
-import {Mediafire} from "./mfire.js";
+import {Mediafire} from "./mfire.js"
+import { Plusvip } from "./plusvip.js";
 let servers = {"fembed": new Fembed(),
                "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -16,7 +17,8 @@ let servers = {"fembed": new Fembed(),
                 "okru": new OkRu(),
                 "owodeuwu.xyz" : new OwodeuwuXYZ(),
                 "zippy": new ZippyShare(),
-                "mediafire.com": new Mediafire()
+                "mediafire.com": new Mediafire(),
+                "plusvip.net": new Plusvip(),
             };
 
 export function getDDL(after, onError, web) {
@@ -24,8 +26,9 @@ export function getDDL(after, onError, web) {
         servers["jkxtreme"].getDDL(after, onError, web);
     }else if(web.indexOf("fembed") != -1) {
         servers["fembed"].getDDL(after, onError, web);
-    }
-    else if(web.indexOf("/um2.php?e=") != -1) {
+    }else if(web.indexOf("plusvip.net") != -1) {
+        servers["plusvip.net"].getDDL(after, onError, web);
+    }else if(web.indexOf("/um2.php?e=") != -1) {
         servers["jkapi"].getDDL(after, onError, web);
     }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
         servers["re_sololatino"].getDDL(after, onError, web);
@@ -71,6 +74,8 @@ export function getName(web) {
         return "ZPlayer live"
     }else if(web.indexOf("mediafire.com") != -1) {
         return "MediaFire";
+    }else if(web.indexOf("plusvip.net") != -1) {
+        return "Plusvip";
     }else {
         return "";
     }
@@ -80,6 +85,7 @@ export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
                     "mediafire.com",
+                    "plusvip.net",
                     "fembed",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",

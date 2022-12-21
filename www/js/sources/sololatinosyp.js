@@ -99,31 +99,47 @@ export class SoloLatinoSyP {
   async getLinks(after, onError, path) {
     try{
       let result = await fGet(dec(path));
+      let links = [];
+      let linkpages = [...result.matchAll(/data-type='([^']+)' data-post='([^']+)' data-nume='([^']+)'/gm)];
+      for(let i = 0; i < linkpages.length; i++){
+          let presp = await fPost("https://sololatino.net/wp-admin/admin-ajax.php",
+          {"Referer": dec(path)},
+          {"action":"doo_player_ajax", "post": linkpages[i][2], "nume": linkpages[i][3],"type":	linkpages[i][1]}
+          );
+          let bData = await fGet(getFirstMatch(/<iframe class='[^']+' src='([^']+)/gm, presp), {"Referer": dec(path)});
+          links = links.concat(this.parseLinks(bData));
+      }
+/*
       let web = [...result.matchAll(/"pframe"><iframe class="[^"]+" src="([^"]+)/gm)][0][1];
       result = await fGet(web);
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(result, "text/html");
-            var lis = doc.getElementsByTagName("li");
-            let links = [];
-            for (const link of lis) {
-              try{
-                if(link.hasAttribute("data-r")){
-                  let linkd = atob(link.getAttribute("data-r"));
-                  if(linkd.indexOf("sypl.xyz")){
-                    linkd = linkd.replace("sypl.xyz", "owodeuwu.xyz");
-                  }
-                  links.push(linkd);
-                }else{
-                  links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
-                }
-              }catch(e){}//continue
-            }
-            if(links.length == 0 && web.includes("xyz")){
-              links.push(web)
-            }
-            after(links);
+      links = links.concat(this.parseLinks(result));*/
+      after(links);
     }catch(error){
         onError(error);
     };
+  }
+
+  parseLinks(htmlContent){
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(htmlContent, "text/html");
+    var lis = doc.getElementsByTagName("li");
+    let links = [];
+    for (const link of lis) {
+      try{
+        if(link.hasAttribute("data-r")){
+          let linkd = atob(link.getAttribute("data-r"));
+          if(linkd.indexOf("sypl.xyz")){
+            linkd = linkd.replace("sypl.xyz", "owodeuwu.xyz");
+          }
+          links.push(linkd);
+        }else{
+          links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
+        }
+      }catch(e){}//continue
+    }
+    if(links.length == 0 && web.includes("xyz")){
+      links.push(web)
+    }
+    return links;
   }
 }

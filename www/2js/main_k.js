@@ -28,9 +28,6 @@ window.serverHost = "http://" + window.location.hostname + ":8080/"
     try{
         recent = JSON.parse(getStorageDefault('recent'), "[]");
     }catch(e){}
-    try{
-        loadResumes();
-    }catch(e){}
     let lastServer = localStorage.getItem('lastServer');
     let lastServerName = localStorage.getItem('lastServerName');
     if(lastServer != null && lastServerName != null){
@@ -144,17 +141,17 @@ let initHome = (reload = true) => {
 }
 
 let fillVideos = (videos)=>{
-    let videoContent = "<";
+    let videoContent = "";
     let titles = Object.keys(videos);
     for (var i = 0; i < titles.length; i++) {
         videoContent += generateCategory(titles[i], videos[titles[i]]);
     }
     if(favorites.length > 0){
-        videoContent += ("<div id='favlist'>" + generateCategory("Favoritos", favorites) + "></div>")
+        videoContent += ("<div id='favlist'>" + generateCategory("Favoritos", favorites) + "</div>")
     }else{
         videoContent += "<div id='favlist'></div>";
     }
-    if(recent.length > 0) {videoContent += ("<div id='reclist'>" + generateCategory("Recientes", recent) + "></div>")
+    if(recent.length > 0) {videoContent += ("<div id='reclist'>" + generateCategory("Recientes", recent) + "</div>")
     }else{
         videoContent += "<div id='reclist'></div>";
     };
@@ -1224,7 +1221,7 @@ function initPlayerNav() {
 window.openPlayer = function(options, items = [], res = true){
     if(Object.keys(options).length > 1 && res) {
         if(localStorage.getItem("resSelect") == "true"){
-            generateSelectorDialog((selection, label)=>{
+            generateSelectorDialog((selection, label) => {
                 options.video = selection;
                 openPlayer(options, items, false);
             },"Elige una resolución apropiada", options);
@@ -1240,7 +1237,6 @@ window.openPlayer = function(options, items = [], res = true){
                 error("Error al abrir reproductor externo: \n" + result);
             }
       })
-      loading.style.visibility = 'hidden';
       return;
     }
     placeholders.player = document.createElement("div");

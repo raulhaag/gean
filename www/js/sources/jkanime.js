@@ -82,7 +82,7 @@ export class JKAnime {
     try{
       let result = await fGet(window.dec(path));
       if (result.indexOf("error") == 0) {
-        onError(result);
+        onError(result + ": " + window.dec(path));
         return;
       }
       var parser = new DOMParser();

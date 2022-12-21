@@ -17,7 +17,7 @@ window.fGet = async function (url, header = {}) {
             data = "error " + response.status;
         }
     }catch(e){
-        try{window.unsetLoading();}catch(e2){}; 
+        try{window.unsetLoading();}catch(e2){};
         throw e;
     }
     try{window.unsetLoading();}catch(e){};
@@ -26,27 +26,28 @@ window.fGet = async function (url, header = {}) {
 
 window.fPost = async function (url, header, data) {
     try{window.setLoading();}catch(e){};
+    var out = "";
     try{
         var response = await fetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(data)));  // `false` makes the request synchronous
-        let data  = "";
+        let   = "";
         if (response.status === 200) {
-            data =  await response.text();
+            out =  await response.text();
         }else{
-            data = "error " + response.status;
+            out = "error " + response.status;
         }
     }catch(e){
         try{window.unsetLoading();}catch(e2){}; 
         throw e;
     }
     try{window.unsetLoading();}catch(e){};
-    return data;
+    return out;
 }
 
 window.fetchRedirectPost = async function (url, header) {
     try{window.setLoading();}catch(e){};
+    let data  = "";
     try{
         var response = await fetch(window.serverHost + "rget/" + enc(url) + "/" + enc(JSON.stringify(header)));
-        let data  = "";
         if (response.status === 200) {
             data =  await response.text();
         }else{

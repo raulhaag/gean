@@ -1,10 +1,13 @@
 window.loadingDiv = null;
 let preloadingKeyManager = null;
 let timeOutLoadingId = 0;
-let keylock = (event) => {event.preventDefault();};
+let keylock = (event) => {
+    if(event == null){preloadingKeyManager(null);}
+    event.preventDefault();
+};
 
 window.setLoading = () => {
-    preloadingKeyManager = document.onkeydown;
+    if(document.onkeydown != keylock) {preloadingKeyManager = document.onkeydown;};
     document.onkeydown = keylock;
     if(loadingDiv == null) {
         window.loadingDiv = document.createElement("div");
@@ -17,8 +20,10 @@ window.setLoading = () => {
 };
 
 window.unsetLoading = () => {
-    timeOutLoadingId = setTimeout(() => {
-        if(document.onkeydown == keylock){window.onkeydown = preloadingKeyManager;};
+   timeOutLoadingId = setTimeout(() => {
+        if(document.onkeydown == keylock){
+            window.onkeydown = preloadingKeyManager;
+        };
         document.body.removeChild(window.loadingDiv);
         window.loadingDiv = null;
     }, 500);
