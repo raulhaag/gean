@@ -404,7 +404,7 @@ export class SceneHome extends Scene{
                 this.setResume(seriePath, true);
             };
             let pgr = (info) => {
-                resumes[seriePath] = this.info.items[0];
+                resumes[seriePath] = info.items[0];
                 this.saveResumes();
                 this.setResume(seriePath, true);
             };
