@@ -1,4 +1,4 @@
-import {Scene} from './Scene.js';
+import {Scene} from './scene.js';
 
 export class SceneDetails extends Scene {
     lastChapter = null;

@@ -1,5 +1,5 @@
 import{Scene} from "./scene.js";
-import {getResponse, getSource, getSourceList} from '../js/sources/sources.js';
+import {getResponse, getSource} from '../js/sources/sources.js';
 
 export class SceneHome extends Scene{
     info = {title: null, resume:null, play:null, image:null};
@@ -11,7 +11,7 @@ export class SceneHome extends Scene{
     home = null;
     constructor(){
         super(true);
-        this.lastKeyManager = this.video_nav;
+        //this.lastKeyManager = this.video_nav;
     }
     initBody(){
         this._body = `<div class="home" id="home">
@@ -75,6 +75,7 @@ export class SceneHome extends Scene{
         };
         document.getElementsByClassName("videos")[0].innerHTML= "<div class='initial-gap'></div>" + videoContent + "<div class='initial-gap'></div>";
         this.updatePositions("videos");
+        changeKeyManager();
     };
 
     setNewVideoSelected = (newselection) => {
@@ -109,7 +110,6 @@ export class SceneHome extends Scene{
         let cc = parseInt(itempos[0]);
         let cr = parseInt(itempos[1]);
         let newselection;
-        event.preventDefault();
         switch(key){
             case up:
                 newselection = document.getElementById("videos_" + (cr - 1) + "_0");
@@ -201,112 +201,6 @@ export class SceneHome extends Scene{
         this.loadData();
     };
 
-    chapter_nav = function(event){
-        let itempos = this.last.chapter.id.split("_").reverse();
-        let cc = parseInt(itempos[0]);
-        let cr = parseInt(itempos[1]);
-        let newselection;
-        if(event == null){
-            this.last.chapter.classList.add("focus");
-            menu.classList.add("menu-closed");
-            teaseMenu.classList.remove("menu-tease-only-icons");
-            return;
-        }else if(teaseMenu.classList.contains("menu-tease-only-icons")){
-            if(event.keyCode == right){
-                menu.classList.add("menu-closed");
-                teaseMenu.classList.remove("menu-tease-only-icons");
-                this.last.chapter.classList.add("focus");
-            }else if(event.keyCode == enter){
-                if(this.last.chapter.parentNode.classList.contains("over-search")){ //pos search
-                    let remi = document.getElementsByClassName("over-search")[0]; //
-                    document.body.removeChild(remi);
-                    changeKeyManager(search_result_nav);
-                    menu.classList.add("menu-closed");
-                    teaseMenu.classList.remove("menu-tease-only-icons");
-                    tease_menu(false);
-                    backMenuSwitch();
-                    return;
-                }
-                document.getElementsByClassName('info-capitulos')[0].classList.add("info-capitulos-hide");
-                document.getElementsByClassName('videos')[0].classList.remove("videos-hide");
-                this.lastKeyManager = videos_nav;
-                changeKeyManager();
-                document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - this.inigap - 32;
-                this.last.video.parentNode.scrollLeft = this.last.video.offsetLeft - this.items_gap;
-                this.last.video.classList.add("focus");
-                this.last.chapter.classList.remove("focus");
-                menu.classList.add("menu-closed");
-                teaseMenu.classList.remove("menu-tease-only-icons");
-                tease_menu(this.last.video.id.endsWith('_0'));
-                backMenuSwitch();
-                this.last.chapter = null;
-                placeholders.favorites.classList.add("hide");
-                setTimeout(() => {
-                    let node = document.getElementsByClassName('info-capitulos')[0];
-                    if(node != null){
-                        document.getElementById("home").removeChild(node);
-                    }
-                },800);
-            }
-            return;
-        }
-        let key = event.keyCode;
-        switch(key){
-            case up:
-                newselection = document.getElementById("info-capitulos_" + (cr-1) + "_" + cc);
-                if(newselection){
-                    this.last.chapter.classList.remove("focus");
-                    this.last.chapter = newselection;
-                    this.last.chapter.classList.add("focus");
-                    document.getElementsByClassName("info-capitulos")[0].scrollTop =  this.last.chapter.offsetTop ;
-                }else{
-                    this.last.chapter.classList.remove("focus");
-                    this.last.chapter = placeholders.favorites;
-                    this.last.chapter.classList.add("focus");
-                }
-                event.preventDefault();
-                break;
-            case right:
-                newselection = document.getElementById("info-capitulos_" + cr + "_" + (cc + 1));
-                if(newselection){
-                    this.last.chapter.classList.remove("focus");
-                    this.last.chapter = newselection;
-                    this.last.chapter.classList.add("focus");
-                }
-                break;
-            case down:
-                newselection = document.getElementById("info-capitulos_" + (cr + 1) + "_" + cc);
-                if(newselection){
-                    this.last.chapter.classList.remove("focus");
-                    this.last.chapter = newselection;
-                    this.last.chapter.classList.add("focus");
-                    document.getElementsByClassName("info-capitulos")[0].scrollTop = this.last.chapter.offsetTop;
-                }
-                event.preventDefault();
-                break;
-
-            case left:
-                newselection = document.getElementById("info-capitulos_" + cr + "_" + (cc - 1));
-                if(newselection){
-                    this.last.chapter.classList.remove("focus");
-                    this.last.chapter = newselection;
-                    this.last.chapter.classList.add("focus");
-                }
-                if(cc === 0){
-                    menu.classList.remove("menu-closed");
-                    teaseMenu.classList.add("menu-tease-only-icons");
-                    this.last.chapter.classList.remove("focus");
-                }
-                break;
-            case enter:
-                this.last.chapter.classList.add("info-capitulo-viewed");
-                route(this.last.chapter.dataset.path, this.last.video.dataset.ppath);
-                break;
-            default:
-                return
-        }
-    };
-
     updatePositions = function (containerCN = "content", className = "focusable"){
         this.container = document.getElementsByClassName(containerCN)[0];
         let items = this.container.getElementsByClassName(className);//focusable next??
@@ -329,20 +223,6 @@ export class SceneHome extends Scene{
         this.setNewVideoSelected(this.last.video);
     };
 
-    setLoadingInfo = ()=>{
-        this.info.title.classList.add("loading_background");
-        this.info.resume.classList.add("loading_background");
-        //this.info.play.classList.add("loading_background")
-        this.info.image.classList.add("transparent");
-    };
-
-    unsetLoadingInfo = ()=>{
-        this.info.title.classList.remove("loading_background");
-        this.info.resume.classList.remove("loading_background");
-        //this.info.play.classList.remove("loading_background")
-        this.info.image.classList.remove("transparent");
-    };
-
     loadData = () => {
         this.info.title.innerHTML = this.last.video.dataset.name;
         this.info.image.src = this.last.video.dataset.image;
@@ -358,8 +238,8 @@ export class SceneHome extends Scene{
     };
 
     setSerieInfo = (info) => {
-        this.info.title.innerHTML = this.info.name;
-        this.info.image.src = this.info.image;
+        this.info.title.innerHTML = info.name;
+        this.info.image.src = info.image;
     };
 
     generateCategories(options) {

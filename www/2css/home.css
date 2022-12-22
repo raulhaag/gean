@@ -234,13 +234,13 @@ body {
   background: transparent;
 }
 
-.items__list .item {
+
+.item {
   margin: 10px;
   display: flex;
   position: relative;
-  min-width: 16vw;
-  aspect-ratio: 0.5;
-  max-height: calc(40vh - 50px);
+  aspect-ratio: 0.65;
+  height: calc(40vh - 80px);
 }
 
 .focus {

@@ -111,6 +111,10 @@ export class SceneSearch extends Scene{
     }
 
     search_result_nav(event){
+        if(event == null){
+            this.lastMedia.classList.add("focus");
+            return;
+        }
         let itempos = this.lastMedia.id.split("_").reverse();
         let cc = parseInt(itempos[0]);
         let cr = parseInt(itempos[1]);
@@ -219,7 +223,7 @@ export class SceneSearch extends Scene{
     searchDone(items, instance){
         let innerHTML = '<div class="search_items"><div class="search_items__list">';
         for (let i = 0; i < items.length; i++) {
-            innerHTML += '<div class="search_item focusable" data-path="' + items[i]["path"].replace("getDescription", "getDescriptionSearch") + '"><img class="search_item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="search_item__title">' + items[i]['name'] + '</h2></div>';
+            innerHTML += '<div class="search_item focusable" data-path="' + items[i]["path"] + '"><img class="search_item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="search_item__title">' + items[i]['name'] + '</h2></div>';
         }
         document.getElementById("search-results-ph").innerHTML = innerHTML + '</div></div>'
         instance.lastMedia = instance.updatePositionsSr("search-results-ph", this.lastMedia);
