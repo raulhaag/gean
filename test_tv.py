@@ -1,4 +1,6 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from socketserver import ThreadingMixIn
+import threading
 import urllib
 from zipfile import ZipFile
 import base64, os, json
@@ -10,6 +12,9 @@ alive = True
 web_path = "./www"
 defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
 favs = []
+
+class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
+    pass
 
 class handler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -93,7 +98,7 @@ def getResponseGet(path = []):
     return getGet(path).read().decode('utf-8')
 
 def getResponseFile(path = [], server = None):
-    headers = {}    
+    headers = {}
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
     if "User-Agent" not in headers:
@@ -180,7 +185,7 @@ def download_file(url, filename):
     request.urlretrieve(url, filename)
 
 
-server = HTTPServer(('', 8080), handler)
+server = ThreadingSimpleServer(('', 8080), handler)
 
 def sf(path):
     web_path = path
@@ -193,7 +198,7 @@ def main(path = "./www"):
         if(not check_for_update()):
             from threading import Thread
             thread = Thread(target = sf, args=(path,))
-            thread.start()    
+            thread.start()
             try:
                 import webbrowser
                 window = webbrowser.open("http://127.0.0.1:8080/main_2.html")

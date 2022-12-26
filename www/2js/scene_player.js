@@ -18,6 +18,7 @@ export class ScenePlayer extends Scene{
         this.lastKeyManager = this.playerNav;
         this.options = options;
         this.items = items;
+        this.videojs = appSettings["videojs"][0];
     }
     initBody(){
             let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options">`;
@@ -70,9 +71,13 @@ export class ScenePlayer extends Scene{
           })
           return;
         }
-        this.player = videojs('player-container_1_0');
+        if(this.videojs){
+            this.player = videojs('player-container_1_0');
+        }else{
+            this.player = document.getElementsByTagName("video")[0];
+        }
         this.last = document.getElementsByTagName("video")[0];
-        this.player.isFullscreen(true);
+        if(appSettings["fullscreen"][0])this.goFullScreen();
         changeKeyManager();
     }
 
@@ -108,9 +113,9 @@ export class ScenePlayer extends Scene{
                     if(this.isFullscreen()){
                         this.switchPlayer();
                     }else{
-                        this.switchPlayer()
-                        this.player.requestFullscreen();;
-                        this.switchPlayer()
+                        this.switchPlayer();
+                        this.goFullScreen();
+                        this.switchPlayer();
                     }
                     break;
                 case left:
@@ -122,7 +127,7 @@ export class ScenePlayer extends Scene{
                 case enter:
                     if(this.doublepress){
                         this.switchPlayer();
-                        this.player.requestFullscreen();
+                        this.goFullScreen();
                         this.switchPlayer();
                         return;
                     }
@@ -232,8 +237,16 @@ export class ScenePlayer extends Scene{
         }
     };
 
+    goFullScreen(){
+        if(this.videojs){
+            this.player.requestFullscreen();
+            }else{
+                requestFullScreen(this.last);
+            }
+    }
+
     dispose(){
-        this.player.dispose();
+        if(this.videojs) this.player.dispose();
     }
 
     /* functions */
@@ -251,10 +264,18 @@ export class ScenePlayer extends Scene{
     }
 
     switchPlayer(){
-        if(this.player.paused()){
-            this.player.play(true);
+        if(this.videojs){
+            if(this.player.paused()){
+                this.player.play(true);
+            }else{
+                this.player.pause(true);
+            }
         }else{
-            this.player.pause(true);
+            if(this.player.paused){
+                this.player.play();
+            }else{
+                this.player.pause();
+            }
         }
     }
     isFullscreen (){return !! document.fullscreenElement};

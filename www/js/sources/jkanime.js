@@ -19,7 +19,7 @@ export class JKAnime {
           flis[i].getElementsByTagName("h5")[0].textContent + " - " + flis[i].getElementsByTagName("h6")[0].textContent.replace(/\s+/gm, " ").trim();
         let epath = this.name + "/getLinks/" + window.enc(flis[i].getAttribute("href"));
         let pparts = flis[i].getAttribute("href").split("/");
-        let ppath = this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/") + "/");
+        let ppath = this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/"));
         ncs.push({
           "name": name,
           "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
@@ -92,7 +92,8 @@ export class JKAnime {
       let genres = doc.querySelector("html body section.contenido.spad div.container div.anime__details__content div.row div.col-lg-9 div.anime__details__text div.anime__details__widget div.row div.col-lg-6.col-md-6 ul li").textContent.trim();
       let image = doc.querySelector("html body section.contenido.spad div.container div.anime__details__content div.row div.col-lg-3 div.anime__details__pic.set-bg").getAttribute("data-setbg");
       let chapters = [];
-      let clen = parseInt([...result.matchAll(/#pag\d*" rel="nofollow">.+?(\d+)<\/a>[\s]+?<\/div/gm)][0][1]);
+      let clen = 0;
+      try{clen = parseInt([...result.matchAll(/#pag\d*" rel="nofollow">.+?(\d+)<\/a>[\s]+?<\/div/gm)][0][1]);}catch(e){}
       for (let i = 1; i <= clen; i++) {
         chapters.push({"name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(window.dec(path) + "/" + i + "/")});
       }

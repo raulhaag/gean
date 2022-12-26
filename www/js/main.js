@@ -3,7 +3,6 @@ import {generateCategory, generateCategories, generateDescription, getPlayer, ge
 import {getDDL, getPreferer} from './vservers/vserver.js';
 import{arrowNav, updatePositions, initVideoNav} from './keynav.js';
 //import{Mediafire} from './vservers/mfire.js';
-//import{SbFull} from './vservers/sbfull.js'
 
 let loading;
 let dp, vp, pp, sp, setp, content;
@@ -48,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     server_selected(sid, sn);
     document.onkeydown = lauchKeyNav;
-    //new Mediafire().getDDL(openPlayer, error, "");
 });
 
 let lauchKeyNav = function(e){

@@ -1,5 +1,5 @@
 import {getSource} from '../js/sources/sources.js';
-import {getDDL, getPreferer} from '../js/vservers/vserver.js';
+import {getDDL, getName, getPreferer} from '../js/vservers/vserver.js';
 import {SceneHome} from "./scene_home.js";
 import {SceneDetails} from './scene_details.js';
 import {SceneSearch} from './scene_search.js';
@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded",function(){
         recent = JSON.parse(getStorageDefault('recent'), "[]");
     }catch(e){}
     loadResumes();
+    loadSettings();
     let lastServer = localStorage.getItem('lastServer');
     let lastServerName = localStorage.getItem('lastServerName');
     if(lastServer != null && lastServerName != null){
@@ -50,6 +51,7 @@ let optionsId = ["menu-home", "menu-search", "menu-change", "menu-settings"];
 let selectedMenuIdx = 0, lastMenuOpened = 0;
 let menuLock = false;
 let currentScene = null;
+let dialog = false;
 
 window.menuManager = () => {
     menuLock = true;
@@ -65,6 +67,8 @@ window.lockKeyboard = () => {
 window.unlockKeyboard = () => {
     if(menuLock){
         menuManager();
+    }else if(dialog){
+        return;
     }else{
         changeKeyManager();
     }
@@ -91,7 +95,7 @@ window.changeKeyManager = () => {
 let loadingDiv = null;
 let timeOutLoadingId = null;
 window.setLoading = () => {
-    if(window.lockKeys) {window.lockKeyboard()}else{window.lockKeys = true};
+    if(window.lockKeys) {window.lockKeyboard()}else{window.lockKeys = true; return};
     if(loadingDiv == null) {
         loadingDiv = document.createElement("div");
         loadingDiv.innerHTML = '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
@@ -105,7 +109,8 @@ window.setLoading = () => {
 window.unsetLoading = () => {
    timeOutLoadingId = setTimeout(() => {
         unlockKeyboard();
-        try {document.body.removeChild(loadingDiv);}catch(e){};
+        try {
+            if(document.body.hasChildNodes(loadingDiv) && loadingDiv != null)document.body.removeChild(loadingDiv);}catch(e){};
         loadingDiv = null;
     }, 500);
 };
@@ -273,13 +278,32 @@ window.route = function(path, ppath = null){
         server.getDescription((resp)=>{
             setScene(new SceneDetails(resp, currentScene));
         }, error, fpath[2]);
-    }else if(action == 'getDescriptionSearch'){
-            server.getDescription(posDescriptionSearch, error, fpath[2]);
     }else if(action == 'getLinks'){
         server.getLinks((linkList)=>{
             let best = getPreferer(linkList);
             let mask = (value) => {
-                setScene(new ScenePlayer(value, best, currentScene));
+                let secondMask = (value) => {
+                    if(window.appSettings['external_player_android'][0]){
+                        fetch(window.serverHost + "view/" + window.enc(options["video"]))
+                        .then((response) => response.text())
+                        .then((result) => {
+                            if(result.trim() != "ok"){
+                                error("Error al abrir reproductor externo: \n" + result);
+                            }
+                        })
+                        return;
+                    }
+                    setScene(new ScenePlayer(value, best, currentScene));
+                }
+                if(window.appSettings['res_select'][0]){
+                    generateSelectorDialog((key, data) => {
+                        value['video'] = key;
+                        secondMask(value);
+                    }, "Selecciona la resolución preferida", value)
+
+                }else{
+                    secondMask(value);
+                }
             }
             let tryOtherOnError = (errorMessage) => {
                 if (best.length > 1){
@@ -290,6 +314,16 @@ window.route = function(path, ppath = null){
                 }
             }
             if (best.length > 0){
+                if(window.appSettings['vsource_select'][0]){
+                    let names = {};
+                    best.forEach(link => names[getName(link)] = link);
+                    generateSelectorDialog((key, data) => {
+                        best.splice(best.indexOf(key), 1);
+                        best.unshift(key);
+                        getDDL(mask,tryOtherOnError, best[0]);
+                    },"Elige el servidor de video preferido", names);
+                    return;
+                }
                 getDDL(mask,tryOtherOnError, best[0]);
             } else {
                 error("No supported servers");
@@ -298,12 +332,11 @@ window.route = function(path, ppath = null){
     }else if(action == 'search'){
         let term = document.getElementsByClassName("search__text")[0].value;
         server.getSearch(posSearch, error, term);
-    }else{
-        //loading.style.visibility = 'hidden';
     }
 };
 
 window.generateSelectorDialog = (postAction, title = "Elige una opcion", options = {}) => {
+    dialog = true;
     document.__selectPrekeydown = document.onkeydown;
     var div = document.createElement("div");
     let content =`<div class="option-selector">
@@ -321,7 +354,6 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
     document.body.appendChild(div);
     document.__optionsDiv = div;
     document.onkeydown = (event) => {
-        event.preventDefault();
         let cidx = parseInt(lOSelected.id.split("_")[1]);
         if (event.keyCode === 38){ //up arrow
             if(cidx > 0){
@@ -341,13 +373,14 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
             document.body.removeChild(document.__optionsDiv);
             document.onkeydown = document.__selectPrekeydown;
             document.__selectPrekeydown = null;
+            dialog = false;
+            unlockKeyboard();
             if (!lOSelected.classList.contains("option-selector-cancel")){
                 postAction(lOSelected.dataset["info"], lOSelected.innerHTML);
             }
         }
     }
 };
-
 
 window.error = (error_message) => {
     alert(error_message);
@@ -438,3 +471,41 @@ function loadResumes(){
         }
     });
 };
+
+function loadSettings(){
+    let settings = {
+        "lockfronpage": [false, "Bloquear pagina principal."],
+        "videojs": [false, "Usar videoJs como reproductor."],
+        "fullscreen": [true,"Iniciar video en pantalla completa. (si el navegador no lo bloquea)."],
+        "res_select": [false,"Dejarme elegir la resolución antes de abrir el video."],
+        "vsource_select": [false,"Dejarme elegir el servidor de video antes de abrir el video."],
+        "external_player_android":[false,"Usar reproductor externo (solo Android)."]
+    }
+    let storedSettings = null;
+    try {
+        storedSettings = JSON.parse(localStorage.getItem("settings"));
+    } catch (e) {}
+    if(storedSettings == null){
+        //first time no changes
+        storedSettings = settings;
+    }else if(Object.keys(storedSettings).length != Object.keys(settings).length){
+        //need to update settings
+        let newSettings = {};
+        Object.keys(settings).forEach(key => {
+            if(key in storedSettings){
+                newSettings[key] = storedSettings[key];
+            }else{
+                newSettings[key] = settings[key];
+            }
+        });
+        storedSettings = newSettings
+    }
+    window.appSettings = storedSettings;
+}
+
+window.getSettingsDefault = (key, defaultValue) => {
+    if(key in Object.keys(window.appSettings)){
+        return window.appSettings[key];
+    }
+    return defaultValue;
+}

@@ -1,11 +1,7 @@
 import { Scene } from "./scene.js";
 
 export class SceneSettings extends Scene{
-    settings = {
-        "lockfronpage": [false, "Bloquear pagina principal"],
-        "fullscreen": [true,"Iniciar video en pantalla completa"],
-        "autoplay": [false,"Autoplay de video"]
-    }
+    settings = null;
     lastSetting = null;
     constructor(){
         super(true);
@@ -37,7 +33,6 @@ export class SceneSettings extends Scene{
                     this.lastSetting = settingsList[cindx + 1];
                     this.lastSetting.classList.add("selected");
                 }
-    
                 break;
             case left:
                 this.lastSetting.classList.remove("selected");
@@ -65,36 +60,16 @@ export class SceneSettings extends Scene{
     }
 
     initBody(){
-        let storedSettings = null;
-        try {
-            storedSettings = JSON.parse(localStorage.getItem("settings"));
-        } catch (e) {}
-        if(storedSettings == null){
-            //first time no changes
-            storedSettings = this.settings;
-        }else if(storedSettings.length != this.settings.length){
-            //need to update settings
-            let newSettings = {};
-            for(key in this.settings){
-                if(key in storedSettings){
-                    newSettings[key] = storedSettings[key];
-                }else{
-                    newSettings[key] = this.settings[key];
-                }
-            }
-            saveSetting(newSettings)
-            storedSettings = newSettings
-        }
-        this.settings = storedSettings;
+        this.settings = appSettings;
         let result = '<div class="settings-title">Configurar</div><div class="settings-list">';
         let extra = "";
-        for(var key in storedSettings){
-            if(storedSettings[key][0] == true){
+        for(var key in this.settings){
+            if(this.settings[key][0] == true){
                 extra = " active";
             }else{
                 extra = "";
             }
-            result +=  '<div class="setting' + extra + '" id ="'+ key +'"><div class="setting-text">'+ storedSettings[key][1] +'</div></div>';
+            result +=  '<div class="setting' + extra + '" id ="'+ key +'"><div class="setting-text">'+ this.settings[key][1] +'</div></div>';
         }
         this._body = result + '</div></div>';
     }

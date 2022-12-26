@@ -109,10 +109,12 @@ export class SoloLatinoSyP {
           let bData = await fGet(getFirstMatch(/<iframe class='[^']+' src='([^']+)/gm, presp), {"Referer": dec(path)});
           links = links.concat(this.parseLinks(bData));
       }
-/*
       let web = [...result.matchAll(/"pframe"><iframe class="[^"]+" src="([^"]+)/gm)][0][1];
       result = await fGet(web);
-      links = links.concat(this.parseLinks(result));*/
+      links = links.concat(this.parseLinks(result));
+      if(links.length == 0 && web.includes("xyz")){
+        links.push(web)
+      }
       after(links);
     }catch(error){
         onError(error);
@@ -136,9 +138,6 @@ export class SoloLatinoSyP {
           links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
         }
       }catch(e){}//continue
-    }
-    if(links.length == 0 && web.includes("xyz")){
-      links.push(web)
     }
     return links;
   }

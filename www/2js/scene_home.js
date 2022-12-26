@@ -55,7 +55,11 @@ export class SceneHome extends Scene{
     initHome = (reload = true) => {
         this.lastKeyManager = this.videos_nav
         changeKeyManager();
-        if(reload) getResponse(sid, this.fillVideos, error);
+        if(!window.appSettings["lockfronpage"][0]){
+            if(reload) getResponse(sid, this.fillVideos, error);
+        }else{
+            this.fillVideos({});
+        }
     }
 
     fillVideos = (videos)=>{
@@ -169,18 +173,23 @@ export class SceneHome extends Scene{
                 let instance = this;
                 let ppf = function(item){
                     instance.add_recent(item);
-                    markViewed(null, this.last.video.dataset.ppath, this.last.video.dataset.path);
+                    if("ppath" in instance.last.video.dataset)
+                        markViewed(null, instance.last.video.dataset.ppath, instance.last.video.dataset.path);
                 };
-                let idx = indexOfProperty(recent, 'path', this.last.video.dataset.ppath);
+                let idx = indexOfProperty(recent, 'path', this.last.video.dataset.path);
+                if("ppath" in instance.last.video.dataset)
+                    idx = indexOfProperty(recent, 'path', this.last.video.dataset.ppath);
                 if(idx == -1){
                         setTimeout(() => {
+                            lockKeys = false;
                             server.getParent(ppf, fpath[2]);
                         }, 5000);
                 }else{
                     let item = recent[idx];
                     recent.splice(idx ,1);
                     recent.unshift(item);
-                    markViewed(null, ppath, fpath[2]);
+                    if("ppath" in instance.last.video.dataset)
+                        markViewed(null, this.last.video.dataset.ppath, this.last.video.dataset.path);
                 }
                 break;
             default:
@@ -330,8 +339,8 @@ export class SceneHome extends Scene{
             this.last.video = selection;
             this.last.video.classList.add("focus");
         }
-        this.last.video.parentNode.scrollLeft = this.last.video.offsetLeft - items_gap - 10;
-        document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - inigap - 32;
+        this.last.video.parentNode.scrollLeft = this.last.video.offsetLeft - this.items_gap - 10;
+        document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - this.inigap - 32;
     }
 
     updateFavorites = function(){

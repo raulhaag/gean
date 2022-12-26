@@ -39,7 +39,7 @@ export class SceneDetails extends Scene {
         `;
         let extra = "";
         chapters.forEach(c => {
-            if(vc.includes(c.path)){
+            if(vc.indexOf(c.path) != -1){
                 extra = " info-capitulo-viewed";
             }else{
                 extra = "";
@@ -191,7 +191,9 @@ export class SceneDetails extends Scene {
             fav.classList.add('info-favorites-added');
             fav.innerHTML = "Quitar de favoritos";
         }
-        this.parent.updateFavorites();
+        if("updateFavorites" in Object.keys(this.parent))
+            this.parent.updateFavorites();
+
     }
 
 }
