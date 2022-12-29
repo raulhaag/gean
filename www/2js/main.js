@@ -284,7 +284,7 @@ window.route = function(path, ppath = null){
             let mask = (value) => {
                 let secondMask = (value) => {
                     if(window.appSettings['external_player_android'][0]){
-                        fetch(window.serverHost + "view/" + window.enc(options["video"]))
+                        fetch(window.serverHost + "view/" + window.enc(value["video"]))
                         .then((response) => response.text())
                         .then((result) => {
                             if(result.trim() != "ok"){
@@ -501,6 +501,14 @@ function loadSettings(){
         storedSettings = newSettings
     }
     window.appSettings = storedSettings;
+}
+
+window.saveFavorites = () => {
+    if (favorites != null){
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+    }else{
+        favorites = [];
+    }
 }
 
 window.getSettingsDefault = (key, defaultValue) => {

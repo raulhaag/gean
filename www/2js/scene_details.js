@@ -191,8 +191,11 @@ export class SceneDetails extends Scene {
             fav.classList.add('info-favorites-added');
             fav.innerHTML = "Quitar de favoritos";
         }
-        if("updateFavorites" in Object.keys(this.parent))
+        if("updateFavorites" in Object.keys(this.parent)){
             this.parent.updateFavorites();
+        }else{
+            saveFavorites();
+        }
 
     }
 

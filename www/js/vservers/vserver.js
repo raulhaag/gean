@@ -7,6 +7,7 @@ import{OkRu}from "./okru.js";
 import{ZippyShare} from "./zippy.js";
 import {Mediafire} from "./mfire.js"
 import { Plusvip } from "./plusvip.js";
+import { Streamlare } from "./streamlare.js";
 let servers = {"fembed": new Fembed(),
                "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -19,6 +20,7 @@ let servers = {"fembed": new Fembed(),
                 "zippy": new ZippyShare(),
                 "mediafire.com": new Mediafire(),
                 "plusvip.net": new Plusvip(),
+                "streamlare.com": new Streamlare(),
             };
 
 export function getDDL(after, onError, web) {
@@ -46,6 +48,8 @@ export function getDDL(after, onError, web) {
         return servers["zippishare"].getDDL(after, onError, web);
     }else if(web.indexOf("mediafire.com") != -1) {
         return servers["mediafire.com"].getDDL(after, onError, web);
+    }else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
+        return servers["streamlare.com"].getDDL(after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -76,6 +80,8 @@ export function getName(web) {
         return "MediaFire";
     }else if(web.indexOf("plusvip.net") != -1) {
         return "Plusvip";
+    }else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
+        return "StreamLare";
     }else {
         return "";
     }
@@ -93,6 +99,7 @@ export function getPreferer(list){
                     "ok.ru" ,
                     "zippishare",
                     "yourupload",
+                    "streamlare.com", "slmaxed.com",
                     "zplayer.live",
                 ];
     let ordered = [];

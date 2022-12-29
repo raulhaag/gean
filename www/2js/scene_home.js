@@ -344,14 +344,10 @@ export class SceneHome extends Scene{
     }
 
     updateFavorites = function(){
-        if (favorites != null){
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            if(favorites.length > 0){
-                let favlist = document.getElementById("favlist");
-                favlist.innerHTML = this.generateCategory("Favoritos", favorites);
-            }
-        }else{
-            favorites = [];
+        saveFavorites();
+        if(favorites.length > 0){
+            let favlist = document.getElementById("favlist");
+            favlist.innerHTML = this.generateCategory("Favoritos", favorites);
         }
         this.updateAndTryToKeepPos();
     }

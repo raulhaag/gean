@@ -21,7 +21,7 @@ export class ScenePlayer extends Scene{
         this.videojs = appSettings["videojs"][0];
     }
     initBody(){
-            let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options">`;
+            let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
             let cc = 0;
             let sItems = {};
             if(Object.keys(this.options).length > 1){
