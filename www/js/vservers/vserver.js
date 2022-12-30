@@ -1,6 +1,6 @@
 import {Fembed} from "./fembed.js";
 import {JKAPI, JKXtreme} from "./jkapi.js";
-import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ} from "./re_sololatino.js";
+import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, EmbedsitoNet} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
 import{YourUpload}from "./yourupload.js";
 import{OkRu}from "./okru.js";
@@ -21,6 +21,7 @@ let servers = {"fembed": new Fembed(),
                 "mediafire.com": new Mediafire(),
                 "plusvip.net": new Plusvip(),
                 "streamlare.com": new Streamlare(),
+                "embedsito.net/reproamz": new EmbedsitoNet(),
             };
 
 export function getDDL(after, onError, web) {
@@ -50,6 +51,8 @@ export function getDDL(after, onError, web) {
         return servers["mediafire.com"].getDDL(after, onError, web);
     }else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
         return servers["streamlare.com"].getDDL(after, onError, web);
+    }else if(web.indexOf("embedsito.net/reproamz") != -1){
+        return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -82,6 +85,8 @@ export function getName(web) {
         return "Plusvip";
     }else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
         return "StreamLare";
+    }else if(web.indexOf("embedsito.net/reproamz")){
+        return "Embedsito(Amz)";
     }else {
         return "";
     }
@@ -92,6 +97,7 @@ export function getPreferer(list){
                     "jk.php?u=stream",
                     "mediafire.com",
                     "plusvip.net",
+                    "embedsito.net/reproamz",
                     "fembed",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",

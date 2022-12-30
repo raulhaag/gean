@@ -79,3 +79,19 @@ function parseVideoFe(rtext){
   vlist.video = response.data[response["data"].length-1].file;
   return vlist;
 }
+
+export class EmbedsitoNet{
+  constructor(){}
+  async getDDL(after, onError, web){
+    let firtStep = await fGet(web);
+    let id = getFirstMatch(/shareId\s*=\s*"([^"]+)/gm, firtStep);
+    let secondStep = JSON.parse(await fGet("https://www.amazon.com/drive/v1/shares/" + id + "?resourceVersion=V2&ContentType=JSON&asset=ALL"));
+    if(secondStep["statusCode"]==200){
+      let thirdStep = JSON.parse(await fGet("https://www.amazon.com/drive/v1/nodes/" + secondStep["nodeInfo"]["id"] + "/children?resourceVersion=V2&ContentType=JSON&limit=200&sort=%5B%22kind+DESC%22%2C+%22modifiedDate+DESC%22%5D&asset=ALL&tempLink=true&shareId=" + id))
+      console.log(thirdStep);
+      after({"video":thirdStep["data"][0]["tempLink"]});
+    }
+    throw Error("Error: " + secondStep["statusCode"]);
+
+  }
+}
