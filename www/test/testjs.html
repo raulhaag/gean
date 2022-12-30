@@ -20,9 +20,11 @@
             return [...str.matchAll(regex)];
         }
         window.serverHost = "http://127.0.0.1:8080/";
-        import {EmbedsitoNet} from "../js/vservers/re_sololatino.js";
+        /*import {EmbedsitoNet} from "../js/vservers/re_sololatino.js";
         new EmbedsitoNet().getDDL((a)=>{
-            console.log(a.video)}, console.log, "");
+            console.log(a.video)}, console.log, "");*/
+        let tester = await fGet("https://short.ink/qdsIAC7dp", {"Referer": "sololatino.net/"})
+        console.log(tester)
     </script>
 </head>
 <body>
