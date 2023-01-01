@@ -252,9 +252,8 @@ export function arrowNav(e){
         if(currentLastPos == "video_placeholder"){
             try{lastPos[currentLastPos].classList.remove("focus");}catch(e){}
             lastPos[currentLastPos] = document.getElementsByTagName("video")[0];
-            
             videoId = lastPos[currentLastPos].id; 
-        }else{        
+        }else{
             lastPos[currentLastPos].classList.add("focus");
             container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
         }
@@ -318,7 +317,6 @@ let videoNav = (event) => {
                 event.preventDefault();
                 break;
             default:
-                
                 break;
         }
     }else{
@@ -326,7 +324,6 @@ let videoNav = (event) => {
         let cc = parseInt(itempos[itempos.length-1]);
         let cr = parseInt(itempos[itempos.length-2]);
         switch (event.keyCode) { //control nav options
-        
             case up:
                 if(cr == 0){
                     manageMenu(null);
@@ -341,7 +338,7 @@ let videoNav = (event) => {
                         break;
                     }
                     desph--;
-                }                        
+                }
                 break;
             case down:
                 let desphd = cc;
@@ -353,7 +350,7 @@ let videoNav = (event) => {
                         break;
                     }
                     desphd--;
-                }   
+                }
                 break;
             case left:
                 if(cc == 0){
@@ -377,7 +374,6 @@ let videoNav = (event) => {
                 break;
         }
     }
-    
 };
 
 export function initVideoNav() {

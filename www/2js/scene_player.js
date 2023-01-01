@@ -136,17 +136,6 @@ export class ScenePlayer extends Scene{
                 default:
                     break;
             }
-        /*}else if(teaseMenu.classList.contains("menu-tease-only-icons")){
-            if(event.keyCode == right){
-                menu.classList.add("menu-closed");
-                teaseMenu.classList.remove("menu-tease-only-icons");
-                this.last.classList.add("selected");
-            }else if(event.keyCode == enter){
-                document.onkeydown = document.prePlayerKeyManager;
-                player.dispose();
-                document.body.removeChild(placeholders.player);
-                document.onkeydown(null);
-            }/*/
         }else{
             let itempos = this.last.id.split("_");
             let cc = parseInt(itempos[itempos.length-1]);
@@ -246,6 +235,12 @@ export class ScenePlayer extends Scene{
     }
 
     dispose(){
+        let video = document.getElementsByTagName("VIDEO")[0];
+        if(video){
+            video.pause();
+            video.src = "";
+            video.load();
+        }
         if(this.videojs) this.player.dispose();
     }
 

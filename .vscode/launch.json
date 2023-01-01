@@ -39,7 +39,7 @@
             "name": "Python: server",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/HttpServer.py",
+            "program": "${workspaceFolder}/SingleThreadHttpServer.py",
             "console": "integratedTerminal",
             "justMyCode": true
         },

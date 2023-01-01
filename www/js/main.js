@@ -118,6 +118,12 @@ window.backClick = function(e){
     if(window.backStack.length > 0){
         let last = window.backStack.pop();
         last.style.display = 'none';
+        let video = document.getElementsByTagName("VIDEO")[0];
+        if(video){
+            video.pause();
+            video.src = "";
+            video.load();
+        }
         last.innerHTML = '';
         if(window.backStack.length == 0){
             document.getElementById("back_button").style.display = 'none';
@@ -265,6 +271,12 @@ window.posLinks = function(linkList, order = true){
 }
 
 window.openPlayer = function(options, items = [], res = true){
+    let video = document.getElementsByTagName("VIDEO")[0];
+    if(video){
+        video.pause();
+        video.src = "";
+        video.load();
+    }
     if(Object.keys(options).length > 1 && res) {
         if(localStorage.getItem("resSelect") == "true"){
             optionSelection("Elige una resolución apropiada", options, 
@@ -286,7 +298,7 @@ window.openPlayer = function(options, items = [], res = true){
       })
       loading.style.visibility = 'hidden';
       return;
-    }  
+    }
     vp.innerHTML = getPlayer(options, items);
     vp.style.display =  'flex';
     loading.style.visibility = 'hidden';
