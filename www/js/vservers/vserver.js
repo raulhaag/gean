@@ -89,7 +89,7 @@ export function getName(web) {
         return "Plusvip";
     }else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
         return "StreamLare";
-    }else if(web.indexOf("embedsito.net/reproamz")){
+    }else if(web.indexOf("embedsito.net/reproamz") != -1) {
         return "Embedsito(Amz)";
     }else if(web.indexOf("mail.ru") != -1) {
         return "Mail.ru(on test)"

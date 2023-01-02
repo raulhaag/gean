@@ -99,7 +99,6 @@ class handler(SimpleHTTPRequestHandler):
 
 
     def return_response_file(self, code, message):
-        self.send_response(code)
         self.send_header('Content-type','text/html')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
