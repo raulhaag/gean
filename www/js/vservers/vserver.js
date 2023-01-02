@@ -8,6 +8,7 @@ import{ZippyShare} from "./zippy.js";
 import {Mediafire} from "./mfire.js"
 import { Plusvip } from "./plusvip.js";
 import { Streamlare } from "./streamlare.js";
+import { MailRu } from "./mailru.js";
 let servers = {"fembed": new Fembed(),
                "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -22,6 +23,7 @@ let servers = {"fembed": new Fembed(),
                 "plusvip.net": new Plusvip(),
                 "streamlare.com": new Streamlare(),
                 "embedsito.net/reproamz": new EmbedsitoNet(),
+                "mail.ru": new MailRu(),
             };
 
 export function getDDL(after, onError, web) {
@@ -53,6 +55,8 @@ export function getDDL(after, onError, web) {
         return servers["streamlare.com"].getDDL(after, onError, web);
     }else if(web.indexOf("embedsito.net/reproamz") != -1){
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
+    }else if(web.indexOf("mail.ru") != -1){
+        return servers["mail.ru"].getDDL (after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -87,6 +91,8 @@ export function getName(web) {
         return "StreamLare";
     }else if(web.indexOf("embedsito.net/reproamz")){
         return "Embedsito(Amz)";
+    }else if(web.indexOf("mail.ru") != -1) {
+        return "Mail.ru(on test)"
     }else {
         return "";
     }
@@ -106,7 +112,7 @@ export function getPreferer(list){
                     "zippishare",
                     "yourupload",
                     "streamlare.com", "slmaxed.com",
-                    "zplayer.live",
+                    "zplayer.live","mail.ru"
                 ];
     let ordered = [];
     for(let i = 0; i < preferer.length; i++){

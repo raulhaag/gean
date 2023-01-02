@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script type="text/javascript" src="../js/fetchpack.js"></script>
-    <script type="text/javascript" src="../js/vservers/zplayer.js"></script>
     <script type="module">
         window.getFirstMatch = function(regex, str){
             var m = regex.exec(str);
@@ -20,11 +19,9 @@
             return [...str.matchAll(regex)];
         }
         window.serverHost = "http://127.0.0.1:8080/";
-        /*import {EmbedsitoNet} from "../js/vservers/re_sololatino.js";
-        new EmbedsitoNet().getDDL((a)=>{
-            console.log(a.video)}, console.log, "");*/
-        let tester = await fGet("https://google.com", {"Referer": "sololatino.net/"})
-        console.log(tester)
+        import {MailRu} from "../js/vservers/mailru.js";
+        new MailRu().getDDL((a)=>{
+            console.log(a.video)}, console.log, "https://my.mail.ru/video/embed/9149163570439661061#tioanime#9733");
     </script>
 </head>
 <body style="background-color: black;">

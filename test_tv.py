@@ -1,6 +1,6 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
-import threading
+import ssl
 import urllib
 from zipfile import ZipFile
 import base64, os, json
@@ -12,6 +12,9 @@ alive = True
 web_path = "./www"
 defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
 favs = []
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
@@ -31,11 +34,11 @@ class handler(SimpleHTTPRequestHandler):
             self.return_response(200, "Apagando")
             server.server_close()
             if window != None:
-                window.destroy() 
-            exit(0)  
+                window.destroy()
+            exit(0)
         try:
             if path[1] == "get":
-                self.return_response(200, getResponseGet(path))
+                self.return_response_whit_headers(200, getGet(path))
                 return
 
             if path[1] == "post":
@@ -55,6 +58,9 @@ class handler(SimpleHTTPRequestHandler):
                 return
 
             if path[1] == "file":
+                if self.headers.get("Range") != None:
+                    self.return_response(206, "Partial unsuported")
+                    return
                 getResponseFile(path, self)
                 return
         except Exception as e:
@@ -84,6 +90,19 @@ class handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(bytes(message, "utf8"))
 
+    def return_response_whit_headers(self, code, message):
+        content = message.read().decode('utf-8')
+        self.send_response(code)
+        for header in message.headers._headers:
+            if header[0].lower() == 'set-cookie':
+                self.send_header("gean_" + header[0], header[1])
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Access-Control-Expose-Headers", "*")
+        self.send_header("Access-Control-Allow-Headers", "*")
+        self.end_headers()
+        self.wfile.write(bytes(content, "utf8"))
+
+
     def return_response_file(self, code, message):
         self.send_response(code)
         self.send_header('Content-type','text/html')
@@ -103,6 +122,9 @@ def getResponseFile(path = [], server = None):
         headers =  json.loads(decode(path[3]))
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
+    range = server.headers.get("Range")
+    if range is not None:
+        headers["Range"] = range
     ho = []
     for key in headers:
         ho.append((key, headers[key]))
@@ -110,7 +132,7 @@ def getResponseFile(path = [], server = None):
     opener = urllib.request.build_opener()
     opener.addheaders = ho
     urllib.request.install_opener(opener)
-    res = urllib.request.urlopen(web)
+    res = urllib.request.urlopen(web, timeout=4, context=ctx) #not secure but the video servers have bad certs
     server.send_response(200)
     server.send_my_headers()
     length = res.headers['content-length']
@@ -198,7 +220,7 @@ def main(path = "./www"):
         if(not check_for_update()):
             from threading import Thread
             thread = Thread(target = sf, args=(path,))
-            thread.start()
+            thread.start()    
             try:
                 import webbrowser
                 window = webbrowser.open("http://127.0.0.1:8080/main_2.html")

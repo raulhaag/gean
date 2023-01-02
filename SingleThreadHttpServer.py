@@ -31,7 +31,7 @@ class handler(SimpleHTTPRequestHandler):
             server.server_close()
             if window != None:
                 window.destroy() 
-            exit(0)  
+            exit(0)
         try:
             if path[1] == "get":
                 self.return_response_whit_headers(200, getGet(path))
@@ -90,9 +90,10 @@ class handler(SimpleHTTPRequestHandler):
         content = message.read().decode('utf-8')
         self.send_response(code)
         for header in message.headers._headers:
-           if header[0].lower() =='set-cookie':
-                self.send_header(header[0], header[1])
+            self.send_header("gean_" + header[0], header[1])
         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Access-Control-Expose-Headers", "*")
+        self.send_header("Access-Control-Allow-Headers", "*")
         self.end_headers()
         self.wfile.write(bytes(content, "utf8"))
 

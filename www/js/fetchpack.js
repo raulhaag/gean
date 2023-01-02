@@ -6,11 +6,11 @@ window.dec = function(e){
     return atob(e.replace(/_/g, '/'));
 }
 
-window.fGet = async function (url, header = {}) {
+window.fGet = async function (url, header = {}, returnHeaders = false) {
     try{window.setLoading();}catch(e){};
-    let data  = "";
+    let data  = "", response = null;
     try{
-        var response = await fetch(window.serverHost + "get/" + enc(url) + "/" + enc(JSON.stringify(header)));
+        response = await fetch(window.serverHost + "get/" + enc(url) + "/" + enc(JSON.stringify(header)));
         if (response.status === 200) {
             data =  await response.text();
         }else{
@@ -21,6 +21,11 @@ window.fGet = async function (url, header = {}) {
         throw e;
     }
     try{window.unsetLoading();}catch(e){};
+    if(returnHeaders){
+        let rHeaders =  {};
+        response.headers.forEach(function(val, key) {rHeaders[key] =val});
+        return {body:data, headers : rHeaders};
+    }
     return data;
 }
 
