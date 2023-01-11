@@ -24,16 +24,33 @@
     width: calc(100%);
 }
 
+.setting.colorselect::after{
+    height: 25px;
+    background-color:var(--tint-color);
+    aspect-ratio: 1;
+    content: "";
+    margin-right: 0px;
+}
+
 .setting.active::after{
     content: "o";
-    color: aquamarine; 
+    color: aquamarine;
+    margin-right: 6px;
 }
 
 .setting::after{
     content: "x";
-    color: red; 
+    color: red;
+    margin-right: 6px;
 }
 
 .setting.selected{
     background-color: #fff4;
+}
+
+.color-square{
+    width: 20px;
+    aspect-ratio: 1;
+    content: "";
+    right: 10px;
 }

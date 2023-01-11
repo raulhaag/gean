@@ -30,6 +30,10 @@ document.addEventListener("DOMContentLoaded",function(){
     }catch(e){}
     loadResumes();
     loadSettings();
+    let color = appSettings["--tint-color"];
+    if(color){
+        document.documentElement.style.setProperty("--tint-color", color);
+    }
     let lastServer = localStorage.getItem('lastServer');
     let lastServerName = localStorage.getItem('lastServerName');
     if(lastServer != null && lastServerName != null){
@@ -42,6 +46,7 @@ document.addEventListener("DOMContentLoaded",function(){
     teaseMenu = document.getElementsByClassName("menu-tease")[0];
     menu = document.getElementsByClassName("menu")[0];
     scene_container = document.getElementById("main_scene");
+
     setScene(new SceneHome());
 });
 
@@ -352,6 +357,7 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
     let lOSelected = div.getElementsByClassName("option-selector-list-item")[0];
     lOSelected.classList.add("selected");
     document.body.appendChild(div);
+    let list = document.getElementsByClassName("option-selector-list")[0];
     document.__optionsDiv = div;
     document.onkeydown = (event) => {
         let cidx = parseInt(lOSelected.id.split("_")[1]);
@@ -360,6 +366,7 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
                 cidx--;
                 lOSelected.classList.remove("selected");
                 lOSelected = document.getElementById("os_" + cidx);
+                list.scrollTop = lOSelected.offsetTop - list.offsetTop ;
                 lOSelected.classList.add("selected");
             }
         }else if (event.keyCode === 40){//down arrow
@@ -367,6 +374,7 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
                 cidx++;
                 lOSelected.classList.remove("selected");
                 lOSelected = document.getElementById("os_" + cidx);
+                list.scrollTop = lOSelected.offsetTop - list.offsetTop;
                 lOSelected.classList.add("selected");
             }
         }else if (event.keyCode === 13){
@@ -479,7 +487,8 @@ function loadSettings(){
         "fullscreen": [true,"Iniciar video en pantalla completa. (si el navegador no lo bloquea)."],
         "res_select": [false,"Dejarme elegir la resolución antes de abrir el video."],
         "vsource_select": [false,"Dejarme elegir el servidor de video antes de abrir el video."],
-        "external_player_android":[false,"Usar reproductor externo (solo Android)."]
+        "external_player_android":[false,"Usar reproductor externo (solo Android)."],
+        "--tint-color" : null
     }
     let storedSettings = null;
     try {

@@ -132,15 +132,25 @@ def getResponseFile(path = [], server = None):
     opener = urllib.request.build_opener()
     opener.addheaders = ho
     urllib.request.install_opener(opener)
-    res = urllib.request.urlopen(web, timeout=4, context=ctx) #not secure but the video servers have bad certs
+    res = urllib.request.urlopen(web, timeout=30, context=ctx) #not secure but the video servers have bad certs
     server.send_response(200)
+    for header in res.headers._headers:
+        server.send_header(header[0], header[1])
     server.send_my_headers()
-    length = res.headers['content-length']
+
+    errorcount = 0
     while True:
-        chunk = res.read(4096)
-        if not chunk:
-            break
-        server.wfile.write(chunk)
+        try:
+            chunk = res.read(4096)
+            if not chunk:
+                break
+            server.wfile.write(chunk)
+            errorcount = 0
+        except Exception as e:
+            print("Retry after " + str(e))
+            errorcount = errorcount + 1
+            if errorcount > 20:
+                raise Exception("to many error")
     urllib.request.urlcleanup()
 
 def getGet(path = []):
