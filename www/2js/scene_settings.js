@@ -75,7 +75,7 @@ export class SceneSettings extends Scene{
         result += '<div class="setting colorselect" id="--tint-color"><div class="setting-text">Color de resaltador</div></div>';
         let extra = "";
         for(var key in this.settings){
-            if(this.settings[key].length != 2){
+            if(!Array.isArray(this.settings[key])){
                 continue;
             }
             if(this.settings[key][0] == true){
