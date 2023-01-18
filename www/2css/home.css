@@ -441,7 +441,7 @@ body {
   transform: translate(-50%, -50%) !important;
 }
 .option-selector-title {
-  background-color: #911;
+  background-color: var(--tint-color);
   padding: 10px;
   text-align: center;
   border-right: 1px solid #ccc;

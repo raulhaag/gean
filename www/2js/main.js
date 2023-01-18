@@ -17,6 +17,7 @@ window.lockMenu = true;
 window.lockKeys = true;
 let scene_container = null;
 let backScenePoll = [], backScenePH = [];
+let loadingCounter = 0;
 
 window.favorites = {}; window.recent = []; window.resumes = {};
 
@@ -100,6 +101,7 @@ window.changeKeyManager = () => {
 let loadingDiv = null;
 let timeOutLoadingId = null;
 window.setLoading = () => {
+    loadingCounter += 1;
     if(window.lockKeys) {window.lockKeyboard()}else{window.lockKeys = true; return};
     if(loadingDiv == null) {
         loadingDiv = document.createElement("div");
@@ -112,15 +114,20 @@ window.setLoading = () => {
 };
 
 window.unsetLoading = () => {
-   timeOutLoadingId = setTimeout(() => {
-        unlockKeyboard();
-        try {
-            if(document.body.hasChildNodes(loadingDiv) && loadingDiv != null)document.body.removeChild(loadingDiv);}catch(e){};
-        loadingDiv = null;
-    }, 500);
+    loadingCounter -= 1;
+    if(loadingCounter != 0){
+        return
+    }
+    timeOutLoadingId = setTimeout(() => {
+            unlockKeyboard();
+            try {
+                if(document.body.hasChildNodes(loadingDiv) && loadingDiv != null)document.body.removeChild(loadingDiv);}catch(e){};
+            loadingDiv = null;
+    }, 250);
 };
 
 window.setScene = (nScene) => {
+    setLoading();
     if(nScene.full_menu){//replace main escene
         for(let i in backScenePoll){
             i.dispose();
@@ -152,6 +159,7 @@ window.setScene = (nScene) => {
         backScenePoll.push(nScene);
     }
     changeKeyManager();
+    unsetLoading();
 };
 
 let popScene = () => {

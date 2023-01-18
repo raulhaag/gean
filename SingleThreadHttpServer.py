@@ -87,9 +87,13 @@ class handler(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(message, "utf8"))
 
     def return_response_whit_headers(self, code, message):
-        content = message.read().decode('utf-8')
-        self.send_response(code)
+        content = ""
+        if(message.headers._headers.index(("Transfer-Encoding","chunked")) >= 0):
+            print("Transfer-Encoding: chunked")
+        self.send_response(code)        
+        content = message.read().decode(message.headers.get_content_charset())
         for header in message.headers._headers:
+            message.headers._headers.index(header)
             self.send_header("gean_" + header[0], header[1])
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header("Access-Control-Expose-Headers", "*")
