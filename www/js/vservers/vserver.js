@@ -31,8 +31,8 @@ export function getDDL(after, onError, web) {
         servers["jkxtreme"].getDDL(after, onError, web);
     }else if(web.indexOf("fembed") != -1) {
         servers["fembed"].getDDL(after, onError, web);
-    }else if(web.indexOf("plusvip.net") != -1) {
-        servers["plusvip.net"].getDDL(after, onError, web);
+   /* }else if(web.indexOf("plusvip.net") != -1) {
+        servers["plusvip.net"].getDDL(after, onError, web);*/
     }else if(web.indexOf("/um2.php?e=") != -1) {
         servers["jkapi"].getDDL(after, onError, web);
     }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
@@ -51,8 +51,8 @@ export function getDDL(after, onError, web) {
         return servers["zippishare"].getDDL(after, onError, web);
     }else if(web.indexOf("mediafire.com") != -1) {
         return servers["mediafire.com"].getDDL(after, onError, web);
-    }else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
-        return servers["streamlare.com"].getDDL(after, onError, web);
+    /*}else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
+        return servers["streamlare.com"].getDDL(after, onError, web);*/
     }else if(web.indexOf("embedsito.net/reproamz") != -1){
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
     }else if(web.indexOf("mail.ru") != -1){
@@ -102,7 +102,7 @@ export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
                     "mediafire.com",
-                    "plusvip.net",
+                    //"plusvip.net",
                     "embedsito.net/reproamz",
                     "fembed",
                     "https://re.sololatino.net/p/embed.php",
@@ -111,7 +111,7 @@ export function getPreferer(list){
                     "ok.ru" ,
                     "zippishare",
                     "yourupload",
-                    "streamlare.com", "slmaxed.com",
+                    //"streamlare.com", "slmaxed.com",
                     "zplayer.live","mail.ru"
                 ];
     let ordered = [];

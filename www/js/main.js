@@ -1,6 +1,6 @@
 import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch, getSettings} from './coder.js';
-import {getDDL, getPreferer} from './vservers/vserver.js';
+import {getDDL, getPreferer, getName} from './vservers/vserver.js';
 import{arrowNav, updatePositions, initVideoNav} from './keynav.js';
 //import{Mediafire} from './vservers/mfire.js';
 
@@ -252,7 +252,7 @@ let linkError = function(error_message){
     }
 }
 
-window.posLinks = function(linkList, order = true){
+window.posLinks = function(linkList, order = true, select = true){
     let best = null;
     if(order){
         best = getPreferer(linkList);
@@ -260,9 +260,24 @@ window.posLinks = function(linkList, order = true){
         best = linkList;
     }
     let mask = (value) => {
+
         openPlayer(value,best);
     }
     window.lastLink = best;
+    if((getStorageDefault("vserSelect", true) == true) && (best.length > 1) && select){
+        let opt = {};
+        for(var key in best){
+            opt[getName(best[key])] = key;
+        }
+        optionSelection("Selecciona tu servidor preferido", opt,  (key) => {
+            let aux = best[0];
+            best[0] = best[parseInt(key,10)];
+            best[parseInt(key,10)] = aux;
+            getDDL(mask, linkError, best[0]);
+        }
+        );
+        return;
+    }
     if (best.length > 0){
         getDDL(mask, linkError, best[0]);
     } else {
@@ -451,7 +466,7 @@ window.changeSrcRes = function(src){
 }
 
 window.changeSrc = function(src){
-    posLinks(JSON.parse(src.dataset.src), false);
+    posLinks(JSON.parse(src.dataset.src), false, false);
 }
 
 function loadm2 () {
@@ -516,6 +531,7 @@ function optionSelection(title, options, postSelect) {
     document.body.appendChild(div);
     document.__optionsDiv = div;
 }
+
 
 document.onOptionSelectionSelected = (option) => {
     document.body.removeChild(document.__optionsDiv);
