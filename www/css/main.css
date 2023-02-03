@@ -191,6 +191,12 @@ div{
     border: none;
     height: 50px;
 }
+
+
+#select_server{
+    overflow: hidden;
+}
+
 .select_server_active::after{
     content: "ˇ";
     margin-left: 10px;
@@ -412,19 +418,29 @@ ul{
     top:50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 28px;
+    font-size: 1.4rem;
     border-radius: 10px;
     overflow: hidden;
     border: 1px #FFF5 solid;
     z-index: 10100;
+    max-height: 95vh;
+    min-width: 25vw;
+    max-width: 95vw;
 }
 .optionSelection__title {
     padding: 20px;
-    background-color: #fff1;
+    background-color: #fff1;    
+    text-align: center;
+
 }
 
 .optionSelection__option{
+    display: flex;
+    align-items:center;
+    justify-content:center;
+
     padding: 10px;
+    min-height: 40px;
 }
 .optionSelection__option.optionSelection__focused{
     background-color: #FFF5;
