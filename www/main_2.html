@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="2css/home.css"/>
-    <link rel="stylesheet" href="2css/search.css"/>
-    <link rel="stylesheet" href="2css/change.css"/>
-    <link rel="stylesheet" href="2css/settings.css"/>
-    <link rel="stylesheet" href="2css/video.css"/>
-    <link rel="stylesheet" href="css/video-js.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="2css/home.css" />
+    <link rel="stylesheet" href="2css/search.css" />
+    <link rel="stylesheet" href="2css/change.css" />
+    <link rel="stylesheet" href="2css/settings.css" />
+    <link rel="stylesheet" href="2css/video.css" />
+    <link rel="stylesheet" href="css/video-js.min.css" />
     <script type="text/javascript">
-       /* window.onerror = function(msg, url, linenumber) {
+      /* window.onerror = function(msg, url, linenumber) {
             alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
             return true;
         }*/
@@ -19,29 +19,33 @@
     <script type="text/javascript" src="js/fetchpack.js"></script>
     <script type="module" src="2js/main.js"></script>
     <script src="js/video.min.js"></script>
+    <script src="js/jwp/jwplayer.js" type="text/javascript"></script>
 
     <title>Gean for TV</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="scene-container" id="main_scene"></div>
     <div class="menu menu-closed">
-        <div class="menu-block">
-            <div id="menu-back" class="menu-item menu-selected menu-back hide"></div>
-            <div id="menu-home" class="menu-item  menu-selected-from-up"></div>
-            <div id="menu-search" class="menu-item"></div>
-            <div id="menu-change" class="menu-item"></div>
-            <div id="menu-settings" class="menu-item"></div>
-        </div>
+      <div class="menu-block">
+        <div
+          id="menu-back"
+          class="menu-item menu-selected menu-back hide"
+        ></div>
+        <div id="menu-home" class="menu-item menu-selected-from-up"></div>
+        <div id="menu-search" class="menu-item"></div>
+        <div id="menu-change" class="menu-item"></div>
+        <div id="menu-settings" class="menu-item"></div>
+      </div>
     </div>
 
     <div class="menu menu-tease">
-        <div class="menu-block">
-            <img class="menu-item-tease menu-back hide" src="2images/back.png"/>
-            <img class="menu-item-tease" src="2images/home.png"/>
-            <img class="menu-item-tease" src="2images/search.png"/>
-            <img class="menu-item-tease" src="2images/change.png"/>
-            <img class="menu-item-tease" src="2images/settings.png"/>
-        </div>
+      <div class="menu-block">
+        <img class="menu-item-tease menu-back hide" src="2images/back.png" />
+        <img class="menu-item-tease" src="2images/home.png" />
+        <img class="menu-item-tease" src="2images/search.png" />
+        <img class="menu-item-tease" src="2images/change.png" />
+        <img class="menu-item-tease" src="2images/settings.png" />
+      </div>
     </div>
-</body>
+  </body>
 </html>

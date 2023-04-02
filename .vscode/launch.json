@@ -28,6 +28,13 @@
         "skipFiles": ["${workspaceFolder}/www/w2/videojs/video.min.js", "${workspaceFolder}/www/js/video.min.js"]
     },
     {
+        "name": "Test jwp",
+        "request": "launch",
+        "type": "chrome",
+        "url": "http://127.0.0.1:5500/w2/videojwp.html",
+        "webRoot": "${workspaceFolder}/www",
+    },
+    {
         "name": "Test JS Chrome",
         "request": "launch",
         "type": "chrome",

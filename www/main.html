@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAnime</title>
-   <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EAnime</title>
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&display=swap" rel="stylesheet">-->
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/details.css">
-    <link rel="stylesheet" href="css/pages.css" />
-    <link rel="stylesheet" href="css/search.css" />
-    <link rel="stylesheet" href="css/video.css" />
-    <script type="text/javascript" src="js/fetchpack.js"></script>
-    <script type="module" src="js/main.js"></script>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/details.css">
+  <link rel="stylesheet" href="css/pages.css" />
+  <link rel="stylesheet" href="css/search.css" />
+  <link rel="stylesheet" href="css/video.css" />
+  <script type="text/javascript" src="js/fetchpack.js"></script>
+  <script type="module" src="js/main.js"></script>
 </head>
+
 <body>
   <div class="menu">
     <img onclick='{backClick()}' id="back_button" class="menu__item back" src="../images/back.png"></img>
     <div class="menu__server">
       <div id="select_server" onclick="{toggleView('server__select__menu')}" class="select_server_active">JkAnime</div>
-      <img class="menu__item" id="search_button" onclick="{search()}" src="../images/search.png"/>
-      <img class="menu__item" id="more_button" onclick="{pages()}" src="../images/plus.png"/>
+      <img class="menu__item" id="search_button" onclick="{search()}" src="../images/search.png" />
+      <img class="menu__item" id="more_button" onclick="{pages()}" src="../images/plus.png" />
     </div>
     <img id="settings_button" class="menu__item" src="../images/settings.png" onclick="{settings()}"></img>
     <img id="shutdown_button" class="menu__item" src="../images/power.png" onclick='{shutdown()}'></img>
@@ -31,22 +33,29 @@
     <div class="menu__server__item" id="jkanime" onclick="{server_selected_click(this)}">JkAnime</div>
     <div class="menu__server__item" id="sololatino" onclick="{server_selected_click(this)}">SoloLatino</div>
     <div class="menu__server__item" id="tioanime" onclick="{server_selected_click(this)}">TioAnime</div>
-    <div class="menu__server__item" id="sololatinosyp" onclick="{server_selected_click(this)}">SoloLatino(Series y Peliculas)</div>
+    <div class="menu__server__item" id="sololatinosyp" onclick="{server_selected_click(this)}">SoloLatino(Series y
+      Peliculas)</div>
 
   </div>
-    <div class="content">
-      <div class="main-content">
+  <div class="content">
+    <div class="main-content">
+      <div class="servers_container__section"></div>
       <div class="recent_placeholder"></div>
       <div class="fav_placeholder"></div>
-      <div class="servers_container__section"></div>
     </div>
-    <div class="lds-group"><div class="lds-dual-ring"></div><p class="lds-text"><center>Cargando...</center></p></div>
+    <div class="lds-group">
+      <div class="lds-dual-ring"></div>
+      <p class="lds-text">
+        <center>Cargando...</center>
+      </p>
     </div>
-    <div class="search_placeholder content"></div>
-    <div class="pages_placeholder content"></div>
-    <div class="details_placeholder content"></div>
-    <div class="video_placeholder content"></div>
-    <div class="settings_placeholder content"></div>
+  </div>
+  <div class="search_placeholder content"></div>
+  <div class="pages_placeholder content"></div>
+  <div class="details_placeholder content"></div>
+  <div class="video_placeholder content"></div>
+  <div class="settings_placeholder content"></div>
 
 </body>
+
 </html>

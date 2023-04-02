@@ -81,7 +81,10 @@ window.unlockKeyboard = () => {
 };
 
 let keyManager = (key) =>{
-    if(key != null){key.preventDefault();}
+    if(key != null){
+        key.preventDefault();
+        key.stopPropagation();
+    }
     currentScene.lastKeyManager(key);
 };
 
@@ -495,6 +498,7 @@ function loadSettings(){
         "fullscreen": [true,"Iniciar video en pantalla completa. (si el navegador no lo bloquea)."],
         "res_select": [false,"Dejarme elegir la resolución antes de abrir el video."],
         "vsource_select": [false,"Dejarme elegir el servidor de video antes de abrir el video."],
+        "cache": [false,"Usar cache de video en disco (solo pc/firefx, necesita espacio disponible en disco)"],
         "external_player_android":[false,"Usar reproductor externo (solo Android)."],
         "--tint-color" : null
     }

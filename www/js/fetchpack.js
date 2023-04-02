@@ -67,10 +67,10 @@ window.fetchRedirectPost = async function (url, header) {
 }
 
 window.fRGet = async function (url, header = {}) {
+    let data  = "";
     try{window.setLoading();}catch(e){};
     try{
         var response = await fetch(window.serverHost + "rget/" + enc(url) + "/" + enc(JSON.stringify(header)));  // `false` makes the request synchronous
-        let data  = "";
         if (response.status === 200) {
             data =  await response.text();
         }else{

@@ -51,7 +51,18 @@ export function generateDescription(options) {
 }
 
 export function getPlayer(options, items = []){
-        let rv = '<div class="source_list">'
+
+        let videoSrc = options["video"];
+        let useCache = localStorage.getItem("cache");
+        if(useCache == "true"){
+            if(videoSrc.indexOf("file/")!== -1){
+                videoSrc = videoSrc.replace("file/", "cache/");
+            }else{
+                videoSrc = window.serverHost + "cache/" + enc(videoSrc)
+            }
+        }
+
+        let rv = '<div class="source_list">';
         let extra = " selected";
         items.forEach(function(item){
             let osar = [item];
@@ -78,7 +89,7 @@ export function getPlayer(options, items = []){
         /*Object.keys(options).forEach(function(option){
             rv +=  `<source src="` + options[option]+ `" label="` + option + `">`
         });*/
-        rv +=  `<source src="` + options["video"]+ `" label="` + "video" + `">`
+        rv +=  `<source src="` + videoSrc + `" label="` + "video" + `">`
         rv +=  `</video>
                 </div>`
         return rv;
@@ -97,15 +108,16 @@ export function getSearch(server){
 }
 
 export function getSettings(){
-    let options = {"lockfronpage":" Bloquear pagina principal", 
-                    "fullscreen": " Iniciar video en pantalla completa", 
+    let options = {"lockfronpage":" Bloquear pagina principal",
+                    "fullscreen": " Iniciar video en pantalla completa",
                     "autoplay": " Autoplay de video",
                     "vserSelect":"Seleccionar servidor antes de reproducir.",
                     "resSelect": "Selección de resolución manual",
                     "external_player":"Usar reproductor externo(Solo Android)",
+                    "cache":"Usar cache de video en disco (solo pc/firefx, necesita espacio disponible en disco)",
                     "modo_2":"Usar modo de vista 2(necesita recargar la pagina)"
                 };
-    const defv = ["false", "true", "true", "true", "false","false", "false"];
+    const defv = ["false", "true", "true", "true", "false","false", "false", "false"];
     let result = '<div class="container"><div class="settings_group main-content">';
     let aval = false;
     var i = 0;

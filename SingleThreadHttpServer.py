@@ -1,8 +1,16 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-import urllib
+import urllib, shutil
 from zipfile import ZipFile
 import base64, os, json
 from urllib import request, parse
+from urllib.request import urlopen
+from threading import Thread
+import time
+import contextlib
+
+cache = {}
+cachedir = "cache/"
+
 thread = None
 server = None
 window = None
@@ -54,10 +62,17 @@ class handler(SimpleHTTPRequestHandler):
                 return
 
             if path[1] == "file":
-                #if self.headers.get("Range") != None:
-                #    self.return_response(206, "Partial unsuported")
-                #    return
-                getResponseFile(path, self)
+                if self.headers.get("Range") != None:
+                    self.return_response(206, "Partial unsuported")
+                    return
+                cacheAndGet(path, self)
+                return
+            if path[1] == "cache":
+                if self.headers.get("Range") != None:
+                    if self.headers.get("Range") != 'bytes=0-':
+                        self.return_response(206, "Partial unsuported")
+                        return
+                cacheAndGet(path, self)
                 return
         except Exception as e:
             print("Error: " + str(e) + "en" + decode(path[2]))
@@ -101,7 +116,6 @@ class handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(bytes(content, "utf8"))
 
-
     def return_response_file(self, code, message):
         self.send_header('Content-type','text/html')
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -115,6 +129,7 @@ def getResponseGet(path = []):
     return getGet(path).read().decode('utf-8')
 
 def getResponseFile(path = [], server = None):
+    server.send_response(200)
     headers = {}
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
@@ -130,8 +145,8 @@ def getResponseFile(path = [], server = None):
     opener = urllib.request.build_opener()
     opener.addheaders = ho
     urllib.request.install_opener(opener)
+    ssl._create_default_https_context = ssl._create_unverified_context
     res = urllib.request.urlopen(web, timeout=30, context=ctx) #not secure but the video servers have bad certs
-    server.send_response(200)
     for header in res.headers._headers:
         server.send_header(header[0], header[1])
     server.send_my_headers()
@@ -149,6 +164,97 @@ def getResponseFile(path = [], server = None):
             errorcount = errorcount + 1
             if errorcount > 20:
                 raise Exception("to many error")
+    urllib.request.urlcleanup()
+
+
+def urlretrievecache(url, filename, cache, data=None):
+    with contextlib.closing(urlopen(url, data)) as fp:
+        headers = fp.info()
+        cache[url]["headers"] = headers
+        tfp = open(filename, 'wb')
+        with tfp:
+            result = filename, headers
+            bs = 8192
+            size = -1
+            read = 0
+            blocknum = 0
+            if "content-length" in headers:
+                size = int(headers["Content-Length"])
+            while True:
+                block = fp.read(bs)
+                if not block:
+                    tfp.flush()
+                    tfp.close()
+                    break
+                read += len(block)
+                tfp.write(block)
+                tfp.flush()
+                blocknum += 1
+                cache[url]["progress"] = read
+    if size >= 0 and read < size:
+        cache[url]["status"] = -1
+        raise Exception(
+            "retrieval incomplete: got only %i out of %i bytes"
+            % (read, size), result)
+    cache[url]["status"] = 1
+    return result
+
+def downloadCacheFile(cache, path):
+    headers = {}
+    if len(path) == 4:
+        headers =  json.loads(decode(path[3]))
+    if "User-Agent" not in headers:
+        headers["User-Agent"] = defaultUserAgent
+    ho = []
+    for key in headers:
+        ho.append((key, headers[key]))
+    web = decode(path[2])
+    opener = urllib.request.build_opener()
+    opener.addheaders = ho
+    urllib.request.install_opener(opener)
+    ssl._create_default_https_context = ssl._create_unverified_context
+    try:
+        urlretrievecache(web, cache[web]["name"], cache)
+    except:
+        cache[web] = -2
+
+def cacheAndGet(path = [], server = None):
+    web = decode(path[2])
+    if hasattr(cache, web) and (cache[web]["status"] >= 0):
+        #raise Exception("already cached")
+        print("url cached active, serving {}".format(path))
+    else:
+        cache[web] = {}
+        cache[web]["status"] = 0  #0 downloading | -1 error | 1 finished | -2 deleted
+        cache[web]["progress"] = 0
+        cache[web]["name"] = f'{cachedir}cache{str(len(cache))}.mp4'
+        cache[web]["thread"] = Thread(target = downloadCacheFile, args = (cache, path))
+        cache[web]["thread"].start()
+    while True:
+        if os.path.exists(cache[web]["name"]):
+            server.send_response(200)
+            for header in cache[web]["headers"]._headers:
+                server.send_header(header[0], header[1])
+            server.send_my_headers()
+            with open(cache[web]["name"], 'rb') as fh:
+                chunk = ""
+                cp = 0
+                while True:
+                    if(cache[web]["progress"] > cp):
+                        chunk = fh.read(8192)
+                        cp += len(chunk)
+                        if not chunk:
+                            break
+                        server.wfile.write(chunk)
+                    else:
+                        if(cache[web]["status"] == 1):
+                            break
+                        time.sleep(0.5)
+            break
+        else:
+            if cache[web]["status"] == -2:
+                break
+            time.sleep(0.5)
     urllib.request.urlcleanup()
 
 def getGet(path = []):
@@ -223,6 +329,9 @@ def sf(path):
 
 
 def main(path = "./www"):
+    if os.path.exists(cachedir):
+        shutil.rmtree(cachedir)
+    os.makedirs(cachedir)
     web_path = path
     try:
         if(not check_for_update()):

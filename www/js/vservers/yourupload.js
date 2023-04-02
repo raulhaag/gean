@@ -1,8 +1,19 @@
 export class YourUpload {
     constructor() {}
     async getDDL(after, onError, web) {
-        let headers = { Referer: "https://www.yourupload.com"};
-        let result = await fGet(web, headers);
+        let headers = { "Referer": web, "User-Agent": window.navigator.userAgent};
+        let page2 = web.replace("/embed/", "/watch/");
+        let data = await fGet(page2, headers);
+        let dpage = "https://www.yourupload.com" + (getFirstMatch(/href="(.dow.+?)"/gm,data))
+        headers["Referer"] = page2;
+        let data2 = await fGet(dpage, headers);
+        let dlink = "https://www.yourupload.com" + (getFirstMatch(/data-url="(.+?)"/gm, data2)).replace("amp;", "");
+        headers["Referer"] = dpage;
+        let rwe = await fRGet(dlink, {"Referer": dpage});
+        headers["Referer"] = dlink;
+        let pw = window.serverHost + "file/" + enc(rwe) + "/" + enc(JSON.stringify(headers));
+        after({"video": pw});
+       /* let result = await fGet(web, headers);
         let filev = getFirstMatch(/og:video.+?"(h[^"]+)"/gm, result);
         if(filev.indexOf("vidcache") != -1) {
           headers["Referer"] = web;
@@ -24,6 +35,6 @@ export class YourUpload {
         result = await fRGet("https://www.yourupload.com" + file2, headers);
         let pw = window.serverHost + "file/" + enc(result) + "/" + enc(JSON.stringify(headers));
         console.log(pw);/*/
-        onError("Error");
+        //onError("Error");
     }
 }
