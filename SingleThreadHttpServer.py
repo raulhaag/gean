@@ -68,10 +68,6 @@ class handler(SimpleHTTPRequestHandler):
                 cacheAndGet(path, self)
                 return
             if path[1] == "cache":
-                if self.headers.get("Range") != None:
-                    if self.headers.get("Range") != 'bytes=0-':
-                        self.return_response(206, "Partial unsuported")
-                        return
                 cacheAndGet(path, self)
                 return
         except Exception as e:
@@ -150,7 +146,7 @@ def getResponseFile(path = [], server = None):
     for header in res.headers._headers:
         server.send_header(header[0], header[1])
     server.send_my_headers()
-
+    server.end_headers()
     errorcount = 0
     while True:
         try:
@@ -180,6 +176,7 @@ def urlretrievecache(url, filename, cache, data=None):
             blocknum = 0
             if "content-length" in headers:
                 size = int(headers["Content-Length"])
+                cache[url]["size"] = size
             while True:
                 block = fp.read(bs)
                 if not block:
@@ -198,6 +195,16 @@ def urlretrievecache(url, filename, cache, data=None):
             % (read, size), result)
     cache[url]["status"] = 1
     return result
+
+def parseRangeHeader(header):
+    unit, range = header.split('=')
+    start, end = range.split("-")
+    if end == '':
+        end = -1
+    else:
+        end = int(end)
+    return int(start), end, unit
+
 
 def downloadCacheFile(cache, path):
     headers = {}
@@ -220,7 +227,7 @@ def downloadCacheFile(cache, path):
 
 def cacheAndGet(path = [], server = None):
     web = decode(path[2])
-    if hasattr(cache, web) and (cache[web]["status"] >= 0):
+    if (web in cache) and (cache[web]["status"] >= 0):
         #raise Exception("already cached")
         print("url cached active, serving {}".format(path))
     else:
@@ -230,31 +237,34 @@ def cacheAndGet(path = [], server = None):
         cache[web]["name"] = f'{cachedir}cache{str(len(cache))}.mp4'
         cache[web]["thread"] = Thread(target = downloadCacheFile, args = (cache, path))
         cache[web]["thread"].start()
-    while True:
-        if os.path.exists(cache[web]["name"]):
-            server.send_response(200)
-            for header in cache[web]["headers"]._headers:
-                server.send_header(header[0], header[1])
-            server.send_my_headers()
-            with open(cache[web]["name"], 'rb') as fh:
-                chunk = ""
-                cp = 0
-                while True:
-                    if(cache[web]["progress"] > cp):
-                        chunk = fh.read(8192)
-                        cp += len(chunk)
-                        if not chunk:
-                            break
-                        server.wfile.write(chunk)
-                    else:
-                        if(cache[web]["status"] == 1):
-                            break
-                        time.sleep(0.5)
-            break
-        else:
-            if cache[web]["status"] == -2:
-                break
-            time.sleep(0.5)
+    while not os.path.exists(cache[web]["name"]):
+        if cache[web]["status"] == -2:
+                return
+        time.sleep(0.5)
+    server.send_response(200)
+    for header in cache[web]["headers"]._headers:
+        server.send_header(header[0], header[1])
+    server.send_my_headers()
+    server.end_headers()
+    start = 0
+    end = ''
+    if(server.headers.get("Range")):
+        start, end, unit = parseRangeHeader(server.headers.get("Range"))
+    with open(cache[web]["name"], 'r+b') as fh:
+        fh.seek(start)
+        chunk = ""
+        cp = start
+        while True:
+            if(cache[web]["progress"] > cp):
+                chunk = fh.read(8192 if((end == -1) or ((end-cp) > 8192)) else (end-cp))
+                cp += len(chunk)
+                if not chunk:
+                    break
+                server.wfile.write(chunk)
+            else:
+                if(cache[web]["status"] == 1):
+                    break
+                time.sleep(0.5)
     urllib.request.urlcleanup()
 
 def getGet(path = []):

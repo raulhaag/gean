@@ -54,7 +54,7 @@
             "name": "Python: server2",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/HttpServer_w2.py",
+            "program": "${workspaceFolder}/HttpServer.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }

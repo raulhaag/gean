@@ -19,13 +19,14 @@ export class ScenePlayer extends Scene{
         this.options = options;
         this.items = items;
         this.videojs = appSettings["videojs"][0];
+        this.cache = appSettings["cache"]
     }
     initBody(){
             let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
             let cc = 0;
             let sItems = {};
             let videoSrc = this.options["video"];
-            if(getStorageDefault("cache", false)){
+            if(this.cache){
                 if(videoSrc.indexOf("file/")!== -1){
                     videoSrc = videoSrc.replace("file/", "cache/");
                 }else{
