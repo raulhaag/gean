@@ -88,3 +88,9 @@ window.singleMatch = function (regex, string) {
     var match = regex.exec(string);
     return match ? match[1] : null;
 }
+
+window.decodeHtml = (html) => {
+    var el = document.createElement("div");
+    el.innerHTML = html;
+    return el.textContent;
+}
