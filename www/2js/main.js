@@ -352,6 +352,12 @@ window.route = function(path, ppath = null){
 };
 
 window.generateSelectorDialog = (postAction, title = "Elige una opcion", options = {}) => {
+    if(Object.keys(options).length <= 1){//si hay solo una opcion se ejecuta directamente
+        let key = Object.keys(options)[0];
+        postAction(options[key], key);
+        return;
+    }
+
     dialog = true;
     document.__selectPrekeydown = document.onkeydown;
     var div = document.createElement("div");

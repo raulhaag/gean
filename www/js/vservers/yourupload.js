@@ -7,11 +7,13 @@ export class YourUpload {
         let dpage = "https://www.yourupload.com" + (getFirstMatch(/href="(.dow.+?)"/gm,data))
         headers["Referer"] = page2;
         let data2 = await fGet(dpage, headers);
-        let dlink = "https://www.yourupload.com" + (getFirstMatch(/data-url="(.+?)"/gm, data2)).replace("amp;", "");
+        let dlink = "https://www.yourupload.com" + decodeHtml(getFirstMatch(/data-url="(.+?)"/gm, data2));
         headers["Referer"] = dpage;
-        let rwe = await fRGet(dlink, {"Referer": dpage});
+        let rwe = await fRGet(dlink, headers);
         headers["Referer"] = dlink;
-        let pw = window.serverHost + "file/" + enc(rwe) + "/" + enc(JSON.stringify(headers));
+        let rwe2 = await fRGet(rwe, headers);
+        headers["Referer"] = "https://www.yourupload.com";
+        let pw = window.serverHost + "file/" + enc(rwe2) + "/" + enc(JSON.stringify(headers));
         after({"video": pw});
        /* let result = await fGet(web, headers);
         let filev = getFirstMatch(/og:video.+?"(h[^"]+)"/gm, result);

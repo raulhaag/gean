@@ -30,8 +30,9 @@ class handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.path.split('/')
         try:
-            dp = path[1] + " -> " + ', '.join([decode(p) for p in path[2:]])
-            print(dp)
+            if (len(path) >= 2) and not("." in path[-1]):
+                dp = path[1] + " -> " + ', '.join([decode(p) for p in path[2:]])
+                print(dp)
         except:
             pass
         if(path[1] == "shutdown"):
@@ -69,7 +70,10 @@ class handler(SimpleHTTPRequestHandler):
                     if self.headers.get("Range") != 'bytes=0-':
                         self.return_response(206, "Partial unsuported")
                         return'''
-                cacheAndGet(path, self)
+                try:
+                    cacheAndGet(path, self)
+                except IOError:
+                    return
                 return
         except Exception as e:
             print("Error: " + str(e) + "en" + decode(path[2]))

@@ -27,10 +27,15 @@
             script.src = "http://127.0.0.1:8080/js/main.js";
             document.head.appendChild(script);
         });
+        window.decodeHtml = (html) => {
+            var el = document.createElement("div");
+            el.innerHTML = html;
+            return el.textContent;
+        }
         
-        //import {SbFull} from "../js/vservers/sbfull.js";
-        //new SbFull().getDDL((a)=>{
-        //    console.log(a.video)}, console.log, "https://sbchill.com/e/b72cupe48oyj.html?poster=https://www.themoviedb.org/t/p/original/iVkpmj6ZrtbUhJ3C9eeNZKdrxzZ.jpg");/*
+        import {YourUpload} from "../js/vservers/yourupload.js";
+        new YourUpload().getDDL((a)=>{
+           console.log(a.video)}, console.log, "https://www.yourupload.com/watch/5p2UP137P6fk");
     </script>
 </head>
 <body style="background-color: black;">
