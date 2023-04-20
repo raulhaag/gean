@@ -144,7 +144,12 @@ export class SoloLatino {
           }
           links.push(linkd);
         }else{
+          var decoded =  getFirstMatch(/\.php\?link=(.+?)&servidor=/gm,link.getAttribute("onclick"))
+          if(decoded){
+            links.push(atob(decoded));
+          }
           links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
+          links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]));
         }
       }catch(e){}//continue
     }

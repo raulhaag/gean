@@ -5,6 +5,7 @@ from threading import Thread
 from zipfile import ZipFile
 from urllib import request, parse
 from urllib.request import urlopen
+import traceback
 
 thread = None
 server = None
@@ -73,10 +74,12 @@ class handler(SimpleHTTPRequestHandler):
                 try:
                     cacheAndGet(path, self)
                 except IOError:
+                    traceback.format_exc()
                     return
                 return
         except Exception as e:
-            print("Error: " + str(e) + "en" + decode(path[2]))
+            print("Error: " + str(e) + "en" + decode(path[2]) + "\n")
+            traceback.format_exc()
         if(os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico"]):
             self.path = web_path + self.path
             #read file to string
@@ -159,7 +162,8 @@ def getResponseFile(path = [], server = None):
             server.wfile.write(chunk)
             errorcount = 0
         except Exception as e:
-            print("Retry after " + str(e))
+            print("Retry after " + str(e) + "\n")
+            traceback.print_exc()
             errorcount = errorcount + 1
             if errorcount > 20:
                 raise Exception("to many error")
@@ -218,6 +222,7 @@ def urlretrievecache(url, filename, cache, data=None):
                 try:
                     f.truncate(int(headers["content-length"]))
                 except IOError as e:
+                    traceback.print_exc()
                     print(e)
         tfp = open(filename, 'wb')
         with tfp:
@@ -249,11 +254,13 @@ def urlretrievecache(url, filename, cache, data=None):
 
 def downloadCacheFile(cache, path):
     headers = {}
+    web = decode(path[2])
+    ho = []
     if len(path) == 4:
         headers =  json.loads(decode(path[3]))
-    if "User-Agent" not in headers:
-        headers["User-Agent"] = defaultUserAgent
-    ho = []
+    for key in cache[web]["rheaders"]:
+        if not(("host" in key.lower()) or ("referer" in key.lower())):
+            ho.append((key, cache[web]["rheaders"].get(key)))
     for key in headers:
         ho.append((key, headers[key]))
     web = decode(path[2])
@@ -263,9 +270,12 @@ def downloadCacheFile(cache, path):
     ssl._create_default_https_context = ssl._create_unverified_context
     try:
         urlretrievecache(web, cache[web]["name"], cache)
-    except:
-        cache[web] = -2
-
+    except Exception as e:
+        print("Error: " + str(e) + " en " + web + "\n")
+        traceback.format_exc()
+        cache[web]["status"] = -2
+        cache[web]["errdetails"] = str(e)
+        
 def cacheAndGet(path = [], server = None):
     web = decode(path[2])
     if (web in cache) and (cache[web]["status"] >= 0):
@@ -275,8 +285,10 @@ def cacheAndGet(path = [], server = None):
         cache[web] = {}
         cache[web]["status"] = 0  #0 downloading | -1 error | 1 finished | -2 deleted
         cache[web]["progress"] = 0
+        cache[web]["errdetails"] = 0
         cache[web]["name"] = f'{cachedir}cache{str(len(cache))}.mp4'
         cache[web]["thread"] = Thread(target = downloadCacheFile, args = (cache, path))
+        cache[web]["rheaders"] = server.headers
         cache[web]["thread"].start()
     while not os.path.exists(cache[web]["name"]):
         if cache[web]["status"] == -2:

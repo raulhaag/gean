@@ -514,6 +514,10 @@ function optionSelection(title, options, postSelect) {
     let postSelectPP = (value) => {
         postSelect(value, document.__selectpostSelectOptions);
     }
+    if(Object.keys(options).length == 1) {
+        postSelectPP(options[0], options);
+        return;
+    }
     document.__selectpostSelect = postSelectPP;
     document.__selectpostSelectOptions = options;
     document.__selectPrekeydown = document.onkeydown;
