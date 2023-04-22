@@ -1,6 +1,6 @@
 import {Fembed} from "./fembed.js";
 import {JKAPI, JKXtreme} from "./jkapi.js";
-import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, EmbedsitoNet} from "./re_sololatino.js";
+import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, EmbedsitoNet, MamazonPlayer} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
 import{YourUpload}from "./yourupload.js";
 import{OkRu}from "./okru.js";
@@ -24,6 +24,7 @@ let servers = {"fembed": new Fembed(),
                 "streamlare.com": new Streamlare(),
                 "embedsito.net/reproamz": new EmbedsitoNet(),
                 "mail.ru": new MailRu(),
+                "/reproamz/": new MamazonPlayer()
             };
 
 export function getDDL(after, onError, web) {
@@ -47,6 +48,8 @@ export function getDDL(after, onError, web) {
         return servers["okru"].getDDL(after, onError, web);
     }else if(web.indexOf("owodeuwu.xyz") != -1) {
         return servers["owodeuwu.xyz"].getDDL(after, onError, web);
+    }else if(web.indexOf("/reproamz/") != -1) {
+        return servers["/reproamz/"].getDDL(after, onError, web);
     }else if(web.indexOf("zippishare") != -1){
         return servers["zippishare"].getDDL(after, onError, web);
     }else if(web.indexOf("mediafire.com") != -1) {
@@ -77,6 +80,8 @@ export function getName(web) {
         return "YourUpload";
     }else if(web.indexOf("ok.ru") != -1) {
         return "OkRu";
+    }else if(web.indexOf("/reproamz/")){
+        return "AMZ ReSololatino" ;
     }else if(web.indexOf("owodeuwu.xyz") != -1) {
         return "owodeuwu.xyz (fembed)";
     }else if(web.indexOf("zippishare") != -1) {
@@ -111,6 +116,7 @@ export function getPreferer(list){
                     "ok.ru" ,
                     "zippishare",
                     "yourupload",
+                    "/reproamz/",
                     //"streamlare.com", "slmaxed.com",
                     "zplayer.live","mail.ru"
                 ];
