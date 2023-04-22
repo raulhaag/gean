@@ -80,7 +80,7 @@ export function getName(web) {
         return "YourUpload";
     }else if(web.indexOf("ok.ru") != -1) {
         return "OkRu";
-    }else if(web.indexOf("/reproamz/")){
+    }else if(web.indexOf("/reproamz/") != -1){
         return "AMZ ReSololatino" ;
     }else if(web.indexOf("owodeuwu.xyz") != -1) {
         return "owodeuwu.xyz (fembed)";

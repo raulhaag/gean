@@ -515,7 +515,7 @@ function optionSelection(title, options, postSelect) {
         postSelect(value, document.__selectpostSelectOptions);
     }
     if(Object.keys(options).length == 1) {
-        postSelectPP(options[0], options);
+        postSelectPP(options[Object.keys(options)[0]], options);
         return;
     }
     document.__selectpostSelect = postSelectPP;
