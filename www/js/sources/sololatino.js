@@ -52,7 +52,7 @@ export class SoloLatino {
       var doc = parser.parseFromString(result, "text/html");
       let sname =  doc.getElementsByTagName("h1")[1].innerText;
       let description =  doc.getElementsByTagName("p")[0].innerText.trim();
-      let image = doc.getElementsByClassName("poster")[0].getElementsByTagName("img")[0].getAttribute("data-src");
+      let image = doc.getElementsByClassName("poster")[0].getElementsByTagName("img")[0].getAttribute("src");
       let chapters = [];
       let ch = [];
       let sh = doc.querySelectorAll("ul.episodios");
