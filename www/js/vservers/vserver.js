@@ -109,7 +109,7 @@ export function getPreferer(list){
                     "mediafire.com",
                     //"plusvip.net",
                     "embedsito.net/reproamz",
-                    "fembed",
+                    //"fembed",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",
                     "owodeuwu.xyz" ,

@@ -1,6 +1,7 @@
 export class ReSololatino {
     constructor() {}
     getDDL(after, onError, web) {
+      onError("Error en servidor");
       let headers = { Referer: web };
       let rqs = window.enc(web) + "/" + window.enc(JSON.stringify(headers));
       fetch(window.serverHost + "get/" + rqs)
@@ -41,6 +42,7 @@ export class ReSololatino {
 export class SololatinoXYZ {
   constructor() {}
   async getDDL(after, onError, web) {
+    onError("Error en servidor");
     let headers = { Referer: web };
     let data = {'r':'https%3A%2F%2Fre.sololatino.net%2F','d':'sololatino.xyz'}
     let path = web.split("#")[0].split("/");
@@ -68,6 +70,7 @@ export class SololatinoXYZ {
 export class OwodeuwuXYZ {
   constructor(){}
   async getDDL(after, onError, web){
+    onError("Error en servidor");
     let path = web.split("#")[0].split("/");
     let data = {"r":"", "d": "owodeuwu.xyz"};
     let id = path[path.indexOf("v") + 1];
