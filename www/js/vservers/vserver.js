@@ -32,8 +32,8 @@ export function getDDL(after, onError, web) {
         servers["jkxtreme"].getDDL(after, onError, web);
     }else if(web.indexOf("fembed") != -1) {
         servers["fembed"].getDDL(after, onError, web);
-   /* }else if(web.indexOf("plusvip.net") != -1) {
-        servers["plusvip.net"].getDDL(after, onError, web);*/
+    }else if(web.indexOf("plusvip.net") != -1) {
+        servers["plusvip.net"].getDDL(after, onError, web);
     }else if(web.indexOf("/um2.php?e=") != -1) {
         servers["jkapi"].getDDL(after, onError, web);
     }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
@@ -107,7 +107,7 @@ export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
                     "mediafire.com",
-                    //"plusvip.net",
+                    "plusvip.net",
                     "embedsito.net/reproamz",
                     //"fembed",
                     "https://re.sololatino.net/p/embed.php",

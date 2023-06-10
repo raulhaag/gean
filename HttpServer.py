@@ -358,7 +358,7 @@ def download_file(url, filename):
     request.urlretrieve(url, filename)
 
 
-server = ThreadingSimpleServer(('', 8080), handler)
+server = ThreadingSimpleServer(('localhost', 8080), handler)
 
 def sf(path):
     web_path = path
