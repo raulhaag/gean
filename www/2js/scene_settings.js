@@ -48,6 +48,14 @@ export class SceneSettings extends Scene{
                         this.saveSetting(this.settings);
                     }, "Elige un color", this.color);
                     return;
+                }else if(this.lastSetting.classList.contains("modoselect")){
+                    if(this.lastSetting.classList.contains("active")){
+                        this.lastSetting.classList.remove("active");
+                    }else{
+                        this.lastSetting.classList.add("active");
+                    };
+                    localStorage.setItem("modo_tv", this.lastSetting.classList.contains("active"));
+                    return;
                 }
                 this.settings[this.lastSetting.id][0] = !this.settings[this.lastSetting.id][0];
                 if(this.lastSetting.classList.contains("active")){
@@ -72,7 +80,12 @@ export class SceneSettings extends Scene{
     initBody(){
         this.settings = appSettings;
         let result = '<div class="settings-title">Configurar</div><div class="settings-list">';
+        let mtvactive = "";
+        if(this.settings["modo_tv"]){
+            mtvactive = " active";
+        }
         result += '<div class="setting colorselect" id="--tint-color"><div class="setting-text">Color de resaltador</div></div>';
+        result += '<div class="setting modoselect'+ mtvactive +'" id="modo_tv"><div class="setting-text">Modo TV</div></div>';
         let extra = "";
         for(var key in this.settings){
             if(!Array.isArray(this.settings[key])){
