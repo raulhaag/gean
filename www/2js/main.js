@@ -22,7 +22,7 @@ let loadingCounter = 0;
 window.favorites = {}; window.recent = []; window.resumes = {};
 
 document.addEventListener("DOMContentLoaded",function(){
-    if(window.getStorageDefault("modo_tv", "true")){
+    if(!window.getStorageDefault("modo_tv", "true")){
         this.location = "http://" + window.location.hostname + ":8080/main.html"
         return
     }
@@ -533,24 +533,9 @@ function loadSettings(){
         });
         storedSettings = newSettings
     }
-    storedSettings["modo_tv"] = window.getStorageDefaulM1("modo_tv", "true");
+    storedSettings["modo_tv"] = window.getStorageDefault("modo_tv", "true");
     window.appSettings = storedSettings;
 }
-window.getStorageDefaulM1 = function(key, defa){
-    let val = localStorage.getItem(key);
-    if(val == null){
-        val = defa;
-        localStorage.setItem(key, val);
-    }
-    if(val == 'true'){
-        return true;
-    }else if(val == 'false'){
-        return false;
-    }
-    return val;
-}
-
-
 
 window.saveFavorites = () => {
     if (window.favorites != null){
