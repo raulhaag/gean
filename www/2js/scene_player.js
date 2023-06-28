@@ -57,10 +57,10 @@ export class ScenePlayer extends Scene{
             <div id="player-container_0_` + cc +`" class="player-option-list" data-options='`+ JSON.stringify(sItems) + `'>` + getName(this.items[0]) + `</div>
             </div><div class="player-video-container">
                     <video id="player-container_1_0" class="video-js" autoplay="true" controls>
-                    <source src="` + videoSrc + `"  type="` + vtype + `" />
+                    <source src="` + videoSrc + `" />
                     </video>
                 </div>
-            </div></div></div>`;
+            </div></div></div>`;//`"  type="` + vtype + `" />
             this._body = innerHtml;
     }
     initBindings(){

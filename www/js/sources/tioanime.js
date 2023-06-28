@@ -56,7 +56,7 @@ export class TioAnime {
         var doc = parser.parseFromString(result, "text/html");
         let sname =  doc.querySelector("h1.title").innerText;
         let description =  doc.querySelector("p.sinopsis").innerText.trim();
-        let genres = doc.querySelector("p.genres").innerText.trim().replaceAll("\n\n\n", ", ");
+        let genres = doc.querySelector("p.genres").innerText.trim().replace(/\n\n\n/g, ", ");
         let image = this.baseUrl + doc.querySelector(".thumb figure img").getAttribute('src');
         let chaptersIndex = [...result.matchAll(/var episodes = \[([^\]]+)\]/gm)][0][1].split(",")
         let chapters = [];
@@ -114,7 +114,7 @@ export class TioAnime {
         let fames = [...result.matchAll(/\["[^"]+","([^"]+)",.+?,.+?\]/gm)]
         let links = [];
         for (let i = 0; i < fames.length; i++) {
-            links.push((fames[i][1]).replaceAll('\\', ""));
+            links.push((fames[i][1]).reeplace(/\\/g, ""));
         }
         after(links);
       } catch (error) {
