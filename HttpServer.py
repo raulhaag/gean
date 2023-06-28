@@ -29,6 +29,7 @@ class handler(SimpleHTTPRequestHandler):
         return
 
     def do_GET(self):
+        defaultUserAgent = self.headers.get('User-Agent')
         path = self.path.split('/')
         try:
             if (len(path) >= 2) and not("." in path[-1]):
