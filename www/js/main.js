@@ -17,6 +17,10 @@ let reload = false;
 
 
 document.addEventListener("DOMContentLoaded", function(){
+    if(window.getStorageDefault("modo_tv", "false")){
+        this.location = "http://" + window.location.hostname + ":8080/main_2.html"
+        return
+    }
     window.serverHost = "http://" + window.location.hostname + ":8080/"
     document.getElementById("search_button").style.display = 'block';
     document.getElementById("more_button").style.display = 'block';
