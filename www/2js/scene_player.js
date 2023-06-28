@@ -25,8 +25,12 @@ export class ScenePlayer extends Scene{
             let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
             let cc = 0;
             let sItems = {};
-            let videoSrc = this.options["video"];
-            if(this.cache){
+            let vdata = this.options["video"].split("|||")
+            let vtype = "video/mp4"
+            let videoSrc = vdata[0];
+            if(vdata.length > 0){
+                vtype = vdata[1];
+            }else if(this.cache){
                 if(videoSrc.indexOf("file/")!== -1){
                     videoSrc = videoSrc.replace("file/", "cache/");
                 }else{
@@ -53,13 +57,12 @@ export class ScenePlayer extends Scene{
             <div id="player-container_0_` + cc +`" class="player-option-list" data-options='`+ JSON.stringify(sItems) + `'>` + getName(this.items[0]) + `</div>
             </div><div class="player-video-container">
                     <video id="player-container_1_0" class="video-js" autoplay="true" controls>
-                    <source src="` + videoSrc + `"  type="video/mp4" />
+                    <source src="` + videoSrc + `" />
                     </video>
                 </div>
-            </div></div></div>`;
+            </div></div></div>`;//`"  type="` + vtype + `" />
             this._body = innerHtml;
     }
-
     initBindings(){
         /*if(Object.keys(this.options).length > 1 && res) {
             if(localStorage.getItem("resSelect") == "true"){

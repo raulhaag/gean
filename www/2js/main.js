@@ -366,7 +366,7 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
                     <div class="option-selector-list">`;
     let id = 0;
     for(var key in options){
-        content += '<div class="option-selector-list-item" id="os_' + id +'" data-info="'+ options[key] +'">' + key + '</div>';
+        content += '<div class="option-selector-list-item" id="os_' + id +'" data-info="'+ enc(options[key]) +'">' + key + '</div>';
         id++;
     }
     content += '</div><div class="option-selector-cancel" id="os_'+ id +'"> Cancelar</div></div>';
@@ -401,7 +401,7 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
             dialog = false;
             unlockKeyboard();
             if (!lOSelected.classList.contains("option-selector-cancel")){
-                postAction(lOSelected.dataset["info"], lOSelected.innerHTML);
+                postAction(dec(lOSelected.dataset["info"]), lOSelected.innerHTML);
             }
         }
     }
