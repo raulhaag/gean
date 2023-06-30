@@ -114,7 +114,7 @@ export class TioAnime {
         let fames = [...result.matchAll(/\["[^"]+","([^"]+)",.+?,.+?\]/gm)]
         let links = [];
         for (let i = 0; i < fames.length; i++) {
-            links.push((fames[i][1]).reeplace(/\\/g, ""));
+            links.push((fames[i][1]).replace(/\\/g, ""));
         }
         after(links);
       } catch (error) {
