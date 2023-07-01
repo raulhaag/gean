@@ -359,7 +359,7 @@ def download_file(url, filename):
     request.urlretrieve(url, filename)
 
 
-server = ThreadingSimpleServer(('localhost', 8080), handler)
+server = ThreadingSimpleServer(('127.0.0.1', 8080), handler)
 
 def sf(path):
     web_path = path

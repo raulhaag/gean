@@ -28,7 +28,7 @@ export class ScenePlayer extends Scene{
             let vdata = this.options["video"].split("|||")
             let vtype = "video/mp4"
             let videoSrc = vdata[0];
-            if(vdata.length > 0){
+            if(vdata.length > 1){
                 vtype = vdata[1];
             }else if(this.cache){
                 if(videoSrc.indexOf("file/")!== -1){
