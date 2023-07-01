@@ -18,7 +18,10 @@ let servers = {"jkanime": new JKAnime(),
 export function getSource(name) {return servers[name];}
 
 export function getResponse(name, callback, error_callback) {
-    return servers[name].getFrontPage(callback, error_callback);
+    if(servers[name]){
+        return servers[name].getFrontPage(callback, error_callback);
+    }
+    return servers["jkanime"].getFrontPage(callback, error_callback);
 }
 
 export function getLinks(path, callback, error_callback) {
