@@ -23,7 +23,6 @@ export class SceneChange extends Scene{
             document.getElementById(this.servers[this.serverSelectedIdx]).classList.add("change-item-focus");
             return;
         }
-        event.preventDefault()
         switch(event.keyCode){
             case right:
                 if(this.serverSelectedIdx < this.servers.length - 1){
