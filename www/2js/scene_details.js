@@ -150,7 +150,6 @@ export class SceneDetails extends Scene {
                     this.lastChapter.classList.add("focus");
                     document.getElementsByClassName("info-capitulos")[0].scrollTop = this.lastChapter.offsetTop;
                 }
-                event.preventDefault();
                 break;
 
             case left:

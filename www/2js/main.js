@@ -21,6 +21,13 @@ let loadingCounter = 0;
 
 window.favorites = {}; window.recent = []; window.resumes = {};
 
+let stopPropagationForKeys = (event) => {
+        if(event != null){
+            event.stopPropagation();
+            event.preventDefault();
+        }
+}
+
 document.addEventListener("DOMContentLoaded",function(){
     if(!window.getStorageDefault("modo_tv", "true")){
         this.location = "http://" + window.location.hostname + ":8080/main.html"
@@ -54,6 +61,9 @@ document.addEventListener("DOMContentLoaded",function(){
     scene_container = document.getElementById("main_scene");
 
     window.setScene(new SceneHome());
+    //document.onkeydown = 
+    document.onkeyup = stopPropagationForKeys;
+    document.onkeypress = stopPropagationForKeys;
 });
 
 //menu management
@@ -72,7 +82,7 @@ window.menuManager = () => {
 };
 
 window.lockKeyboard = () => {
-    document.onkeydown = null;
+    document.onkeydown = stopPropagationForKeys;
 };
 
 window.unlockKeyboard = () => {
@@ -86,7 +96,7 @@ window.unlockKeyboard = () => {
 };
 
 let keyManager = (key) =>{
-    if(key != null){
+    if((key != null) && (key.hasOwnProperty("preventDefault"))){
         key.preventDefault();
         key.stopPropagation();
     }
@@ -184,6 +194,7 @@ let popScene = () => {
 
 let menu_nav = (event) =>{
     if(event == null){
+        stopPropagationForKeys(event);
         window.tease_menu(true);
         return;
     }
@@ -414,6 +425,8 @@ window.generateSelectorDialog = (postAction, title = "Elige una opcion", options
 
 window.error = (error_message) => {
     alert(error_message);
+    window.unsetLoading();
+    //TODO: Error
 //loading.style.visibility = 'hidden';
 };
 
