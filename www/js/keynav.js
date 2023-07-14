@@ -144,16 +144,18 @@ export function updatePositions(containerCN = "content"){
     currentLastPos = containerCN;
     container = document.getElementsByClassName(containerCN)[0];
     let items = container.getElementsByClassName("focusable");//focusable next??
-    let ctop = items[0].offsetTop;
-    let rc = 0, cc = 0;
-    for(let i = 0; i < items.length; i++){
-        if(items[i].offsetTop != ctop){
-            ctop = items[i].offsetTop;
-            rc++;
-            cc = 0;
+    if(items[0]){
+        let ctop = items[0].offsetTop;
+        let rc = 0, cc = 0;
+        for(let i = 0; i < items.length; i++){
+            if(items[i].offsetTop != ctop){
+                ctop = items[i].offsetTop;
+                rc++;
+                cc = 0;
+            }
+            items[i].id = currentLastPos + "_" + rc + "_" + cc;
+            cc++;
         }
-        items[i].id = currentLastPos + "_" + rc + "_" + cc;
-        cc++;
     }
 }
 
@@ -254,8 +256,10 @@ export function arrowNav(e){
             lastPos[currentLastPos] = document.getElementsByTagName("video")[0];
             videoId = lastPos[currentLastPos].id; 
         }else{
-            lastPos[currentLastPos].classList.add("focus");
-            container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
+            if(lastPos[currentLastPos]){
+                lastPos[currentLastPos].classList.add("focus");
+                container.scrollTop = lastPos[currentLastPos].offsetTop - 70;
+            }
         }
     }
 }

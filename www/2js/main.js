@@ -29,7 +29,8 @@ let stopPropagationForKeys = (event) => {
 }
 
 document.addEventListener("DOMContentLoaded",function(){
-    if(!window.getStorageDefault("modo_tv", "true")){
+    let tvMode = localStorage.getItem("modotv");
+    if((tvMode != null) && (!tvMode)){
         this.location = "http://" + window.location.hostname + ":8080/main.html"
         return
     }

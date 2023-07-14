@@ -2,7 +2,6 @@ import {getResponse, getSource} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch, getSettings} from './coder.js';
 import {getDDL, getPreferer, getName} from './vservers/vserver.js';
 import{arrowNav, updatePositions, initVideoNav} from './keynav.js';
-//import{Mediafire} from './vservers/mfire.js';
 
 let loading;
 let dp, vp, pp, sp, setp, content;
@@ -17,7 +16,8 @@ let reload = false;
 
 
 document.addEventListener("DOMContentLoaded", function(){
-    if(window.getStorageDefault("modo_tv", "false")){
+    let tvMode = localStorage.getItem("modotv");
+    if((tvMode != null) && tvMode){
         this.location = "http://" + window.location.hostname + ":8080/main_2.html"
         return
     }
