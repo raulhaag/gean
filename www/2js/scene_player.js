@@ -56,7 +56,7 @@ export class ScenePlayer extends Scene{
             innerHtml += `<div  class="player-option-title">Video Server</div>
             <div id="player-container_0_` + cc +`" class="player-option-list" data-options='`+ JSON.stringify(sItems) + `'>` + getName(this.items[0]) + `</div>
             </div><div class="player-video-container">
-                    <video id="player-container_1_0" class="video-js" autoplay="true" controls>
+                    <video id="player-container_1_0" class="video-js" controls>
                     <source src="` + videoSrc + `" />
                     </video>
                 </div>
@@ -84,12 +84,15 @@ export class ScenePlayer extends Scene{
           return;
         }
         if(this.videojs){
-            this.player = videojs('player-container_1_0');
+            this.player = videojs('player-container_1_0', {autoplay: appSettings["autoplay"][0]});
         }else{
             this.player = document.getElementsByTagName("video")[0];
         }
         this.last = document.getElementsByTagName("video")[0];
         if(appSettings["fullscreen"][0])this.goFullScreen();
+        if(appSettings["autoplay"][0] && !this.videojs){
+                this.player.play();
+        };
         changeKeyManager();
     }
 
