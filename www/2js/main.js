@@ -632,6 +632,10 @@ function loadSettings() {
       false,
       "Usar cache de video en disco (solo pc/firefx, necesita espacio disponible en disco)",
     ],
+    useBlob: [
+      false,
+      "Usar cache blob (usa mucha memoria y hay que esperar la carga, pero despues no se corta)",
+    ],
     external_player_android: [
       false,
       "Usar reproductor externo (solo Android).",
