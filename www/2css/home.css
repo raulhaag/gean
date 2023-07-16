@@ -247,8 +247,7 @@ body {
 }
 
 .focus {
-  box-sizing: content-box;
-  outline: 3px solid #ddd;
+  border: 3px solid #ddd;
 }
 
 .item img {
