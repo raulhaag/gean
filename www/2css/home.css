@@ -86,7 +86,7 @@ body {
 
 .info-title {
   flex: 0 0 auto;
-  font-size: 1.8rem;
+  font-size: 4.5vh;
   text-align: center;
   overflow: hidden;
   margin: 20px;
@@ -100,7 +100,7 @@ body {
   text-align: justify;
   margin: 20px;
   margin-top: 0px;
-  font-size: 1.2rem;
+  font-size: 3vh;
   transition: color linear 0.3s;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -217,7 +217,9 @@ body {
 
 .items__title {
   margin: 0px;
-  margin-left: 80px;
+  margin-left: 86px;
+  font-size: 3vh;
+  padding-top: 1vh;
 }
 
 .items__list {
@@ -225,7 +227,7 @@ body {
   overflow: scroll;
   overflow-y: visible;
   position: relative;
-  max-height: calc(40vh - 50px);
+  max-height: 38vh;
   z-index: 100;
 }
 
@@ -237,15 +239,15 @@ body {
 
 
 .item {
-  margin: 10px;
+  margin: 1vh;
   display: flex;
   position: relative;
   aspect-ratio: 0.65;
-  height: calc(40vh - 80px);
+  height: 37vh;
 }
 
 .focus {
-  outline: 3px solid #ddd;
+  border: 3px solid #ddd;
 }
 
 .item img {
@@ -259,15 +261,13 @@ body {
   position: absolute;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 2vh;
+  font-size: 3vh;
   background: linear-gradient(to top, #000a, #0005);
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
   left: 0;
   bottom: 0px;
   right: 0;
   max-height: 100%;
-  padding: 10px;
+  padding: 1vh;
   text-align: center;
 }
 

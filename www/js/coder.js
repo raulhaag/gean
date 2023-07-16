@@ -116,7 +116,7 @@ export function getSettings(){
                     "external_player":"Usar reproductor externo(Solo Android)",
                     "cache":"Usar cache de video en disco (solo pc/firefx, necesita espacio disponible en disco)",
                     "modo_2":"Usar modo de vista 2(necesita recargar la pagina)",
-                    "modo_tv":"Modo pensado para tv (usa cursores para navegar y enter/ no tactil)"
+                    "modotv":"Modo pensado para tv (usa cursores para navegar y enter/ no tactil)"
                 };
     const defv = ["false", "true", "true", "true", "false","false", "false", "false", "false"];
     let result = '<div class="container"><div class="settings_group main-content">';
