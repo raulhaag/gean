@@ -19,7 +19,7 @@ export class ScenePlayer extends Scene {
     this.items = items;
     this.videojs = appSettings["videojs"][0];
     this.cache = appSettings["cache"][0];
-    this.useBlob = true
+    this.useBlob = appSettings["useBlob"][0];
   }
   initBody() {
     let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
