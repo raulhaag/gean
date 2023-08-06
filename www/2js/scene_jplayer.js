@@ -17,9 +17,11 @@ export class ScenePlayer extends Scene{
         this.parent = parent;
         this.lastKeyManager = this.playerNav;
         this.options = options;
+        this.cache = appSettings["cache"][0];
         this.items = items;
     }
     initBody(){
+           
             let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
             let cc = 0;
             let sItems = {};
@@ -68,7 +70,19 @@ export class ScenePlayer extends Scene{
           })
           return;
         }
-        this.player = jwplayer('player-container_1_0').setup({file: this.options["video"], autostart: true});
+        let vdata = this.options["video"].split("|||");
+        let vtype = "video/mp4";
+        let videoSrc = vdata[0];
+        if (vdata.length > 1) {
+        vtype = vdata[1];
+        } else if (this.cache) {
+        if (videoSrc.indexOf("file/") !== -1) {
+            videoSrc = videoSrc.replace("file/", "cache/");
+        } else {
+            videoSrc = window.serverHost + "cache/" + enc(videoSrc);
+        }
+        }
+        this.player = jwplayer('player-container_1_0').setup({file: videoSrc, autostart: true});
         this.last = this.player;
         if(appSettings["fullscreen"][0])this.player.setFullscreen(true);
         changeKeyManager();

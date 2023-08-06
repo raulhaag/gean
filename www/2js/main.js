@@ -7,14 +7,6 @@ import { ScenePlayer } from "./scene_player.js";
 import { SceneChange } from "./scene_change.js";
 import { SceneSettings } from "./scene_settings.js";
 
-//keys used
-(window.up = 38),
-  (window.right = 39),
-  (window.down = 40),
-  (window.left = 37),
-  (window.enter = 13),
-  (window.backspace = 8),
-  (window.space = 32);
 //server id / name
 window.sid, window.sn;
 window.tease_menu = null;
@@ -225,8 +217,8 @@ let menu_nav = (event) => {
     window.tease_menu(true);
     return;
   }
-  switch (event.keyCode) {
-    case window.up:
+  switch (event.code) {
+    case 'ArrowUp':
       if (selectedMenuIdx > 0) {
         document
           .getElementById(optionsId[selectedMenuIdx - 1])
@@ -240,7 +232,7 @@ let menu_nav = (event) => {
         selectedMenuIdx -= 1;
       }
       break;
-    case window.down:
+    case 'ArrowDown':
       if (selectedMenuIdx < optionsId.length - 1) {
         document
           .getElementById(optionsId[selectedMenuIdx + 1])
@@ -254,7 +246,7 @@ let menu_nav = (event) => {
         selectedMenuIdx += 1;
       }
       break;
-    case window.right:
+    case "ArrowRight":
       window.changeKeyManager();
       teaseMenu.classList.remove("menu-tease-only-icons");
       menu.classList.add("menu-closed");
@@ -283,7 +275,9 @@ let menu_nav = (event) => {
       selectedMenuIdx = lastMenuOpened;
       teaseMenu.classList.remove("menu-tease-only-icons");
       break;
-    case window.enter:
+      case "Enter":
+      case "NumpadEnter":
+      case "Space":
       if (!currentScene.full_menu) {
         popScene();
         return;
@@ -480,7 +474,7 @@ window.generateSelectorDialog = (
   document.__optionsDiv = div;
   document.onkeydown = (event) => {
     let cidx = parseInt(lOSelected.id.split("_")[1]);
-    if (event.keyCode === 38) {
+    if (event.code === 'ArrowUp') {
       //up arrow
       if (cidx > 0) {
         cidx--;
@@ -489,7 +483,7 @@ window.generateSelectorDialog = (
         list.scrollTop = lOSelected.offsetTop - list.offsetTop;
         lOSelected.classList.add("selected");
       }
-    } else if (event.keyCode === 40) {
+    } else if (event.code === 'ArrowDown') {
       //down arrow
       if (!lOSelected.classList.contains("option-selector-cancel")) {
         cidx++;
@@ -498,7 +492,7 @@ window.generateSelectorDialog = (
         list.scrollTop = lOSelected.offsetTop - list.offsetTop;
         lOSelected.classList.add("selected");
       }
-    } else if (event.keyCode === 13) {
+    } else if (event.code === "Enter" || event.code === "Space" || event.code === "NumpadEnter" ) {
       document.body.removeChild(document.__optionsDiv);
       document.onkeydown = document.__selectPrekeydown;
       document.__selectPrekeydown = null;
@@ -632,10 +626,10 @@ function loadSettings() {
       false,
       "Usar cache de video en disco (solo pc/firefx, necesita espacio disponible en disco)",
     ],
-    useBlob: [
+    /*useBlob: [
       false,
       "Usar cache blob (usa mucha memoria y hay que esperar la carga, pero despues no se corta)",
-    ],
+    ],*/
     external_player_android: [
       false,
       "Usar reproductor externo (solo Android).",

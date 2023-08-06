@@ -23,8 +23,8 @@ export class SceneChange extends Scene{
             document.getElementById(this.servers[this.serverSelectedIdx]).classList.add("change-item-focus");
             return;
         }
-        switch(event.keyCode){
-            case right:
+        switch(event.code){
+            case 'ArrowRight':
                 if(this.serverSelectedIdx < this.servers.length - 1){
                     document.getElementById(this.servers[this.serverSelectedIdx]).classList.remove("change-item-focus");
                     this.serverSelectedIdx += 1;
@@ -35,7 +35,7 @@ export class SceneChange extends Scene{
                     document.getElementById(this.servers[this.serverSelectedIdx]).parentNode.scrollLeft = document.getElementById(this.servers[this.serverSelectedIdx]).offsetLeft - 80;
                 }
                 break;
-            case left:
+            case 'ArrowLeft':
                 if(this.serverSelectedIdx > 0 ){
                     document.getElementById(this.servers[this.serverSelectedIdx]).classList.remove("change-item-focus");
                     this.serverSelectedIdx -= 1;
@@ -49,7 +49,9 @@ export class SceneChange extends Scene{
                     document.getElementById(this.servers[this.serverSelectedIdx]).classList.remove("change-item-focus");
                 }
                 break;
-            case enter:
+            case "Enter":
+            case "NumpadEnter":
+            case "Space":
                 let sid = document.getElementById(this.servers[this.serverSelectedIdx]).id;
                 let sn = document.getElementById(this.servers[this.serverSelectedIdx]).textContent;
                 localStorage.setItem('lastServer', sid);
