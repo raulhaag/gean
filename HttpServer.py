@@ -205,19 +205,18 @@ def getPost(path = []):
 def getResponsePost(path = []):
     return getPost(path).read().decode('utf-8')
 
-def parseRangeHeader(header):
+def parseRangeHeader(header, content_len):
     unit, range = header.split('=')
     start, end = range.split("-")
     if end == '':
-        end = -1
-    else:
-        end = int(end)
-    return int(start), end, unit
+        end = content_len
+    return int(start), int(end), unit
 
 def urlretrievecache(url, filename, cache, data=None):
     with contextlib.closing(urlopen(url, data)) as fp:
         headers = fp.info()
         cache[url]["headers"] = headers
+        cache[url]['content-length'] = headers['content-length']
         if "content-length" in headers:
             with open(filename, 'w') as f:
                 try:
@@ -273,10 +272,10 @@ def downloadCacheFile(cache, path):
         urlretrievecache(web, cache[web]["name"], cache)
     except Exception as e:
         print("Error: " + str(e) + " en " + web + "\n")
-        traceback.format_exc()
+        traceback.print_exc()
         cache[web]["status"] = -2
         cache[web]["errdetails"] = str(e)
-        
+
 def cacheAndGet(path = [], server = None):
     web = decode(path[2])
     if (web in cache) and (cache[web]["status"] >= 0):
@@ -295,23 +294,33 @@ def cacheAndGet(path = [], server = None):
         if cache[web]["status"] == -2:
                 return
         time.sleep(0.5)
-    ''' TODO if(server.headers.get("Range")):
+    start = 0
+    end = int(cache[web]['content-length'])
+    if(server.headers.get("Range")):
         server.send_response(206)
-        start, end, unit = parseRangeHeader(server.headers.get("Range"))
-    else:
-        '''
-    server.send_response(200)
+        start, end, unit = parseRangeHeader(server.headers.get("Range"), end)
+        server.send_header('Content-Length', min(end - start + 1, int(cache[web]['content-length'])))
+        server.send_header('Content-Range', 'bytes {}-{}/{}'.format(start, min(end, int(cache[web]['content-length']) - 1) , cache[web]['content-length']))
+    else:   
+        server.send_response(200)
+        server.send_header('Content-Length',cache[web]['content-length'])
+        
     for header in cache[web]["headers"]._headers:
         if header[0].lower() == "connection":
             server.send_header(header[0], "keep-alive")
         elif header[0].lower() == "content-type":
             server.send_header(header[0], header[1])
-        elif header[0].lower() == "content-length":
-            server.send_header(header[0], header[1])
-    server.send_my_headers()
+        '''elif header[0].lower() == "content-length":
+            server.send_header(header[0], header[1])'''
+    print(server.headers)
     server.end_headers()
-    start = 0
-    end = -1
+    while not cache[web]["progress"] > start:
+        if cache[web]["status"] < 0:
+            return
+        #if(((end - start + 1)/float(cache[web]['content-length'])) <  0.001):
+        #    server.wfile.write([0] * (end - start))
+        #    return
+        time.sleep(0.3)
 
     with open(cache[web]["name"], 'r+b') as fh:
         fh.seek(start)
