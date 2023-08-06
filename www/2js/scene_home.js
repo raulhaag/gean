@@ -103,8 +103,8 @@ export class SceneHome extends Scene{
             document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - this.inigap - 32;
             return;
         }
-        let key = event.keyCode;
-        if(this.last.video == null && key == left){
+        let key = event.code;
+        if(this.last.video == null && key === 'ArrowLeft'){
             tease_menu(true);
             manageMenu()
             this.last.video.classList.remove("focus");
@@ -115,7 +115,7 @@ export class SceneHome extends Scene{
         let cr = parseInt(itempos[1]);
         let newselection;
         switch(key){
-            case up:
+            case 'ArrowUp':
                 newselection = document.getElementById("videos_" + (cr - 1) + "_0");
                 if(newselection){
                     newselection = document.getElementById("videos_" + (cr - 1) + "_"  + newselection.parentElement.getAttribute("value"));
@@ -128,7 +128,7 @@ export class SceneHome extends Scene{
                 }
                 break;
 
-            case down:
+            case 'ArrowDown':
                 newselection = document.getElementById("videos_" + (cr + 1) + "_0");
                 if(newselection){
                     newselection = document.getElementById("videos_" + (cr + 1) + "_"  + newselection.parentElement.getAttribute("value"));
@@ -140,7 +140,7 @@ export class SceneHome extends Scene{
                 }
                 break;
 
-            case right:
+            case 'ArrowRight':
                 newselection = document.getElementById("videos_" + cr + "_" + (cc + 1));
                 if(newselection){
                     this.last.video.parentNode.scrollLeft = newselection.offsetLeft - this.items_gap - 10;
@@ -149,7 +149,7 @@ export class SceneHome extends Scene{
                 }
                 break;
 
-            case left:
+            case 'ArrowLeft':
                 newselection = document.getElementById("videos_" + cr + "_" + (cc - 1));
                 if(newselection){
                     this.last.video.parentNode.scrollLeft = newselection.offsetLeft - this.items_gap - 10;
@@ -161,7 +161,9 @@ export class SceneHome extends Scene{
                     menuManager();
                 }
                 break;
-            case enter:
+            case "Enter":
+            case "NumpadEnter":
+            case "Space":
                 let node = document.getElementsByClassName('info-capitulos')[0];
                 if(node != null){
                     document.getElementById("home").removeChild(node);

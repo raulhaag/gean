@@ -17,8 +17,8 @@ export class SceneSettings extends Scene{
         }
         let settingsList = null;
         let cindx = 0;
-        switch(event.keyCode) {
-            case up:
+        switch(event.code) {
+            case 'ArrowUp':
                 settingsList = document.getElementsByClassName("setting");
                 cindx = Array.prototype.indexOf.call(settingsList, this.lastSetting);
                 if (cindx > 0){
@@ -27,7 +27,7 @@ export class SceneSettings extends Scene{
                     this.lastSetting.classList.add("selected");
                 }
                 break;
-            case down:
+            case 'ArrowDown':
                 settingsList = document.getElementsByClassName("setting");
                 cindx = Array.prototype.indexOf.call(settingsList, this.lastSetting);
                 if (cindx < settingsList.length - 1){
@@ -36,11 +36,13 @@ export class SceneSettings extends Scene{
                     this.lastSetting.classList.add("selected");
                 }
                 break;
-            case left:
+            case 'ArrowLeft':
                 this.lastSetting.classList.remove("selected");
                 menuManager();
                 break;
-            case enter:
+            case "Enter":
+            case "NumpadEnter":
+            case "Space":
                 if(this.lastSetting.classList.contains("colorselect")){
                     generateSelectorDialog((ncolor)=>{
                         this.settings[this.lastSetting.id] = ncolor;

@@ -19,7 +19,7 @@ export class ScenePlayer extends Scene {
     this.items = items;
     this.videojs = appSettings["videojs"][0];
     this.cache = appSettings["cache"][0];
-    this.useBlob = appSettings["useBlob"][0];
+    //this.useBlob = appSettings["useBlob"][0];
   }
   initBody() {
     let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
@@ -113,9 +113,9 @@ export class ScenePlayer extends Scene {
     if (appSettings["autoplay"][0] && !this.videojs) {
       this.player.play();
     }
-    if(this.useBlob){
+    /*if(this.useBlob){
         this.loadBlob();
-    };
+    };*/
     changeKeyManager();
   }
 
@@ -163,9 +163,9 @@ export class ScenePlayer extends Scene {
     }
     if (this.last.id.indexOf("1_0") !== -1) {
       switch (
-        event.keyCode //control player
+        event.code //control player
       ) {
-        case up:
+        case 'ArrowUp':
           if (this.isFullscreen()) {
             exitFullScreen();
           } else {
@@ -176,7 +176,7 @@ export class ScenePlayer extends Scene {
             tease_menu(true);
           }
           break;
-        case down:
+        case 'ArrowDown':
           if (this.isFullscreen()) {
             this.switchPlayer();
           } else {
@@ -185,13 +185,15 @@ export class ScenePlayer extends Scene {
             this.switchPlayer();
           }
           break;
-        case left:
+        case 'ArrowLeft':
           this.last.currentTime -= this.increments[this.doubleAccumulator];
           break;
-        case right:
+        case 'ArrowRight':
           this.last.currentTime += this.increments[this.doubleAccumulator];
           break;
-        case enter:
+        case "Enter":
+        case "NumpadEnter":
+        case "Space":
           if (this.doublepress) {
             this.switchPlayer();
             this.goFullScreen();
@@ -208,9 +210,9 @@ export class ScenePlayer extends Scene {
       let cc = parseInt(itempos[itempos.length - 1]);
       let cr = parseInt(itempos[itempos.length - 2]);
       switch (
-        event.keyCode //control nav options
+        event.code //control nav options
       ) {
-        case up:
+        case 'ArrowUp':
           if (cr == 0) {
             //manageMenu(null);
             return;
@@ -226,11 +228,11 @@ export class ScenePlayer extends Scene {
             desph--;
           }
           break;
-        case down:
+        case 'ArrowDown':
           this.last.classList.remove("selected");
           this.last = document.getElementsByTagName("VIDEO")[0];
           break;
-        case left:
+        case 'ArrowLeft':
           if (cc == 1) {
             tease_menu(true);
           }
@@ -243,7 +245,7 @@ export class ScenePlayer extends Scene {
             this.last.classList.add("selected");
           }
           break;
-        case right:
+        case 'ArrowRight':
           if (this.itemExists(cr, cc + 1)) {
             this.last.classList.remove("selected");
             this.last = this.getItem(cr, cc + 1);
@@ -253,7 +255,9 @@ export class ScenePlayer extends Scene {
             tease_menu(false);
           }
           break;
-        case enter:
+        case "Enter":
+        case "NumpadEnter":
+        case "Space":
           let options = JSON.parse(this.last.dataset["options"]);
           if (options.hasOwnProperty("video")) {
             delete options.video;

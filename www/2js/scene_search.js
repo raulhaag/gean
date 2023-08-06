@@ -19,8 +19,8 @@ export class SceneSearch extends Scene{
         let cc = parseInt(itempos[0]);
         let cr = parseInt(itempos[1]);
         let newselection;
-        switch(event.keyCode){
-            case up:
+        switch(event.code){
+            case 'ArrowUp':
                 if(cr == 1){
                     cc = Math.floor(cc/2);
                 }
@@ -31,7 +31,7 @@ export class SceneSearch extends Scene{
                     this.lastkey.classList.add("focus");
                 }
                 break;
-            case down:
+            case 'ArrowDown':
                 if(cr == 0){
                     cc = cc * 2;
                 }
@@ -43,7 +43,7 @@ export class SceneSearch extends Scene{
                 }
                 break;
 
-            case left:
+            case 'ArrowLeft':
                     newselection = document.getElementById("search-box_" + cr + "_" + (cc - 1));
                     if(newselection){
                         this.lastkey.classList.remove("focus");
@@ -58,7 +58,7 @@ export class SceneSearch extends Scene{
                     }
                 break;
 
-            case right:
+            case 'ArrowRight':
                 newselection = document.getElementById("search-box_" + cr + "_" + (cc + 1));
                 if(newselection){
                     this.lastkey.classList.remove("focus");
@@ -76,7 +76,8 @@ export class SceneSearch extends Scene{
                 }
                 break;
 
-            case enter:
+            case "Enter":
+            case "NumpadEnter":
                 let c = this.lastkey.innerHTML;
                 switch(c){
                     case '🠔':
@@ -95,18 +96,18 @@ export class SceneSearch extends Scene{
                 }
                 break;
 
-            case backspace:
+            case 'Backspace':
                 this.searchtext.innerHTML = this.searchtext.innerHTML.slice(0, -1);
                 break;
 
-            case space:
+            case 'Space':
                 this.searchtext.innerHTML = this.searchtext.innerHTML + " ";
                 break;
 
-            default:0
-                if((event.keyCode >= 65 && event.keyCode <= 90)||(event.keyCode >= 96 && event.keyCode <= 105)){
+            default:
+                if(event.code != null && event.code.length == 4 && event.code.startsWith("Key")){
                     this.searchtext.innerHTML = this.searchtext.innerHTML + event.key;
-                }
+                }             
         }
     }
 
@@ -119,8 +120,8 @@ export class SceneSearch extends Scene{
         let cc = parseInt(itempos[0]);
         let cr = parseInt(itempos[1]);
         let newselection;
-        switch(event.keyCode){
-            case up:
+        switch(event.code){
+            case 'ArrowUp':
                 newselection = document.getElementById("search-results-ph_" + (cr-1) + "_" + cc);
                 if(newselection){
                     this.lastMedia.classList.remove("focus");
@@ -129,7 +130,7 @@ export class SceneSearch extends Scene{
                     this.lastMedia.parentElement.scrollTop = this.lastMedia.offsetTop - 65;
                 }
                 break;
-            case down:
+            case 'ArrowDown':
                 newselection = document.getElementById("search-results-ph_" + (cr+1) + "_" + cc);
                 if(newselection){
                     this.lastMedia.classList.remove("focus");
@@ -138,7 +139,7 @@ export class SceneSearch extends Scene{
                     this.lastMedia.parentElement.scrollTop = this.lastMedia.offsetTop - 65;
                 }
                 break;
-            case left:
+            case 'ArrowLeft':
                     newselection = document.getElementById("search-results-ph_" + cr + "_" + (cc - 1));
                     if(newselection){
                         this.lastMedia.classList.remove("focus");
@@ -151,7 +152,7 @@ export class SceneSearch extends Scene{
                         this.lastkey.classList.add("focus");
                     }
                 break;
-            case right:
+            case 'ArrowRight':
                 newselection = document.getElementById("search-results-ph_" + cr + "_" + (cc + 1));
                 if(newselection){
                     this.lastMedia.classList.remove("focus");
@@ -159,7 +160,9 @@ export class SceneSearch extends Scene{
                     this.lastMedia.classList.add("focus");
                 }
                 break;
-            case enter:
+            case "Enter":
+            case "NumpadEnter":
+            case "Space":                    
                 route(this.lastMedia.dataset.path)
                 break;
         }

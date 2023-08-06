@@ -100,14 +100,14 @@ export class SceneDetails extends Scene {
             tease_menu(this.lastChapter == this.info.fav ||this.lastChapter.id.endsWith("_0"));
             return;
         }
-        let key = event.keyCode;
+        let key = event.code;
         if(this.lastChapter == this.info.fav){
             switch(key){
-                case left:
+                case 'ArrowLeft':
                     menuManager();
                     this.lastChapter.classList.remove("focus");
                     return;
-                case down:
+                case 'ArrowDown':
                     let fc = document.getElementById("info-capitulos_0_0");
                     if(fc){
                         this.lastChapter.classList.remove("focus");
@@ -115,13 +115,15 @@ export class SceneDetails extends Scene {
                         this.lastChapter.classList.add("focus");
                     }
                     return;
-                case enter:
+                case "Enter":
+                case "NumpadEnter":
+                case "Space":
                     this.switch_fab(this.info.fav);
                     return;
             }
         }
         switch(key){
-            case up:
+            case 'ArrowUp':
                 newselection = document.getElementById("info-capitulos_" + (cr-1) + "_" + cc);
                 if(newselection){
                     this.lastChapter.classList.remove("focus");
@@ -134,7 +136,7 @@ export class SceneDetails extends Scene {
                     this.lastChapter.classList.add("focus");
                 }
                 break;
-            case right:
+            case 'ArrowRight':
                 newselection = document.getElementById("info-capitulos_" + cr + "_" + (cc + 1));
                 if(newselection){
                     this.lastChapter.classList.remove("focus");
@@ -142,7 +144,7 @@ export class SceneDetails extends Scene {
                     this.lastChapter.classList.add("focus");
                 }
                 break;
-            case down:
+            case 'ArrowDown':
                 newselection = document.getElementById("info-capitulos_" + (cr + 1) + "_" + cc);
                 if(newselection){
                     this.lastChapter.classList.remove("focus");
@@ -152,7 +154,7 @@ export class SceneDetails extends Scene {
                 }
                 break;
 
-            case left:
+            case 'ArrowLeft':
                 newselection = document.getElementById("info-capitulos_" + cr + "_" + (cc - 1));
                 if(newselection){
                     this.lastChapter.classList.remove("focus");
@@ -164,7 +166,9 @@ export class SceneDetails extends Scene {
                     this.lastChapter.classList.remove("focus");
                 }
                 break;
-            case enter:
+            case "Enter":
+            case "NumpadEnter":
+            case "Space":
                 this.lastChapter.classList.add("info-capitulo-viewed");
                 markViewed(null, this.lastChapter.dataset.ppath, this.lastChapter.dataset.path);
                 route(this.lastChapter.dataset.path, this.lastChapter.dataset.ppath);

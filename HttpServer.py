@@ -81,7 +81,8 @@ class handler(SimpleHTTPRequestHandler):
         except Exception as e:
             print("Error: " + str(e) + "en" + decode(path[2]) + "\n")
             traceback.format_exc()
-        if(os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico"]):
+            return
+        if(os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico","mp4"]):
             self.path = web_path + self.path
             #read file to string
             return SimpleHTTPRequestHandler.do_GET(self)
@@ -283,13 +284,14 @@ def cacheAndGet(path = [], server = None):
         print("url cached active, serving {}".format(path))
     else:
         cache[web] = {}
-        cache[web]["status"] = 0  #0 downloading | -1 error | 1 finished | -2 deleted
+        cache[web]["status"] = 0  #0 downloading | -1 error | 1 finished |3 paused| -2 deleted
         cache[web]["progress"] = 0
         cache[web]["errdetails"] = 0
         cache[web]["name"] = f'{cachedir}cache{str(len(cache))}.mp4'
         cache[web]["thread"] = Thread(target = downloadCacheFile, args = (cache, path))
         cache[web]["rheaders"] = server.headers
         cache[web]["thread"].start()
+    
     while not os.path.exists(cache[web]["name"]):
         if cache[web]["status"] == -2:
                 return
@@ -297,8 +299,13 @@ def cacheAndGet(path = [], server = None):
     start = 0
     end = int(cache[web]['content-length'])
     if(server.headers.get("Range")):
-        server.send_response(206)
         start, end, unit = parseRangeHeader(server.headers.get("Range"), end)
+        '''if(((end - start + 1)/float(cache[web]['content-length'])) <  0.001):
+            cache[web]["status"] = 3  #0 downloading | -1 error | 1 finished |3 paused| -2 deleted
+            getResponseFile(path, server)
+            cache[web]["status"] = 0  #0 downloading | -1 error | 1 finished |3 paused| -2 deleted
+            return'''
+        server.send_response(206)
         server.send_header('Content-Length', min(end - start + 1, int(cache[web]['content-length'])))
         server.send_header('Content-Range', 'bytes {}-{}/{}'.format(start, min(end, int(cache[web]['content-length']) - 1) , cache[web]['content-length']))
     else:   
@@ -312,14 +319,11 @@ def cacheAndGet(path = [], server = None):
             server.send_header(header[0], header[1])
         '''elif header[0].lower() == "content-length":
             server.send_header(header[0], header[1])'''
-    print(server.headers)
+    #print(server.headers)
     server.end_headers()
     while not cache[web]["progress"] > start:
         if cache[web]["status"] < 0:
             return
-        #if(((end - start + 1)/float(cache[web]['content-length'])) <  0.001):
-        #    server.wfile.write([0] * (end - start))
-        #    return
         time.sleep(0.3)
 
     with open(cache[web]["name"], 'r+b') as fh:
@@ -337,7 +341,7 @@ def cacheAndGet(path = [], server = None):
                 if(cache[web]["status"] == 1):
                     break
                 time.sleep(0.5)
-    urllib.request.urlcleanup()
+     #urllib.request.urlcleanup()
 
 def check_for_update():
     if os.path.exists("version"):
