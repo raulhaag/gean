@@ -163,7 +163,7 @@ export class ScenePlayer extends Scene {
     }
     if (this.last.id.indexOf("1_0") !== -1) {
       switch (
-        event.code //control player
+        event.key //control player
       ) {
         case 'ArrowUp':
           if (this.isFullscreen()) {
@@ -210,7 +210,7 @@ export class ScenePlayer extends Scene {
       let cc = parseInt(itempos[itempos.length - 1]);
       let cr = parseInt(itempos[itempos.length - 2]);
       switch (
-        event.code //control nav options
+        event.key //control nav options
       ) {
         case 'ArrowUp':
           if (cr == 0) {

@@ -19,7 +19,7 @@ export class SceneSearch extends Scene{
         let cc = parseInt(itempos[0]);
         let cr = parseInt(itempos[1]);
         let newselection;
-        switch(event.code){
+        switch(event.key){
             case 'ArrowUp':
                 if(cr == 1){
                     cc = Math.floor(cc/2);
@@ -120,7 +120,7 @@ export class SceneSearch extends Scene{
         let cc = parseInt(itempos[0]);
         let cr = parseInt(itempos[1]);
         let newselection;
-        switch(event.code){
+        switch(event.key){
             case 'ArrowUp':
                 newselection = document.getElementById("search-results-ph_" + (cr-1) + "_" + cc);
                 if(newselection){
