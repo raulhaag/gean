@@ -103,7 +103,7 @@ export class SceneHome extends Scene{
             document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - this.inigap - 32;
             return;
         }
-        let key = event.code;
+        let key = event.key;
         if(this.last.video == null && key === 'ArrowLeft'){
             tease_menu(true);
             manageMenu()

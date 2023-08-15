@@ -102,8 +102,9 @@ window.unlockKeyboard = () => {
 let keyManager = (key) => {
   if (key != null && key.hasOwnProperty("preventDefault")) {
     key.preventDefault();
-    key.stopPropagation();
-  }
+    key.stopPropagation();  
+    //console.error(key.key);
+  };
   currentScene.lastKeyManager(key);
 };
 
@@ -217,7 +218,7 @@ let menu_nav = (event) => {
     window.tease_menu(true);
     return;
   }
-  switch (event.code) {
+  switch (event.key) {
     case 'ArrowUp':
       if (selectedMenuIdx > 0) {
         document

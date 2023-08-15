@@ -17,7 +17,7 @@ export class SceneSettings extends Scene{
         }
         let settingsList = null;
         let cindx = 0;
-        switch(event.code) {
+        switch(event.key) {
             case 'ArrowUp':
                 settingsList = document.getElementsByClassName("setting");
                 cindx = Array.prototype.indexOf.call(settingsList, this.lastSetting);

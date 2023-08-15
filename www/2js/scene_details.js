@@ -100,7 +100,7 @@ export class SceneDetails extends Scene {
             tease_menu(this.lastChapter == this.info.fav ||this.lastChapter.id.endsWith("_0"));
             return;
         }
-        let key = event.code;
+        let key = event.key;
         if(this.lastChapter == this.info.fav){
             switch(key){
                 case 'ArrowLeft':
