@@ -8,16 +8,24 @@
 .settings-title{
     text-align: center;
     padding: 40px;
-    font-size: 50px;
+    font-size: 8vh;
 }
 
 .setting{
     display: flex;
-    font-size: 25px;
+    font-size: 4vh;
     width: calc(100% - 50px);
     margin: 0px 10px;
     border-bottom: 1px lightslategray solid;
     padding: 10px;
+}
+
+.settings-list{
+    height: calc(92vh - 80px);
+    position: relative;
+    top: 0px;
+    overflow-y: scroll;
+    padding-bottom: 20px;
 }
 
 .setting-text{
