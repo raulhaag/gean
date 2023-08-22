@@ -308,7 +308,16 @@ window.openPlayer = function(options, items = [], res = true){
     }
 
     if(getStorageDefault("external_player", false)){
-        fetch(window.serverHost + "view/" + window.enc(options["video"]))
+        let videoSrc = options["video"];
+        let useCache = localStorage.getItem("cache");
+        if(useCache == "true"){
+            if(videoSrc.indexOf("file/")!== -1){
+                videoSrc = videoSrc.replace("file/", "cache/");
+            }else{
+                videoSrc = window.serverHost + "cache/" + enc(videoSrc);
+            }
+        }
+        fetch(window.serverHost + "view/" + window.enc(videoSrc))
         .then((response) => response.text())
         .then((result) => {
             if(result.trim() != "ok"){

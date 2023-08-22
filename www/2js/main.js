@@ -367,7 +367,16 @@ window.route = function (path, ppath = null) {
         let mask = (value) => {
           let secondMask = (value) => {
             if (window.appSettings["external_player_android"][0]) {
-              fetch(window.serverHost + "view/" + window.enc(value["video"]))
+                let vdata = value["video"].split("|||");
+                let videoSrc = vdata[0];
+                if (window.appSettings["cache"][0]) {
+                  if (videoSrc.indexOf("file/") !== -1) {
+                    videoSrc = videoSrc.replace("file/", "cache/");
+                  } else {
+                    videoSrc = window.serverHost + "cache/" + enc(videoSrc);
+                  }
+                }
+              fetch(window.serverHost + "view/" + window.enc(videoSrc))
                 .then((response) => response.text())
                 .then((result) => {
                   if (result.trim() != "ok") {
