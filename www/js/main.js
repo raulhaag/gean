@@ -91,6 +91,7 @@ window.mediaClick = function(e, path){
     }else if(action == 'getCategory'){
         //server.getCategory(params, posServerClick, error);
     }else if(action == 'getDescription'){
+        window.lastDescription = path;
         server.getDescription(posDescription, error, fpath[2]);
     }else if(action == 'getLinks'){
         server.getLinks(posLinks, error, fpath[2]);
@@ -245,6 +246,24 @@ let posDescription = function(response){
     dp.style.display =  'block';
     loading.style.visibility = 'hidden';
     addBackStack(dp);
+    let vc = JSON.parse(localStorage.getItem(window.lastDescription));
+    if(vc != null){
+        let lastOpenedChapter = vc.pop();
+        vc.push(lastOpenedChapter);
+        let vchapters = document.getElementsByClassName("viewed");
+        for(var i = vchapters.length - 1; i >= 0; i--){
+            if(vchapters[i].outerHTML.indexOf(lastOpenedChapter) >= 0){
+                let nsc = vchapters[i];
+                if(lastPos["details_placeholder"]  != undefined){
+                    lastPos["details_placeholder"].classList.remove("focus");
+                }
+                lastPos["details_placeholder"] = nsc;
+                document.getElementsByClassName("details_placeholder")[0].scrollTop = nsc.offsetTop - 70;
+                nsc.parentElement.scrollLeft = nsc.offsetLeft - nsc.parentElement.offsetLeft- nsc.parentElement.offsetWidth  / 3 + nsc.offsetWidth;
+                nsc.classList.add("focus");
+            }
+        }
+    }
 }
 
 let linkError = function(error_message){
