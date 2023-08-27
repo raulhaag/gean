@@ -2,18 +2,21 @@ import {Scene} from './scene.js';
 
 export class SceneDetails extends Scene {
     lastChapter = null;
+    lastOpenedChapter = null;
     info = {title: null, resume:null, image:null, fav: null};
     constructor(serie, parent){
         super(false);
         this.serie = serie;
         this.parent = parent;
         this.lastKeyManager = this.chapter_nav;
+
     }
 
     dispose(){
         //TODO if needed
     }
 
+    //return the elements to be added at the container
     initBody(){
         let chapters = this.serie.chapters;
         let vc = [];
@@ -21,6 +24,9 @@ export class SceneDetails extends Scene {
             vc = JSON.parse(localStorage.getItem(this.serie.path));
             if(vc == null){
                 vc = [];
+            }else{
+                this.lastOpenedChapter = vc.pop();
+                vc.push(this.lastOpenedChapter);
             }
         }catch(error){}
         let ach = `
@@ -51,22 +57,37 @@ export class SceneDetails extends Scene {
         return ach;
     }
 
+    //connect objects added on initbody to actions, variable, etc
     initBindings(){
         this.info.fav = document.getElementsByClassName("info-favorites")[0];
         this.info.fav.classList.remove("hide");
         let idx = indexOfProperty(favorites, 'path', this.serie.path);
         if(idx > -1){
             this.info.fav.classList.add("info-favorites-added");
-            this.info.fav.innerHTML = "Quitar de favoritos"
+            this.info.fav.innerHTML = "Quitar de favoritos";
         }
         this.info.fav.dataset["name"] = this.serie.name;
         this.info.fav.dataset["image"] = this.serie.image;
         this.info.fav.dataset["path"] = this.serie.path;
+
+
         if (this.serie.chapters.length > 0){
             this.lastChapter = this.updatePositionsLV0("info-capitulos", "info-capitulo");
         }else{
             this.lastChapter = this.info.fav;
-            this.lastChapter.classList.add("focus")
+            this.lastChapter.classList.add("focus");
+        }
+        if(this.lastOpenedChapter != null){
+            let chapters = document.getElementsByClassName("info-capitulo-viewed");
+            for(let i = chapters.length - 1; i >= 0; i--){
+                if(chapters[i].dataset.path === this.lastOpenedChapter){
+                    document.getElementsByClassName("info-capitulos")[0].scrollTop =  chapters[i].offsetTop;
+                    this.lastChapter.classList.remove("focus");
+                    this.lastChapter = chapters[i];
+                    this.lastChapter.classList.add("focus");
+                    break;
+                }
+            }
         }
     }
 
@@ -101,7 +122,7 @@ export class SceneDetails extends Scene {
             return;
         }
         let key = event.key;
-        if(this.lastChapter == this.info.fav){
+        if(this.lastChapter == this.info.fav){//Fav Navigate
             switch(key){
                 case 'ArrowLeft':
                     menuManager();
@@ -122,7 +143,7 @@ export class SceneDetails extends Scene {
                     return;
             }
         }
-        switch(key){
+        switch(key){    // chapters navigate
             case 'ArrowUp':
                 newselection = document.getElementById("info-capitulos_" + (cr-1) + "_" + cc);
                 if(newselection){
