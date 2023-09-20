@@ -484,7 +484,7 @@ window.generateSelectorDialog = (
   document.__optionsDiv = div;
   document.onkeydown = (event) => {
     let cidx = parseInt(lOSelected.id.split("_")[1]);
-    if (event.code === 'ArrowUp') {
+    if (event.key === 'ArrowUp') {
       //up arrow
       if (cidx > 0) {
         cidx--;
@@ -493,7 +493,7 @@ window.generateSelectorDialog = (
         list.scrollTop = lOSelected.offsetTop - list.offsetTop;
         lOSelected.classList.add("selected");
       }
-    } else if (event.code === 'ArrowDown') {
+    } else if (event.key === 'ArrowDown') {
       //down arrow
       if (!lOSelected.classList.contains("option-selector-cancel")) {
         cidx++;
@@ -502,7 +502,7 @@ window.generateSelectorDialog = (
         list.scrollTop = lOSelected.offsetTop - list.offsetTop;
         lOSelected.classList.add("selected");
       }
-    } else if (event.code === "Enter" || event.code === "Space" || event.code === "NumpadEnter" ) {
+    } else if (event.key === "Enter" || event.key === "Space" || event.key === "NumpadEnter" ) {
       document.body.removeChild(document.__optionsDiv);
       document.onkeydown = document.__selectPrekeydown;
       document.__selectPrekeydown = null;
