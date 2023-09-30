@@ -366,7 +366,7 @@ window.route = function (path, ppath = null) {
         let best = getPreferer(linkList);
         let mask = (value) => {
           let secondMask = (value) => {
-            if (window.appSettings["external_player_android"][0]) {
+            if (window.appSettings["selected_player"] === "external" || window.appSettings["selected_player"] === "internal"){
                 let vdata = value["video"].split("|||");
                 let videoSrc = vdata[0];
                 if (window.appSettings["cache"][0]) {
@@ -376,7 +376,11 @@ window.route = function (path, ppath = null) {
                     videoSrc = window.serverHost + "cache/" + enc(videoSrc);
                   }
                 }
-              fetch(window.serverHost + "view/" + window.enc(videoSrc))
+              let op = "view/";
+              if(window.appSettings["selected_player"] === "internal"){
+                op = "play/"
+              }
+              fetch(window.serverHost + op + window.enc(videoSrc))
                 .then((response) => response.text())
                 .then((result) => {
                   if (result.trim() != "ok") {
@@ -639,13 +643,14 @@ function loadSettings() {
     /*useBlob: [
       false,
       "Usar cache blob (usa mucha memoria y hay que esperar la carga, pero despues no se corta)",
-    ],*/
+    ],
     external_player_android: [
       false,
       "Usar reproductor externo (solo Android).",
-    ],
+    ],*/
     "--tint-color": null,
     modo_tv: true,
+    selected_player: "html"
   };
   let storedSettings = null;
   try {

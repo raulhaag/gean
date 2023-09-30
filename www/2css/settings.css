@@ -40,6 +40,10 @@
     margin-right: 0px;
 }
 
+.multi_value_option::after{
+    content: "" !important;
+}
+
 .setting.active::after{
     content: "o";
     color: aquamarine;

@@ -1,62 +1,76 @@
 {
-    // Use IntelliSense para saber los atributos posibles.
-    // Mantenga el puntero para ver las descripciones de los existentes atributos.
-    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
+  // Use IntelliSense para saber los atributos posibles.
+  // Mantenga el puntero para ver las descripciones de los existentes atributos.
+  // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
     {
-        "name": "Launch Chrome",
-        "request": "launch",
-        "type": "chrome",
-        "url": "http://localhost:5500/main.html",
-        "webRoot": "${workspaceFolder}/www"
+      "name": "Python: archivo actual",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
     },
     {
-        "name": "Launch Firefox",
-        "request": "launch",
-        "type": "firefox",
-        "reAttach": true,
-        "url": "http://localhost:5500/main.html",
-        "webRoot": "${workspaceFolder}/www"
+      "name": "Launch Chrome",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:5500/main.html",
+      "webRoot": "${workspaceFolder}/www"
     },
     {
-        "name": "Launch Chrome m2",
-        "request": "launch",
-        "type": "chrome",
-        "url": "http://localhost:5500/main_2.html",
-        "webRoot": "${workspaceFolder}/www",
-        "skipFiles": ["${workspaceFolder}/www/w2/videojs/video.min.js", "${workspaceFolder}/www/js/video.min.js"]
+      "name": "Launch Firefox",
+      "request": "launch",
+      "type": "firefox",
+      "reAttach": true,
+      "url": "http://localhost:5500/main.html",
+      "webRoot": "${workspaceFolder}/www"
     },
     {
-        "name": "Test jwp",
-        "request": "launch",
-        "type": "chrome",
-        "url": "http://127.0.0.1:5500/w2/videojwp.html",
-        "webRoot": "${workspaceFolder}/www",
+      "name": "Launch Chrome m2",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:5500/main_2.html",
+      "webRoot": "${workspaceFolder}/www",
+      "skipFiles": [
+        "${workspaceFolder}/www/w2/videojs/video.min.js",
+        "${workspaceFolder}/www/js/video.min.js"
+      ]
     },
     {
-        "name": "Test JS Chrome",
-        "request": "launch",
-        "type": "chrome",
-        "url": "http://localhost:8080/test/testjs.html",
-        "webRoot": "${workspaceFolder}/www",
-        "skipFiles": ["${workspaceFolder}/www/w2/videojs/video.min.js", "${workspaceFolder}/www/js/video.min.js"]
+      "name": "Test jwp",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://127.0.0.1:5500/w2/videojwp.html",
+      "webRoot": "${workspaceFolder}/www"
     },
-        {
-            "name": "Python: server",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/SingleThreadHttpServer.py",
-            "console": "integratedTerminal",
-            "justMyCode": true
-        },
-        {
-            "name": "Python: server2",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/HttpServer.py",
-            "console": "integratedTerminal",
-            "justMyCode": true
-        }
-    ]
+    {
+      "name": "Test JS Chrome",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:8080/test/testjs.html",
+      "webRoot": "${workspaceFolder}/www",
+      "skipFiles": [
+        "${workspaceFolder}/www/w2/videojs/video.min.js",
+        "${workspaceFolder}/www/js/video.min.js"
+      ]
+    },
+    {
+      "name": "Python: server",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/SingleThreadHttpServer.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Python: server2",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/HttpServer.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
 }
