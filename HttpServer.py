@@ -6,6 +6,7 @@ from zipfile import ZipFile
 from urllib import request, parse
 from urllib.request import urlopen
 import traceback
+import re
 
 thread = None
 server = None
@@ -82,6 +83,12 @@ class handler(SimpleHTTPRequestHandler):
             print("Error: " + str(e) + "en" + decode(path[2]) + "\n")
             traceback.format_exc()
             return
+        if self.path.endswith("sources.js"):
+            if(not os.path.exists("temp")):
+                os.mkdir("temp")
+            generateSourceList()
+            self.path = "temp/sources.js"
+            return SimpleHTTPRequestHandler.do_GET(self)
         if(os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico","mp4"]):
             self.path = web_path + self.path
             #read file to string
@@ -378,6 +385,44 @@ def sf(path):
     web_path = path
     server.serve_forever()
 
+def generateSourceList():
+    regex = r"class\s+(\S+)[\s|\S]+?this.name\s*=\s*([\S+]+)\s*;"
+    soucesDir = "./www/js/sources/"
+    sources = os.listdir(soucesDir)
+    initial = ""
+    imports = ""
+    for file in sources:
+        with open(file=(soucesDir + file), mode="r") as ofile:
+            ctt = ("\n").join(ofile.readlines())
+            ofile.close()
+            if(ctt.__contains__("this.name")):
+                match_ = re.findall(regex, ctt, re.MULTILINE)
+                if((len(match_) > 0) and (match_[0][0][0:2] != "NO")):
+                    imports += "import { " + match_[0][0] + " } from \"./" + file +"\";\n"
+                    initial +=  match_[0][1] + ": new " + match_[0][0] +",\n"
+    
+    sOut = imports + '''\nexport function openInNewTab(url) {
+        window.open(url, '_blank').focus();
+}\n'''
+    sOut += "let servers = {" + initial + "};\n"
+    sOut += '''export function getSource(name) {return servers[name];}
+
+export function getResponse(name, callback, error_callback) {
+    if(servers[name]){
+        return servers[name].getFrontPage(callback, error_callback);
+    }
+    return servers["jkanime"].getFrontPage(callback, error_callback);
+}
+
+export function getLinks(path, callback, error_callback) {
+}
+
+export function getSourceList(){
+    return Object.keys(servers);
+}'''
+    with open("temp/sources.js","w") as file:
+        file.write(sOut)
+        file.close()
 
 def main(page = "http://127.0.0.1:8080/main.html",path = "./www"):
     if os.path.exists(cachedir):

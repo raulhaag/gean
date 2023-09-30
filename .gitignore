@@ -5,4 +5,5 @@ update.zip
 www/w2/*
 www/js/jwp/*
 cache/*
+temp/*
 *.ini

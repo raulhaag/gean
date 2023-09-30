@@ -2,7 +2,7 @@ import { JKAnime } from "./jkanime.js";
 import{SoloLatino} from "./sololatino.js";
 import{SoloLatinoSyP} from "./sololatinosyp.js";
 import { TioAnime } from "./tioanime.js";
-import { AwsomeIPTV } from "./awsomeiptv.js";
+//import { AwsomeIPTV } from "./awsomeiptv.js";
 
 export function openInNewTab(url) {
     window.open(url, '_blank').focus();

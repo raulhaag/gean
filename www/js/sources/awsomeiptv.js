@@ -1,4 +1,4 @@
-export class AwsomeIPTV {
+export class NOAwsomeIPTV {
     constructor() {
       this.name = "awsomeiptv";
     }

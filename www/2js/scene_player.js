@@ -17,7 +17,7 @@ export class ScenePlayer extends Scene {
     this.lastKeyManager = this.playerNav;
     this.options = options;
     this.items = items;
-    this.videojs = appSettings["videojs"][0];
+    this.videojs = appSettings["selected_player"] === "videojs";
     this.cache = appSettings["cache"][0];
     //this.useBlob = appSettings["useBlob"][0];
   }
