@@ -326,7 +326,11 @@ window.openPlayer = function(options, items = [], res = true){
         }
     }
 
-    if(getStorageDefault("external_player", false)){
+    if(getStorageDefault("external_player", false) || getStorageDefault("internal_player", false)){
+        let action = "view/";
+        if(getStorageDefault("internal_player", false)){
+            action = "play/";
+        }
         let videoSrc = options["video"];
         let useCache = localStorage.getItem("cache");
         if(useCache == "true"){
@@ -336,11 +340,11 @@ window.openPlayer = function(options, items = [], res = true){
                 videoSrc = window.serverHost + "cache/" + enc(videoSrc);
             }
         }
-        fetch(window.serverHost + "view/" + window.enc(videoSrc))
+        fetch(window.serverHost + action + window.enc(videoSrc))
         .then((response) => response.text())
         .then((result) => {
             if(result.trim() != "ok"){
-                error("Error al abrir reproductor externo: \n" + result);
+                error("Error al abrir reproductor externo/interno: \n" + result);
             }
       })
       loading.style.visibility = 'hidden';
