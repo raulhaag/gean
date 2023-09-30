@@ -55,12 +55,16 @@ body{
     background-color: black;
     width: 100%;
     padding: 0px !important;
+    max-height: calc(100vh - 90px);
+    overflow: scroll;
 }
 
 .setting_option {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .setting_option.focus{
