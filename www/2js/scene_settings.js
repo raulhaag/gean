@@ -8,9 +8,10 @@ export class SceneSettings extends Scene{
     player = {"html": "html", "videoJs": "videojs", "Integrado (solo android)": "internal", "Externo (solo android)": "external"}
     root = document.documentElement;
 
-    constructor(){
+    constructor(settings){
         super(true);
         this.lastKeyManager = this.navSettings;
+        this.settings = settings;
     }
     navSettings(event){
         if(event == null){
@@ -92,15 +93,14 @@ export class SceneSettings extends Scene{
     }
 
     initBody(){
-        this.settings = appSettings;
         let result = '<div class="settings-title">Configurar</div><div class="settings-list">';
         let mtvactive = "";
         if(this.settings["modo_tv"]){
             mtvactive = " active";
         }
         result += '<div class="setting colorselect" id="--tint-color"><div class="setting-text">Color de resaltador</div></div>';
-        result += '<div class="setting multi_value_option" id="player_select"><div class="setting-text">Reproductor de video</div> <div id="player_selected" class="setting-info">' + this.settings["selected_player"] +'</div></div>';
         result += '<div class="setting modoselect'+ mtvactive +'" id="modo_tv"><div class="setting-text">Modo TV</div></div>';
+        result += '<div class="setting multi_value_option" id="player_select"><div class="setting-text">Reproductor de video</div> <div id="player_selected" class="setting-info">' + this.settings["selected_player"] +'</div></div>';
         let extra = "";
         for(var key in this.settings){
             if(!Array.isArray(this.settings[key])){

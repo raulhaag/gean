@@ -295,7 +295,7 @@ let menu_nav = (event) => {
             window.setScene(new SceneChange());
             break;
           case 3:
-            window.setScene(new SceneSettings());
+            window.setScene(new SceneSettings(window.appSettings));
             break;
         }
         lastMenuOpened = selectedMenuIdx;
@@ -619,7 +619,6 @@ function loadResumes() {
 function loadSettings() {
   let settings = {
     lockfronpage: [false, "Bloquear pagina principal."],
-    videojs: [false, "Usar videoJs como reproductor."],
     fullscreen: [
         true,
         "Iniciar video en pantalla completa. (si el navegador no lo bloquea).",
@@ -643,10 +642,6 @@ function loadSettings() {
     /*useBlob: [
       false,
       "Usar cache blob (usa mucha memoria y hay que esperar la carga, pero despues no se corta)",
-    ],
-    external_player_android: [
-      false,
-      "Usar reproductor externo (solo Android).",
     ],*/
     "--tint-color": null,
     modo_tv: true,
