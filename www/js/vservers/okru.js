@@ -16,5 +16,4 @@ export class OkRu{
             onError("can't find video");
         }
     }
-
 }

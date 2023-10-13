@@ -10,6 +10,7 @@ import { Plusvip } from "./plusvip.js";
 import { Streamlare } from "./streamlare.js";
 import { MailRu } from "./mailru.js";
 import { StreamSB } from "./streamsb.js";
+import { Mixdrop } from "./mixdropCo.js";
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -26,6 +27,7 @@ let servers = {"fembed": new Fembed(),
                 "embedsito.net/reproamz": new EmbedsitoNet(),
                 "mail.ru": new MailRu(),
                 "/reproamz/": new MamazonPlayer(),
+                "mixdrop": new Mixdrop(),
                 "streamsb": new StreamSB()
             };
 
@@ -64,6 +66,8 @@ export function getDDL(after, onError, web) {
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
     }else if(web.indexOf("mail.ru") != -1){
         return servers["mail.ru"].getDDL (after, onError, web);
+    }else if(web.indexOf("mixdrop.") != -1){
+            return servers["mixdrop"].getDDL (after, onError, web);
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
         return servers["streamsb"].getDDL (after, onError, web);
     }else{
@@ -128,7 +132,8 @@ export function getPreferer(list){
                     "yourupload",
                     "/reproamz/",
                     "zplayer.live",
-                    "mail.ru"
+                    "mail.ru",
+                    "mixdrop"
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){
