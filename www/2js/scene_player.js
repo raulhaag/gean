@@ -8,9 +8,9 @@ export class ScenePlayer extends Scene {
   lastPressedKeyCode = -1;
   lastPressedTime = -1;
   doubleAccumulator = 0;
+  maxDoubleAccumulator = 7;
   player = null;
   last = null;
-  maxDoubleAccumulator = 7;
   constructor(options, items, parent) {
     super(false);
     this.parent = parent;

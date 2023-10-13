@@ -181,11 +181,8 @@ export class JKAnime {
       let fames = [...result.matchAll(/video\[\d+\] = '<iframe.+?src="([^"]+)/gm)]
       let links = [];
       for (let i = 0; i < fames.length; i++) {
-        if(fames[i][1].indexOf('fembed') > -1){
-          links.push(fames[i][1].replace('https://jkanime.net/jkfembed.php?u=', 'https://www.fembed.com/v/'));
-        }else{
-          links.push(fames[i][1]);
-        }
+          links.push(fames[i][1]
+            .replace("/jkokru.php?u=", "https://ok.ru/videoembed/"));
       }
       after(links);
     } catch (error) {
