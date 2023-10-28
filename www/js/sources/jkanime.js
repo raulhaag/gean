@@ -182,7 +182,7 @@ export class JKAnime {
       let links = [];
       for (let i = 0; i < fames.length; i++) {
           links.push(fames[i][1]
-            .replace("/jkokru.php?u=", "https://ok.ru/videoembed/"));
+            .replace("/jkokru.php?u=", "https://ok.ru/videoembed/").replace("/jkvmixdrop.php?u=", "https://mixdrop.co/e/"));
       }
       after(links);
     } catch (error) {
