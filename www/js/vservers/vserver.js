@@ -8,7 +8,6 @@ import {ZippyShare} from "./zippy.js";
 import {Mediafire} from "./mfire.js"
 import { Plusvip } from "./plusvip.js";
 import { Streamlare } from "./streamlare.js";
-import { MailRu } from "./mailru.js";
 import { StreamSB } from "./streamsb.js";
 import { Mixdrop } from "./mixdropCo.js";
 let servers = {"fembed": new Fembed(),
@@ -25,7 +24,6 @@ let servers = {"fembed": new Fembed(),
                 "plusvip.net": new Plusvip(),
                 "streamlare.com": new Streamlare(),
                 "embedsito.net/reproamz": new EmbedsitoNet(),
-                "mail.ru": new MailRu(),
                 "/reproamz/": new MamazonPlayer(),
                 "mixdrop": new Mixdrop(),
                 "streamsb": new StreamSB()
@@ -64,8 +62,6 @@ export function getDDL(after, onError, web) {
         return servers["streamlare.com"].getDDL(after, onError, web);*/
     }else if(web.indexOf("embedsito.net/reproamz") != -1){
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
-    }else if(web.indexOf("mail.ru") != -1){
-        return servers["mail.ru"].getDDL (after, onError, web);
     }else if(web.indexOf("mixdrop.") != -1){
             return servers["mixdrop"].getDDL (after, onError, web);
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
@@ -108,10 +104,11 @@ export function getName(web) {
         return "StreamLare";
     }else if(web.indexOf("embedsito.net/reproamz") != -1) {
         return "Embedsito(Amz)";
-    }else if(web.indexOf("mail.ru") != -1) {
-        return "Mail.ru(on test)"
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
         return "StreamSB";
+    }else if(web.indexOf("mixdrop.") != -1){
+        return "Mixdrop";
+
     }else {
         return "";
     }
@@ -132,7 +129,6 @@ export function getPreferer(list){
                     "yourupload",
                     "/reproamz/",
                     "zplayer.live",
-                    "mail.ru",
                     "mixdrop"
                 ];
     let ordered = [];
