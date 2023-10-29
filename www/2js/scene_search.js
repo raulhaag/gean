@@ -80,7 +80,7 @@ export class SceneSearch extends Scene{
             case "NumpadEnter":
                 let c = this.lastkey.innerHTML;
                 switch(c){
-                    case '🠔':
+                    case '←':
                         this.searchtext.innerHTML = this.searchtext.innerHTML.slice(0, -1);
                         break;
                     case ' ':
@@ -89,7 +89,7 @@ export class SceneSearch extends Scene{
                         break;
                     case '✓':
                         let server = getSource(sid);
-                        server.getSearch((items) =>{this.searchDone(items, this)}, error, this.searchtext.innerHTML)
+                        server.getSearch((items) =>{this.searchDone(items, this)}, error, this.searchtext.innerHTML.replace(' ', '+'))
                         break;
                     default:
                         this.searchtext.innerHTML = this.searchtext.innerHTML + this.lastkey.innerHTML;
@@ -101,6 +101,7 @@ export class SceneSearch extends Scene{
                 break;
 
             case 'Space':
+            case ' ':
                 this.searchtext.innerHTML = this.searchtext.innerHTML + " ";
                 break;
 
@@ -163,6 +164,7 @@ export class SceneSearch extends Scene{
             case "Enter":
             case "NumpadEnter":
             case "Space":                    
+            case " ":                    
                 route(this.lastMedia.dataset.path)
                 break;
         }
@@ -177,7 +179,7 @@ export class SceneSearch extends Scene{
       this._body = `<div class="search-box">
                     <div class="search-keypad">
                         <div class="search-key focusable search-double-key"> </div>
-                        <div class="search-key focusable search-double-key">🠔</div>
+                        <div class="search-key focusable search-double-key">←</div>
                         <div class="search-key focusable search-double-key">✓</div>
                         <div class="search-key focusable">a</div>
                         <div class="search-key focusable">b</div>

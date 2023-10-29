@@ -139,6 +139,7 @@ export class SceneDetails extends Scene {
                 case "Enter":
                 case "NumpadEnter":
                 case "Space":
+                case " ":
                     this.switch_fab(this.info.fav);
                     return;
             }
@@ -190,6 +191,7 @@ export class SceneDetails extends Scene {
             case "Enter":
             case "NumpadEnter":
             case "Space":
+            case " ":
                 this.lastChapter.classList.add("info-capitulo-viewed");
                 markViewed(null, this.lastChapter.dataset.ppath, this.lastChapter.dataset.path);
                 route(this.lastChapter.dataset.path, this.lastChapter.dataset.ppath);

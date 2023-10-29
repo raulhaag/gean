@@ -279,6 +279,7 @@ let menu_nav = (event) => {
       case "Enter":
       case "NumpadEnter":
       case "Space":
+      case " ":
       if (!currentScene.full_menu) {
         popScene();
         return;

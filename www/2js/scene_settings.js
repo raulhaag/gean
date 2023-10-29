@@ -48,6 +48,7 @@ export class SceneSettings extends Scene{
             case "Enter":
             case "NumpadEnter":
             case "Space":
+            case " ":
                 if(this.lastSetting.classList.contains("colorselect")){
                     generateSelectorDialog((ncolor)=>{
                         this.settings[this.lastSetting.id] = ncolor;
