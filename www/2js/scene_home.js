@@ -164,6 +164,7 @@ export class SceneHome extends Scene{
             case "Enter":
             case "NumpadEnter":
             case "Space":
+            case " ":
                 let node = document.getElementsByClassName('info-capitulos')[0];
                 if(node != null){
                     document.getElementById("home").removeChild(node);

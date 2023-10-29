@@ -194,6 +194,7 @@ export class ScenePlayer extends Scene {
         case "Enter":
         case "NumpadEnter":
         case "Space":
+        case " ":
           if (this.doublepress) {
             this.switchPlayer();
             this.goFullScreen();
@@ -258,6 +259,7 @@ export class ScenePlayer extends Scene {
         case "Enter":
         case "NumpadEnter":
         case "Space":
+        case " ":
           let options = JSON.parse(this.last.dataset["options"]);
           if (options.hasOwnProperty("video")) {
             delete options.video;

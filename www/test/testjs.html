@@ -34,6 +34,7 @@
         }
         
         import {Mixdrop} from "../js/vservers/mixdropCo.js";
+        let data = await fGet("https://vembed.net/e/KNWlED96YROkbpL",{});
         new Mixdrop().getDDL((a)=>{//https://mixdrop.co/e/md6ve37mf4640k
            console.log(a.video)}, console.log, "https://mixdrop.co/e/n0d694pnslqrzje");
     </script>
