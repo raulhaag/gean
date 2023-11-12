@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script type="text/javascript" src="../js/fetchpack.js"></script>
+    <script src="../js/lib/aes.js"></script>
+    <script src="../js/lib/mode-ecb.min.js"></script>
     <script type="module">
         window.getFirstMatch = function(regex, str){
             var m = regex.exec(str);
@@ -20,21 +22,39 @@
         }
         window.serverHost = "http://127.0.0.1:8080/";
         document.addEventListener("DOMContentLoaded", ()=>{
-            var script = document.createElement('script');
-            script.onload = function () {
-                alert("hi");
-            };
-            script.src = "http://127.0.0.1:8080/js/main.js";
-            document.head.appendChild(script);
+            //var script = document.createElement('script');
+            //script.onload = function () {
+             //   alert("hi");
+            //};
+            //script.src = "http://127.0.0.1:8080/js/main.js";
+            //document.head.appendChild(script);
         });
         window.decodeHtml = (html) => {
             var el = document.createElement("div");
             el.innerHTML = html;
             return el.textContent;
         }
-        import {AnimeFlvNet} from "../js/sources/animeflv.js";
+        var web = "https://plusvip.net/moe?data=xDlka1eIZkgrL3EEANVjQeuKxhByqJ9NlKgloqKEyNywWYcrIUjlGT7oFCuFDnRtgkvNmuKrtPueBgqmW6ajrmGtuYPd9mNybBoCD81QJhsZhg=="
+        var link = web.split("data=")[1]; 
+        var data = await fGet(web);
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(data, "text/html");
+        var u = doc.getElementById("cuca").text.replace('"', '');
+        var R = CryptoJS.enc.Utf8.parse('d41d8cd98f00b204e9800998ecf8427e');
+        //var u = '8blKAqAQTEset1qaN3AqbPIJnwICOe6FlmwaaTLdS8w9rs9SezvEqzr4rpagO9G8';
+        var N = CryptoJS.AES.decrypt(u, R, { mode: CryptoJS.mode.ECB });
+        var web2 = "https://plusvip.net" + N.toString(CryptoJS.enc.Utf8);
+        var webC1 = await fPost(web2, {"Referer":web}, {"link":link});
+        var ddweb = JSON.parse(webC1);
+        console.log(ddweb.link);
+        
+
+        //import {Voe} from "../js/vservers/voe.js";
+        //new Voe().getDDL(console.log, console.log, ("https://voe.sx/e/wieadalibqsf"));
+
+        //import {AnimeFlvNet} from "../js/sources/animeflv.js";
         //new AnimeFlvNet().getDescription(console.log, console.log, "aHR0cHM6Ly93d3czLmFuaW1lZmx2Lm5ldC9hbmltZS9zYWloYXRlLW5vLXBhbGFkaW4tdGV0c3VzYWJpLW5vLXlhbWEtbm8tb3U=")
-        new AnimeFlvNet().getLinks(console.log, console.log, enc("https://www3.animeflv.net/ver/saihate-no-paladin-tetsusabi-no-yama-no-ou-3"))
+        //new AnimeFlvNet().getLinks(console.log, console.log, enc("https://www3.animeflv.net/ver/saihate-no-paladin-tetsusabi-no-yama-no-ou-3"))
         
         //import {Mixdrop} from "../js/vservers/mixdropCo.js";
         //let data = await fGet("https://vembed.net/e/KNWlED96YROkbpL",{});

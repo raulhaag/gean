@@ -8,6 +8,7 @@ import {ZippyShare} from "./zippy.js";
 import {Mediafire} from "./mfire.js"
 import { Plusvip } from "./plusvip.js";
 import { Streamlare } from "./streamlare.js";
+import { Streamtape } from "./streamtape.js";
 import { StreamSB } from "./streamsb.js";
 import { Mixdrop } from "./mixdropCo.js";
 let servers = {"fembed": new Fembed(),
@@ -26,7 +27,8 @@ let servers = {"fembed": new Fembed(),
                 "embedsito.net/reproamz": new EmbedsitoNet(),
                 "/reproamz/": new MamazonPlayer(),
                 "mixdrop": new Mixdrop(),
-                "streamsb": new StreamSB()
+                "streamsb": new StreamSB(),
+                "streamtape.com": new Streamtape(),
             };
 
 export function getDDL(after, onError, web) {
@@ -64,6 +66,8 @@ export function getDDL(after, onError, web) {
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
     }else if(web.indexOf("mixdrop.") != -1){
             return servers["mixdrop"].getDDL (after, onError, web);
+    }else if(web.indexOf("streamtape.com") != -1){
+        return servers["streamtape.com"].getDDL(after,onError, web);
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
         return servers["streamsb"].getDDL (after, onError, web);
     }else{
@@ -108,7 +112,8 @@ export function getName(web) {
         return "StreamSB";
     }else if(web.indexOf("mixdrop.") != -1){
         return "Mixdrop";
-
+    }else if(web.indexOf("streamtape.com") != -1){
+        return "Streamtape"
     }else {
         return "";
     }
@@ -129,7 +134,8 @@ export function getPreferer(list){
                     "yourupload",
                     "/reproamz/",
                     "zplayer.live",
-                    "mixdrop"
+                    "mixdrop",
+                    "streamtape.com"
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){

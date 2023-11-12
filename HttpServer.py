@@ -351,6 +351,7 @@ def cacheAndGet(path = [], server = None):
      #urllib.request.urlcleanup()
 
 def check_for_update():
+    import sys
     if os.path.exists("version"):
         c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
         c_version = [int(x) for x in c_version]
@@ -373,6 +374,10 @@ def check_for_update():
 
     os.remove("update.zip")
     print("Actualizado, reinicie la aplicación")
+    try:
+        os.execv(sys.executable, ['python'] + sys.argv)
+    except:
+        pass
     return True
 
 def download_file(url, filename):
