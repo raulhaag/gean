@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from urllib import request, parse
 from urllib.request import urlopen
 import traceback
-import re
+import re, subprocess, platform
 
 thread = None
 server = None
@@ -31,7 +31,7 @@ class handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         defaultUserAgent = self.headers.get('User-Agent')
-        path = self.path.split('/')
+        path = self.path.replace("/fscache.mp4", "").split('/')
         try:
             if (len(path) >= 2) and not("." in path[-1]):
                 dp = path[1] + " -> " + ', '.join([decode(p) for p in path[2:]])
@@ -62,6 +62,10 @@ class handler(SimpleHTTPRequestHandler):
                 return
 
             if path[1] == "view":
+                if("/cache/" in decode(path[2])):
+                    abrir_video_con_reproductor(decode(path[2])+ "/fscache.mp4")
+                else:
+                    abrir_video_con_reproductor(decode(path[2]))
                 self.return_response(200, "Solo soportado por android, quita esta cofiguración de tus opciones.")
                 return
 
@@ -428,6 +432,19 @@ export function getSourceList(){
     with open("temp/sources.js","w") as file:
         file.write(sOut)
         file.close()
+
+
+def abrir_video_con_reproductor(ruta_o_url):
+    sistema_operativo = platform.system()
+
+    if sistema_operativo == 'Windows':
+        subprocess.run(['start', ruta_o_url], shell=True)
+    elif sistema_operativo == 'Darwin':  # macOS
+        subprocess.run(['open', ruta_o_url])
+    elif sistema_operativo == 'Linux':
+        subprocess.run(['xdg-open', ruta_o_url])
+    else:
+        print("Sistema operativo no compatible.")
 
 def main(page = "http://127.0.0.1:8080/main.html",path = "./www"):
     if os.path.exists(cachedir):

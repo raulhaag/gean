@@ -1,4 +1,4 @@
-import {getResponse, getSource} from './sources/sources.js';
+import {getResponse, getSource, getSourceList} from './sources/sources.js';
 import {generateCategory, generateCategories, generateDescription, getPlayer, getSearch, getSettings} from './coder.js';
 import {getDDL, getPreferer, getName} from './vservers/vserver.js';
 import{arrowNav, updatePositions, initVideoNav} from './keynav.js';
@@ -50,8 +50,19 @@ document.addEventListener("DOMContentLoaded", function(){
         sn = "JkAnime";
     }
     server_selected(sid, sn);
+    loadSourcesList(document.getElementById("server__select__menu"));
     document.onkeydown = lauchKeyNav;
 });
+
+let loadSourcesList = (container) =>{
+    let sl = getSourceList()
+    let ac = ''
+    sl.forEach((key)=>{
+        ac += '<div class="menu__server__item" id="' + key + 
+        '" onclick="{server_selected_click(this)}">' + key + '</div>'
+    });
+    container.innerHTML = ac;
+}
 
 let lauchKeyNav = function(e){
     let code = e || window.event;
