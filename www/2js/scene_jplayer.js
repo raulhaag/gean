@@ -76,13 +76,23 @@ export class ScenePlayer extends Scene{
         if (vdata.length > 1) {
         vtype = vdata[1];
         } else if (this.cache) {
-        if (videoSrc.indexOf("file/") !== -1) {
-            videoSrc = videoSrc.replace("file/", "cache/");
-        } else {
-            videoSrc = window.serverHost + "cache/" + enc(videoSrc);
+            if (videoSrc.indexOf("file/") !== -1) {
+                videoSrc = videoSrc.replace("file/", "cache/");
+            } else {
+                videoSrc = window.serverHost + "cache/" + enc(videoSrc);
+            }
         }
-        }
-        this.player = jwplayer('player-container_1_0').setup({file: videoSrc, autostart: true});
+        let setup = {
+            primary: 'html5',
+            autostart: true,
+            preload: 'none',
+            cast: {},
+            floating: {},
+        };
+        this.player = jwplayer('player-container_1_0').setup({
+            autostart: true,
+            file : videoSrc + "/" + enc({}) +"/v.mp4",
+        })
         this.last = this.player;
         if(appSettings["fullscreen"][0])this.player.setFullscreen(true);
         changeKeyManager();
@@ -104,8 +114,8 @@ export class ScenePlayer extends Scene{
             this.doubleAccumulator = 0;
         }
         if(this.last == this.player){
-            switch (event.keyCode) { //control player
-                case up:
+            switch (event.key) { //control player
+                case 'ArrowUp':
                     if(this.player.getFullscreen()){
                         this.player.setFullscreen(false);
                     }else{
@@ -116,7 +126,7 @@ export class ScenePlayer extends Scene{
                         tease_menu(true);
                     }
                     break;
-                case down:
+                case 'ArrowDown':
                     if(this.player.getFullscreen()){
                         this.switchPlayer();
                     }else{
@@ -125,13 +135,16 @@ export class ScenePlayer extends Scene{
                         this.switchPlayer();
                     }
                     break;
-                case left:
+                case 'ArrowLeft':
                     this.player.seek(this.player.getCurrentTime() - this.increments[this.doubleAccumulator]);;
                     break;
-                case right:
+                case 'ArrowRight':
                     this.player.seek(this.player.getCurrentTime() + this.increments[this.doubleAccumulator]);;
                     break;
-                case enter:
+                case "Enter":
+                case "NumpadEnter":
+                case "Space":
+                case " ":                    
                     if(this.doublepress){
                         this.switchPlayer();
                         this.player.setFullscreen(true);
@@ -147,8 +160,8 @@ export class ScenePlayer extends Scene{
             let itempos = this.last.id.split("_");
             let cc = parseInt(itempos[itempos.length-1]);
             let cr = parseInt(itempos[itempos.length-2]);
-            switch (event.keyCode) { //control nav options
-                case up:
+            switch (event.key) { //control nav options
+                case 'ArrowUp':
                     if(cr == 0){
                         //manageMenu(null);
                         return;
@@ -164,11 +177,11 @@ export class ScenePlayer extends Scene{
                         desph--;
                     }
                     break;
-                case down:
+                case 'ArrowDown':
                             this.last.classList.remove("selected");
                             this.last = this.player;
                     break;
-                case left:
+                case 'ArrowLeft':
                     if(cc == 1){
                         tease_menu(true);
                     }
@@ -181,7 +194,7 @@ export class ScenePlayer extends Scene{
                         this.last.classList.add("selected");
                     }
                     break;
-                case right:
+                case 'ArrowRight':
                     if(this.itemExists(cr, cc + 1)){
                         this.last.classList.remove("selected");
                         this.last = this.getItem(cr, cc + 1);
@@ -191,7 +204,10 @@ export class ScenePlayer extends Scene{
                         tease_menu(false);
                     }
                     break;
-                case enter:
+                case "Enter":
+                case "NumpadEnter":
+                case "Space":
+                case " ":
                     let options = JSON.parse(this.last.dataset["options"]);
                     if(options.hasOwnProperty("video")){
                         delete options.video;
