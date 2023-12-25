@@ -171,6 +171,21 @@ export class JKAnime {
     after(fres);
   }
 
+  trLink = (link) => {
+    link = link.replace("/jkokru.php?u=", "https://ok.ru/videoembed/")
+               .replace("/jkvmixdrop.php?u=", "https://mixdrop.co/e/");
+    if(link.indexOf('&s=mixdrop') != -1){
+      link.replace("jkanime.net/c3.php?u=", "https://mixdrop.co/e/").replace('&s=mixdrop',"")
+      return link
+    }
+    if(link.indexOf("&s=mp4upload") != -1){
+      link.replace("jkanime.net/c3.php?u=", "https://mixdrop.co/e/").replace('&s=mixdrop',"")
+      return link
+    }
+    //https://jkanime.net/c3.php?u=YGcg4483qPOrg&s=mp4upload
+    return link
+  }
+
   async getLinks(after, onError, path) {
     try{
       let result = await fGet(window.dec(path));
@@ -181,8 +196,12 @@ export class JKAnime {
       let fames = [...result.matchAll(/video\[\d+\] = '<iframe.+?src="([^"]+)/gm)]
       let links = [];
       for (let i = 0; i < fames.length; i++) {
-          links.push(fames[i][1]
-            .replace("/jkokru.php?u=", "https://ok.ru/videoembed/").replace("/jkvmixdrop.php?u=", "https://mixdrop.co/e/"));
+          links.push(this.trLink(fames[i][1]));
+      }
+      let jswp = getFirstMatch(/\$.getJSON\('([^']+)/gm,result)
+      let ssjs = JSON.parse(await fGet(jswp))
+      for(var ss in ssjs) {
+        links.push("https://jkanime.net/c3.php?u=" + ssjs[ss].slug + "&s=" + ssjs[ss].server.toLowerCase())
       }
       after(links);
     } catch (error) {
