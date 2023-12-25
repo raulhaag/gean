@@ -28,6 +28,10 @@ export class ScenePlayer extends Scene {
     let vdata = this.options["video"].split("|||");
     let vtype = "video/mp4";
     let videoSrc = vdata[0];
+    if(vdata[0].indexOf(".m3u") != -1){
+      this.cache = false
+      this.videojs = true
+    }
     if (vdata.length > 1) {
       vtype = vdata[1];
     } else if (this.cache) {
@@ -37,10 +41,10 @@ export class ScenePlayer extends Scene {
         videoSrc = window.serverHost + "cache/" + enc(videoSrc);
       }
     }
-    if(this.useBlob){
-        this.options["video"] = videoSrc;
-        videoSrc = "";
-    }
+    //if(this.useBlob){
+    //    this.options["video"] = videoSrc;
+    //    videoSrc = "";
+    //}
     if (Object.keys(this.options).length > 1) {
       let csl = "video";
       let keys = Object.keys(this.options);

@@ -11,6 +11,7 @@ import { Streamlare } from "./streamlare.js";
 import { Streamtape } from "./streamtape.js";
 import { StreamSB } from "./streamsb.js";
 import { Mixdrop } from "./mixdropCo.js";
+import { Voe } from "./voe.js";
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -29,9 +30,14 @@ let servers = {"fembed": new Fembed(),
                 "mixdrop": new Mixdrop(),
                 "streamsb": new StreamSB(),
                 "streamtape.com": new Streamtape(),
+                "voe": new Voe(),
             };
 
-export function getDDL(after, onError, web) {
+export async function getDDL(after, onError, web) {
+    if(web.startsWith("https://jkanime.net/c3.php?u=")){
+        let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c3.jkdesu.com/e/").replaceAll(/&[\s\S]+/gm,"")
+        web = await fRGet(nw)
+    }
     /*if(web.startsWith("{")){
         after({"video": JSON.parse(web)["path"]});
     }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
@@ -64,12 +70,14 @@ export function getDDL(after, onError, web) {
         return servers["streamlare.com"].getDDL(after, onError, web);*/
     }else if(web.indexOf("embedsito.net/reproamz") != -1){
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
-    }else if(web.indexOf("mixdrop.") != -1){
+    }else if((web.indexOf("mixdrop") != -1)  || ((web.indexOf("mdbekjwqa") != -1))){
             return servers["mixdrop"].getDDL (after, onError, web);
     }else if(web.indexOf("streamtape.com") != -1){
         return servers["streamtape.com"].getDDL(after,onError, web);
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
         return servers["streamsb"].getDDL (after, onError, web);
+    }else if ((web.indexOf("voe") != -1) || (web.indexOf("lukecomparetwo.") != -1)) {
+        return servers["voe"].getDDL (after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -110,10 +118,12 @@ export function getName(web) {
         return "Embedsito(Amz)";
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
         return "StreamSB";
-    }else if(web.indexOf("mixdrop.") != -1){
+    }else if(web.indexOf("mixdrop") != -1){
         return "Mixdrop";
     }else if(web.indexOf("streamtape.com") != -1){
         return "Streamtape"
+    }else if(web.indexOf("voe") != -1){
+        return "VOE"
     }else {
         return "";
     }
@@ -135,7 +145,8 @@ export function getPreferer(list){
                     "/reproamz/",
                     "zplayer.live",
                     "mixdrop",
-                    "streamtape.com"
+                    "streamtape.com",
+                    "voe"
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){
