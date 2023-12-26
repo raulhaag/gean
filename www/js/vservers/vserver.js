@@ -12,6 +12,8 @@ import { Streamtape } from "./streamtape.js";
 import { StreamSB } from "./streamsb.js";
 import { Mixdrop } from "./mixdropCo.js";
 import { Voe } from "./voe.js";
+import { StreamWish } from "./streamwish.js";
+
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -31,6 +33,7 @@ let servers = {"fembed": new Fembed(),
                 "streamsb": new StreamSB(),
                 "streamtape.com": new Streamtape(),
                 "voe": new Voe(),
+                "streamwish": new StreamWish()
             };
 
 export async function getDDL(after, onError, web) {
@@ -78,6 +81,8 @@ export async function getDDL(after, onError, web) {
         return servers["streamsb"].getDDL (after, onError, web);
     }else if ((web.indexOf("voe") != -1) || (web.indexOf("lukecomparetwo.") != -1)) {
         return servers["voe"].getDDL (after, onError, web);
+    }else if ((web.indexOf("wish.") != -1)) {
+        return servers["streamwish"].getDDL (after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -121,9 +126,11 @@ export function getName(web) {
     }else if(web.indexOf("mixdrop") != -1){
         return "Mixdrop";
     }else if(web.indexOf("streamtape.com") != -1){
-        return "Streamtape"
+        return "Streamtape";
     }else if(web.indexOf("voe") != -1){
-        return "VOE"
+        return "VOE";
+    }else if (web.indexOf("wish") != -1) {
+        return "StreamWish";
     }else {
         return "";
     }
@@ -146,7 +153,8 @@ export function getPreferer(list){
                     "zplayer.live",
                     "mixdrop",
                     "streamtape.com",
-                    "voe"
+                    "voe",
+                    "wish"
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){
