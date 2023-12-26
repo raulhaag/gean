@@ -28,11 +28,18 @@
             //};
             //script.src = "http://127.0.0.1:8080/js/main.js";
             //document.head.appendChild(script);
+            swish("https://sfastwish.com/e/fyzzc4gmrwc0")
         });
         window.decodeHtml = (html) => {
             var el = document.createElement("div");
             el.innerHTML = html;
             return el.textContent;
+        }
+
+        async function swish(link){
+            let content = await fGet(link);
+            let vLink = getFirstMatch(/file:"(.+?)"/gm, content)
+            console.log(content);
         }
     </script>
 </head>
