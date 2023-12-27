@@ -370,7 +370,10 @@ window.route = function (path, ppath = null) {
             if (window.appSettings["selected_player"] === "external" || window.appSettings["selected_player"] === "internal"){
                 let vdata = value["video"].split("|||");
                 let videoSrc = vdata[0];
-                if (window.appSettings["cache"][0]) {
+                let isHls = vdata[0].indexOf(".m3u") != -1; 
+
+                
+                if (window.appSettings["cache"][0] && !isHls) {
                   if (videoSrc.indexOf("file/") !== -1) {
                     videoSrc = videoSrc.replace("file/", "cache/");
                   } else {

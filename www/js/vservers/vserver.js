@@ -38,7 +38,7 @@ let servers = {"fembed": new Fembed(),
 
 export async function getDDL(after, onError, web) {
     if(web.startsWith("https://jkanime.net/c3.php?u=")){
-        let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c3.jkdesu.com/e/").replaceAll(/&[\s\S]+/gm,"")
+        let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c3.jkdesu.com/e/").replace(/&[\s\S]+/gm,"")
         web = await fRGet(nw)
     }
     /*if(web.startsWith("{")){
