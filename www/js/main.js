@@ -343,7 +343,8 @@ window.openPlayer = function(options, items = [], res = true){
             action = "play/";
         }
         let videoSrc = options["video"];
-        let useCache = localStorage.getItem("cache");
+        let useCache = localStorage.getItem("cache") && !(videoSrc.indexOf(".m3u") != -1); 
+        
         if(useCache == "true"){
             if(videoSrc.indexOf("file/")!== -1){
                 videoSrc = videoSrc.replace("file/", "cache/");

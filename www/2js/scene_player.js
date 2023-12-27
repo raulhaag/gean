@@ -20,7 +20,12 @@ export class ScenePlayer extends Scene {
     this.videojs = appSettings["selected_player"] === "videojs";
     this.cache = appSettings["cache"][0];
     //this.useBlob = appSettings["useBlob"][0];
+    if(this.options["video"].indexOf(".m3u") != -1){
+      this.cache = false
+      this.videojs = true
+    }
   }
+  
   initBody() {
     let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
     let cc = 0;
@@ -28,10 +33,7 @@ export class ScenePlayer extends Scene {
     let vdata = this.options["video"].split("|||");
     let vtype = "video/mp4";
     let videoSrc = vdata[0];
-    if(vdata[0].indexOf(".m3u") != -1){
-      this.cache = false
-      this.videojs = true
-    }
+    
     if (vdata.length > 1) {
       vtype = vdata[1];
     } else if (this.cache) {
