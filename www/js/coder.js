@@ -52,11 +52,8 @@ export function generateDescription(options) {
 
 export function getPlayer(options, items = []){
         let videoSrc = options["video"];
-        let useCache = localStorage.getItem("cache");
-        if(vdata[0].indexOf(".m3u") != -1){
-            useCache = "false"
-        }
-        if(useCache == "true"){
+        let useCache = (localStorage.getItem("cache") == "true") && !(videoSrc.indexOf(".m3u") != -1); 
+        if(useCache){
             if(videoSrc.indexOf("file/")!== -1){
                 videoSrc = videoSrc.replace("file/", "cache/");
             }else{
