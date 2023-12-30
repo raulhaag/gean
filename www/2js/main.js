@@ -14,8 +14,8 @@ window.menu = null;
 window.lockMenu = true;
 window.lockKeys = true;
 let scene_container = null;
-let backScenePoll = [],
-  backScenePH = [];
+window.backScenePoll = [];
+let backScenePH = [];
 let loadingCounter = 0;
 
 window.favorites = {};
