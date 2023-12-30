@@ -14,6 +14,7 @@ import { Mixdrop } from "./mixdropCo.js";
 import { Voe } from "./voe.js";
 import { StreamWish } from "./streamwish.js";
 import { FileMoon } from "./filemoon.js";
+import { FileLions } from "./filelions.js";
 
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
@@ -36,7 +37,8 @@ let servers = {"fembed": new Fembed(),
                 "streamtape.com": new Streamtape(),
                 "voe": new Voe(),
                 "streamwish": new StreamWish(),
-                "filemoon": new FileMoon()
+                "filemoon": new FileMoon(),
+                "filelions": new FileLions(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -88,6 +90,8 @@ export async function getDDL(after, onError, web) {
         return servers["streamwish"].getDDL (after, onError, web);
     }else if ((web.indexOf("filemoon.") != -1)) {
         return servers["filemoon"].getDDL (after, onError, web);
+    }else if ((web.indexOf("filelions.") != -1)) {
+        return servers["filelions"].getDDL (after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -136,6 +140,8 @@ export function getName(web) {
         return "VOE";
     }else if(web.indexOf("filemoon") != -1){
         return "FileMoon";
+    }else if(web.indexOf("filelions") != -1){
+        return "FileLions";
     }else if (web.indexOf("wish") != -1) {
         return "StreamWish";
     }else {
@@ -163,8 +169,8 @@ export function getPreferer(list){
                     "streamtape.com",
                     "voe",
                     "wish",
-                    "filemoon"
-                    
+                    "filemoon",
+                    "filelions"
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){
