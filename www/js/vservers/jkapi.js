@@ -55,3 +55,19 @@ export class JKXtreme{
       after({"video": web.replace("jk.php?u=", "")});
     }
 }
+
+export class Desu{
+  async getDDL(after, onError, web) {
+    try{
+      let link = "https://jkanime.net/" + web;
+      let content = await fGet(link, {"Referer":
+                    "https://jkanime.net/"});
+      var match = getFirstMatch(/url:\s*'(.+?)'/gm, content);
+      if (match) {
+        after({"video": match});
+        return
+      }
+    }catch(e){};
+    onError("Error al obtener video")
+  }
+}

@@ -173,16 +173,8 @@ export class JKAnime {
 
   trLink = (link) => {
     link = link.replace("/jkokru.php?u=", "https://ok.ru/videoembed/")
-               .replace("/jkvmixdrop.php?u=", "https://mixdrop.co/e/");
-    if(link.indexOf('&s=mixdrop') != -1){
-      link.replace("jkanime.net/c3.php?u=", "https://mixdrop.co/e/").replace('&s=mixdrop',"")
-      return link
-    }
-    if(link.indexOf("&s=mp4upload") != -1){
-      link.replace("jkanime.net/c3.php?u=", "https://mixdrop.co/e/").replace('&s=mixdrop',"")
-      return link
-    }
-    //https://jkanime.net/c3.php?u=YGcg4483qPOrg&s=mp4upload
+               .replace("/jkvmixdrop.php?u=", "https://mixdrop.co/e/")
+               .replace("/jksw.php?u=", "https://streamwish.to/e/");
     return link
   }
 

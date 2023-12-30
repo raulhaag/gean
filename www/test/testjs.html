@@ -28,7 +28,7 @@
             //};
             //script.src = "http://127.0.0.1:8080/js/main.js";
             //document.head.appendChild(script);
-            swish("https://filemoon.sx/e/9ut9vjwhwuab/")
+            swish("https://jkanime.net/um.php?e=NmpIMkM0R1pjWTlzWjR6azE1dDAwM1hGa1FXK2hmUjU2d1VkM0lpb1J1UWFvbzdOMUdnNVNmRlI2UlN3UWJxcTgxQmNCSlUwR0JnTnZaYk8wb3FTd2VoNGEzSVA2RVNzU1RUY1VvMitwSVE9Ojpeaeyfa.LXyLdNhnD.ZyLU&t=f783291f4748c86527b42f5ec3ffa9b6")
         });
         window.decodeHtml = (html) => {
             var el = document.createElement("div");
@@ -37,15 +37,14 @@
         }
 
         async function swish(link){
-            let content = await fGet(link);
-            var match = getFirstMatch(/(eval\(function\(p,a,c,k,e,d\)[\S\s]+?\.split\('\|'\)\)\))/gm, content);
+            let content = await fGet(link, {"Referer":
+                "https://jkanime.net/"});
+            var match = getFirstMatch(/url:\s*'(.+?)'/gm, content);
             if (match) {
-                var funcionDesofuscada = match.replace('eval', 'return');
-                var desofuscado = new Function(funcionDesofuscada);
-                var data = desofuscado();
-                var dlink = getFirstMatch(/file:"(.+?)"/gm, data)
-                console.log(dlink)
-            } 
+                console.log(match);
+            }else{
+                console.log("Error")
+            }
         }
     </script>
 </head>

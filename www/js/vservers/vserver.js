@@ -1,5 +1,5 @@
 import {Fembed} from "./fembed.js";
-import {JKAPI, JKXtreme} from "./jkapi.js";
+import {JKAPI, JKXtreme, Desu} from "./jkapi.js";
 import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, EmbedsitoNet, MamazonPlayer} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
 import {YourUpload}from "./yourupload.js";
@@ -18,6 +18,7 @@ import { FileMoon } from "./filemoon.js";
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
+                "desu": new Desu(),
                 "re_sololatino": new ReSololatino(),
                 "sololatinoxyz": new SololatinoXYZ(),
                 "zplayer.live": new ZPlayer(),
@@ -47,10 +48,10 @@ export async function getDDL(after, onError, web) {
         after({"video": JSON.parse(web)["path"]});
     }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
         servers["jkxtreme"].getDDL(after, onError, web);
-    }/*else if(web.indexOf("fembed") != -1) {
-        servers["fembed"].getDDL(after, onError, web);
-    }*/else if(web.indexOf("plusvip.net") != -1) {
+    }else if(web.indexOf("plusvip.net") != -1) {
         servers["plusvip.net"].getDDL(after, onError, web);
+    }else if(web.indexOf("um.php?e=") != -1) {
+        servers["desu"].getDDL(after, onError, web);
     }else if(web.indexOf("/um2.php?e=") != -1) {
         servers["jkapi"].getDDL(after, onError, web);
     }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
@@ -85,6 +86,8 @@ export async function getDDL(after, onError, web) {
         return servers["voe"].getDDL (after, onError, web);
     }else if ((web.indexOf("wish.") != -1)) {
         return servers["streamwish"].getDDL (after, onError, web);
+    }else if ((web.indexOf("filemoon.") != -1)) {
+        return servers["filemoon"].getDDL (after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -95,8 +98,8 @@ export function getName(web) {
         return JSON.parse(web)["name"];
     }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
         return "jkxtreme";
-    }else if(web.indexOf("fembed") != -1) {
-        return "Fembed";
+    }else if(web.indexOf("um.php?e=") != -1) {
+        return "Desu";
     }else if(web.indexOf("/um2.php?e=") != -1) {
         return "Gdrive_JKAPI";
     }else if(web.startsWith("https://sololatino.xyz/v/")){
@@ -143,6 +146,7 @@ export function getName(web) {
 export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
+                    "um.php?e=",
                     "mediafire.com",
                     "plusvip.net",
                     "embedsito.net/reproamz",
@@ -160,6 +164,7 @@ export function getPreferer(list){
                     "voe",
                     "wish",
                     "filemoon"
+                    
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){
