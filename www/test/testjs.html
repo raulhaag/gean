@@ -28,7 +28,7 @@
             //};
             //script.src = "http://127.0.0.1:8080/js/main.js";
             //document.head.appendChild(script);
-            swish("https://sfastwish.com/e/fyzzc4gmrwc0")
+            swish("https://filelions.to/v/j6m4jua8tlxw")
         });
         window.decodeHtml = (html) => {
             var el = document.createElement("div");
@@ -38,8 +38,14 @@
 
         async function swish(link){
             let content = await fGet(link);
-            let vLink = getFirstMatch(/file:"(.+?)"/gm, content)
-            console.log(content);
+            var match = getFirstMatch(/(eval\(function\(p,a,c,k,e,d\)[\S\s]+?\.split\('\|'\)\)\))/gm, content);
+            if (match) {
+                var funcionDesofuscada = match.replace('eval', 'return');
+                var desofuscado = new Function(funcionDesofuscada);
+                var data = desofuscado();
+                var dlink = getFirstMatch(/file:"(.+?)"/gm, data);
+                after({"video":dlink});
+            } 
         }
     </script>
 </head>

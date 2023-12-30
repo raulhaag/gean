@@ -1,5 +1,5 @@
 import {Fembed} from "./fembed.js";
-import {JKAPI, JKXtreme} from "./jkapi.js";
+import {JKAPI, JKXtreme, Desu} from "./jkapi.js";
 import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, EmbedsitoNet, MamazonPlayer} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
 import {YourUpload}from "./yourupload.js";
@@ -13,10 +13,13 @@ import { StreamSB } from "./streamsb.js";
 import { Mixdrop } from "./mixdropCo.js";
 import { Voe } from "./voe.js";
 import { StreamWish } from "./streamwish.js";
+import { FileMoon } from "./filemoon.js";
+import { FileLions } from "./filelions.js";
 
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
+                "desu": new Desu(),
                 "re_sololatino": new ReSololatino(),
                 "sololatinoxyz": new SololatinoXYZ(),
                 "zplayer.live": new ZPlayer(),
@@ -33,7 +36,9 @@ let servers = {"fembed": new Fembed(),
                 "streamsb": new StreamSB(),
                 "streamtape.com": new Streamtape(),
                 "voe": new Voe(),
-                "streamwish": new StreamWish()
+                "streamwish": new StreamWish(),
+                "filemoon": new FileMoon(),
+                "filelions": new FileLions(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -45,10 +50,10 @@ export async function getDDL(after, onError, web) {
         after({"video": JSON.parse(web)["path"]});
     }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
         servers["jkxtreme"].getDDL(after, onError, web);
-    }/*else if(web.indexOf("fembed") != -1) {
-        servers["fembed"].getDDL(after, onError, web);
-    }*/else if(web.indexOf("plusvip.net") != -1) {
+    }else if(web.indexOf("plusvip.net") != -1) {
         servers["plusvip.net"].getDDL(after, onError, web);
+    }else if(web.indexOf("um.php?e=") != -1) {
+        servers["desu"].getDDL(after, onError, web);
     }else if(web.indexOf("/um2.php?e=") != -1) {
         servers["jkapi"].getDDL(after, onError, web);
     }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
@@ -83,6 +88,10 @@ export async function getDDL(after, onError, web) {
         return servers["voe"].getDDL (after, onError, web);
     }else if ((web.indexOf("wish.") != -1)) {
         return servers["streamwish"].getDDL (after, onError, web);
+    }else if ((web.indexOf("filemoon.") != -1)) {
+        return servers["filemoon"].getDDL (after, onError, web);
+    }else if ((web.indexOf("filelions.") != -1)) {
+        return servers["filelions"].getDDL (after, onError, web);
     }else{
         onError("Not supported server");
     }
@@ -93,8 +102,8 @@ export function getName(web) {
         return JSON.parse(web)["name"];
     }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
         return "jkxtreme";
-    }else if(web.indexOf("fembed") != -1) {
-        return "Fembed";
+    }else if(web.indexOf("um.php?e=") != -1) {
+        return "Desu";
     }else if(web.indexOf("/um2.php?e=") != -1) {
         return "Gdrive_JKAPI";
     }else if(web.startsWith("https://sololatino.xyz/v/")){
@@ -129,6 +138,10 @@ export function getName(web) {
         return "Streamtape";
     }else if(web.indexOf("voe") != -1){
         return "VOE";
+    }else if(web.indexOf("filemoon") != -1){
+        return "FileMoon";
+    }else if(web.indexOf("filelions") != -1){
+        return "FileLions";
     }else if (web.indexOf("wish") != -1) {
         return "StreamWish";
     }else {
@@ -139,6 +152,7 @@ export function getName(web) {
 export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
+                    "um.php?e=",
                     "mediafire.com",
                     "plusvip.net",
                     "embedsito.net/reproamz",
@@ -154,7 +168,9 @@ export function getPreferer(list){
                     "mixdrop",
                     "streamtape.com",
                     "voe",
-                    "wish"
+                    "wish",
+                    "filemoon",
+                    "filelions"
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){
