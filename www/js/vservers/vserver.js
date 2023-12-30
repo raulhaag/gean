@@ -13,6 +13,7 @@ import { StreamSB } from "./streamsb.js";
 import { Mixdrop } from "./mixdropCo.js";
 import { Voe } from "./voe.js";
 import { StreamWish } from "./streamwish.js";
+import { FileMoon } from "./filemoon.js";
 
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
@@ -33,7 +34,8 @@ let servers = {"fembed": new Fembed(),
                 "streamsb": new StreamSB(),
                 "streamtape.com": new Streamtape(),
                 "voe": new Voe(),
-                "streamwish": new StreamWish()
+                "streamwish": new StreamWish(),
+                "filemoon": new FileMoon()
             };
 
 export async function getDDL(after, onError, web) {
@@ -129,6 +131,8 @@ export function getName(web) {
         return "Streamtape";
     }else if(web.indexOf("voe") != -1){
         return "VOE";
+    }else if(web.indexOf("filemoon") != -1){
+        return "FileMoon";
     }else if (web.indexOf("wish") != -1) {
         return "StreamWish";
     }else {
@@ -154,7 +158,8 @@ export function getPreferer(list){
                     "mixdrop",
                     "streamtape.com",
                     "voe",
-                    "wish"
+                    "wish",
+                    "filemoon"
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){

@@ -1,12 +1,13 @@
 export class StreamWish {
     constructor() {}
     async getDDL(after, onError, web){
-        let content = await fGet(web);
-        let vLink = getFirstMatch(/file:"(.+?)"/gm, content)
-        let videos = {};
-        videos["hls"] = vLink;
-        videos["video"] = vLink;
-        after(videos);
+        try{
+            let content = await fGet(web);
+            let vLink = getFirstMatch(/file:"(.+?)"/gm, content)
+            let videos = {};
+            videos["video"] = vLink;
+            after(videos);
+        }catch (e) {onError(e)}
     }
     
 }
