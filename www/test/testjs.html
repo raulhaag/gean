@@ -9,6 +9,7 @@
     <script src="../js/lib/aes.js"></script>
     <script src="../js/lib/mode-ecb.min.js"></script>
     <script type="module">
+        import {AnimeOnlineNinja} from "../js/sources/aoninja.js"
         window.getFirstMatch = function(regex, str){
             var m = regex.exec(str);
             if(m == null){
@@ -17,18 +18,25 @@
             return m[1];
         }
 
+
         window.getAllMatches = function(regex, str){
             return [...str.matchAll(regex)];
         }
         window.serverHost = "http://127.0.0.1:8080/";
         document.addEventListener("DOMContentLoaded", ()=>{
+            let data;
+            //new AnimeOnlineNinja().getDescription(console.log, console.log, window.enc("https://ww3.animeonline.ninja/online/gintama-1/"));
+            "AONinja/getLinks/aHR0cHM6Ly93dzMuYW5pbWVvbmxpbmUubmluamEvZXBpc29kaW8vc29rdXNoaS1jaGVhdC1nYS1zYWlreW91LXN1Z2l0ZS1jYXAtMS8="
+            "AONinja/getDescription/aHR0cHM6Ly93dzMuYW5pbWVvbmxpbmUubmluamEvb25saW5lL2tpbmdkb20v"
+            new AnimeOnlineNinja().getLinks(console.log, console.log, window.enc("https://ww3.animeonline.ninja/pelicula/evangelion-3-01-01-thrice-upon-a-time/"));
+            console.log(data);
             //var script = document.createElement('script');
             //script.onload = function () {
              //   alert("hi");
             //};
             //script.src = "http://127.0.0.1:8080/js/main.js";
             //document.head.appendChild(script);
-            swish("https://filelions.to/v/j6m4jua8tlxw")
+            //swish("https://ww3.animeonline.ninja/wp-json/dooplayer/v1/post/79011?type=tv&source=1")
         });
         window.decodeHtml = (html) => {
             var el = document.createElement("div");
@@ -38,6 +46,8 @@
 
         async function swish(link){
             let content = await fGet(link);
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(content, "text/html");
             var match = getFirstMatch(/(eval\(function\(p,a,c,k,e,d\)[\S\s]+?\.split\('\|'\)\)\))/gm, content);
             if (match) {
                 var funcionDesofuscada = match.replace('eval', 'return');

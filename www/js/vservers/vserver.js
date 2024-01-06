@@ -42,6 +42,7 @@ let servers = {"fembed": new Fembed(),
             };
 
 export async function getDDL(after, onError, web) {
+    web = web.replace(/\|\|info.+/gm, "");
     if(web.startsWith("https://jkanime.net/c3.php?u=")){
         let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c3.jkdesu.com/e/").replace(/&[\s\S]+/gm,"")
         web = await fRGet(nw)
@@ -98,55 +99,59 @@ export async function getDDL(after, onError, web) {
 }
 
 export function getName(web) {
+    let info = " " + getFirstMatch(/\|\|info_(.+)/gm, web);
+    let name = "";
     /*if(web.startsWith("{")){
         return JSON.parse(web)["name"];
     }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
-        return "jkxtreme";
+        name = "jkxtreme";
     }else if(web.indexOf("um.php?e=") != -1) {
-        return "Desu";
+        name = "Desu";
     }else if(web.indexOf("/um2.php?e=") != -1) {
-        return "Gdrive_JKAPI";
+        name = "Gdrive_JKAPI";
     }else if(web.startsWith("https://sololatino.xyz/v/")){
-        return "ReSololatino";
+        name = "ReSololatino";
     }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
-        return "ReSololatino";
+        name = "ReSololatino";
     }else if(web.indexOf("yourupload") != -1) {
-        return "YourUpload";
+        name = "YourUpload";
     }else if(web.indexOf("ok.ru") != -1) {
-        return "OkRu";
+        name = "OkRu";
     }else if(web.indexOf("/reproamz/") != -1){
-        return "AMZ ReSololatino" ;
+        name = "AMZ ReSololatino" ;
     }else if(web.indexOf("owodeuwu.xyz") != -1) {
-        return "owodeuwu.xyz (fembed)";
+        name = "owodeuwu.xyz (fembed)";
     }else if(web.indexOf("zippishare") != -1) {
-        return "Zippishare";
+        name = "Zippishare";
     }else if(web.indexOf("zplayer.live") != -1) {
-        return "ZPlayer live"
+        name = "ZPlayer live"
     }else if(web.indexOf("mediafire.com") != -1) {
-        return "MediaFire";
+        name = "MediaFire";
     }else if(web.indexOf("plusvip.net") != -1) {
-        return "Plusvip";
+        name = "Plusvip";
     }else if((web.indexOf("streamlare.com") != -1) || (web.indexOf("slmaxed.com") != -1) || (web.indexOf("slwatch.c") != -1)) {
-        return "StreamLare";
+        name = "StreamLare";
     }else if(web.indexOf("embedsito.net/reproamz") != -1) {
-        return "Embedsito(Amz)";
+        name = "Embedsito(Amz)";
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
-        return "StreamSB";
+        name = "StreamSB";
     }else if(web.indexOf("mixdrop") != -1){
-        return "Mixdrop";
+        name = "Mixdrop";
     }else if(web.indexOf("streamtape.com") != -1){
-        return "Streamtape";
+        name = "Streamtape";
     }else if(web.indexOf("voe") != -1){
-        return "VOE";
+        name = "VOE";
     }else if(web.indexOf("filemoon") != -1){
-        return "FileMoon";
+        name = "FileMoon";
     }else if(web.indexOf("filelions") != -1){
-        return "FileLions";
+        name = "FileLions";
     }else if (web.indexOf("wish") != -1) {
-        return "StreamWish";
+        name = "StreamWish";
     }else {
-        return "";
+        name = "";
     }
+
+    return name + info;
 }
 
 export function getPreferer(list){
@@ -162,15 +167,15 @@ export function getPreferer(list){
                     "owodeuwu.xyz" ,
                     "ok.ru" ,
                     "zippishare",
-                    "yourupload",
                     "/reproamz/",
                     "zplayer.live",
-                    "mixdrop",
                     "streamtape.com",
                     "voe",
                     "wish",
                     "filemoon",
-                    "filelions"
+                    "filelions",
+                    "yourupload",
+                    "mixdrop",
                 ];
     let ordered = [];
     for(let i = 0; i < list.length; i++){
@@ -187,7 +192,6 @@ export function getPreferer(list){
                 ordered.push(list[i]);
             }
           }
-
         }
         
    // }

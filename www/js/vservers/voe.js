@@ -4,6 +4,10 @@ export class Voe {
             let data = await fGet(web, {"User-Agent":navigator.userAgent});
             let dlink = getFirstMatch(/sources [^\{]+{([^}]+)/gm, data);
             let filev = getAllMatches(/['"]([^'"]+?)["']\s*:\s*['"]([^'"]+?)["']/gm, dlink);
+            if (filev.length == 1){
+                after({"video": filev[0][2]})
+                return
+            }
             if (filev.length > 0) {        
                 let videos = {};
                 for (let i = 0; i < filev.length; i++) {
