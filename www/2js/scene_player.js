@@ -110,6 +110,17 @@ export class ScenePlayer extends Scene {
     if (this.videojs) {
       this.player = videojs("player-container_1_0", {
         autoplay: appSettings["autoplay"][0],
+        controlBar: {
+          children: [
+              "playToggle",
+              "volumeMenuButton",
+              "currentTimeDisplay",
+              "progressControl",
+              "durationDisplay",
+              'playbackRateMenuButton',
+              "fullscreenToggle"
+          ]
+      },  
       });
     } else {
       this.player = document.getElementsByTagName("video")[0];
