@@ -44,8 +44,10 @@ let servers = {"fembed": new Fembed(),
 export async function getDDL(after, onError, web) {
     web = web.replace(/\|\|info.+/gm, "");
     if(web.startsWith("https://jkanime.net/c3.php?u=")){
+        let sname = getFirstMatch(/s\=(.+)/gm, web);
         let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c3.jkdesu.com/e/").replace(/&[\s\S]+/gm,"")
         web = await fRGet(nw)
+        web = web + "||info_server_" + sname;
     }
     /*if(web.startsWith("{")){
         after({"video": JSON.parse(web)["path"]});
@@ -79,23 +81,27 @@ export async function getDDL(after, onError, web) {
         return servers["streamlare.com"].getDDL(after, onError, web);*/
     }else if(web.indexOf("embedsito.net/reproamz") != -1){
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
-    }else if((web.indexOf("mixdrop") != -1)  || ((web.indexOf("mdbekjwqa") != -1))){
-            return servers["mixdrop"].getDDL (after, onError, web);
+    }else if(web.indexOf("mixdrop") != -1){
+            return servers["mixdrop"].getDDL (after, onError, cleanInfo(web));
     }else if(web.indexOf("streamtape.com") != -1){
         return servers["streamtape.com"].getDDL(after,onError, web);
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
         return servers["streamsb"].getDDL (after, onError, web);
-    }else if ((web.indexOf("voe") != -1) || (web.indexOf("lukecomparetwo.") != -1)) {
-        return servers["voe"].getDDL (after, onError, web);
+    }else if ((web.indexOf("voe") != -1)) {
+        return servers["voe"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("wish.") != -1)) {
-        return servers["streamwish"].getDDL (after, onError, web);
+        return servers["streamwish"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("filemoon.") != -1)) {
-        return servers["filemoon"].getDDL (after, onError, web);
+        return servers["filemoon"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("filelions.") != -1)) {
-        return servers["filelions"].getDDL (after, onError, web);
+        return servers["filelions"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
+}
+
+function cleanInfo(data){
+    return data.replace(/\|\|info.+/gm, "");
 }
 
 export function getName(web) {
@@ -139,12 +145,12 @@ export function getName(web) {
         name = "Mixdrop";
     }else if(web.indexOf("streamtape.com") != -1){
         name = "Streamtape";
-    }else if(web.indexOf("voe") != -1){
-        name = "VOE";
     }else if(web.indexOf("filemoon") != -1){
         name = "FileMoon";
     }else if(web.indexOf("filelions") != -1){
         name = "FileLions";
+    }else if((web.indexOf("voe") != -1)){
+        name = "VOE";
     }else if (web.indexOf("wish") != -1) {
         name = "StreamWish";
     }else {
@@ -161,7 +167,6 @@ export function getPreferer(list){
                     "mediafire.com",
                     "plusvip.net",
                     "embedsito.net/reproamz",
-                    //"fembed",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",
                     "owodeuwu.xyz" ,
@@ -177,6 +182,7 @@ export function getPreferer(list){
                     "yourupload",
                     "mixdrop",
                 ];
+    
     let ordered = [];
     for(let i = 0; i < list.length; i++){
          /* if(list[i].startsWith("{")){
