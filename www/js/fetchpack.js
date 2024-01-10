@@ -7,6 +7,7 @@ window.dec = function(e){
 }
 
 window.fGet = async function (url, header = {}, returnHeaders = false) {
+    new URL(url) //just to throw exeption if not valid
     try{window.setLoading();}catch(e){};
     let data  = "", response = null;
     try{
@@ -30,6 +31,7 @@ window.fGet = async function (url, header = {}, returnHeaders = false) {
 }
 
 window.fPost = async function (url, header, data) {
+    new URL(url) //just to throw exeption if not valid
     try{window.setLoading();}catch(e){};
     var out = "";
     try{
@@ -49,6 +51,7 @@ window.fPost = async function (url, header, data) {
 }
 
 window.fetchRedirectPost = async function (url, header) {
+    new URL(url) //just to throw exeption if not valid
     try{window.setLoading();}catch(e){};
     let data  = "";
     try{
@@ -67,6 +70,7 @@ window.fetchRedirectPost = async function (url, header) {
 }
 
 window.fRGet = async function (url, header = {}) {
+    new URL(url) //just to throw exeption if not valid
     let data  = "";
     try{window.setLoading();}catch(e){};
     try{

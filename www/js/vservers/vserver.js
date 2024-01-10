@@ -45,7 +45,7 @@ export async function getDDL(after, onError, web) {
     web = web.replace(/\|\|info.+/gm, "");
     if(web.startsWith("https://jkanime.net/c3.php?u=")){
         let sname = getFirstMatch(/s\=(.+)/gm, web);
-        let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c3.jkdesu.com/e/").replace(/&[\s\S]+/gm,"")
+        let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c4.jkdesu.com/e/").replace(/&[\s\S]+/gm,"")
         web = await fRGet(nw)
         web = web + "||info_server_" + sname;
     }

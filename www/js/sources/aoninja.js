@@ -152,7 +152,7 @@ export class AnimeOnlineNinja {
       let rjd = JSON.parse(await fGet(rpage, {"Referer": page}));
       let rds = await fGet(rjd["embed_url"], {"Referer": page});
       let rgroups = getAllMatches(/OD_(...)([\s\S]+?)<\/div>\r\n\t\t\t\t/gm, rds)
-      let oLinks = [];
+      let oLinks = [rjd["embed_url"]];
       for(var j = 0; j < rgroups.length; j++){
         let rglinks = getAllMatches(/go_to_player\('(.+?)'\)/gm, rgroups[j][2]);
         for(var k = 0; k < rglinks.length; k++){
@@ -163,6 +163,7 @@ export class AnimeOnlineNinja {
     }
 
     async getLinks(after, onError, path) {
+      let vlinks = []
       try{
         let result = await fGet(dec(path));
         if (result.indexOf("error") == 0) {
@@ -173,7 +174,6 @@ export class AnimeOnlineNinja {
         var parser = new DOMParser();
         var doc = parser.parseFromString(result, "text/html");
         var lle = doc.getElementsByClassName("dooplay_player_option");
-        let vlinks = []
         if(lle.length > 0){
           for(var i = 0; i < lle.length; i++){
             let title = lle[i].getElementsByClassName("title")[0].innerHTML
@@ -186,6 +186,9 @@ export class AnimeOnlineNinja {
 
         after(vlinks);
       } catch (error) {
+        if(vlinks.length > 0){
+          after(vlinks);
+        }
         onError(error);
       }
     }
