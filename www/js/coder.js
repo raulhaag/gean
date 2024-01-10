@@ -12,7 +12,7 @@ export function generateCategories(options) {
 export function generateCategory(title, items) {
     let result = '<div class="items"><h2 class="items__title">' + title + '</h2><div class="items__list">';
     for (let i = 0; i < items.length; i++) {
-        result += '<div class="item focusable" onclick="{mediaClick(self, \'' + items[i]["path"] + '\')}"><img class="item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="item__title">' + items[i]['name'] + '</h2></div>';
+        result += '<div class="item focusable" onclick="{mediaClick(self, \'' + items[i]["path"] + '\')}"><img class="item__image" src="' + items[i]['image'] + '" alt="" referrerpolicy="no-referrer"> <h2 class="item__title">' + items[i]['name'] + '</h2></div>';
     }
     return result + '</div></div>';
 }
