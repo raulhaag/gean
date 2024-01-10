@@ -9,6 +9,7 @@ export function openInNewTab(url) {
         window.open(url, '_blank').focus();
 }
 let servers = {"animeflv.net": new AnimeFlvNet,
+"AONinja": new AnimeOnlineNinja,
 "jkanime": new JKAnime,
 "sololatino": new SoloLatino,
 "sololatinosyp": new SoloLatinoSyP,
