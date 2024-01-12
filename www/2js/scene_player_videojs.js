@@ -1,7 +1,14 @@
 import { Scene } from "./scene.js";
 import { getName, getDDL } from "../js/vservers/vserver.js";
+var loadJS = function(url, implementationCode, location){
+  var scriptTag = document.createElement('script');
+  scriptTag.src = url;
+  scriptTag.onload = implementationCode;
+  scriptTag.onreadystatechange = implementationCode;
+  location.appendChild(scriptTag);
+};
 
-export class ScenePlayer extends Scene {
+export class ScenePlayerVideoJs extends Scene {
   increments = [5, 10, 15, 30, 30, 60, 300, 600];
   doublepress = false;
   timeoutdoublepress = 500;
@@ -18,16 +25,16 @@ export class ScenePlayer extends Scene {
     this.options = options;
     this.items = items;
     this.cache = appSettings["cache"][0];
-
+    //this.useBlob = appSettings["useBlob"][0];
     if(this.options["video"].indexOf(".m3u") != -1){
-      this.cache = false;
-      this.hls = true;
-    }else{
-      this.hls = false;
+      this.cache = false
     }
   }
   
   initBody() {
+    document.head.innerHTML += '\n<link rel="stylesheet" href="' + window.serverHost + 
+                                '/css/video-js.min.css" />\n<script src="' + 
+                                window.serverHost + '/js/lib/video.min.js"></script>';
     let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
     let cc = 0;
     let sItems = {};
@@ -96,27 +103,22 @@ export class ScenePlayer extends Scene {
         });
       return;
     }
-    this.player = document.getElementsByTagName("video")[0];
-    if(this.hls){
-      var hls_config = {
-        autoStartLoad: true,
-        maxMaxBufferLength: 10*60,
-        maxBufferSize: 50*1000*1000,
-      };
-      if (!Hls.isSupported()) {
-        alert("Hls no soportado por el navegador");
-      } else {
-        const hls = new Hls(hls_config);
-        hls.loadSource(this.options["video"].split("|||")[0]);
-        hls.attachMedia(this.player);
-      }
-    }
-
+    this.player = videojs("player-container_1_0", {
+      autoplay: appSettings["autoplay"][0],
+      controlBar: {
+        children: [
+            "playToggle",
+            "volumeMenuButton",
+            "currentTimeDisplay",
+            "progressControl",
+            "durationDisplay",
+            'playbackRateMenuButton',
+            "fullscreenToggle"
+        ]
+    },  
+    });
     this.last = document.getElementsByTagName("video")[0];
     if (appSettings["fullscreen"][0]) this.goFullScreen();
-    if (appSettings["autoplay"][0]) {
-      this.player.play();
-    }
     changeKeyManager();
   }
 
@@ -287,7 +289,7 @@ export class ScenePlayer extends Scene {
   }
 
   goFullScreen() {
-      requestFullScreen(this.last);
+    requestFullScreen(this.last);
   }
 
   dispose() {
@@ -297,6 +299,7 @@ export class ScenePlayer extends Scene {
       video.src = "";
       video.load();
     }
+    this.player.dispose();
   }
 
   /* functions */
@@ -314,10 +317,10 @@ export class ScenePlayer extends Scene {
   }
 
   switchPlayer() {
-    if (this.player.paused) {
-      this.player.play();
+    if (this.player.paused()) {
+      this.player.play(true);
     } else {
-      this.player.pause();
+      this.player.pause(true);
     }
   }
   isFullscreen() {

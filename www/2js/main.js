@@ -4,6 +4,7 @@ import { SceneHome } from "./scene_home.js";
 import { SceneDetails } from "./scene_details.js";
 import { SceneSearch } from "./scene_search.js";
 import { ScenePlayer } from "./scene_player.js";
+import { ScenePlayerVideoJs } from "./scene_player_videojs.js";
 import { SceneChange } from "./scene_change.js";
 import { SceneSettings } from "./scene_settings.js";
 
@@ -45,6 +46,12 @@ document.addEventListener("DOMContentLoaded", function () {
   } catch (e) {}
   loadResumes();
   loadSettings();
+  if((appSettings["selected_player"] === "videojs") && (window.location.toString().indexOf("videojs") == -1)){
+    window.location = "main_2_videojs.html";
+  }else if((appSettings["selected_player"] === "html") && (window.location.toString().indexOf("_2.html") == -1)){
+    window.location = "main_2.html";
+  }
+
   let color = window.appSettings["--tint-color"];
   if (color) {
     document.documentElement.style.setProperty("--tint-color", color);
@@ -395,7 +402,11 @@ window.route = function (path, ppath = null) {
                 });
               return;
             }
-            window.setScene(new ScenePlayer(value, best, currentScene));
+            if(appSettings["selected_player"] === "videojs"){
+              window.setScene(new ScenePlayerVideoJs(value, best, currentScene));
+            }else{
+              window.setScene(new ScenePlayer(value, best, currentScene));
+            }
           };
           if (window.appSettings["res_select"][0]) {
             window.generateSelectorDialog(

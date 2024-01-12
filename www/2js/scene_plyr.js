@@ -17,18 +17,21 @@ export class ScenePlayer extends Scene {
     this.lastKeyManager = this.playerNav;
     this.options = options;
     this.items = items;
+    this.videojs = appSettings["selected_player"] === "videojs";
     this.cache = appSettings["cache"][0];
-
+    //this.useBlob = appSettings["useBlob"][0];
     if(this.options["video"].indexOf(".m3u") != -1){
-      this.cache = false;
-      this.hls = true;
-    }else{
-      this.hls = false;
+      this.cache = false
+      this.videojs = true
     }
   }
   
   initBody() {
-    let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
+    let innerHtml = '<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es6,Array.prototype.includes,CustomEvent,Object.entries,Object.values,URL"></script>\
+    <script src="https://unpkg.com/plyr@3.7.8/dist/plyr.min.js"></script>\
+    <script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>\
+    <link rel="stylesheet" href="https://unpkg.com/plyr@3/dist/plyr.css">\n'
+    innerHtml += `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
     let cc = 0;
     let sItems = {};
     let vdata = this.options["video"].split("|||");
@@ -86,6 +89,7 @@ export class ScenePlayer extends Scene {
     this._body = innerHtml;
   }
   initBindings() {
+
     if (getStorageDefault("external_player", false)) {
       fetch(window.serverHost + "view/" + window.enc(options["video"]))
         .then((response) => response.text())
@@ -96,27 +100,57 @@ export class ScenePlayer extends Scene {
         });
       return;
     }
-    this.player = document.getElementsByTagName("video")[0];
-    if(this.hls){
-      var hls_config = {
-        autoStartLoad: true,
-        maxMaxBufferLength: 10*60,
-        maxBufferSize: 50*1000*1000,
-      };
-      if (!Hls.isSupported()) {
-        alert("Hls no soportado por el navegador");
-      } else {
-        const hls = new Hls(hls_config);
-        hls.loadSource(this.options["video"].split("|||")[0]);
-        hls.attachMedia(this.player);
-      }
+    const source = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';//    options["video"];
+    const video = document.querySelector('video');
+    
+    // For more options see: https://github.com/sampotts/plyr/#options
+    // captions.update is required for captions to work with hls.js
+    const player = new Plyr(video, {captions: {active: true, update: true, language: 'en'}});
+    
+    if (!Hls.isSupported()) {
+      video.src = source;
+    } else {
+      // For more Hls.js options, see https://github.com/dailymotion/hls.js
+      const hls = new Hls();
+      hls.loadSource(source);
+      hls.attachMedia(video);
+      window.hls = hls;
+      
+      // Handle changing captions
+      player.on('languagechange', () => {
+        // Caption support is still flaky. See: https://github.com/sampotts/plyr/issues/994
+        setTimeout(() => hls.subtitleTrack = player.currentTrack, 50);
+      });
     }
+    
+    // Expose player so it can be used from the console
+    window.player = player;
+  
+    if (this.videojs) {
 
+      this.player = videojs("player-container_1_0", {
+        autoplay: appSettings["autoplay"][0],
+        controlBar: {
+          children: [
+              "playToggle",
+              "volumeMenuButton",
+              "currentTimeDisplay",
+              "progressControl",
+              "durationDisplay",
+              'playbackRateMenuButton',
+              "fullscreenToggle"
+          ]
+      },  
+      });
+    }
     this.last = document.getElementsByTagName("video")[0];
     if (appSettings["fullscreen"][0]) this.goFullScreen();
-    if (appSettings["autoplay"][0]) {
+    if (appSettings["autoplay"][0] && !this.videojs) {
       this.player.play();
     }
+    /*if(this.useBlob){
+        this.loadBlob();
+    };*/
     changeKeyManager();
   }
 
@@ -287,7 +321,11 @@ export class ScenePlayer extends Scene {
   }
 
   goFullScreen() {
+    if (this.videojs) {
+      this.player.requestFullscreen();
+    } else {
       requestFullScreen(this.last);
+    }
   }
 
   dispose() {
@@ -297,6 +335,7 @@ export class ScenePlayer extends Scene {
       video.src = "";
       video.load();
     }
+    if (this.videojs) this.player.dispose();
   }
 
   /* functions */
@@ -314,10 +353,18 @@ export class ScenePlayer extends Scene {
   }
 
   switchPlayer() {
-    if (this.player.paused) {
-      this.player.play();
+    if (this.videojs) {
+      if (this.player.paused()) {
+        this.player.play(true);
+      } else {
+        this.player.pause(true);
+      }
     } else {
-      this.player.pause();
+      if (this.player.paused) {
+        this.player.play();
+      } else {
+        this.player.pause();
+      }
     }
   }
   isFullscreen() {
