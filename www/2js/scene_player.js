@@ -106,9 +106,9 @@ export class ScenePlayer extends Scene {
       if (!Hls.isSupported()) {
         alert("Hls no soportado por el navegador");
       } else {
-        const hls = new Hls(hls_config);
-        hls.loadSource(this.options["video"].split("|||")[0]);
-        hls.attachMedia(this.player);
+        this.hlsObj = new Hls(hls_config);
+        this.hlsObj.loadSource(this.options["video"].split("|||")[0]);
+        this.hlsObj.attachMedia(this.player);
       }
     }
 
@@ -297,6 +297,7 @@ export class ScenePlayer extends Scene {
       video.src = "";
       video.load();
     }
+    if(this.hls) this.hlsObj.destroy();
   }
 
   /* functions */

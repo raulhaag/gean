@@ -93,3 +93,6 @@
 .video-js .vjs-duration{
     display: block !important;
 }
+.plyr{
+    height: 100%;
+}
