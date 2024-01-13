@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
   } catch (e) {}
   loadResumes();
   loadSettings();
-  selectPlayerHome();
+  window.selectPlayerHome();
   let color = window.appSettings["--tint-color"];
   if (color) {
     document.documentElement.style.setProperty("--tint-color", color);
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.onkeypress = stopPropagationForKeys;
 });
 
-let selectPlayerHome = () => {
+window.selectPlayerHome = () => {
   if((appSettings["selected_player"] === "videojs") && (window.location.toString().indexOf("videojs") == -1)){
     window.location = "main_2_videojs.html";
   }else if((appSettings["selected_player"] === "plyr") && (window.location.toString().indexOf("plyr") == -1)){

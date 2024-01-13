@@ -117,4 +117,7 @@ export class SceneSettings extends Scene{
         this._body = result + '</div></div>';
     }
 
+    dispose(){
+        window.selectPlayerHome()
+    }
 }
