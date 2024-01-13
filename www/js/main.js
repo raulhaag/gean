@@ -365,24 +365,24 @@ window.openPlayer = function(options, items = [], res = true){
     vp.innerHTML = getPlayer(options, items, videoSrc);
     vp.style.display =  'flex';
     var elem = document.getElementsByClassName("videoview")[0];    
-
+    window.player = new Plyr("#player");
     if(videoSrc.indexOf(".m3u") != -1){
         var hls_config = {
-          autoStartLoad: true,
-          maxMaxBufferLength: 10*60,
-          maxBufferSize: 50*1000*1000,
+            autoStartLoad: true,
+            maxMaxBufferLength: 10*60,
+            maxBufferSize: 50*1000*1000,
         };
         if (!Hls.isSupported()) {
-          alert("Hls no soportado por el navegador");
+            alert("Hls no soportado por el navegador");
         } else {
-          const hls = new Hls(hls_config);
-          hls.loadSource(videoSrc);
-          hls.attachMedia(elem);
+            window.hls = new Hls(hls_config);
+            window.hls.loadSource(videoSrc);
+            window.hls.attachMedia(elem);
         }
-      }
+    }
     loading.style.visibility = 'hidden';
     initVideoNav();    
-    requestFullScreen(elem);
+    window.player.fullscreen.enter();
     elem.focus();
     addBackStack(vp);
 }
@@ -512,10 +512,20 @@ window.getAllMatches = function(regex, str){
     return [...str.matchAll(regex)];
 }
 
+window.destroyPlayer = function(){
+    try{
+        window.hls.destroy()
+    }catch(e) {/* ignore */}
+    try{
+        window.player.destroy()
+    }catch(e) {/* ignore */}
+}
+
 window.changeSrcRes = function(src){
     if(src.classList.contains("selected")){
         return
     }
+    window.destroyPlayer();
     let options = src.parentNode.getElementsByClassName("source_item");
     for(let i = 0; i < options.length; i++){
         options[i].classList.remove("selected");
@@ -525,9 +535,24 @@ window.changeSrcRes = function(src){
     let currentTime = player.currentTime;
     player.src = src.dataset.src;
     player.currentTime = currentTime;
+    if(src.dataset.src.indexOf(".m3u") != -1){
+        var hls_config = {
+            autoStartLoad: true,
+            maxMaxBufferLength: 10*60,
+            maxBufferSize: 50*1000*1000,
+        };
+        if (!Hls.isSupported()) {
+            alert("Hls no soportado por el navegador");
+        } else {
+            window.hls = new Hls(hls_config);
+            window.hls.loadSource(src.dataset.src);
+            window.hls.attachMedia(player);
+        }
+    }
 }
 
 window.changeSrc = function(src){
+    window.destroyPlayer();
     posLinks(JSON.parse(src.dataset.src), false, false);
 }
 
@@ -591,7 +616,7 @@ function optionSelection(title, options, postSelect) {
     for(var key in options){
         content += '<div class="optionSelection__option" onclick="{onOptionSelectionSelected(this)}" data-src="' + options[key] + '">' + key + '</div>';
     }
-    content += '</div>';
+    content += '<div class="optionSelection__option optionSelection__Cancel" onclick="{onOptionSelectionSelected(this)}" data-src="cancel">Cancelar</div></div>';
     div.innerHTML = content;
     div.getElementsByClassName("optionSelection__option")[0].classList.add("optionSelection__focused");
     document.body.appendChild(div);
@@ -602,6 +627,10 @@ function optionSelection(title, options, postSelect) {
 document.onOptionSelectionSelected = (option) => {
     document.body.removeChild(document.__optionsDiv);
     document.onkeydown = document.__selectPrekeydown;
+    if(option.dataset.src === "cancel"){
+        loading.style.visibility = 'hidden';
+        return;
+    }
     document.__selectpostSelect(option.dataset.src);
 }
 // selection message end

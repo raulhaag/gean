@@ -59,3 +59,11 @@
 video{
     outline: 0px;
 }
+
+.plyr__controls{
+    z-index: 10000!important;
+}
+
+.plyr{
+    height: 100%;
+}

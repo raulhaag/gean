@@ -422,7 +422,7 @@ ul{
 }
 
 .optionSelection{
-    background-color: #242a3b;
+    background-color: #000000;
     position: absolute;
     top:50%;
     left: 50%;
@@ -447,9 +447,12 @@ ul{
     display: flex;
     align-items:center;
     justify-content:center;
-
     padding: 10px;
     min-height: 40px;
+}
+.optionSelection__Cancel{
+    border-top: 2px white solid;
+    background-color: rgb(199, 48, 48);
 }
 .optionSelection__option.optionSelection__focused{
     background-color: #FFF5;
