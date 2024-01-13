@@ -50,17 +50,7 @@ export function generateDescription(options) {
     return result;
 }
 
-export function getPlayer(options, items = []){
-        let videoSrc = options["video"];
-        let useCache = (localStorage.getItem("cache") == "true") && !(videoSrc.indexOf(".m3u") != -1); 
-        if(useCache){
-            if(videoSrc.indexOf("file/")!== -1){
-                videoSrc = videoSrc.replace("file/", "cache/");
-            }else{
-                videoSrc = window.serverHost + "cache/" + enc(videoSrc)
-            }
-        }
-
+export function getPlayer(options, items = [], videoSrc){
         let rv = '<div class="source_list">';
         let extra = " selected";
         items.forEach(function(item){

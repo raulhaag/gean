@@ -5,6 +5,7 @@ import { SceneDetails } from "./scene_details.js";
 import { SceneSearch } from "./scene_search.js";
 import { ScenePlayer } from "./scene_player.js";
 import { ScenePlayerVideoJs } from "./scene_player_videojs.js";
+import { ScenePlayerPlyr } from "./scene_player_plyr.js";
 import { SceneChange } from "./scene_change.js";
 import { SceneSettings } from "./scene_settings.js";
 
@@ -36,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
     this.location = "http://" + window.location.hostname + ":8080/main.html";
     return;
   }
-
   window.serverHost = "http://" + window.location.hostname + ":8080/";
   try {
     window.favorites = JSON.parse(window.getStorageDefault("favorites", "[]"));
@@ -46,12 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
   } catch (e) {}
   loadResumes();
   loadSettings();
-  if((appSettings["selected_player"] === "videojs") && (window.location.toString().indexOf("videojs") == -1)){
-    window.location = "main_2_videojs.html";
-  }else if((appSettings["selected_player"] === "html") && (window.location.toString().indexOf("_2.html") == -1)){
-    window.location = "main_2.html";
-  }
-
+  window.selectPlayerHome();
   let color = window.appSettings["--tint-color"];
   if (color) {
     document.documentElement.style.setProperty("--tint-color", color);
@@ -74,6 +69,16 @@ document.addEventListener("DOMContentLoaded", function () {
   document.onkeyup = stopPropagationForKeys;
   document.onkeypress = stopPropagationForKeys;
 });
+
+window.selectPlayerHome = () => {
+  if((appSettings["selected_player"] === "videojs") && (window.location.toString().indexOf("videojs") == -1)){
+    window.location = "main_2_videojs.html";
+  }else if((appSettings["selected_player"] === "plyr") && (window.location.toString().indexOf("plyr") == -1)){
+    window.location = "main_2_plyr.html";
+  }else if((appSettings["selected_player"] === "html") && (window.location.toString().indexOf("_2.html") == -1)){
+    window.location = "main_2.html";
+  }
+}
 
 //menu management
 let teaseMenu = null,
@@ -404,6 +409,8 @@ window.route = function (path, ppath = null) {
             }
             if(appSettings["selected_player"] === "videojs"){
               window.setScene(new ScenePlayerVideoJs(value, best, currentScene));
+            }else if(appSettings["selected_player"] === "plyr"){
+              window.setScene(new ScenePlayerPlyr(value, best, currentScene));
             }else{
               window.setScene(new ScenePlayer(value, best, currentScene));
             }

@@ -336,22 +336,22 @@ window.openPlayer = function(options, items = [], res = true){
             return;
         }
     }
-
+    let videoSrc = options["video"];
+    let useCache = (localStorage.getItem("cache") == "true") && !(videoSrc.indexOf(".m3u") != -1); 
+    
+    if(useCache){
+        if(videoSrc.indexOf("file/")!== -1){
+            videoSrc = videoSrc.replace("file/", "cache/");
+        }else{
+            videoSrc = window.serverHost + "cache/" + enc(videoSrc);
+        }
+    }
     if(getStorageDefault("external_player", false) || getStorageDefault("internal_player", false)){
         let action = "view/";
         if(getStorageDefault("internal_player", false)){
             action = "play/";
         }
-        let videoSrc = options["video"];
-        let useCache = (localStorage.getItem("cache") == "true") && !(videoSrc.indexOf(".m3u") != -1); 
-        
-        if(useCache){
-            if(videoSrc.indexOf("file/")!== -1){
-                videoSrc = videoSrc.replace("file/", "cache/");
-            }else{
-                videoSrc = window.serverHost + "cache/" + enc(videoSrc);
-            }
-        }
+
         fetch(window.serverHost + action + window.enc(videoSrc))
         .then((response) => response.text())
         .then((result) => {
@@ -362,15 +362,29 @@ window.openPlayer = function(options, items = [], res = true){
       loading.style.visibility = 'hidden';
       return;
     }
-    vp.innerHTML = getPlayer(options, items);
+    vp.innerHTML = getPlayer(options, items, videoSrc);
     vp.style.display =  'flex';
-    loading.style.visibility = 'hidden';
     var elem = document.getElementsByClassName("videoview")[0];    
+
+    if(videoSrc.indexOf(".m3u") != -1){
+        var hls_config = {
+          autoStartLoad: true,
+          maxMaxBufferLength: 10*60,
+          maxBufferSize: 50*1000*1000,
+        };
+        if (!Hls.isSupported()) {
+          alert("Hls no soportado por el navegador");
+        } else {
+          const hls = new Hls(hls_config);
+          hls.loadSource(videoSrc);
+          hls.attachMedia(elem);
+        }
+      }
+    loading.style.visibility = 'hidden';
     initVideoNav();    
     requestFullScreen(elem);
     elem.focus();
     addBackStack(vp);
-
 }
 
 
