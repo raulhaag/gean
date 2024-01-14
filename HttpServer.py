@@ -101,7 +101,7 @@ class handler(SimpleHTTPRequestHandler):
             self.return_response(404, "Not Found")
 
     def end_headers(self):
-        if(self.path.endswith(".js")):
+        if(self.path.endswith(".js") or self.path.endswith(".css") or self.path.endswith(".html")):
             self.send_my_headers()
         SimpleHTTPRequestHandler.end_headers(self)
 
@@ -175,11 +175,14 @@ def getResponseFile(path = [], server = None):
             server.wfile.write(chunk)
             errorcount = 0
         except Exception as e:
+            if(str(e).__contains__("Errno 32")):
+                break #broken pipe disconected
             print("Retry after " + str(e) + "\n")
             traceback.print_exc()
             errorcount = errorcount + 1
-            if errorcount > 20:
-                raise Exception("to many error")
+            if errorcount > 3:
+                break
+                #raise Exception("to many error")
     urllib.request.urlcleanup()
 
 def getGet(path = []):

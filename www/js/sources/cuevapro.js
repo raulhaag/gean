@@ -1,7 +1,7 @@
-export class CuevaPro {
+export class NOCuevaPro {
     constructor() {
       this.name = "CuevaPro";
-      this.baseUrl = "https://cuevana.pro/";
+      this.baseUrl = "https://cuevana.pro";
     }
 
     getSeries = (flis, onError = console.log) => {
