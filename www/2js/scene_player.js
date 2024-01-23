@@ -13,12 +13,13 @@ export class ScenePlayer extends Scene {
   last = null;
   constructor(options, items, parent) {
     super(false);
+    this.preTitle = document.title
+    document.title = window.currentTitle + window.currentChapter
     this.parent = parent;
     this.lastKeyManager = this.playerNav;
     this.options = options;
     this.items = items;
     this.cache = appSettings["cache"][0];
-
     if(this.options["video"].indexOf(".m3u") != -1){
       this.cache = false;
       this.hls = true;
@@ -298,6 +299,7 @@ export class ScenePlayer extends Scene {
       video.load();
     }
     if(this.hls) this.hlsObj.destroy();
+    document.title = this.preTitle;
   }
 
   /* functions */

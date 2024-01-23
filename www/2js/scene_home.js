@@ -170,6 +170,7 @@ export class SceneHome extends Scene{
                     document.getElementById("home").removeChild(node);
                 }
                 this.last.video.classList.remove("focus");
+                window.currentChapter = this.last.video.innerText;
                 route(this.last.video.dataset.path, this.last.video.dataset.ppath)
                 let fpath = this.last.video.dataset.path.split('/');
                 let server = getSource(fpath[0]);

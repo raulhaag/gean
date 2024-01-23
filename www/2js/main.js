@@ -19,7 +19,8 @@ let scene_container = null;
 window.backScenePoll = [];
 let backScenePH = [];
 let loadingCounter = 0;
-
+window.currentTitle = "";
+window.currentChapter = "";
 window.favorites = {};
 window.recent = [];
 window.resumes = {};
@@ -216,6 +217,7 @@ let popScene = () => {
   if (backScenePoll.length > 1) {
     currentScene = backScenePoll[backScenePoll.length - 1];
   } else {
+    document.title = "Gean"
     currentScene = currentScene.parent;
     backMenuSwitch();
   }
@@ -362,10 +364,12 @@ window.route = function (path, ppath = null) {
     params = atob(fpath[2]);
   }
   if (action == "getFrontPage") {
+    document.title("GEAn")
     server.getFrontPage(window.posServerClick, window.error);
   } else if (action == "getCategory") {
     //server.getCategory(params, posServerClick, error);
   } else if (action == "getDescription") {
+    document.title = window.currentTitle
     server.getDescription(
       (resp) => {
         window.setScene(new SceneDetails(resp, currentScene));
@@ -383,8 +387,6 @@ window.route = function (path, ppath = null) {
                 let vdata = value["video"].split("|||");
                 let videoSrc = vdata[0];
                 let isHls = vdata[0].indexOf(".m3u") != -1; 
-
-                
                 if (window.appSettings["cache"][0] && !isHls) {
                   if (videoSrc.indexOf("file/") !== -1) {
                     videoSrc = videoSrc.replace("file/", "cache/");
@@ -406,8 +408,7 @@ window.route = function (path, ppath = null) {
                   }
                 });
               return;
-            }
-            if(appSettings["selected_player"] === "videojs"){
+            }else if(appSettings["selected_player"] === "videojs"){
               window.setScene(new ScenePlayerVideoJs(value, best, currentScene));
             }else if(appSettings["selected_player"] === "plyr"){
               window.setScene(new ScenePlayerPlyr(value, best, currentScene));

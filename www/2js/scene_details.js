@@ -9,15 +9,19 @@ export class SceneDetails extends Scene {
         this.serie = serie;
         this.parent = parent;
         this.lastKeyManager = this.chapter_nav;
-
+        this.preTitle = document.title;
     }
 
     dispose(){
-        //TODO if needed
+
+        window.currentTitle = "";
+        window.currentChapter = "";
     }
 
     //return the elements to be added at the container
     initBody(){
+        window.currentTitle = this.serie.name;
+        document.title = this.serie.name;
         let chapters = this.serie.chapters;
         let vc = [];
         try{
@@ -193,6 +197,7 @@ export class SceneDetails extends Scene {
             case "Space":
             case " ":
                 this.lastChapter.classList.add("info-capitulo-viewed");
+                window.currentChapter = " - " + this.lastChapter.innerText;
                 markViewed(null, this.lastChapter.dataset.ppath, this.lastChapter.dataset.path);
                 route(this.lastChapter.dataset.path, this.lastChapter.dataset.ppath);
                 break;
