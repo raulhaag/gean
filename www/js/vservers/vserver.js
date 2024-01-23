@@ -43,12 +43,13 @@ let servers = {"fembed": new Fembed(),
 
 export async function getDDL(after, onError, web) {
     web = web.replace(/\|\|info.+/gm, "");
-    if(web.startsWith("https://jkanime.net/c3.php?u=")){
+  /*   if(web.startsWith("https://jkanime.net/c3.php?u=")){
         let sname = getFirstMatch(/s\=(.+)/gm, web);
-        let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c4.jkdesu.com/e/").replace(/&[\s\S]+/gm,"")
-        web = await fRGet(nw)
-        web = web + "||info_server_" + sname;
-    }
+        let nw = web.replace("https://jkanime.net/c3.php?u=", "https://c4.jkdesu.com/e/").replace(/&[\s\S]+/gm,"");
+        web = await fGet(nw);
+        web = getFirstMatch(/<iframe width="100%" height="100%" src="(.+)"/gm, web);
+        web = web + "||info_server_" + sname + ".";
+    } */
     /*if(web.startsWith("{")){
         after({"video": JSON.parse(web)["path"]});
     }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
@@ -101,7 +102,7 @@ export async function getDDL(after, onError, web) {
 }
 
 function cleanInfo(data){
-    return data.replace(/\|\|info.+/gm, "");
+    return data.replace(/\|\|server_name_.+/gm, "");
 }
 
 export function getName(web) {

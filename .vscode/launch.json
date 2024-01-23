@@ -35,6 +35,7 @@
       "webRoot": "${workspaceFolder}/www",
       "skipFiles": [
         "${workspaceFolder}/www/w2/videojs/video.min.js",
+        "${workspaceFolder}/www/js/lib/*",
         "${workspaceFolder}/www/js/video.min.js"
       ]
     },

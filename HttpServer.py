@@ -25,20 +25,21 @@ cachedir = "cache/"
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
 
+
 class handler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         return
 
     def do_GET(self):
-        defaultUserAgent = self.headers.get('User-Agent')
-        path = self.path.replace("/fscache.mp4", "").split('/')
+        defaultUserAgent = self.headers.get("User-Agent")
+        path = self.path.replace("/fscache.mp4", "").split("/")
         try:
-            if (len(path) >= 2) and not("." in path[-1]):
-                dp = path[1] + " -> " + ', '.join([decode(p) for p in path[2:]])
+            if (len(path) >= 2) and not ("." in path[-1]):
+                dp = path[1] + " -> " + ", ".join([decode(p) for p in path[2:]])
                 print(dp)
         except:
             pass
-        if(path[1] == "shutdown"):
+        if path[1] == "shutdown":
             self.return_response(200, "Apagando")
             server.server_close()
             if window != None:
@@ -62,21 +63,24 @@ class handler(SimpleHTTPRequestHandler):
                 return
 
             if path[1] == "view":
-                if("/cache/" in decode(path[2])):
-                    abrir_video_con_reproductor(decode(path[2])+ "/fscache.mp4")
+                if "/cache/" in decode(path[2]):
+                    abrir_video_con_reproductor(decode(path[2]) + "/fscache.mp4")
                 else:
                     abrir_video_con_reproductor(decode(path[2]))
-                self.return_response(200, "Solo soportado por android, quita esta cofiguración de tus opciones.")
+                self.return_response(
+                    200,
+                    "Solo soportado por android, quita esta cofiguración de tus opciones.",
+                )
                 return
 
             if path[1] == "file":
                 getResponseFile(path, self)
                 return
             if path[1] == "cache":
-                '''if self.headers.get("Range") != None:
-                    if self.headers.get("Range") != 'bytes=0-':
-                        self.return_response(206, "Partial unsuported")
-                        return'''
+                """if self.headers.get("Range") != None:
+                if self.headers.get("Range") != 'bytes=0-':
+                    self.return_response(206, "Partial unsuported")
+                    return"""
                 try:
                     cacheAndGet(path, self)
                 except IOError:
@@ -88,20 +92,33 @@ class handler(SimpleHTTPRequestHandler):
             traceback.format_exc()
             return
         if self.path.endswith("sources.js"):
-            if(not os.path.exists("temp")):
+            if not os.path.exists("temp"):
                 os.mkdir("temp")
             generateSourceList()
             self.path = "temp/sources.js"
             return SimpleHTTPRequestHandler.do_GET(self)
-        if(os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in["html", "js", "css", "jpg", "png", "gif", "ico","mp4"]):
+        if os.path.exists(web_path + self.path) and path[-1].split(".")[-1] in [
+            "html",
+            "js",
+            "css",
+            "jpg",
+            "png",
+            "gif",
+            "ico",
+            "mp4",
+        ]:
             self.path = web_path + self.path
-            #read file to string
+            # read file to string
             return SimpleHTTPRequestHandler.do_GET(self)
         else:
             self.return_response(404, "Not Found")
 
     def end_headers(self):
-        if(self.path.endswith(".js") or self.path.endswith(".css") or self.path.endswith(".html")):
+        if (
+            self.path.endswith(".js")
+            or self.path.endswith(".css")
+            or self.path.endswith(".html")
+        ):
             self.send_my_headers()
         SimpleHTTPRequestHandler.end_headers(self)
 
@@ -113,42 +130,44 @@ class handler(SimpleHTTPRequestHandler):
 
     def return_response(self, code, message):
         self.send_response(code)
-        self.send_header('Content-type','text/html')
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Content-type", "text/html")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(bytes(message, "utf8"))
 
     def return_response_whit_headers(self, code, message):
-        content = message.read().decode('utf-8')
+        content = message.read().decode("utf-8")
         self.send_response(code)
         for header in message.headers._headers:
-            if header[0].lower() == 'set-cookie':
+            if header[0].lower() == "set-cookie":
                 self.send_header("gean_" + header[0], header[1])
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Expose-Headers", "*")
         self.send_header("Access-Control-Allow-Headers", "*")
         self.end_headers()
         self.wfile.write(bytes(content, "utf8"))
 
-
     def return_response_file(self, code, message):
         self.send_response(code)
-        self.send_header('Content-type','text/html')
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Content-type", "text/html")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(message)
 
+
 def decode(input):
-    return base64.b64decode(input.replace("_", "/").encode('utf-8')).decode('utf-8')
+    return base64.b64decode(input.replace("_", "/").encode("utf-8")).decode("utf-8")
 
-def getResponseGet(path = []):
-    return getGet(path).read().decode('utf-8')
 
-def getResponseFile(path = [], server = None):
+def getResponseGet(path=[]):
+    return getGet(path).read().decode("utf-8")
+
+
+def getResponseFile(path=[], server=None):
     server.send_response(200)
     headers = {}
     if len(path) == 4:
-        headers =  json.loads(decode(path[3]))
+        headers = json.loads(decode(path[3]))
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
     range = server.headers.get("Range")
@@ -161,7 +180,9 @@ def getResponseFile(path = [], server = None):
     opener = urllib.request.build_opener()
     opener.addheaders = ho
     urllib.request.install_opener(opener)
-    res = urllib.request.urlopen(web, timeout=30, context=ctx) #not secure but the video servers have bad certs
+    res = urllib.request.urlopen(
+        web, timeout=30, context=ctx
+    )  # not secure but the video servers have bad certs
     for header in res.headers._headers:
         server.send_header(header[0], header[1])
     server.send_my_headers()
@@ -175,71 +196,78 @@ def getResponseFile(path = [], server = None):
             server.wfile.write(chunk)
             errorcount = 0
         except Exception as e:
-            if(str(e).__contains__("Errno 32")):
-                break #broken pipe disconected
+            if str(e).__contains__("Errno 32"):
+                break  # broken pipe disconected
             print("Retry after " + str(e) + "\n")
             traceback.print_exc()
             errorcount = errorcount + 1
             if errorcount > 3:
                 break
-                #raise Exception("to many error")
+                # raise Exception("to many error")
     urllib.request.urlcleanup()
 
-def getGet(path = []):
+
+def getGet(path=[]):
     headers = {}
     if len(path) == 4:
-        headers =  json.loads(decode(path[3]))
+        headers = json.loads(decode(path[3]))
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
-    req =  request.Request(web, headers=headers)
+    req = request.Request(web, headers=headers)
     return request.urlopen(req)
 
-def getRedirectGet(path = []):
-    resp =  getGet(path)
+
+def getRedirectGet(path=[]):
+    resp = getGet(path)
     return resp.url
 
-def getRedirectPost(path = []):
-    resp =  getPost(path)
+
+def getRedirectPost(path=[]):
+    resp = getPost(path)
     return resp.url
 
-def getPost(path = []):
+
+def getPost(path=[]):
     headers = {}
     data = {}
     if len(path) == 5:
-        headers =  json.loads(decode(path[3]))
-        data =  json.loads(decode(path[4]))
+        headers = json.loads(decode(path[3]))
+        data = json.loads(decode(path[4]))
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
     data = parse.urlencode(data).encode()
-    req =  request.Request(web, data=data, headers=headers)
+    req = request.Request(web, data=data, headers=headers)
     resp = request.urlopen(req)
     return resp
 
-def getResponsePost(path = []):
-    return getPost(path).read().decode('utf-8')
+
+def getResponsePost(path=[]):
+    return getPost(path).read().decode("utf-8")
+
 
 def parseRangeHeader(header, content_len):
-    unit, range = header.split('=')
+    unit, range = header.split("=")
     start, end = range.split("-")
-    if end == '':
+    if end == "":
         end = content_len
     return int(start), int(end), unit
+
 
 def urlretrievecache(url, filename, cache, data=None):
     with contextlib.closing(urlopen(url, data)) as fp:
         headers = fp.info()
         cache[url]["headers"] = headers
-        cache[url]['content-length'] = headers['content-length']
+        cache[url]["content-length"] = headers["content-length"]
         if "content-length" in headers:
-            with open(filename, 'w') as f:
+            with open(filename, "w") as f:
                 try:
                     f.truncate(int(headers["content-length"]))
                 except IOError as e:
                     traceback.print_exc()
                     print(e)
-        tfp = open(filename, 'wb')
+        tfp = open(filename, "wb")
         with tfp:
             result = filename, headers
             bs = 8192
@@ -262,19 +290,20 @@ def urlretrievecache(url, filename, cache, data=None):
     if size >= 0 and read < size:
         cache[url]["status"] = -1
         raise Exception(
-            "retrieval incomplete: got only %i out of %i bytes"
-            % (read, size), result)
+            "retrieval incomplete: got only %i out of %i bytes" % (read, size), result
+        )
     cache[url]["status"] = 1
     return result
+
 
 def downloadCacheFile(cache, path):
     headers = {}
     web = decode(path[2])
     ho = []
     if len(path) == 4:
-        headers =  json.loads(decode(path[3]))
+        headers = json.loads(decode(path[3]))
     for key in cache[web]["rheaders"]:
-        if not(("host" in key.lower()) or ("referer" in key.lower())):
+        if not (("host" in key.lower()) or ("referer" in key.lower())):
             ho.append((key, cache[web]["rheaders"].get(key)))
     for key in headers:
         ho.append((key, headers[key]))
@@ -291,111 +320,134 @@ def downloadCacheFile(cache, path):
         cache[web]["status"] = -2
         cache[web]["errdetails"] = str(e)
 
-def cacheAndGet(path = [], server = None):
+
+def cacheAndGet(path=[], server=None):
     web = decode(path[2])
     if (web in cache) and (cache[web]["status"] >= 0):
-        #raise Exception("already cached")
+        # raise Exception("already cached")
         print("url cached active, serving {}".format(path))
     else:
         cache[web] = {}
-        cache[web]["status"] = 0  #0 downloading | -1 error | 1 finished |3 paused| -2 deleted
+        cache[web][
+            "status"
+        ] = 0  # 0 downloading | -1 error | 1 finished |3 paused| -2 deleted
         cache[web]["progress"] = 0
         cache[web]["errdetails"] = 0
-        cache[web]["name"] = f'{cachedir}cache{str(len(cache))}.mp4'
-        cache[web]["thread"] = Thread(target = downloadCacheFile, args = (cache, path))
+        cache[web]["name"] = f"{cachedir}cache{str(len(cache))}.mp4"
+        cache[web]["thread"] = Thread(target=downloadCacheFile, args=(cache, path))
         cache[web]["rheaders"] = server.headers
         cache[web]["thread"].start()
-    
+
     while not os.path.exists(cache[web]["name"]):
         if cache[web]["status"] == -2:
-                return
+            return
         time.sleep(0.5)
     start = 0
-    end = int(cache[web]['content-length'])
-    if(server.headers.get("Range")):
+    end = int(cache[web]["content-length"])
+    if server.headers.get("Range"):
         start, end, unit = parseRangeHeader(server.headers.get("Range"), end)
-        '''if(((end - start + 1)/float(cache[web]['content-length'])) <  0.001):
+        """if(((end - start + 1)/float(cache[web]['content-length'])) <  0.001):
             cache[web]["status"] = 3  #0 downloading | -1 error | 1 finished |3 paused| -2 deleted
             getResponseFile(path, server)
             cache[web]["status"] = 0  #0 downloading | -1 error | 1 finished |3 paused| -2 deleted
-            return'''
+            return"""
         server.send_response(206)
-        server.send_header('Content-Length', min(end - start + 1, int(cache[web]['content-length'])))
-        server.send_header('Content-Range', 'bytes {}-{}/{}'.format(start, min(end, int(cache[web]['content-length']) - 1) , cache[web]['content-length']))
-    else:   
+        server.send_header(
+            "Content-Length", min(end - start + 1, int(cache[web]["content-length"]))
+        )
+        server.send_header(
+            "Content-Range",
+            "bytes {}-{}/{}".format(
+                start,
+                min(end, int(cache[web]["content-length"]) - 1),
+                cache[web]["content-length"],
+            ),
+        )
+    else:
         server.send_response(200)
-        server.send_header('Content-Length',cache[web]['content-length'])
-        
+        server.send_header("Content-Length", cache[web]["content-length"])
+
     for header in cache[web]["headers"]._headers:
         if header[0].lower() == "connection":
             server.send_header(header[0], "keep-alive")
         elif header[0].lower() == "content-type":
             server.send_header(header[0], header[1])
-        '''elif header[0].lower() == "content-length":
-            server.send_header(header[0], header[1])'''
-    #print(server.headers)
+        """elif header[0].lower() == "content-length":
+            server.send_header(header[0], header[1])"""
+    # print(server.headers)
     server.end_headers()
     while not cache[web]["progress"] > start:
         if cache[web]["status"] < 0:
             return
         time.sleep(0.3)
 
-    with open(cache[web]["name"], 'r+b') as fh:
+    with open(cache[web]["name"], "r+b") as fh:
         fh.seek(start)
         chunk = ""
         cp = start
         while True:
-            if(cache[web]["progress"] > cp):
-                chunk = fh.read(8192 if((end == -1) or ((end-cp) > 8192)) else (end-cp))
+            if cache[web]["progress"] > cp:
+                chunk = fh.read(
+                    8192 if ((end == -1) or ((end - cp) > 8192)) else (end - cp)
+                )
                 cp += len(chunk)
                 if not chunk:
                     break
                 server.wfile.write(chunk)
             else:
-                if(cache[web]["status"] == 1):
+                if cache[web]["status"] == 1:
                     break
                 time.sleep(0.5)
-     #urllib.request.urlcleanup()
+    # urllib.request.urlcleanup()
+
 
 def check_for_update():
     import sys
+
     if os.path.exists("version"):
         c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
         c_version = [int(x) for x in c_version]
         c_version = c_version[0] * 100000000 + c_version[1] * 100000 + c_version[2]
-        req =  request.Request("https://raw.githubusercontent.com/raulhaag/gean/master/version")
-        r_version = request.urlopen(req).read().decode('utf-8').strip().split(".")
+        req = request.Request(
+            "https://raw.githubusercontent.com/raulhaag/gean/master/version"
+        )
+        r_version = request.urlopen(req).read().decode("utf-8").strip().split(".")
         r_version = [int(x) for x in r_version]
         r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
         if c_version >= r_version:
             return False
 
     print("Actualizando...")
-    download_file("https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip")
-    with ZipFile('update.zip', 'r') as zipf:
+    download_file(
+        "https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip"
+    )
+    with ZipFile("update.zip", "r") as zipf:
         zipinfos = zipf.infolist()
         for zipinfo in zipinfos:
-            zipinfo.filename = zipinfo.filename.replace('gean-master/', '')
-            if len(zipinfo.filename) > 0 and not ("test/" in zipinfo.filename) :
+            zipinfo.filename = zipinfo.filename.replace("gean-master/", "")
+            if len(zipinfo.filename) > 0 and not ("test/" in zipinfo.filename):
                 zipf.extract(zipinfo)
 
     os.remove("update.zip")
     print("Actualizado, reinicie la aplicación")
     try:
-        os.execv(sys.executable, ['python'] + sys.argv)
+        os.execv(sys.executable, ["python"] + sys.argv)
     except:
         pass
     return True
+
 
 def download_file(url, filename):
     request.urlretrieve(url, filename)
 
 
-server = ThreadingSimpleServer(('', 8080), handler)
+server = ThreadingSimpleServer(("", 8080), handler)
+
 
 def sf(path):
     web_path = path
     server.serve_forever()
+
 
 def generateSourceList():
     regex = r"class\s+(\S+)[\s|\S]+?this.name\s*=\s*([\S+]+)\s*;"
@@ -407,17 +459,22 @@ def generateSourceList():
         with open(file=(soucesDir + file), mode="r") as ofile:
             ctt = ("\n").join(ofile.readlines())
             ofile.close()
-            if(ctt.__contains__("this.name")):
+            if ctt.__contains__("this.name"):
                 match_ = re.findall(regex, ctt, re.MULTILINE)
-                if((len(match_) > 0) and (match_[0][0][0:2] != "NO")):
-                    imports += "import { " + match_[0][0] + " } from \"./" + file +"\";\n"
-                    initial +=  match_[0][1] + ": new " + match_[0][0] +",\n"
-    
-    sOut = imports + '''\nexport function openInNewTab(url) {
+                if (len(match_) > 0) and (match_[0][0][0:2] != "NO"):
+                    imports += (
+                        "import { " + match_[0][0] + ' } from "./' + file + '";\n'
+                    )
+                    initial += match_[0][1] + ": new " + match_[0][0] + ",\n"
+
+    sOut = (
+        imports
+        + """\nexport function openInNewTab(url) {
         window.open(url, '_blank').focus();
-}\n'''
+}\n"""
+    )
     sOut += "let servers = {" + initial + "};\n"
-    sOut += '''export function getSource(name) {return servers[name];}
+    sOut += """export function getSource(name) {return servers[name];}
 
 export function getResponse(name, callback, error_callback) {
     if(servers[name]){
@@ -431,8 +488,8 @@ export function getLinks(path, callback, error_callback) {
 
 export function getSourceList(){
     return Object.keys(servers);
-}'''
-    with open("temp/sources.js","w") as file:
+}"""
+    with open("temp/sources.js", "w") as file:
         file.write(sOut)
         file.close()
 
@@ -440,32 +497,37 @@ export function getSourceList(){
 def abrir_video_con_reproductor(ruta_o_url):
     sistema_operativo = platform.system()
 
-    if sistema_operativo == 'Windows':
-        subprocess.run(['start', ruta_o_url], shell=True)
-    elif sistema_operativo == 'Darwin':  # macOS
-        subprocess.run(['open', ruta_o_url])
-    elif sistema_operativo == 'Linux':
-        subprocess.run(['xdg-open', ruta_o_url])
+    if sistema_operativo == "Windows":
+        subprocess.run(["start", ruta_o_url], shell=True)
+    elif sistema_operativo == "Darwin":  # macOS
+        subprocess.run(["open", ruta_o_url])
+    elif sistema_operativo == "Linux":
+        subprocess.run(["xdg-open", ruta_o_url])
     else:
         print("Sistema operativo no compatible.")
 
-def main(page = "http://127.0.0.1:8080/main.html",path = "./www"):
+
+def main(page="http://127.0.0.1:8080/main.html", path="./www"):
     if os.path.exists(cachedir):
         shutil.rmtree(cachedir)
     os.makedirs(cachedir)
     web_path = path
     try:
-        if(not check_for_update()):
+        if not check_for_update():
             from threading import Thread
-            thread = Thread(target = sf, args=(path,))
+
+            thread = Thread(target=sf, args=(path,))
             thread.start()
             try:
                 import webbrowser
+
                 window = webbrowser.open(page)
             except Exception as e:
                 print(e)
             thread.join()
     except Exception as e:
         print(e)
+
+
 if __name__ == "__main__":
     main()
