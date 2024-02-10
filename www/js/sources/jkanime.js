@@ -190,11 +190,12 @@ export class JKAnime {
       for (let i = 0; i < fames.length; i++) {
         links.push(this.trLink(fames[i][1]));
       }
-      const regex = /remote = '(.+?)'.[\s]+\$\.getJ.+?'(.+?)'/gm;
-      var rMatch = regex.exec(result)
-      if (rMatch) {
-        let jswp = rMatch[1] + rMatch[2];
-        let ssjs = JSON.parse(await fGet(jswp))
+      const remote = getFirstMatch(/remote\s*=\s*'([^']+)'/gm, result)
+      const rpath = getFirstMatch(/remote\+'([^']+?js)'/gm, result)
+      if (remote && rpath) {
+        let jswp = remote + rpath;
+        let sjs = (await fGet(jswp, {Referer: "https://jkanime.net/"}));
+        const ssjs = JSON.parse(sjs.replace('var servers = ','').trim());
         for (var ss in ssjs) {
           links.push(dec(ssjs[ss].remote) + "||server_name_" + ssjs[ss].server.toLowerCase() + ".")
         }
