@@ -117,7 +117,7 @@ export class SoloLatino {
       }
       if (links.length === 0) {// if no links
         let web = [...result.matchAll(/"pframe"><iframe class="[^"]+" src="([^"]+)/gm)][0][1];
-        result = await fGet(web);
+        result = await fGet(web, {Referer: this.baseUrl});
         links = links.concat(this.parseLinks(result));
         if(links.length == 0 && web.includes("xyz")){
           links.push(web)
@@ -148,8 +148,13 @@ export class SoloLatino {
           if(decoded){
             links.push(atob(decoded));
           }
+          try{
+            links.push([...link.getAttribute("onclick").matchAll(/go_to_playerVast\('(.+?)'/gm)][0][1]);
+            links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_playerVast\('(.+?)'/gm)][0][1]));
+          }catch(e){
           links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
-          links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]));
+            links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]));
+          }
         }
       }catch(e){}//continue
     }
