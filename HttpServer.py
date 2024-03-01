@@ -105,6 +105,7 @@ class handler(SimpleHTTPRequestHandler):
             "png",
             "gif",
             "ico",
+            "svg",
             "mp4",
         ]:
             self.path = web_path + self.path
