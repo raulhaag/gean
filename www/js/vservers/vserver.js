@@ -188,7 +188,7 @@ export function getPreferer(list){
                     "filelions",
                     "yourupload",
                     "mixdrop",
-                    "plustr",
+                    //"plustr",
                 ];
     
     let ordered = [];
