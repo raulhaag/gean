@@ -15,6 +15,7 @@ import { Voe } from "./voe.js";
 import { StreamWish } from "./streamwish.js";
 import { FileMoon } from "./filemoon.js";
 import { FileLions } from "./filelions.js";
+import {Plustr} from "./plustr.js";
 
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
@@ -39,6 +40,7 @@ let servers = {"fembed": new Fembed(),
                 "streamwish": new StreamWish(),
                 "filemoon": new FileMoon(),
                 "filelions": new FileLions(),
+                "plustr": new Plustr()
             };
 
 export async function getDDL(after, onError, web) {
@@ -96,6 +98,8 @@ export async function getDDL(after, onError, web) {
         return servers["filemoon"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("filelions.") != -1)) {
         return servers["filelions"].getDDL(after, onError, cleanInfo(web));
+    }else if ((web.indexOf("plustr") != -1)) {
+        return servers["plustr"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -154,6 +158,8 @@ export function getName(web) {
         name = "VOE";
     }else if (web.indexOf("wish") != -1) {
         name = "StreamWish";
+    }else if (web.indexOf("plustr") != -1) {
+        name = "Plustream";
     }else {
         name = "";
     }
@@ -182,6 +188,7 @@ export function getPreferer(list){
                     "filelions",
                     "yourupload",
                     "mixdrop",
+                    "plustr",
                 ];
     
     let ordered = [];
