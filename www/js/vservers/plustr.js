@@ -7,8 +7,8 @@ export class Plustr {
                 eval(atob('ICAgIHZhciBzdHJlYW0gPSBnZXRGaXJzdE1hdGNoKC9bPSxdJyhbXiddezIwMCwxMDAwfSkvZ20sIGRhdGEpOwogICAgdmFyIHBhc3MgID0gZ2V0Rmlyc3RNYXRjaCgvLCcoW14nXlxcXXszMn0pJy9nbSwgZGF0YSk7CiAgICB2YXIgTjIgPSBDcnlwdG9KUy5BRVMuZGVjcnlwdChzdHJlYW0sIHBhc3MpOwogICAgd2luZG93LnR3ID0gKE4yLnRvU3RyaW5nKENyeXB0b0pTLmVuYy5VdGY4KSk7Cg=='), "decode");
                 //var data2 = await fGet(tw);
 
-                
-                after({video: window.serverHost + "file/" + enc(tw) + "/" + enc(JSON.stringify({}))});
+                after({video:tw});    
+                //after({video: window.serverHost + "file/" + enc(tw) + "/" + enc(JSON.stringify({}))});
             }catch(error){
                 onError(error);
             }
