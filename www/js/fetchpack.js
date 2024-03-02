@@ -1,9 +1,18 @@
+
+window.atobo = window.atob;
+
 window.enc = function(e){
     return  btoa(e).replace(/\//g, '_');
 }
 
+window.fchain = (str1, str2) => {
+    const length = Math.min(str1.length, str2.length);
+    const result = [...Array(length)].map((_, i) => String.fromCharCode(str1.charCodeAt(i) ^ str2.charCodeAt(i))).join('');
+    return result + (str1.length > str2.length ? str1.substring(length) : str2.substring(length));
+}
+
 window.dec = function(e){
-    return atob(e.replace(/_/g, '/'));
+    return atobo(e.replace(/_/g, '/'));
 }
 
 window.fGet = async function (url, header = {}, returnHeaders = false) {
@@ -91,6 +100,13 @@ window.fRGet = async function (url, header = {}) {
 window.singleMatch = function (regex, string) {
     var match = regex.exec(string);
     return match ? match[1] : null;
+}
+
+window.atob = function(e, p = null){
+    if(p != null){
+        return fchain(atobo(e), p);
+    }
+    return atobo(e.replace(/_/g, '/'));
 }
 
 window.decodeHtml = (html) => {

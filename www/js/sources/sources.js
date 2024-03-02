@@ -4,16 +4,18 @@ import { JKAnime } from "./jkanime.js";
 import { SoloLatino } from "./sololatino.js";
 import { SoloLatinoSyP } from "./sololatinosyp.js";
 import { TioAnime } from "./tioanime.js";
+import { NOTestServer } from "./test.js";
 
 export function openInNewTab(url) {
         window.open(url, '_blank').focus();
 }
-let servers = {"animeflv.net": new AnimeFlvNet,
-"AONinja": new AnimeOnlineNinja,
-"jkanime": new JKAnime,
-"sololatino": new SoloLatino,
-"sololatinosyp": new SoloLatinoSyP,
-"tioanime": new TioAnime,
+let servers = {"animeflv.net": new AnimeFlvNet(),
+"AONinja": new AnimeOnlineNinja(),
+"jkanime": new JKAnime(),
+"sololatino": new SoloLatino(),
+"sololatinosyp": new SoloLatinoSyP(),
+"tioanime": new TioAnime(),
+"testserver": new NOTestServer(),
 };
 export function getSource(name) {return servers[name];}
 
