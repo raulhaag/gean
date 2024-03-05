@@ -2,7 +2,7 @@ import { getSource } from "../../../js/sources/sources.js";
 
 window.loadHome = (onFinnish = null) => {
     if(!window.appSettings["lockfronpage"][0]){
-       getSource("testserver").getFrontPage(fillVideos, console.log);
+       getSource(window.sid).getFrontPage(fillVideos, console.log);
     }else{
         this.fillVideos({});
     }
@@ -31,7 +31,7 @@ let generateCategory = (title, items) =>{
 window.onHomeItemClick = (item) => {
     if(item.dataset.path.includes("/getDescription/")){
         window.showLoading();
-        getSource("testserver").getDescription((data) => {
+        getSource(window.sid).getDescription((data) => {
             window.stateDetails(data)
             window.hideLoading();
         }, console.log, item.dataset.path );

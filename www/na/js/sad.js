@@ -90,8 +90,17 @@ function loadSettings() {
 
 
 // init sad 
-
 loadSettings();
+let lastServer = localStorage.getItem("lastServer");
+let lastServerName = localStorage.getItem("lastServerName");
+if (lastServer != null && lastServerName != null) {
+  window.sid = lastServer;
+  window.sn = lastServerName;
+} else {
+  window.sid = "jkanime";
+  window.sn = "JkAnime";
+}
+
 try {
     window.favorites = JSON.parse(window.getStorageDefault("favorites", "[]"));
 } catch (e) {

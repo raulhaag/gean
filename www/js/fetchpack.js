@@ -45,7 +45,7 @@ window.fPost = async function (url, header, data) {
     var out = "";
     try{
         var response = await fetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(data)));  // `false` makes the request synchronous
-        let   = "";
+        let out = "";
         if (response.status === 200) {
             out =  await response.text();
         }else{
