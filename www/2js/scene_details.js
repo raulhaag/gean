@@ -93,6 +93,7 @@ export class SceneDetails extends Scene {
                 }
             }
         }
+        hideLoading()
     }
 
     updatePositionsLV0 = function (containerCN = "content", className = "focusable"){

@@ -74,7 +74,8 @@ export class SceneChange extends Scene{
         cs.classList.add("change-item-selected");
         cs.parentNode.scrollLeft = cs.offsetLeft;
         this.serverSelectedIdx = this.servers.indexOf(sid);
-        this.needCenter()
+        this.needCenter();
+        hideLoading();
     }
 
     needCenter = () => {

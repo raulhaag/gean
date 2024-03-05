@@ -88,6 +88,7 @@ export class SceneSearch extends Scene{
                         this.searchtext.innerHTML = this.searchtext.innerHTML + " ";
                         break;
                     case '✓':
+                        showLoading();
                         let server = getSource(sid);
                         server.getSearch((items) =>{this.searchDone(items, this)}, error, this.searchtext.innerHTML.replace(' ', '+'))
                         break;
@@ -173,6 +174,7 @@ export class SceneSearch extends Scene{
     initBindings(){
         this.lastkey = this.updatePositionsSr("search-box", this.lastkey);
         this.searchtext = document.getElementsByClassName("search-text")[0];
+        hideLoading();
     }
 
     initBody(){
@@ -234,6 +236,7 @@ export class SceneSearch extends Scene{
         instance.lastMedia = instance.updatePositionsSr("search-results-ph", this.lastMedia);
         instance.lastKeyManager = instance.search_result_nav;
         instance.lastkey.classList.remove("focus");
+        hideLoading();
     }
     updatePositionsSr(containerCN = "content", lastsel){
         let container = document.getElementsByClassName(containerCN)[0];

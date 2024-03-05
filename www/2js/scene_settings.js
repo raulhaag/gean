@@ -87,6 +87,7 @@ export class SceneSettings extends Scene{
         this.lastSetting = document.getElementsByClassName("setting")[0];
         this.lastSetting.classList.add("selected");
         this.settingsList = document.getElementsByClassName("settings-list")[0];
+        hideLoading();
     }
 
     saveSetting(newSettings) {

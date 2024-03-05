@@ -118,6 +118,7 @@ export class ScenePlayer extends Scene {
     if (appSettings["autoplay"][0]) {
       this.player.play();
     }
+    hideLoading();
     changeKeyManager();
   }
 
