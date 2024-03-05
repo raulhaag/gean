@@ -159,7 +159,7 @@ export function getName(web) {
     }else if (web.indexOf("wish") != -1) {
         name = "StreamWish";
     }else if (web.indexOf("plustr") != -1) {
-        name = "Plustream";
+        name = "Plustream (Solo reproductor interno android)";
     }else {
         name = "";
     }
@@ -170,9 +170,10 @@ export function getName(web) {
 export function getPreferer(list){
     let preferer = ["/um2.php?e=",
                     "jk.php?u=stream",
-                    "um.php?e=",
                     "mediafire.com",
                     "plusvip.net",
+                    "streamtape.com",
+                    "voe",
                     "embedsito.net/reproamz",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",
@@ -181,17 +182,28 @@ export function getPreferer(list){
                     "zippishare",
                     "/reproamz/",
                     "zplayer.live",
-                    "streamtape.com",
-                    "voe",
                     "wish",
                     "filemoon",
                     "filelions",
                     "yourupload",
                     "mixdrop",
-                    //"plustr",
+                    "um.php?e=",
+                    "plustr",
                 ];
     
     let ordered = [];
+    for(let i = 0; i < preferer.length; i++){
+        for(let j = 0; j < list.length; j++){
+            if(list[j].indexOf(preferer[i]) != -1){
+                ordered.push(list[j]);
+            }
+          }
+        }
+
+
+
+
+/*
     for(let i = 0; i < list.length; i++){
          /* if(list[i].startsWith("{")){
             ordered.push(list[i]);
@@ -200,14 +212,14 @@ export function getPreferer(list){
                 ordered.push(list[j]);
             }else if((list[j].indexOf("streamlare.com") != -1) || (list[j].indexOf("slmaxed.com") != -1) || (list[j].indexOf("slwatch.c") != -1)) {
                 ordered.push(list[j]);
-            }*/
+            }
         for(let j = 0; j < preferer.length; j++){
             if(list[i].indexOf(preferer[j]) != -1){
-                ordered.push(list[i]);
+                ordered[ordered.length] = list[i];
             }
           }
         }
-        
+        */
    // }
 
     return ordered;

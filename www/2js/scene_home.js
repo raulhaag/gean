@@ -79,6 +79,7 @@ export class SceneHome extends Scene{
         };
         document.getElementsByClassName("videos")[0].innerHTML= "<div class='initial-gap'></div>" + videoContent + "<div class='initial-gap'></div>";
         this.updatePositions("videos");
+        hideLoading();
         changeKeyManager();
     };
 
@@ -165,6 +166,7 @@ export class SceneHome extends Scene{
             case "NumpadEnter":
             case "Space":
             case " ":
+                showLoading();
                 let node = document.getElementsByClassName('info-capitulos')[0];
                 if(node != null){
                     document.getElementById("home").removeChild(node);

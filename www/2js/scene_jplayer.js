@@ -95,6 +95,7 @@ export class ScenePlayer extends Scene{
         })
         this.last = this.player;
         if(appSettings["fullscreen"][0])this.player.setFullscreen(true);
+        hideLoading();
         changeKeyManager();
     }
 

@@ -18,7 +18,6 @@ window.lockKeys = true;
 let scene_container = null;
 window.backScenePoll = [];
 let backScenePH = [];
-let loadingCounter = 0;
 window.currentTitle = "";
 window.currentChapter = "";
 window.favorites = {};
@@ -136,8 +135,7 @@ window.changeKeyManager = () => {
 
 let loadingDiv = null;
 let timeOutLoadingId = null;
-window.setLoading = () => {
-  loadingCounter += 1;
+window.showLoading = () => {
   if (window.lockKeys) {
     window.lockKeyboard();
   } else {
@@ -155,11 +153,7 @@ window.setLoading = () => {
   }
 };
 
-window.unsetLoading = () => {
-  loadingCounter -= 1;
-  if (loadingCounter != 0) {
-    return;
-  }
+window.hideLoading = () => {
   timeOutLoadingId = setTimeout(() => {
     window.unlockKeyboard();
     try {
@@ -171,7 +165,7 @@ window.unsetLoading = () => {
 };
 
 window.setScene = (nScene) => {
-  window.setLoading();
+  window.showLoading();
   try {
     if (nScene.full_menu) {
       //replace main escene
@@ -210,7 +204,6 @@ window.setScene = (nScene) => {
     }
   } catch (e) {}
   window.changeKeyManager();
-  window.unsetLoading();
 };
 
 let popScene = () => {
@@ -364,20 +357,25 @@ window.route = function (path, ppath = null) {
     params = atob(fpath[2]);
   }
   if (action == "getFrontPage") {
+    showLoading();
     document.title("GEAn")
     server.getFrontPage(window.posServerClick, window.error);
+    return;
   } else if (action == "getCategory") {
     //server.getCategory(params, posServerClick, error);
   } else if (action == "getDescription") {
+    showLoading();
     document.title = window.currentTitle
     server.getDescription(
       (resp) => {
         window.setScene(new SceneDetails(resp, currentScene));
+        hideLoading()
       },
       window.error,
       fpath[2]
     );
   } else if (action == "getLinks") {
+    showLoading();
     server.getLinks(
       (linkList) => {
         let best = getPreferer(linkList);
@@ -454,6 +452,7 @@ window.route = function (path, ppath = null) {
           }
           getDDL(mask, tryOtherOnError, best[0]);
         } else {
+          hideLoading()
           window.error("No supported servers");
         }
       },
@@ -461,6 +460,7 @@ window.route = function (path, ppath = null) {
       fpath[2]
     );
   } else if (action == "search") {
+    showLoading();
     let term = document.getElementsByClassName("search__text")[0].value;
     server.getSearch(window.posSearch, window.error, term);
   }
@@ -538,8 +538,10 @@ window.generateSelectorDialog = (
       if (!lOSelected.classList.contains("option-selector-cancel")) {
         postAction(
           window.dec(lOSelected.dataset["info"]),
-          lOSelected.innerHTML
+          lOSelected.innerHTML,
         );
+      }else{
+        hideLoading();
       }
     }
   };
@@ -547,7 +549,7 @@ window.generateSelectorDialog = (
 
 window.error = (error_message) => {
   alert(error_message);
-  window.unsetLoading();
+  window.hideLoading();
   //TODO: Error
   //loading.style.visibility = 'hidden';
 };

@@ -119,6 +119,7 @@ export class ScenePlayerVideoJs extends Scene {
     });
     this.last = document.getElementsByTagName("video")[0];
     if (appSettings["fullscreen"][0]) this.goFullScreen();
+    hideLoading();
     changeKeyManager();
   }
 

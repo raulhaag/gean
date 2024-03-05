@@ -1,3 +1,5 @@
+import { getSourceList } from "../../js/sources/sources.js";
+
 window.drawerState = true;
 window.searchState = true;
 
@@ -22,8 +24,6 @@ let loadPanel = null;
 let lastSelectedButton = null;
 let backActionsPile = [];
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
   homeButton = document.getElementById("homeButton");
   searchButton = document.getElementById("search_menu");
@@ -47,7 +47,15 @@ document.addEventListener("DOMContentLoaded", () => {
   drawerButton.addEventListener("click", drawerSwitch);
   document.getElementById("drawer_icon_open").addEventListener("click", drawerSwitch);
   searchButton.addEventListener("click", searchSwitch);
-  sourceButton.addEventListener("click", stateChangeSource);
+  sourceButton.addEventListener("click", () => {
+    drawerSwitch();
+    let slist = getSourceList();
+    showOptionsDialog("Selecciona un origen", slist, slist, (nValue) => {
+      localStorage.setItem("lastServer", nValue);
+      localStorage.setItem("lastServerName", nValue);
+      location.reload();
+    }, ()=>{} ,window.sid);
+  });
   homeButton.addEventListener("click", stateHome);
   settingsButton.addEventListener("click", stateSettings);
   backButton.addEventListener("click", onBackClick);
@@ -118,9 +126,9 @@ let searchSwitch = (newState = !window.searchState) => {
   if (window.searchState) {
     document.getElementById("search").classList.remove("hide");
     document.getElementById("header").classList.add("search_state");
-    setTimeout(() => {main_content.classList.add('undysplay')}, 500);
+    setTimeout(() => {mainPanel.classList.add('undysplay')}, 500);
   } else {
-    main_content.classList.remove('undysplay');
+    mainPanel.classList.remove('undysplay');
     document.getElementById("search").classList.add("hide");
     document.getElementById("header").classList.remove("search_state");
   }
@@ -133,17 +141,6 @@ let searchSwitch = (newState = !window.searchState) => {
   }
 };
 
-let stateChangeSource = () => {
-  changeSelected(sourceButton);
-  drawerSwitch();
-  searchSwitch(true);
-  hide(searchButton, false);
-  hide(settingsPanel);
-  hide(detailsPanel);
-  hide(settingsPanel);
-  setHeader("Selecciona un origen");
-  show(sourcePanel);
-};
 
 let stateHome = () => {
   changeSelected(homeButton);
@@ -164,21 +161,6 @@ let stateSettings = () => {
   hide(sourcePanel);
   show(settingsPanel);
   setHeader("Configuración");
-  /*showOptionsDialog(
-    "Elige una opción",
-    [
-      "opcion 1",
-      "opcion 1",
-      "opcion 3",
-      "opcion 4",
-      "opcion 1",
-      "opcion 1",
-      "opcion 3",
-      "opcion 4",
-    ],
-    ["1", "2", "3", "4", "1", "2", "3", "4"],
-    alert
-  );*/
 };
 
 
@@ -210,25 +192,32 @@ let showOptionsDialog = (
   options,
   values,
   onSelect,
-  onCancel = console.log
+  onCancel = console.log,
+  defaultValue = 0
 ) => {
   /*clean and populate new option*/
-  let optionsUl = document.getElementById("options_list");
+  let optionsUl = document.getElementsByClassName("options_box")[0];
   window.lastDialogOnSelect = (value) => {
     optionsDialog.classList.add("hide");
     onSelect(value);
   };
 
-  let newLis = "";
+  let innerHTML = '<div class="options_title"><div>' + title + '</div></div><ul id="options_list" class="options_list">';
+  let selected = "";
   for (let i = 0; i < options.length; i++) {
-    newLis +=
-      "<li onclick=\"{window.lastDialogOnSelect('" +
+    if(values[i] == defaultValue){
+      selected = "class='selected'";
+    }else{
+      selected = "";
+    }
+    innerHTML +=
+      "<li " + selected + " onclick=\"{window.lastDialogOnSelect('" +
       values[i] +
       "')}\"><div>" +
       options[i] +
       "</div></li>";
   }
-  optionsUl.innerHTML = newLis;
+  optionsUl.innerHTML = innerHTML + '</ul><div class="options_cancel"><div>Cancelar</div></div>';
   optionsDialog.classList.remove("hide");
   let cancelButton = document.getElementsByClassName("options_cancel")[0];
   cancelButton.addEventListener("click", () => {
