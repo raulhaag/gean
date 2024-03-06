@@ -146,10 +146,8 @@ let stateHome = () => {
   changeSelected(homeButton);
   drawerSwitch();
   show(searchButton);
-  hide(settingsPanel);
   hide(detailsPanel);
   hide(settingsPanel);
-  hide(sourcePanel);
   setHeader("Serrvidor n");
 };
 
@@ -158,7 +156,6 @@ let stateSettings = () => {
   drawerSwitch();
   hide(searchButton, false);
   hide(detailsPanel);
-  hide(sourcePanel);
   show(settingsPanel);
   setHeader("Configuración");
 };

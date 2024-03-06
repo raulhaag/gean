@@ -29,12 +29,13 @@ let generateCategory = (title, items) =>{
 
 
 window.onHomeItemClick = (item) => {
-    if(item.dataset.path.includes("/getDescription/")){
+    let path = item.dataset.path.split("/");
+    if(path[1].includes("getDescription")){
         window.showLoading();
-        getSource(window.sid).getDescription((data) => {
+        getSource(path[0]).getDescription((data) => {
             window.stateDetails(data)
             window.hideLoading();
-        }, console.log, item.dataset.path );
+        }, console.log, path[2]);
     }
 }
 
