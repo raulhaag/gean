@@ -20,6 +20,7 @@ let settingsPanel = null;
 let playerPanel = null;
 let optionsDialog = null;
 let loadPanel = null;
+let searchInput = null;
 
 let lastSelectedButton = null;
 let backActionsPile = [];
@@ -44,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   optionsDialog = document.getElementById("options_menu");
 
+  searchInput = document.getElementById("search_input");
+
   drawerButton.addEventListener("click", drawerSwitch);
   document.getElementById("drawer_icon_open").addEventListener("click", drawerSwitch);
   searchButton.addEventListener("click", searchSwitch);
@@ -59,6 +62,16 @@ document.addEventListener("DOMContentLoaded", () => {
   homeButton.addEventListener("click", stateHome);
   settingsButton.addEventListener("click", stateSettings);
   backButton.addEventListener("click", onBackClick);
+
+  searchInput.addEventListener("keypress", (evt) =>{
+    switch(evt.key){
+      case "Enter":
+      case "NumpadEnter":
+      case "Go":
+        if(searchInput.value.length > 2) window.searchInServer(searchInput.value);
+      break;
+    }
+  });
   
   lastSelectedButton = homeButton;
   window.loadHome(() => {hide(loadPanel, false)});

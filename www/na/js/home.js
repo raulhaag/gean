@@ -27,7 +27,6 @@ let generateCategory = (title, items) =>{
 };
 
 
-
 window.onHomeItemClick = (item) => {
     let path = item.dataset.path.split("/");
     if(path[1].includes("getDescription")){
@@ -53,3 +52,28 @@ let fillVideos = (videos)=>{
     };
     document.getElementById("main_content").innerHTML= "<div class=\"content_groups\">" + videoContent + "</div>";
 };
+
+window.searchInServer = (term) => {
+    let sRCont = document.getElementsByClassName("search_results")[0];
+    sRCont.innerHTML = "";
+    window.showLoading()
+    getSource(window.sid).getSearch((items) => {
+        /*
+        <article class="search_result">
+          <img src="img/testImg.jpg"/>
+          <div class="search_result_title">
+            Titulo A
+          </div>
+        </article>*/
+        let sRData = "";
+        for(let i = 0; i < items.length; i++){
+            sRData += '<article class="search_result"  onClick="{window.onHomeItemClick(this);}" data-name="' + items[i]["name"] +
+                '" data-image="' + items[i]["image"] + 
+                '" data-path="' + items[i]["path"] + 
+                '"><img src="' + items[i]["image"] + 
+                '"/><div class="search_result_title">' + items[i]["name"] +"</div></article>"
+        }
+        sRCont.innerHTML = sRData;
+        window.hideLoading()
+    }, console.log, term)
+}
