@@ -11,3 +11,9 @@ export class Plustr {
             }
     }
 }
+
+/*
+                let w2 = await fGet(tw);
+                let w3 = getFirstMatch(/(https:[^ ]+)/gm, w2);
+                after({video: window.serverHost + "get/" + enc(w3) + "/" + enc(JSON.stringify({Referer:tw}))})
+                */

@@ -1,4 +1,6 @@
 
+window.serverHost = "http://127.0.0.1:8080/";
+
 window.atobo = window.atob;
 
 window.enc = function(e){

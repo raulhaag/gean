@@ -6,7 +6,10 @@
     <title>Gean</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" media="screen" href="na/css/main.css" />
-    <script type="module" src="js/fetchpack.js"></script>
+    <script type="text/javascript" src="js/fetchpack.js"></script>
+    <script src="js/lib/aes.js"></script>
+    <script src="js/lib/mode-ecb.min.js"></script>
+    <script src="js/lib/hls.js"></script>
     <script type="module" src="na/js/sad.js"></script>
     <script type="module" src="na/js/home.js"></script>
     <script type="module" src="na/js/main.js"></script>
@@ -30,7 +33,7 @@
     <div id="main_content">
     </div>
     <div id="search" class="search hide">
-       <input type="text" placeholder="Buscar" autocomplete="off">
+       <input id="search_input" type="text" placeholder="Buscar" autocomplete="off">
        <div class="search_results">
        </div>
     </div>
