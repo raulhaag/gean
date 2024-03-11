@@ -511,39 +511,45 @@ window.generateSelectorDialog = (
   document.__optionsDiv = div;
   document.onkeydown = (event) => {
     let cidx = parseInt(lOSelected.id.split("_")[1]);
-    if (event.key === 'ArrowUp') {
-      //up arrow
-      if (cidx > 0) {
-        cidx--;
-        lOSelected.classList.remove("selected");
-        lOSelected = document.getElementById("os_" + cidx);
-        list.scrollTop = lOSelected.offsetTop - list.offsetTop;
-        lOSelected.classList.add("selected");
+    switch (event.key) {
+      case 'ArrowUp':
+        //up arrow
+        if (cidx > 0) {
+          cidx--;
+          lOSelected.classList.remove("selected");
+          lOSelected = document.getElementById("os_" + cidx);
+          list.scrollTop = lOSelected.offsetTop - list.offsetTop;
+          lOSelected.classList.add("selected");
+        }
+        break;
+      case 'ArrowDown':
+        //down arrow
+        if (!lOSelected.classList.contains("option-selector-cancel")) {
+          cidx++;
+          lOSelected.classList.remove("selected");
+          lOSelected = document.getElementById("os_" + cidx);
+          list.scrollTop = lOSelected.offsetTop - list.offsetTop;
+          lOSelected.classList.add("selected");
+        }
+        break
+        case "Enter":
+        case "NumpadEnter":
+        case "Space":
+        case " ":   
+          document.body.removeChild(document.__optionsDiv);
+          document.onkeydown = document.__selectPrekeydown;
+          document.__selectPrekeydown = null;
+          dialog = false;
+          window.unlockKeyboard();
+          if (!lOSelected.classList.contains("option-selector-cancel")) {
+            postAction(
+              window.dec(lOSelected.dataset["info"]),
+              lOSelected.innerHTML,
+            );
+          }else{
+            hideLoading();
+          }
       }
-    } else if (event.key === 'ArrowDown') {
-      //down arrow
-      if (!lOSelected.classList.contains("option-selector-cancel")) {
-        cidx++;
-        lOSelected.classList.remove("selected");
-        lOSelected = document.getElementById("os_" + cidx);
-        list.scrollTop = lOSelected.offsetTop - list.offsetTop;
-        lOSelected.classList.add("selected");
-      }
-    } else if (event.key === "Enter" || event.key === "Space" || event.key === "NumpadEnter" ) {
-      document.body.removeChild(document.__optionsDiv);
-      document.onkeydown = document.__selectPrekeydown;
-      document.__selectPrekeydown = null;
-      dialog = false;
-      window.unlockKeyboard();
-      if (!lOSelected.classList.contains("option-selector-cancel")) {
-        postAction(
-          window.dec(lOSelected.dataset["info"]),
-          lOSelected.innerHTML,
-        );
-      }else{
-        hideLoading();
-      }
-    }
   };
 };
 
