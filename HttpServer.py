@@ -142,6 +142,9 @@ class handler(SimpleHTTPRequestHandler):
         for header in message.headers._headers:
             if header[0].lower() == "set-cookie":
                 self.send_header("gean_" + header[0], header[1])
+            if "content" in header[0].lower():
+                self.send_header(header[0], header[1])
+
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Expose-Headers", "*")
         self.send_header("Access-Control-Allow-Headers", "*")

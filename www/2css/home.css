@@ -242,7 +242,7 @@ body {
   margin: 1vh;
   display: flex;
   position: relative;
-  aspect-ratio: 0.65;
+  width: 24vh;
   height: 37vh;
 }
 
@@ -251,9 +251,10 @@ body {
 }
 
 .item img {
+  position: relative;
   object-fit: cover;
   object-position: center;
-  width: 100%;
+  width: calc(24vh - 6px);
   background-color: #0005;
 }
 
