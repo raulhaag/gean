@@ -16,7 +16,7 @@ let header = null;
 let mainPanel = null;
 let sourcePanel = null;
 let detailsPanel = null;
-let settingsPanel = null;
+window.settingsPanel = null;
 let playerPanel = null;
 let optionsDialog = null;
 let loadPanel = null;
@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   lastSelectedButton = homeButton;
   window.loadHome(() => {hide(loadPanel, false)});
+  stateSettings();
 });
 
 window.showLoading = ()=>{
@@ -119,7 +120,7 @@ let changeSelected = (newSelected) => {
   lastSelectedButton.classList.add("selected");
 };
 
-let drawerSwitch = () => {
+window.drawerSwitch = () => {
   if (window.drawerState) {
     drawer.classList.remove("drawer_hide");
     document
@@ -161,14 +162,15 @@ let stateHome = () => {
   show(searchButton);
   hide(detailsPanel);
   hide(settingsPanel);
-  setHeader("Serrvidor n");
+  setHeader(window.sid);
 };
 
 let stateSettings = () => {
   changeSelected(settingsButton);
-  drawerSwitch();
+  //TODO UNCOMMENT drawerSwitch();
   hide(searchButton, false);
   hide(detailsPanel);
+  window.generateSettings();
   show(settingsPanel);
   setHeader("Configuración");
 };
@@ -197,7 +199,7 @@ window.stateDetails = (data, search = false) => {
 };
 
 
-let showOptionsDialog = (
+window.showOptionsDialog = (
   title,
   options,
   values,
