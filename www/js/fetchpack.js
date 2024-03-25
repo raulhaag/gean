@@ -29,8 +29,7 @@ window.fGet = async function (url, header = {}, returnHeaders = false) {
             data = "error " + response.status;
         }
     }catch(e){
-        try{window.unsetLoading();}catch(e2){};
-        throw e;
+
     }
     try{window.unsetLoading();}catch(e){};
     if(returnHeaders){

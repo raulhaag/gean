@@ -1,3 +1,7 @@
+:root {
+  --description-text-height: 1.2rem;
+  --tint-color: #004A77;
+}
 *{
     margin: 0px;
     padding: 0px;
@@ -130,11 +134,11 @@ li {
 }
 
 li:hover{
-  background-color: #004A77;
+  background-color: var(--tint-color);
 }
 
 .selected{
-  background-color: #004A77!important;
+  background-color: var(--tint-color)!important;
 }
 
 .button:hover {
@@ -290,7 +294,7 @@ input:focus{
 .search_result{
   position: relative;
   border-radius: 25px;
-  background-color: #004A77;
+  background-color: var(--tint-color);
 }
 
 .search_result img{
@@ -360,10 +364,10 @@ input:focus{
 }
 
 #select_source li:hover{
-  background-color: #004A77;
+  background-color: var(--tint-color);
 }
 #select_source li.selected{
-  background-color: #004A77;
+  background-color: var(--tint-color);
 }
 
 
@@ -448,18 +452,18 @@ input:focus{
   width: calc(100% - 22px);
   overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100% -25px);
+  height: calc(100% - 25px);
 }
 
 #settings li {
-  max-width: 500px;
-  display: inline-block;
+  max-width: 800px;
   text-align: center;
   background-color: #28292A;
   width: calc(100% - 44px);
   display: flex;
   margin-right: auto;
   margin-left: auto;
+  height: fit-content;
 }
 
 #settings li div{
@@ -505,12 +509,19 @@ input:focus{
 }
 
 #settings .value_preview{
-  color: #004A77;
+  color: var(--tint-color);
   flex-grow: 1;
   margin: 12px;
   padding-left: 12px;
 }
-
+.color-square{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  margin-left: 20px;
+  
+}
 
 
 
@@ -549,6 +560,7 @@ input:focus{
 
 .options_box li div{
   width: inherit;
+  display: inline-block;
 }
 
 .options_title{
@@ -598,6 +610,9 @@ input:focus{
 }
 
 
+
+/* Load screen */
+
 #load_background {
   color: #c4c7c5;
   background-color: #000;
@@ -610,7 +625,6 @@ input:focus{
   transition: opacity 0.5s ease; 
 }
 
-/* Load screen */
 #load_icon {
   position: absolute;
   width: 48px;

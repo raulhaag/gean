@@ -113,7 +113,7 @@ export class SceneSettings extends Scene{
             }else{
                 extra = "";
             }
-            result +=  '<div class="setting' + extra + '" id ="'+ key +'"><div class="setting-text">'+ this.settings[key][1] +'</div></div>';
+            result += '<div class="setting' + extra + '" id ="'+ key +'"><div class="setting-text">'+ this.settings[key][1] +'</div></div>';
         }
         this._body = result + '</div></div>';
     }

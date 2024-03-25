@@ -1,10 +1,10 @@
 import { getSource } from "../../../js/sources/sources.js";
 
 window.loadHome = (onFinnish = null) => {
-    if(!window.appSettings["lockfronpage"][0]){
+    if(!window.getSettingsDefault("lockfronpage", true)){
        getSource(window.sid).getFrontPage(fillVideos, console.log);
     }else{
-        this.fillVideos({});
+     fillVideos({});
     }
     if(onFinnish){
         onFinnish();
