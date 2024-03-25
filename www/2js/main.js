@@ -405,6 +405,7 @@ window.route = function (path, ppath = null) {
                     );
                   }
                 });
+              hideLoading();
               return;
             }else if(appSettings["selected_player"] === "videojs"){
               window.setScene(new ScenePlayerVideoJs(value, best, currentScene));
