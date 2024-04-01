@@ -541,18 +541,6 @@ window.exitFullScreen = function () {
   }
 };
 
-window.getFirstMatch = function (regex, str) {
-  var m = regex.exec(str);
-  if (m == null) {
-    return "";
-  }
-  return m[1];
-};
-
-window.getAllMatches = function (regex, str) {
-  return [...str.matchAll(regex)];
-};
-
 window.destroyPlayer = function () {
   try {
     window.hls.destroy();

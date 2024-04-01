@@ -90,7 +90,6 @@ function loadSettings() {
       keys.indexOf(setting.currentValue));
   }
 
-
   window.generateSettings = () => {
     let settingsToShow = ["selected_player", "--tint-color", "lockfronpage", "fullscreen", "res_select", "vsource_select", "cache"]
     let innerHTML = "<ul>";
@@ -123,7 +122,6 @@ function loadSettings() {
     }
     return defaultValue;
   };
-
 
 // init sad 
 loadSettings();

@@ -7,13 +7,13 @@ export class NOTestServer {
     while (performance.now() - start < ms);
   }
 
-  waitOfFail() {
+  waitOrFail() {
     this.wait(Math.floor(Math.random() * 3));
     return Math.random() > 0.95;
   }
 
   async getFrontPage(after, onError) {
-    if (this.waitOfFail()) {
+    if (this.waitOrFail()) {
       onError();
       return;
     }
@@ -795,7 +795,7 @@ export class NOTestServer {
     });
   }
   async getDescription(after, onError, path, page = 0) {
-    if (this.waitOfFail()) {
+    if (this.waitOrFail()) {
       onError();
       return;
     }
@@ -885,7 +885,7 @@ export class NOTestServer {
     });
   }
   async getSearch(after, onError, query) {
-    if (this.waitOfFail()) {
+    if (this.waitOrFail()) {
       onError();
       return;
     }
@@ -1049,7 +1049,7 @@ export class NOTestServer {
     ]);
   }
   async getLinks(after, onError, path) {
-    if (this.waitOfFail()) {
+    if (this.waitOrFail()) {
       onError();
       return;
     }

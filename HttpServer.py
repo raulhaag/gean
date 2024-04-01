@@ -115,12 +115,15 @@ class handler(SimpleHTTPRequestHandler):
             self.return_response(404, "Not Found")
 
     def end_headers(self):
-        if (
-            self.path.endswith(".js")
-            or self.path.endswith(".css")
-            or self.path.endswith(".html")
-        ):
-            self.send_my_headers()
+        try:
+            if (
+                self.path.endswith(".js")
+                or self.path.endswith(".css")
+                or self.path.endswith(".html")
+            ):
+                self.send_my_headers()
+        except:
+            pass
         SimpleHTTPRequestHandler.end_headers(self)
 
     def send_my_headers(self):
