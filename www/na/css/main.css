@@ -528,10 +528,11 @@ input:focus{
 /* Options dialog */
 
 .options_box{
-  width: 100%;
+  width: calc(100% - 20px);
   position: absolute;
   background-color: #2d2f31;
-  height: 100%;
+  height: calc(100% - 20px);
+  padding: 10px;;
 }
 
 .options_box ul {
@@ -552,7 +553,7 @@ input:focus{
   text-align: center;
   background-color: #28292A;
   align-items:center;
-  width: 100%;
+  width: calc(100% - 10px);
   display: flex;
   margin-right: auto;
   margin-left: auto;
@@ -587,7 +588,7 @@ input:focus{
   display: inline-block;
   text-align: center;
   align-items: center;
-  width: 100%;
+  width: calc(100% - 20px);
   display: flex;
   margin-right: auto;
   margin-left: auto;

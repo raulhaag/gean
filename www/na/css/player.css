@@ -1,0 +1,52 @@
+#player{
+    position: absolute;
+    top:  68px;
+    overflow: scroll;
+    width: calc(100% - 20px);
+    height: calc(100% - 68px);
+    max-height: calc(100% - 68px);
+    background-color: #1f1f1f;
+    opacity: 1;
+    visibility: visible;
+    transition: visibility 0s, opacity 0.5s ease;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+video{
+    width: 100%;
+    height: fit-content;
+    max-height: calc(100% - 88px);
+}
+
+#vSelect{
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#vServers,#vOptions{
+    flex-grow: 1;
+    height: fit-content;
+    height: 68px;
+    bottom: 0px;
+    display: inline-block;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    display: flex;
+}
+
+#vServers div,#vOptions div{
+    max-width: 500px;
+    position: relative;
+    left: 50%;
+    height: 48px;
+    line-height: 48px;
+    background-color: #28292A;
+    width: inherit;
+    transform: translateX(-50%);
+    border-radius: 24px;
+  }

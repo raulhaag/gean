@@ -1,4 +1,5 @@
 import { getSource } from "../../../js/sources/sources.js";
+import { playVideo } from "./video.js";
 
 window.loadHome = (onFinnish = null) => {
     if(!window.getSettingsDefault("lockfronpage", true)){
@@ -35,6 +36,8 @@ window.onHomeItemClick = (item) => {
             window.stateDetails(data)
             window.hideLoading();
         }, console.log, path[2]);
+    }else if(path[1].includes("getLinks")){
+        playVideo(item.innerText, item.dataset.path);
     }
 }
 

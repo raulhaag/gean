@@ -115,3 +115,16 @@ window.decodeHtml = (html) => {
     el.innerHTML = html;
     return el.textContent;
 }
+
+window.getFirstMatch = function (regex, str) {
+    var m = regex.exec(str);
+    if (m == null) {
+      return "";
+    }
+    return m[1];
+  };
+  
+  window.getAllMatches = function (regex, str) {
+    return [...str.matchAll(regex)];
+  };
+  

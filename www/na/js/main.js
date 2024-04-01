@@ -75,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
   lastSelectedButton = homeButton;
   window.loadHome(() => {hide(loadPanel, false)});
-  stateSettings();
 });
 
 window.showLoading = ()=>{
@@ -167,7 +166,7 @@ let stateHome = () => {
 
 let stateSettings = () => {
   changeSelected(settingsButton);
-  //TODO UNCOMMENT drawerSwitch();
+  drawerSwitch();
   hide(searchButton, false);
   hide(detailsPanel);
   window.generateSettings();
