@@ -317,7 +317,7 @@ let linkError = function (error_message) {
   }
 };
 
-window.posLinks = function (linkList, order = true, select = true) {
+window.posLinks = function (linkList, subtitle, order = true, select = true) {
   let best = null;
   if (order) {
     best = getPreferer(linkList);
@@ -325,7 +325,7 @@ window.posLinks = function (linkList, order = true, select = true) {
     best = linkList;
   }
   let mask = (value) => {
-    openPlayer(value, best);
+    openPlayer(value, best, subtitle);
   };
   window.lastLink = best;
   if (
@@ -352,7 +352,7 @@ window.posLinks = function (linkList, order = true, select = true) {
   }
 };
 
-window.openPlayer = function (options, items = [], res = true) {
+window.openPlayer = function (options,  items = [], subtitle = "",res = true) {
   let video = document.getElementsByTagName("VIDEO")[0];
   if (video) {
     video.pause();
@@ -366,7 +366,7 @@ window.openPlayer = function (options, items = [], res = true) {
         options,
         (selection, options) => {
           options.video = selection;
-          openPlayer(options, items, false);
+          openPlayer(options, items, subtitle, false);
         }
       );
       return;
@@ -392,7 +392,9 @@ window.openPlayer = function (options, items = [], res = true) {
     if (getStorageDefault("internal_player", false)) {
       action = "play/";
     }
-
+    if(subtitle.length > 1){
+      videoSrc = videoSrc + "||subtitle:" + subtitle;
+    }
     fetch(window.serverHost + action + window.enc(videoSrc))
       .then((response) => response.text())
       .then((result) => {
@@ -403,7 +405,7 @@ window.openPlayer = function (options, items = [], res = true) {
     loading.style.visibility = "hidden";
     return;
   }
-  vp.innerHTML = getPlayer(options, items, videoSrc);
+  vp.innerHTML = getPlayer(options, items, videoSrc, subtitle);
   vp.style.display = "flex";
   var elem = document.getElementsByClassName("videoview")[0];
   window.player = new Plyr("#player");
