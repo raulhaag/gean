@@ -2,7 +2,7 @@
 // enc 1 unnescaper(atob(src))
 export class PanDramaTV {
     constructor() {
-      this.name = "pandrama";
+      this.name = "PanDrama";
       this.host = atob("aHR0cHM6Ly9wYW5kcmFtYS50di8=")
     }
     async getFrontPage(after, error) {
