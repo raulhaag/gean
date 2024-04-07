@@ -94,7 +94,7 @@ export function generateDescription(options) {
   return result;
 }
 
-export function getPlayer(options, items = [], videoSrc) {
+export function getPlayer(options, items = [], videoSrc, subtitles = "") {
   let rv = '<div class="source_list">';
   let extra = " selected";
   items.forEach(function (item) {
@@ -137,6 +137,14 @@ export function getPlayer(options, items = [], videoSrc) {
             rv +=  `<source src="` + options[option]+ `" label="` + option + `">`
         });*/
   rv += `<source src="` + videoSrc + `" label="` + "video" + `">`;
+  if(subtitles.length > 1){
+    rv += `<track
+    label="Español"
+    kind="subtitles"
+    srclang="en"
+    src="${subtitles}"
+    default />`
+  }
   rv += `</video>
                 </div>`;
   return rv;
