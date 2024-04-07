@@ -10,7 +10,9 @@ export class FileMoon {
                 var data = desofuscado();
                 var dlink = getFirstMatch(/file:"(.+?)"/gm, data);
                 after({"video":dlink});
-            } 
+            }else{
+                onError("Error: video no encontrado");
+            }
         }catch(error){
             onError(error);
         }

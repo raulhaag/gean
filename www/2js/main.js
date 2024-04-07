@@ -377,7 +377,7 @@ window.route = function (path, ppath = null) {
   } else if (action == "getLinks") {
     showLoading();
     server.getLinks(
-      (linkList) => {
+      (linkList, subtitles = "") => {
         let best = getPreferer(linkList);
         let mask = (value) => {
           let secondMask = (value) => {
@@ -396,6 +396,9 @@ window.route = function (path, ppath = null) {
               if(window.appSettings["selected_player"] === "internal"){
                 op = "play/"
               }
+              if(subtitles.length > 1){
+                videoSrc = videoSrc + "||subtitle:" + subtitles;
+              }
               fetch(window.serverHost + op + window.enc(videoSrc))
                 .then((response) => response.text())
                 .then((result) => {
@@ -412,7 +415,7 @@ window.route = function (path, ppath = null) {
             }else if(appSettings["selected_player"] === "plyr"){
               window.setScene(new ScenePlayerPlyr(value, best, currentScene));
             }else{
-              window.setScene(new ScenePlayer(value, best, currentScene));
+              window.setScene(new ScenePlayer(value, best, currentScene, subtitles));
             }
           };
           if (window.appSettings["res_select"][0]) {

@@ -54,7 +54,11 @@ export async function getDDL(after, onError, web) {
     } */
     /*if(web.startsWith("{")){
         after({"video": JSON.parse(web)["path"]});
-    }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
+    }else*/ 
+    if(web.indexOf("server_name_EnlaceDirecto") != -1) {
+        after({video: cleanInfo(web)}); 
+        return;
+    }else if(web.indexOf("jk.php?u=stream") != -1) {
         servers["jkxtreme"].getDDL(after, onError, web);
     }else if(web.indexOf("plusvip.net") != -1) {
         servers["plusvip.net"].getDDL(after, onError, web);
@@ -114,7 +118,10 @@ export function getName(web) {
     let name = "";
     /*if(web.startsWith("{")){
         return JSON.parse(web)["name"];
-    }else*/ if(web.indexOf("jk.php?u=stream") != -1) {
+    }else*/ 
+    if(web.indexOf("server_name_EnlaceDirecto") != -1) {
+        name = "Directo";
+    }else if(web.indexOf("jk.php?u=stream") != -1) {
         name = "jkxtreme";
     }else if(web.indexOf("um.php?e=") != -1) {
         name = "Desu";
@@ -169,6 +176,7 @@ export function getName(web) {
 
 export function getPreferer(list){
     let preferer = ["/um2.php?e=",
+                    "server_name_EnlaceDirecto",
                     "jk.php?u=stream",
                     "mediafire.com",
                     "plusvip.net",

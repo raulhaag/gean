@@ -11,7 +11,7 @@ export class ScenePlayer extends Scene {
   maxDoubleAccumulator = 7;
   player = null;
   last = null;
-  constructor(options, items, parent) {
+  constructor(options, items, parent, subtitles = '') {
     super(false);
     this.preTitle = document.title
     document.title = window.currentTitle + window.currentChapter
@@ -20,6 +20,7 @@ export class ScenePlayer extends Scene {
     this.options = options;
     this.items = items;
     this.cache = appSettings["cache"][0];
+    this.subtitles = subtitles;
     if(this.options["video"].indexOf(".m3u") != -1){
       this.cache = false;
       this.hls = true;
@@ -44,6 +45,15 @@ export class ScenePlayer extends Scene {
       } else {
         videoSrc = window.serverHost + "cache/" + enc(videoSrc);
       }
+    }
+    let extraSub = "";
+    if(this.subtitles.length > 1){
+      extraSub = `<track
+      label="Español"
+      kind="subtitles"
+      srclang="en"
+      src="${this.subtitles}"
+      default />`;
     }
 
     if (Object.keys(this.options).length > 1) {
@@ -80,7 +90,7 @@ export class ScenePlayer extends Scene {
                     <video id="player-container_1_0" class="video-js" controls>
                     <source src="` +
       videoSrc +
-      `" />
+      `" />` + extraSub + `
                     </video>
                 </div>
             </div></div></div>`; //`"  type="` + vtype + `" />
@@ -263,7 +273,7 @@ export class ScenePlayer extends Scene {
                 }
               });
               let mask = (value) => {
-                setScene(new ScenePlayer(value, best, this.parent));
+                setScene(new ScenePlayer(value, best, this.parent, this.subtitles));
               };
               let tryOtherOnError = (errorMessage) => {
                 if (best.length > 1) {
