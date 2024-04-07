@@ -13,7 +13,7 @@ export class OkRu{
             videos["video"] = filev[filev.length - 1][2];
             after(videos);
         }else{
-            onError("can't find video");
+            onError(`can't find video (${web})` );
         }
     }
 }
