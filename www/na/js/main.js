@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   homeButton.addEventListener("click", stateHome);
   settingsButton.addEventListener("click", stateSettings);
-  backButton.addEventListener("click", onBackClick);
+  backButton.addEventListener("click", window.onBackClick);
 
   searchInput.addEventListener("keypress", (evt) =>{
     switch(evt.key){
@@ -85,7 +85,7 @@ window.hideLoading = ()=>{
   hide(loadPanel);
 }
 
-let onBackClick = () => {
+window.onBackClick = () => {
   let action = backActionsPile.pop();
   if (action) action();
   if(backActionsPile.length == 0){
@@ -95,11 +95,11 @@ let onBackClick = () => {
   }
 }
 
-let setHeader = (title) => {
+window.setHeader = (title) => {
   header.innerText = title;
 };
 
-let hide = (el, disapear = true) => {
+window.hide = (el, disapear = true) => {
   el.classList.add("hide");
   if(disapear){
     setTimeout(() => {
@@ -108,7 +108,7 @@ let hide = (el, disapear = true) => {
   }
 };
 
-let show = (el) => {
+window.show = (el) => {
   el.classList.remove("undysplay");
   el.classList.remove("hide");
 };
@@ -137,10 +137,16 @@ let searchSwitch = (newState = !window.searchState) => {
     return;
   }
   if (window.searchState) {
+    backActionsPile.push(()=>{
+      searchSwitch();
+    });
+    show(backButton);
     document.getElementById("search").classList.remove("hide");
     document.getElementById("header").classList.add("search_state");
     setTimeout(() => {mainPanel.classList.add('undysplay')}, 500);
   } else {
+    hide(backButton);
+    backActionsPile = [];
     mainPanel.classList.remove('undysplay');
     document.getElementById("search").classList.add("hide");
     document.getElementById("header").classList.remove("search_state");
@@ -236,3 +242,17 @@ window.showOptionsDialog = (
     onCancel("cancel");
   });
 };
+
+window.showError = (errorMsg, duration = 1500) => {
+  var errorDiv = document.createElement('div');
+  errorDiv.classList.add("errorMsg");
+  errorDiv.innerHTML = "<div>" + errorMsg + "</div>";
+  document.body.appendChild(errorDiv);
+  errorDiv.classList.add("show");
+  setTimeout(()=>{
+    errorDiv.classList.add("hideMsg");
+    setTimeout(() => {
+      document.body.removeChild(errorDiv);
+    }, 1000);
+  }, duration);
+}
