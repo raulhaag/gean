@@ -6,6 +6,7 @@ function reveseSearch(sObject, value){
 }
 
 export function playVideo (title, path, servers = []) {
+    let paths = path.split("/");
     let vServers = servers;
     let vServersName = [];
     let vServerSelectedOptions = {};
@@ -45,7 +46,7 @@ export function playVideo (title, path, servers = []) {
             let elPl = document.getElementById("player");
             let cServerName = vServersName[vServers.indexOf(lastSelectedLink)];
             let cQuality = reveseSearch(vServerSelectedOptions, src)[0];
-            let innerHTML = `<div id="vSelect"><div id="vServers" onClick='{playVideo("${title.replaceAll("\"", "\\\"")}", "${path}", ${JSON.stringify(vServers)});}'><div>${cServerName}</div></div><div id="vOptions"><div>${cQuality}</div></div></div>`;
+            let innerHTML = `<div id="vSelect"><div id="vServers" onClick='{playVideo("${title.replace(/\"/g, "\\\"")}", "${path}", ${JSON.stringify(vServers)});}'><div>${cServerName}</div></div><div id="vOptions"><div>${cQuality}</div></div></div>`;
             innerHTML += `<video id="vPlayer" src="${src}" controls></video>`;
             elPl.innerHTML = innerHTML;
             show(elPl);
@@ -123,8 +124,7 @@ export function playVideo (title, path, servers = []) {
         afterGetLinks(vServers);
         return;
     }
-    
-    getSource(path.split("/")[0]).getLinks(afterGetLinks, console.log, path);
+    getSource(paths[0]).getLinks(afterGetLinks, console.log, paths[2]);
 }
 
 window.playVideo = playVideo

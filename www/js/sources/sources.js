@@ -16,7 +16,7 @@ let servers = {"animeflv.net": new AnimeFlvNet(),
 "sololatino": new SoloLatino(),
 "sololatinosyp": new SoloLatinoSyP(),
 "tioanime": new TioAnime(),
-"pandrama": new PanDramaTV(),
+"PanDrama": new PanDramaTV(),
 "testserver": new NOTestServer(),
 };
 export function getSource(name) {return servers[name];}

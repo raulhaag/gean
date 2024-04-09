@@ -16,7 +16,7 @@ export class OkRu{
                 return
             }else{
                 let data = getFirstMatch(/data-video="({.+?})"/gm, result);
-                let jsd = JSON.parse(data)    
+                let jsd = JSON.parse(data.replace(/&quot;/g, "\"").replace(/%3B/g, ";").replace(/\\u0026/g, "&"));   
                 if(jsd.videoSrc){
                     after({"video": jsd.videoSrc});
                     return;

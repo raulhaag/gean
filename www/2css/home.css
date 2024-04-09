@@ -169,7 +169,7 @@ body {
   text-align: center;
   border: #fff4 solid 5px;
   background-color: #0009;
-  aspect-ratio: 1.75;
+  height: calc((100vw - 170px) * 0.15);
   font-size: 1.2rem;
   overflow: hidden;
 }
