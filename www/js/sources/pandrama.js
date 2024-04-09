@@ -77,15 +77,24 @@ export class PanDramaTV {
   
     async getLinks(after, onError, path) {
       try {
-        let result = await fGet(window.dec(path));
+        let dpath = window.dec(path);
+        let result = await fGet(dpath);
         if (result.indexOf("error") == 0) {
           onError(result);
           return;
         }
         let data = JSON.parse(getFirstMatch(/var player_\S+?=({.+?})</gm, result));
+        let count = (result.match(/hl-tabs-btn hl-slide-swiper/g) || []).length;
         let links = [];
-        links.push(decodeURIComponent(atob(data.url)));
+        links.push(decodeURIComponent(atob(data.url)));        
         let subtitles = window.serverHost + "get/" + window.enc('https://pandrama.com/subs/'+ data.vod_en_py + '/6/es/('+ data.nid +').vtt');
+        if(count > 1){
+          for(var i = 2; i <= count; i++){
+            result = await fGet(dpath.replace("-t1-", `-t${i}-`));
+            data = JSON.parse(getFirstMatch(/var player_\S+?=({.+?})</gm, result));
+            links.push(decodeURIComponent(atob(data.url)));        
+          }
+        }
         after(links, subtitles);
       } catch (error) {
         onError(error);

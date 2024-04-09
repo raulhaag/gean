@@ -34,8 +34,8 @@
 
 .setting.colorselect::after{
     height: 25px;
+    width: 25px;
     background-color:var(--tint-color);
-    aspect-ratio: 1;
     content: "";
     margin-right: 0px;
 }
