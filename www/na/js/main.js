@@ -1,4 +1,5 @@
 import { getSourceList } from "../../js/sources/sources.js";
+import { testPlayer } from "./video.js";
 
 window.drawerState = true;
 window.searchState = true;
@@ -74,15 +75,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   
   lastSelectedButton = homeButton;
-  window.loadHome(() => {hide(loadPanel, false)});
+  window.loadHome(() => {hideLoading()});
+  testPlayer( window.serverHost + "m3u8/" +"aHR0cHM6Ly9kZW1vLnVuaWZpZWQtc3RyZWFtaW5nLmNvbS9rOHMvZmVhdHVyZXMvc3RhYmxlL3ZpZGVvL3RlYXJzLW9mLXN0ZWVsL3RlYXJzLW9mLXN0ZWVsLmlzbS8ubTN1OA==", true)
+
 });
 
 window.showLoading = ()=>{
-  show(loadPanel);
+  loadPanel.classList.remove("hide");
 }
 
 window.hideLoading = ()=>{
-  hide(loadPanel);
+  loadPanel.classList.add("hide");
 }
 
 window.onBackClick = () => {
@@ -98,6 +101,10 @@ window.onBackClick = () => {
 window.setHeader = (title) => {
   header.innerText = title;
 };
+
+window.getHeader = () =>{
+  return header.innerText;
+}
 
 window.hide = (el, disapear = true) => {
   el.classList.add("hide");
@@ -167,7 +174,7 @@ let stateHome = () => {
   show(searchButton);
   hide(detailsPanel);
   hide(settingsPanel);
-  setHeader(window.sid);
+  window.setHeader(window.sid);
 };
 
 let stateSettings = () => {
@@ -176,15 +183,24 @@ let stateSettings = () => {
   hide(searchButton, false);
   hide(detailsPanel);
   window.generateSettings();
+  let lastHeader = window.getHeader();
   show(settingsPanel);
   setHeader("Configuración");
+  window.addBackAction(() => {
+    hide(settingsPanel);
+    setHeader(lastHeader);
+  })
 };
 
+window.addBackAction = (nBAction) => {
+  backActionsPile.push(nBAction);
+  show(backButton);
+}
 
 window.stateDetails = (data, search = false) => {
   hide(searchButton, false);
   hide(drawerButton, false);
-  setHeader(data.name);
+  window.setHeader(data.name);
   let innerHTML = '<article class="details_info">';
   innerHTML += '<img src="' + data.image + '"></img><div class="info">'
   for(let t1 in data.items){
@@ -192,15 +208,17 @@ window.stateDetails = (data, search = false) => {
   }
   innerHTML += '</div></article><ul>';
   for(let c in data.chapters){
-      innerHTML += '<li><div>' +  data.chapters[c].name + '</div></li>';
+      innerHTML += `<li><div onClick="{onHomeItemClick(this)}" data-path="${data.chapters[c].path}">` +  data.chapters[c].name + '</div></li>';
   }
   innerHTML += '</ul>';
   detailsPanel.innerHTML = innerHTML;
-  backActionsPile.push(()=>{
+  let pHeader = window.getHeader();
+  window.addBackAction(()=>{
     hide(detailsPanel);
+    window.setHeader(pHeader);
   });
-  show(backButton);
   show(detailsPanel);
+  window.hideLoading();
 };
 
 

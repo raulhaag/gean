@@ -3,7 +3,12 @@ import { playVideo } from "./video.js";
 
 window.loadHome = (onFinnish = null) => {
     if(!window.getSettingsDefault("lockfronpage", true)){
-       getSource(window.sid).getFrontPage(fillVideos, console.log);
+        try {
+            getSource(window.sid).getFrontPage(fillVideos, console.log);
+        } catch (error) {
+            window.showError(error);
+        } 
+    
     }else{
      fillVideos({});
     }
@@ -29,12 +34,11 @@ let generateCategory = (title, items) =>{
 
 
 window.onHomeItemClick = (item) => {
+    window.showLoading();
     let path = item.dataset.path.split("/");
     if(path[1].includes("getDescription")){
-        window.showLoading();
         getSource(path[0]).getDescription((data) => {
-            window.stateDetails(data)
-            window.hideLoading();
+            window.stateDetails(data);
         }, console.log, path[2]);
     }else if(path[1].includes("getLinks")){
         playVideo(item.innerText, item.dataset.path);
