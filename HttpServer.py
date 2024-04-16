@@ -20,6 +20,8 @@ ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 cache = {}
 cachedir = "cache/"
+lastBase_m3u8 = ""
+last_m3u8_headers = ""
 
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
@@ -32,7 +34,7 @@ class handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         defaultUserAgent = self.headers.get("User-Agent")
-        path = self.path.replace("/fscache.mp4", "").split("/")
+        path = self.path.replace("/fscache.mp4", "").replace("/maskfile.ts", "").replace("/maskfile.m3u8", "").split("/")
         try:
             if (len(path) >= 2) and not ("." in path[-1]):
                 dp = path[1] + " -> " + ", ".join([decode(p) for p in path[2:]])
@@ -87,6 +89,60 @@ class handler(SimpleHTTPRequestHandler):
                     traceback.format_exc()
                     return
                 return
+            if path[1] == "m3u8":                                      
+                def get_parent_path(url):
+                    last_slash_index = url.rfind('/')
+                    if last_slash_index == -1 or last_slash_index == len(url) - 1:
+                        return url
+                    return url[0:last_slash_index + 1]
+                
+                      
+                def transform(content, baseUrl, headers):
+                    contentLines = content.split("\n")
+                    for l in contentLines:
+                        if ".m3u8" in l:
+                            if l.startswith("http"):
+                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + last_m3u8_headers)
+                            else:
+                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(baseUrl + l) + last_m3u8_headers)
+                        elif (re.match(".+\.\w{2,4}$", l) != None):
+                            if l.startswith("http"):
+                                content = content.replace(l, "http://127.0.0.1:8080/cache/" + encode(l) + last_m3u8_headers)
+                            else:
+                                content = content.replace(l, "http://127.0.0.1:8080/cache/" + encode(baseUrl + l) + last_m3u8_headers)
+                    return content
+                content_t = ""
+                message = None
+                if(".key" in path[3]):
+                    lastBase_m3u8 = get_parent_path(decode(path[2]))
+                    path2 = ["get", "get", encode(lastBase_m3u8 + path[3])]
+                    message = getGet(path2)
+                    content_t = message.read().decode("utf-8")
+                else:
+                    if len(path) == 4:
+                        last_m3u8_headers = "/" + path[3]
+                    else:
+                        last_m3u8_headers = ""
+                    lastBase_m3u8 = get_parent_path(decode(path[2]))
+                    message = getGet(path)
+                    content = message.read().decode("utf-8")
+                    content_t = transform(content, lastBase_m3u8, last_m3u8_headers)
+                self.send_response(200)
+                for header in message.headers._headers:
+                    if header[0].lower() == "set-cookie":
+                        self.send_header("gean_" + header[0], header[1])
+                    if "content-type" in header[0].lower():
+                        self.send_header(header[0], header[1])
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Access-Control-Expose-Headers", "*")
+                self.send_header("Access-Control-Allow-Headers", "*")
+                self.end_headers()
+                self.wfile.write(content_t.encode("utf-8"))
+                return
+        except Exception as e:
+            print("Error: " + str(e) + "en" + decode(path[2]) + "\n")
+            traceback.format_exc()
+            return
         except Exception as e:
             print("Error: " + str(e) + "en" + decode(path[2]) + "\n")
             traceback.format_exc()
@@ -165,6 +221,10 @@ class handler(SimpleHTTPRequestHandler):
 def decode(input):
     return base64.b64decode(input.replace("_", "/").encode("utf-8")).decode("utf-8")
 
+def encode(input):
+    encoded_bytes = base64.b64encode(input.encode("utf-8"))
+    encoded_string = encoded_bytes.decode("utf-8").replace("/", "_")
+    return encoded_string
 
 def getResponseGet(path=[]):
     return getGet(path).read().decode("utf-8")
@@ -381,6 +441,10 @@ def cacheAndGet(path=[], server=None):
             server.send_header(header[0], header[1])
         """elif header[0].lower() == "content-length":
             server.send_header(header[0], header[1])"""
+    server.send_header("Access-Control-Allow-Origin", "*")
+    server.send_header("Access-Control-Expose-Headers", "*")
+    server.send_header("Access-Control-Allow-Headers", "*")
+
     # print(server.headers)
     server.end_headers()
     while not cache[web]["progress"] > start:
@@ -528,7 +592,7 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
             try:
                 import webbrowser
 
-                window = webbrowser.open(page)
+                #window = webbrowser.open(page)
             except Exception as e:
                 print(e)
             thread.join()
