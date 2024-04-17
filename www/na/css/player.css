@@ -50,3 +50,11 @@ video{
     transform: translateX(-50%);
     border-radius: 24px;
   }
+
+  video::cue {
+    position: relative;
+    font-size: min(7vh, 7vw); /* Tamaño de la fuente */
+    color: white; /* Color del texto */
+    background-color: transparent; /* Fondo transparente */
+    text-shadow: -1px -1px 0 black, 2px -1px 0 black, -1px 2px 0 black, 2px 2px 0 black; /* Contorno */
+  }

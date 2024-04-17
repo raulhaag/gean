@@ -107,9 +107,9 @@ class handler(SimpleHTTPRequestHandler):
                                 content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(baseUrl + l) + last_m3u8_headers)
                         elif (re.match(".+\.\w{2,4}$", l) != None):
                             if l.startswith("http"):
-                                content = content.replace(l, "http://127.0.0.1:8080/cache/" + encode(l) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(l) + last_m3u8_headers)
                             else:
-                                content = content.replace(l, "http://127.0.0.1:8080/cache/" + encode(baseUrl + l) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(baseUrl + l) + last_m3u8_headers)
                     return content
                 content_t = ""
                 message = None
@@ -231,48 +231,64 @@ def getResponseGet(path=[]):
 
 
 def getResponseFile(path=[], server=None):
-    server.send_response(200)
     headers = {}
+    rcode = 200    
+    url = decode(path[2])
+    ho = []
+    
     if len(path) == 4:
-        headers = json.loads(decode(path[3]))
+        try:
+            headers = json.loads(decode(path[3]))
+        except (json.JSONDecodeError, UnicodeDecodeError) as e:
+            print(f"Error decoding headers: {e}")
+
+    rheaders = server.headers
+    for key in rheaders:
+        if not (("host" in key.lower()) or ("referer" in key.lower())):
+            ho.append((key, rheaders.get(key)))
+
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
-    range = server.headers.get("Range")
-    if range is not None:
-        headers["Range"] = range
-    ho = []
+
+    range_header = server.headers.get("Range")
+    if range_header is not None:
+        headers["Range"] = range_header
+        rcode = 206
     for key in headers:
         ho.append((key, headers[key]))
-    web = decode(path[2])
+        
     opener = urllib.request.build_opener()
     opener.addheaders = ho
     urllib.request.install_opener(opener)
-    res = urllib.request.urlopen(
-        web, timeout=30, context=ctx
-    )  # not secure but the video servers have bad certs
-    for header in res.headers._headers:
-        server.send_header(header[0], header[1])
-    server.send_my_headers()
-    server.end_headers()
-    errorcount = 0
-    while True:
-        try:
-            chunk = res.read(4096)
-            if not chunk:
-                break
-            server.wfile.write(chunk)
-            errorcount = 0
-        except Exception as e:
-            if str(e).__contains__("Errno 32"):
-                break  # broken pipe disconected
-            print("Retry after " + str(e) + "\n")
-            traceback.print_exc()
-            errorcount = errorcount + 1
-            if errorcount > 3:
-                break
-                # raise Exception("to many error")
-    urllib.request.urlcleanup()
+    ssl._create_default_https_context = ssl._create_unverified_context
+    with contextlib.closing(urlopen(url, None)) as fp:
+        headers = fp.info()
+        bs = 8192
+        size = -1
+        read = 0
+        blocknum = 0        
+        server.send_response(rcode)
+        for header in headers._headers:
+            if header[0].lower() == "connection":
+                server.send_header(header[0], "keep-alive")
+            elif (header[0].lower() == "content-type") or (header[0].lower() == "content-length"):
+                server.send_header(header[0], header[1])
 
+        server.send_header("Access-Control-Allow-Origin", "*")
+        server.send_header("Access-Control-Expose-Headers", "*")
+        server.send_header("Access-Control-Allow-Headers", "*")
+        server.end_headers()
+        if "content-length" in headers:
+            size = int(headers["Content-Length"])
+        while True:
+            block = fp.read(bs)
+            if not block:
+                break
+            read += len(block)
+            server.wfile.write(block)
+            blocknum += 1
+        urllib.request.urlcleanup()
+        
 
 def getGet(path=[]):
     headers = {}
@@ -592,7 +608,7 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
             try:
                 import webbrowser
 
-                #window = webbrowser.open(page)
+                window = webbrowser.open(page)
             except Exception as e:
                 print(e)
             thread.join()
