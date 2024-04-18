@@ -16,6 +16,7 @@ import { StreamWish } from "./streamwish.js";
 import { FileMoon } from "./filemoon.js";
 import { FileLions } from "./filelions.js";
 import {Plustr} from "./plustr.js";
+import { VK } from "./vk.js";
 
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
@@ -40,7 +41,8 @@ let servers = {"fembed": new Fembed(),
                 "streamwish": new StreamWish(),
                 "filemoon": new FileMoon(),
                 "filelions": new FileLions(),
-                "plustr": new Plustr()
+                "plustr": new Plustr(),
+                "vk.com/": new VK(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -104,6 +106,8 @@ export async function getDDL(after, onError, web) {
         return servers["filelions"].getDDL(after, onError, cleanInfo(web));
     }else if ((web.indexOf("plustr") != -1)) {
         return servers["plustr"].getDDL(after, onError, cleanInfo(web));
+    }else if ((web.indexOf("vk.com/") != -1)){
+        return servers["vk.com/"].getDDL(after, onError, cleanInfo(web))
     }else{
         onError("Not supported server");
     }
@@ -167,6 +171,8 @@ export function getName(web) {
         name = "StreamWish";
     }else if (web.indexOf("plustr") != -1) {
         name = "Plustream (Solo reproductor interno android)";
+    }else if ((web.indexOf("vk.com/") != -1)){
+            return "VK"
     }else {
         name = "";
     }
@@ -197,6 +203,7 @@ export function getPreferer(list){
                     "mixdrop",
                     "um.php?e=",
                     "plustr",
+                    "vk.com/"
                 ];
     
     let ordered = [];
@@ -207,9 +214,6 @@ export function getPreferer(list){
             }
           }
         }
-
-
-
 
 /*
     for(let i = 0; i < list.length; i++){
