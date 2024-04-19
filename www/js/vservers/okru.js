@@ -18,7 +18,10 @@ export class OkRu{
                 let data = getFirstMatch(/data-video="({.+?})"/gm, result);
                 let jsd = JSON.parse(data.replace(/&quot;/g, "\"").replace(/%3B/g, ";").replace(/\\u0026/g, "&"));   
                 if(jsd.videoSrc){
-                    after({"video": jsd.videoSrc});
+                    after({"video": window.serverHost + "m3u8/" + enc(jsd.videoSrc) + "/" + enc(JSON.stringify(
+                        {   "Referer": web, 
+                            "Sec-Fetch-Mode": "cors",
+                            "Sec-Fetch-Site": "same-origin"})) + "/maskfile.m3u8"});
                     return;
                 }        
             }
