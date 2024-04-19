@@ -27,13 +27,20 @@ last_m3u8_headers = ""
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
 
+def bytesDecode(bytesString):
+    try:
+        return bytesString.decode("utf-8")
+    except:
+        return bytesString.decode("latin-1")
+
 
 class handler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         return
-
+    
     def do_GET(self):
         defaultUserAgent = self.headers.get("User-Agent")
+        ssl._create_default_https_context = ssl._create_unverified_context#not recomended but those sites dont have updates certs or w...
         path = self.path.replace("/fscache.mp4", "").replace("/maskfile.ts", "").replace("/maskfile.m3u8", "").split("/")
         try:
             if (len(path) >= 2) and not ("." in path[-1]):
@@ -117,7 +124,7 @@ class handler(SimpleHTTPRequestHandler):
                     lastBase_m3u8 = get_parent_path(decode(path[2]))
                     path2 = ["get", "get", encode(lastBase_m3u8 + path[3])]
                     message = getGet(path2)
-                    content_t = message.read().decode("utf-8")
+                    content_t = bytesDecode(message.read())
                 else:
                     if len(path) == 4:
                         last_m3u8_headers = "/" + path[3]
@@ -125,7 +132,7 @@ class handler(SimpleHTTPRequestHandler):
                         last_m3u8_headers = ""
                     lastBase_m3u8 = get_parent_path(decode(path[2]))
                     message = getGet(path)
-                    content = message.read().decode("utf-8")
+                    content = bytesDecode(message.read())
                     content_t = transform(content, lastBase_m3u8, last_m3u8_headers)
                 self.send_response(200)
                 for header in message.headers._headers:
@@ -196,7 +203,7 @@ class handler(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(message, "utf8"))
 
     def return_response_whit_headers(self, code, message):
-        content = message.read().decode("utf-8")
+        content = bytesDecode(message.read())
         self.send_response(code)
         for header in message.headers._headers:
             if header[0].lower() == "set-cookie":
@@ -227,7 +234,7 @@ def encode(input):
     return encoded_string
 
 def getResponseGet(path=[]):
-    return getGet(path).read().decode("utf-8")
+    return bytesDecode(getGet(path).read())
 
 
 def getResponseFile(path=[], server=None):
@@ -327,7 +334,7 @@ def getPost(path=[]):
 
 
 def getResponsePost(path=[]):
-    return getPost(path).read().decode("utf-8")
+    return bytesDecode(getPost(path).read())
 
 
 def parseRangeHeader(header, content_len):
@@ -394,7 +401,6 @@ def downloadCacheFile(cache, path):
     opener = urllib.request.build_opener()
     opener.addheaders = ho
     urllib.request.install_opener(opener)
-    ssl._create_default_https_context = ssl._create_unverified_context
     try:
         urlretrievecache(web, cache[web]["name"], cache)
     except Exception as e:
