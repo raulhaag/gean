@@ -29,8 +29,9 @@ class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
 
 def bytesDecode(bytesString):
     try:
-        return bytesString.decode("utf-8")
-    except:
+        return bytesString.decode("utf-8", errors="ignore")
+    except Exception as e:
+        print(e)
         return bytesString.decode("latin-1")
 
 
@@ -104,23 +105,35 @@ class handler(SimpleHTTPRequestHandler):
                     return url[0:last_slash_index + 1]
                 
                 def eliminar_path_relativos(url):
+                    url = url[0:8] + url[8:].replace("//", "/")
                     parsed_url = parse.urlparse(url)
                     url_absoluta = parse.urljoin(parsed_url.geturl(), parsed_url.path)
                     return url_absoluta
                       
                 def transform(content, baseUrl, headers):
                     contentLines = content.split("\n")
+                    encnl = False
                     for l in contentLines:
+                        if encnl:
+                            if l.startswith("http"):
+                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + headers)
+                            else:
+                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(eliminar_path_relativos(baseUrl + l)) + headers)
+                        if l.startswith("#EXT-X-STREAM"):
+                            encnl = True
+                            continue
+                        else:
+                            encnl = False
                         if ".m3u8" in l:
                             if l.startswith("http"):
-                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + headers)
                             else:
-                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(eliminar_path_relativos(baseUrl + l)) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(eliminar_path_relativos(baseUrl + l)) + headers)
                         elif (re.match(".+\.\w{2,4}$", l) != None):
                             if l.startswith("http"):
-                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(l) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(l) + headers)
                             else:
-                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(eliminar_path_relativos(baseUrl + l)) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(eliminar_path_relativos(baseUrl + l)) + headers)
                     return content
                 content_t = ""
                 message = None
@@ -272,33 +285,36 @@ def getResponseFile(path=[], server=None):
     opener.addheaders = ho
     urllib.request.install_opener(opener)
     ssl._create_default_https_context = ssl._create_unverified_context
-    with contextlib.closing(urlopen(url, None)) as fp:
-        headers = fp.info()
-        bs = 8192
-        size = -1
-        read = 0
-        blocknum = 0        
-        server.send_response(rcode)
-        for header in headers._headers:
-            if header[0].lower() == "connection":
-                server.send_header(header[0], "keep-alive")
-            elif (header[0].lower() == "content-type") or (header[0].lower() == "content-length"):
-                server.send_header(header[0], header[1])
+    try:
+        with contextlib.closing(urlopen(url, None)) as fp:
+            headers = fp.info()
+            bs = 8192
+            size = -1
+            read = 0
+            blocknum = 0        
+            server.send_response(rcode)
+            for header in headers._headers:
+                if header[0].lower() == "connection":
+                    server.send_header(header[0], "keep-alive")
+                elif (header[0].lower() == "content-type") or (header[0].lower() == "content-length"):
+                    server.send_header(header[0], header[1])
 
-        server.send_header("Access-Control-Allow-Origin", "*")
-        server.send_header("Access-Control-Expose-Headers", "*")
-        server.send_header("Access-Control-Allow-Headers", "*")
-        server.end_headers()
-        if "content-length" in headers:
-            size = int(headers["Content-Length"])
-        while True:
-            block = fp.read(bs)
-            if not block:
-                break
-            read += len(block)
-            server.wfile.write(block)
-            blocknum += 1
-        urllib.request.urlcleanup()
+            server.send_header("Access-Control-Allow-Origin", "*")
+            server.send_header("Access-Control-Expose-Headers", "*")
+            server.send_header("Access-Control-Allow-Headers", "*")
+            server.end_headers()
+            if "content-length" in headers:
+                size = int(headers["Content-Length"])
+            while True:
+                block = fp.read(bs)
+                if not block:
+                    break
+                read += len(block)
+                server.wfile.write(block)
+                blocknum += 1
+    except:
+        pass
+    urllib.request.urlcleanup()
         
 
 def getGet(path=[]):
