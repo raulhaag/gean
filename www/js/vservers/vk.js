@@ -7,19 +7,21 @@ export class VK{
         //let filev2 = getAllMatches(/"(hls)":"(.+?)"/gm, result)
         try{
             let videos = {};
-            /*if(filev2.length > 0) {
-                videos["hls"] = window.serverHost + "m3u8/" + enc(filev2[0][2]) + "/" + enc(JSON.stringify(
+           /*if(filev2.length > 0) {
+                let cwe = filev2[0][2].replace(/\\/g, "");
+                videos["hls"] = window.serverHost + "m3u8/" + enc(cwe) + "/" + enc(JSON.stringify(
                     {   "Referer": web, 
                         "Sec-Fetch-Dest": "empty",
                         "Sec-Fetch-Mode": "cors",
                         "Sec-Fetch-Site": "same-origin"})) + "/maskfile.m3u8";
+                videos["hls2"] = cwe;
                 videos["video"] = videos["hls"];
             }*/
             if (filev.length > 0) {        
                 for (let i = 0; i < filev.length; i++) {
-                    videos[filev[i][1]] = filev[i][2];
+                    videos[filev[i][1]] = filev[i][2].replace(/\\/g, "");
                 }
-                videos["video"] = filev[filev.length - 1][2];
+                videos["video"] = filev[filev.length - 1][2].replace(/\\/g, "");
 
             }
             if(videos["video"]){
