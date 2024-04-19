@@ -103,6 +103,10 @@ class handler(SimpleHTTPRequestHandler):
                         return url
                     return url[0:last_slash_index + 1]
                 
+                def eliminar_path_relativos(url):
+                    parsed_url = parse.urlparse(url)
+                    url_absoluta = parse.urljoin(parsed_url.geturl(), parsed_url.path)
+                    return url_absoluta
                       
                 def transform(content, baseUrl, headers):
                     contentLines = content.split("\n")
@@ -111,12 +115,12 @@ class handler(SimpleHTTPRequestHandler):
                             if l.startswith("http"):
                                 content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + last_m3u8_headers)
                             else:
-                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(baseUrl + l) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(eliminar_path_relativos(baseUrl + l)) + last_m3u8_headers)
                         elif (re.match(".+\.\w{2,4}$", l) != None):
                             if l.startswith("http"):
                                 content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(l) + last_m3u8_headers)
                             else:
-                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(baseUrl + l) + last_m3u8_headers)
+                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(eliminar_path_relativos(baseUrl + l)) + last_m3u8_headers)
                     return content
                 content_t = ""
                 message = None

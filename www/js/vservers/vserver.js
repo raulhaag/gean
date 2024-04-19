@@ -17,6 +17,7 @@ import { FileMoon } from "./filemoon.js";
 import { FileLions } from "./filelions.js";
 import {Plustr} from "./plustr.js";
 import { VK } from "./vk.js";
+import { DailyMotion } from "./dailymot.js";
 
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
@@ -43,6 +44,7 @@ let servers = {"fembed": new Fembed(),
                 "filelions": new FileLions(),
                 "plustr": new Plustr(),
                 "vk.com/": new VK(),
+                "dailymotion.com": new DailyMotion(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -108,6 +110,8 @@ export async function getDDL(after, onError, web) {
         return servers["plustr"].getDDL(after, onError, cleanInfo(web));
     }else if ((web.indexOf("vk.com/") != -1)){
         return servers["vk.com/"].getDDL(after, onError, cleanInfo(web))
+    }else if(web.indexOf("dailymotion.com") != -1){
+        return servers["dailymotion.com"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -173,6 +177,8 @@ export function getName(web) {
         name = "Plustream (Solo reproductor interno android)";
     }else if ((web.indexOf("vk.com/") != -1)){
             return "VK"
+    }else if(web.indexOf("dailymotion.com") != -1){
+        return "DailyMotion";
     }else {
         name = "";
     }
@@ -203,7 +209,8 @@ export function getPreferer(list){
                     "mixdrop",
                     "um.php?e=",
                     "plustr",
-                    "vk.com/"
+                    "vk.com/",
+                    "dailymotion.com"
                 ];
     
     let ordered = [];
