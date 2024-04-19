@@ -13,11 +13,11 @@
     <script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/plyr@3/dist/plyr.css">    
     <script type="module">
+        import {DailyMotion} from "../js/vservers/dailymot.js"
         //import {AnimeOnlineNinja} from "../js/sources/aoninja.js"
         /*import {FileMoon} from '../js/vservers/filemoon.js'*/
         window.serverHost = "http://127.0.0.1:8080/";
 
-        import {Plustr} from '../js/vservers/plustr.js'
         window.getFirstMatch = function(regex, str){
             var m = regex.exec(str);
             if(m == null){
@@ -26,12 +26,14 @@
             return m[1];
         }
 
-        new Plustr().getDDL(alert, console.log, "https://plustream.com/embedv2/SXBTBjbPS4DfVIHu3zlkBSaDsncgMIWnx7g9yNPer7P.Xr4KSFcQK_xu7JVZ0AQnygYek7Dsjll6NrvabQaDFQ--")
-
         window.getAllMatches = function(regex, str){
             return [...str.matchAll(regex)];
         }
+
+        let data = new DailyMotion().getDDL(console.log, console.log, "https://www.dailymotion.com/embed/video/x8qa1qc");
+        console.log(data)
         document.addEventListener("DOMContentLoaded", ()=>{
+        
 
 	const source = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
 	const video = document.querySelector('video');
