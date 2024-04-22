@@ -6,6 +6,7 @@ import { SoloLatinoSyP } from "./sololatinosyp.js";
 import { TioAnime } from "./tioanime.js";
 import { NOTestServer } from "./test.js";
 import { PanDramaTV } from "./pandrama.js";
+import { DeadServer } from "./deadserver.js";
 
 export function openInNewTab(url) {
         window.open(url, '_blank').focus();
@@ -18,17 +19,18 @@ let servers = {"animeflv.net": new AnimeFlvNet(),
 "tioanime": new TioAnime(),
 "PanDrama": new PanDramaTV(),
 "testserver": new NOTestServer(),
+"DeadServer": new DeadServer(),
 };
-export function getSource(name) {return servers[name];}
+export function getSource(name) {
+    return (servers[name])? servers[name]:servers["DeadServer"]
+}
 
 export function getResponse(name, callback, error_callback) {
-    if(servers[name]){
-        return servers[name].getFrontPage(callback, error_callback);
-    }
-    return servers["jkanime"].getFrontPage(callback, error_callback);
+    getSource(name).getFrontPage(callback, error_callback);
 }
 
 export function getLinks(path, callback, error_callback) {
+
 }
 
 export function getSourceList(){

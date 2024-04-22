@@ -114,12 +114,12 @@ export function playVideo (title, path, servers = [], noBack = false) {
             links.push(value);
             linksIds.push(key);
         }
-        if(linkDict.length > 1 && window.appSettings["res_select"].currentValue){
+        if(Object.keys(linkDict).length > 1 && window.appSettings["res_select"].currentValue){
             window.hideLoading();
             window.showOptionsDialog(
                 "Selecciona una resolucion",
-                links,
                 linksIds,
+                links,
                 showPlayer,
                 console.log,
                 0
