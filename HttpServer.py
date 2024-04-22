@@ -587,13 +587,12 @@ def generateSourceList():
 }\n"""
     )
     sOut += "let servers = {" + initial + "};\n"
-    sOut += """export function getSource(name) {return servers[name];}
+    sOut += """export function getSource(name) {
+    return (servers[name])? servers[name]:servers["DeadServer"];
+}
 
 export function getResponse(name, callback, error_callback) {
-    if(servers[name]){
-        return servers[name].getFrontPage(callback, error_callback);
-    }
-    return servers["jkanime"].getFrontPage(callback, error_callback);
+    getSource(name).getFrontPage(callback, error_callback);
 }
 
 export function getLinks(path, callback, error_callback) {

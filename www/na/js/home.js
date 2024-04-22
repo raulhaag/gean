@@ -10,7 +10,7 @@ window.loadHome = (onFinnish = null) => {
         } 
     
     }else{
-     fillVideos({});
+        fillVideos({});
     }
     if(onFinnish){
         onFinnish();

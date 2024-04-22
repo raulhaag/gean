@@ -74,10 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
-  lastSelectedButton = homeButton;
+  lastSelectedButton = homeButton;    
   window.loadHome(() => {hideLoading()});
-  testPlayer( window.serverHost + "m3u8/" +"aHR0cHM6Ly9kZW1vLnVuaWZpZWQtc3RyZWFtaW5nLmNvbS9rOHMvZmVhdHVyZXMvc3RhYmxlL3ZpZGVvL3RlYXJzLW9mLXN0ZWVsL3RlYXJzLW9mLXN0ZWVsLmlzbS8ubTN1OA==", true)
-
 });
 
 window.showLoading = ()=>{
