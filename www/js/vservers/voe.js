@@ -5,8 +5,8 @@ export class Voe {
             let dlink = getFirstMatch(/sources [^\{]+{([^}]+)/gm, data);
             let filev = getAllMatches(/['"]([^'"]+?)["']\s*:\s*['"]([^'"]+?)["']/gm, dlink);
             if (filev.length == 1){
-                after({"video": filev[0][2]})
-                return
+                after({"video":  atob(filev[0][2])});
+                return;
             }
             if (filev.length > 0) {        
                 let videos = {};
