@@ -428,6 +428,11 @@ input:focus{
   width: inherit;
 }
 
+.viewed{
+  opacity: .3;
+  background-color: var(--tint-color) !important;
+}
+
 /* Settings */
 #settings{
   position: absolute;

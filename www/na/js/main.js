@@ -196,6 +196,15 @@ window.addBackAction = (nBAction) => {
 }
 
 window.stateDetails = (data, search = false) => {
+  let vieweds = [];
+  try {
+    vieweds = JSON.parse(localStorage.getItem(data.path));
+    if (vieweds == null) {
+      vieweds = [];
+    }
+  } catch (e) {
+    vieweds = [];
+  }
   hide(searchButton, false);
   hide(drawerButton, false);
   window.setHeader(data.name);
@@ -205,8 +214,14 @@ window.stateDetails = (data, search = false) => {
     innerHTML += data.items[t1] + '</br>';
   }
   innerHTML += '</div></article><ul>';
+  let viewed = '';
   for(let c in data.chapters){
-      innerHTML += `<li><div onClick="{onHomeItemClick(this)}" data-path="${data.chapters[c].path}">` +  data.chapters[c].name + '</div></li>';
+    if (vieweds.indexOf(data["chapters"][c]["path"]) == -1) {
+      viewed = ""
+    }else{
+      viewed = "viewed";
+    }
+      innerHTML += `<li class="${viewed}"><div onClick="{onHomeItemClick(this);markAsViewed(this, '${data.path}', '${data.chapters[c].path}');}" data-path="${data.chapters[c].path}">` +  data.chapters[c].name + '</div></li>';
   }
   innerHTML += '</ul>';
   detailsPanel.innerHTML = innerHTML;
@@ -218,6 +233,24 @@ window.stateDetails = (data, search = false) => {
   show(detailsPanel);
   window.hideLoading();
 };
+
+window.markAsViewed = function (e, spath, path) {
+  let vc = [];
+  try {
+    vc = JSON.parse(localStorage.getItem(spath));
+    if (vc == null) {
+      vc = [];
+    }
+  } catch (error) {}
+  if (vc.indexOf(path) == -1) {
+    if (e != null) {
+      e.parentNode.classList.add("viewed");
+    }
+    vc.push(path);
+    localStorage.setItem(spath, JSON.stringify(vc));
+  }
+};
+
 
 
 window.showOptionsDialog = (
@@ -234,7 +267,11 @@ window.showOptionsDialog = (
     optionsDialog.classList.add("hide");
     onSelect(value);
   };
-
+  if(values.length == 1 || 
+    ((values.length == 2) && (values[0] == values[1]))){
+      onSelect(values);
+      return;
+    }
   let innerHTML = '<div class="options_title"><div>' + title + '</div></div><ul id="options_list" class="options_list">';
   let selected = "";
   for (let i = 0; i < options.length; i++) {
@@ -264,6 +301,7 @@ window.showError = (errorMsg, duration = 1500) => {
   errorDiv.classList.add("errorMsg");
   errorDiv.innerHTML = "<div>" + errorMsg + "</div>";
   document.body.appendChild(errorDiv);
+  window.hideLoading()
   errorDiv.classList.add("show");
   setTimeout(()=>{
     errorDiv.classList.add("hideMsg");

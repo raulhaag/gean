@@ -37,6 +37,7 @@ video{
     align-items: center;
     width: 100%;
     display: flex;
+    overflow: hidden;
 }
 
 #vServers div,#vOptions div{
@@ -47,6 +48,7 @@ video{
     line-height: 48px;
     background-color: #28292A;
     width: inherit;
+    overflow: hidden;
     transform: translateX(-50%);
     border-radius: 24px;
   }
