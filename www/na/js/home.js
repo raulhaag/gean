@@ -4,7 +4,7 @@ import { playVideo } from "./video.js";
 window.loadHome = (onFinnish = null) => {
     if(!window.getSettingsDefault("lockfronpage", true)){
         try {
-            getSource(window.sid).getFrontPage(fillVideos, console.log);
+            getSource(window.sid).getFrontPage(fillVideos, window.showError);
         } catch (error) {
             window.showError(error);
         } 
@@ -33,15 +33,19 @@ let generateCategory = (title, items) =>{
 };
 
 
-window.onHomeItemClick = (item) => {
+window.onHomeItemClick = (item) => {   
     window.showLoading();
-    let path = item.dataset.path.split("/");
-    if(path[1].includes("getDescription")){
-        getSource(path[0]).getDescription((data) => {
-            window.stateDetails(data);
-        }, console.log, path[2]);
-    }else if(path[1].includes("getLinks")){
-        playVideo(item.innerText, item.dataset.path);
+    try{
+        let path = item.dataset.path.split("/");
+        if(path[1].includes("getDescription")){
+            getSource(path[0]).getDescription((data) => {
+                window.stateDetails(data);
+            }, window.showError, path[2]);
+        }else if(path[1].includes("getLinks")){
+            playVideo(item.innerText, item.dataset.path);
+        }
+    }catch(e){
+        window.showError(e);
     }
 }
 
@@ -82,5 +86,5 @@ window.searchInServer = (term) => {
         }
         sRCont.innerHTML = sRData;
         window.hideLoading()
-    }, console.log, term)
+    }, window.showError, term)
 }
