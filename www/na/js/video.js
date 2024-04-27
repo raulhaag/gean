@@ -30,7 +30,7 @@ export function playVideo (title, path, servers = [], noBack = false) {
               }
             }
           let op = "view/";
-          if(window.appSettings["selected_player"] === "internal"){
+          if(window.appSettings["selected_player"].currentValue === "internal"){
             op = "play/"
           }
           fetch(window.serverHost + op + window.enc(videoSrc))
