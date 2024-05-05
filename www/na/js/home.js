@@ -1,19 +1,27 @@
 import { getSource } from "../../../js/sources/sources.js";
 import { playVideo } from "./video.js";
 
+
+
+async function fillVideosWithNews(onFinnish = null){
+    try {
+        const endFunction = (videos) => {fillVideos(videos); if(onFinnish) onFinnish();};
+        getSource(window.sid).getFrontPage(endFunction, window.showError);
+    } catch (error) {
+        window.showError(error);
+    } 
+
+}
+
 window.loadHome = (onFinnish = null) => {
+    window.showLoading();
     if(!window.getSettingsDefault("lockfronpage", true)){
-        try {
-            getSource(window.sid).getFrontPage(fillVideos, window.showError);
-        } catch (error) {
-            window.showError(error);
-        } 
-    
+        fillVideosWithNews(onFinnish)
     }else{
         fillVideos({});
-    }
-    if(onFinnish){
-        onFinnish();
+        if(onFinnish){
+            onFinnish();
+        }
     }
 }
 
@@ -33,19 +41,33 @@ let generateCategory = (title, items) =>{
 };
 
 
-window.onHomeItemClick = (item) => {   
-    window.showLoading();
+async function getDescription(path){
     try{
-        let path = item.dataset.path.split("/");
-        if(path[1].includes("getDescription")){
-            getSource(path[0]).getDescription((data) => {
-                window.stateDetails(data);
-            }, window.showError, path[2]);
-        }else if(path[1].includes("getLinks")){
-            playVideo(item.innerText, item.dataset.path);
-        }
+        await getSource(path[0]).getDescription((data) => {
+                    window.stateDetails(data);
+                }, window.showError, path[2]);
+        window.hideLoading();
     }catch(e){
         window.showError(e);
+    }
+}
+
+async function getLinks(item){
+    try{
+        await playVideo(item.innerText, item.dataset.path);
+    }catch(e){
+        window.showError(e);
+    }
+
+}
+
+window.onHomeItemClick = (item) => {   
+    window.showLoading();
+    let path = item.dataset.path.split("/");
+    if(path[1].includes("getDescription")){
+        getDescription(path)
+    }else if(path[1].includes("getLinks")){
+        getLinks(item);
     }
 }
 
@@ -62,6 +84,7 @@ let fillVideos = (videos)=>{
         videoContent +=  generateCategory("Recientes", window.recent);
     };
     document.getElementById("main_content").innerHTML= "<div class=\"content_groups\">" + videoContent + "</div>";
+    window.hideLoading();
 };
 
 window.searchInServer = (term) => {
