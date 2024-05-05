@@ -231,7 +231,6 @@ window.stateDetails = (data, search = false) => {
     window.setHeader(pHeader);
   });
   show(detailsPanel);
-  window.hideLoading();
 };
 
 window.markAsViewed = function (e, spath, path) {
