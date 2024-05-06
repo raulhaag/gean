@@ -433,6 +433,17 @@ input:focus{
   background-color: var(--tint-color) !important;
 }
 
+#fav_icon{
+  background-color: var(--tint-color);
+  position: relative;
+  bottom: 74px;
+  height: 48px;
+  width: 48px;
+  left: calc(100% - 54px);
+}
+
+
+
 /* Settings */
 #settings{
   position: absolute;

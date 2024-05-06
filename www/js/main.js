@@ -189,13 +189,6 @@ let addBackStack = function (e) {
   window.backStack.push(e);
 };
 
-window.indexOfProperty = function (array, property, value) {
-  return array
-    .map(function (x) {
-      return x[property];
-    })
-    .indexOf(value);
-};
 
 window.switch_fab = function (e, name, image, path) {
   let idx = indexOfProperty(favorites, "path", path);

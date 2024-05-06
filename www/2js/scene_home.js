@@ -360,8 +360,8 @@ export class SceneHome extends Scene{
 
     updateRecents = function(){
         if (recent != null){
-            if(recent.length > 30){
-                recent =  recent.slice(0, 30);
+            if(recent.length > 50){
+                recent =  recent.slice(0, 50);
             }
             localStorage.setItem('recent', JSON.stringify(recent));
             if(recent.length > 0){
