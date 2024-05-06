@@ -128,3 +128,10 @@ window.getFirstMatch = function (regex, str) {
     return [...str.matchAll(regex)];
   };
   
+window.indexOfProperty = function (array, property, value) {
+    return array
+      .map(function (x) {
+        return x[property];
+      })
+      .indexOf(value);
+  };

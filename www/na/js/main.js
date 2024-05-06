@@ -205,11 +205,16 @@ window.stateDetails = (data, search = false) => {
   } catch (e) {
     vieweds = [];
   }
+
+  let f_extra = (indexOfProperty(favorites, 'path', data.path) != -1)? "": "no_";
+  
+
+
   hide(searchButton, false);
   hide(drawerButton, false);
   window.setHeader(data.name);
   let innerHTML = '<article class="details_info">';
-  innerHTML += '<img src="' + data.image + '"></img><div class="info">'
+  innerHTML += `<img src="${data.image}"><img id="fav_icon" src="./na/icons/${f_extra}fav.svg" onClick='{switch_fab(${JSON.stringify(data)}, this)}'></img><div class="info">`;
   for(let t1 in data.items){
     innerHTML += data.items[t1] + '</br>';
   }
@@ -233,6 +238,7 @@ window.stateDetails = (data, search = false) => {
   show(detailsPanel);
 };
 
+
 window.markAsViewed = function (e, spath, path) {
   let vc = [];
   try {
@@ -249,8 +255,6 @@ window.markAsViewed = function (e, spath, path) {
     localStorage.setItem(spath, JSON.stringify(vc));
   }
 };
-
-
 
 window.showOptionsDialog = (
   title,
