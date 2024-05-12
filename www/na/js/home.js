@@ -72,8 +72,10 @@ window.loadHome = (onFinnish = null) => {
 }
 
 let generateCategory = (title, items) =>{
+    let icon =   document.getElementById("main_content").classList.contains("list")? "./na/icons/show_as_grid.svg":"./na/icons/show_as_list.svg"
+
     if(items == null) return "";
-    let result = '<div class="content_group"><div class="content_group_title">' + title + '</div> <div class="content_group_items">';
+    let result = '<div class="content_group"><div class="content_group_title">' + title + `<img class= "sicon" src="${icon}" onClick="{switchListToGrid();}"></div> <div class="content_group_items">`;
     let ppath = "";
     for (let i = 0; i < items.length; i++) {
         if(items[i]["parentPath"]){
