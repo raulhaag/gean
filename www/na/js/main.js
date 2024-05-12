@@ -74,7 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
-  lastSelectedButton = homeButton;    
+  lastSelectedButton = homeButton;  
+  window.setHeader(window.sid);
   window.loadHome(() => {hideLoading()});
 });
 
@@ -141,6 +142,7 @@ let searchSwitch = (newState = !window.searchState) => {
   if (newState == window.searchState) {
     return;
   }
+
   if (window.searchState) {
     backActionsPile.push(()=>{
       searchSwitch();
@@ -156,15 +158,37 @@ let searchSwitch = (newState = !window.searchState) => {
     document.getElementById("search").classList.add("hide");
     document.getElementById("header").classList.remove("search_state");
   }
+
   window.searchState = !window.searchState;
   if (window.searchState) {
     setTimeout(() => {
       /*TODO clean search*/
-    }, 3000);
+      try{
+      document.getElementsByClassName("search_results")[0].innerHTML = "";
+      }catch(e){}
+    }, 1000);
   } else {
   }
 };
 
+window.switchListToGrid = () => {
+  let cont = document.getElementById("main_content");
+  let icon = "./na/icons/show_as_grid.svg"
+  if(cont.classList.contains("list")){
+      cont.classList.remove("list");
+      localStorage.setItem("showAsGrid", "")
+      icon = "./na/icons/show_as_list.svg"
+  }else{
+    cont.classList.add("list");
+    localStorage.setItem("showAsGrid", "list")
+
+  }
+  let icons = document.getElementsByClassName("sicon");
+  for(let i = 0; i < icons.length; i++){
+    icons[i].src = icon;
+  }
+
+}
 
 let stateHome = () => {
   changeSelected(homeButton);
@@ -181,12 +205,11 @@ let stateSettings = () => {
   hide(searchButton, false);
   hide(detailsPanel);
   window.generateSettings();
-  let lastHeader = window.getHeader();
   show(settingsPanel);
   setHeader("Configuración");
   window.addBackAction(() => {
     hide(settingsPanel);
-    setHeader(lastHeader);
+    window.location.reload();
   })
 };
 

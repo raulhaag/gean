@@ -19,6 +19,7 @@ window.getStorageDefault = function (key, defa) {
 
 function loadSettings() {
     let settings = {
+
       lockfronpage: {type: "bool",currentValue: true, title: "Bloquear pagina principal."},
       fullscreen: {type: "bool",currentValue: true, title: "Iniciar video en pantalla completa. (si el navegador no lo bloquea)."},   
       autoplay: {type: "bool",currentValue: true, title: "Reproducir automaticamente al abrir video."},
@@ -127,6 +128,11 @@ function loadSettings() {
 loadSettings();
 let lastServer = localStorage.getItem("lastServer");
 let lastServerName = localStorage.getItem("lastServerName");
+let content_display = window.getStorageDefault("showAsGrid", "");
+
+if(content_display){
+  document.getElementById("main_content").classList.add(content_display);
+}
 if (lastServer != null && lastServerName != null) {
   window.sid = lastServer;
   window.sn = lastServerName;
@@ -134,6 +140,7 @@ if (lastServer != null && lastServerName != null) {
   window.sid = "jkanime";
   window.sn = "JkAnime";
 }
+
 
 try {
     window.favorites = JSON.parse(window.getStorageDefault("favorites", "[]"));
