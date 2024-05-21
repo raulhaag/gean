@@ -24,7 +24,7 @@ let loadPanel = null;
 let searchInput = null;
 
 let lastSelectedButton = null;
-let backActionsPile = [];
+window.backStack = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   homeButton = document.getElementById("homeButton");
@@ -88,14 +88,17 @@ window.hideLoading = ()=>{
 }
 
 window.onBackClick = () => {
-  let action = backActionsPile.pop();
+  let action = window.backStack.pop();
   if (action) action();
-  if(backActionsPile.length == 0){
+  if(window.backStack.length == 0){
     hide(backButton);
     show(drawerButton);
     show(searchButton);
   }
 }
+
+//for android gesture
+window.backClick = window.onBackClick
 
 window.setHeader = (title) => {
   header.innerText = title;
@@ -144,7 +147,7 @@ let searchSwitch = (newState = !window.searchState) => {
   }
 
   if (window.searchState) {
-    backActionsPile.push(()=>{
+    window.backStack.push(()=>{
       searchSwitch();
     });
     show(backButton);
@@ -153,7 +156,7 @@ let searchSwitch = (newState = !window.searchState) => {
     setTimeout(() => {mainPanel.classList.add('undysplay')}, 500);
   } else {
     hide(backButton);
-    backActionsPile = [];
+    window.backStack = [];
     mainPanel.classList.remove('undysplay');
     document.getElementById("search").classList.add("hide");
     document.getElementById("header").classList.remove("search_state");
@@ -214,7 +217,7 @@ let stateSettings = () => {
 };
 
 window.addBackAction = (nBAction) => {
-  backActionsPile.push(nBAction);
+  window.backStack.push(nBAction);
   show(backButton);
 }
 
