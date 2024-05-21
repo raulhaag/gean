@@ -129,6 +129,14 @@ export class SoloLatino {
     };
   }
 
+  getLangInfo(ca){
+    switch(ca){
+      case '0': return "Lat";
+      case '1': return "Esp";
+      case '2': return "Sub";
+      default: return "Otro"
+    }
+  }
 
   parseLinks(htmlContent){
     var parser = new DOMParser();
@@ -146,14 +154,19 @@ export class SoloLatino {
         }else{
           var decoded =  getFirstMatch(/\.php\?link=(.+?)&servidor=/gm,link.getAttribute("onclick"))
           if(decoded){
-            links.push(atob(decoded));
+            links.push(atob(decoded) + 
+            "||info_" + this.getLangInfo(link.dataset.lang));
           }
           try{
-            links.push([...link.getAttribute("onclick").matchAll(/go_to_playerVast\('(.+?)'/gm)][0][1]);
-            links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_playerVast\('(.+?)'/gm)][0][1]));
+            links.push([...link.getAttribute("onclick").matchAll(/go_to_playerVast\('(.+?)'/gm)][0][1] + 
+            "||info_" + this.getLangInfo(link.dataset.lang));
+            links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_playerVast\('(.+?)'/gm)][0][1]) + 
+            "||info_" + this.getLangInfo(link.dataset.lang));
           }catch(e){
-          links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]);
-            links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]));
+          links.push([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1] + 
+          "||info_" + this.getLangInfo(link.dataset.lang));
+            links.push(atob([...link.getAttribute("onclick").matchAll(/go_to_player\('(.+?)'/gm)][0][1]) + 
+            "||info_" + this.getLangInfo(link.dataset.lang));
           }
         }
       }catch(e){}//continue
