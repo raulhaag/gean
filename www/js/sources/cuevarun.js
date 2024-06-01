@@ -1,17 +1,17 @@
-export class NOCuevaPro {
+export class CuevaRun {
     constructor() {
-      this.name = "CuevaPro";
-      this.baseUrl = "https://cuevana.pro";
+      this.name = "CuevaRun";
+      this.baseUrl = "https://cuevana2.run";
     }
-
+    
     getSeries = (flis, onError = console.log) => {
         let nas = [];
         try {
             for (var i = 0; i < flis.length; i++) {
                 nas.push({
-                  "name": flis[i].getElementsByClassName('item-detail')[0].innerText,
-                  "image": flis[i].getElementsByTagName('img')[0].getAttribute('src'),
-                  "path": this.name + "/getLinks/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
+                  "name": flis[i].getElementsByTagName("h2")[0].innerText,
+                  "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
+                  "path": this.name + "/getDescription/" + enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
                 });
             }
           } catch (nerror) {
@@ -26,14 +26,16 @@ export class NOCuevaPro {
         onError(result);
         return;
       }
+
+    //document.getElementsByClassName('row')[x]  3:Peliculas destacadas, 5:Series destacadas, 7: ultimas peliculas, 9:ultimas series
       var parser = new DOMParser();
       var doc = parser.parseFromString(result, "text/html");
-      let allPages = doc.getElementsByTagName('dd');
+      let allPages = doc.getElementsByClassName('row');
       after({
-        "Últimas Películas": this.getSeries(allPages[0].getElementsByClassName("movie-item")),
-        "Series": this.getSeries(allPages[1].getElementsByClassName("movie-item")),
-        //"Últimos Animes Agregados": naa,
-        //"Últimos Peliculas Agregadas": nam
+        "Películas destacadas": this.getSeries(allPages[3].getElementsByTagName("article")),
+        "Últimas películas": this.getSeries(allPages[7].getElementsByTagName("article")),
+        "Series destacadas": this.getSeries(allPages[5].getElementsByTagName("article")),
+        "Últimas series": this.getSeries(allPages[9].getElementsByTagName("article")),
       });
     }
 
@@ -48,13 +50,9 @@ export class NOCuevaPro {
         }
         var parser = new DOMParser();
         var doc = parser.parseFromString(result, "text/html");
-        let sname =  doc.querySelector(".sheader > div:nth-child(2) > h1:nth-child(1)").innerText;
-        let ps = doc.querySelectorAll(".wp-content > p");
-        let description = "";
-        for(let i = 0; i < ps.length; i++){
-          description += ps[i].innerText;
-        }
-        let image = doc.querySelector(".poster > img:nth-child(1)").getAttribute("data-src");
+        let sname =  doc.getElementsByTagName("h1")[0].innerText;
+        let description = doc.getElementsByClassName("row")[0].innerText;
+        let image = doc.getElementsByClassName("sticky-top")[0].getElementsByTagName("img")[0].src;
         let jsChapters = doc.querySelectorAll("div.se-c > div > ul > li");
         let chapters = [];
         let clen = 0;
@@ -63,7 +61,7 @@ export class NOCuevaPro {
             chapters.push({"name": "Capítulo " + doc.querySelectorAll("div.se-c > div > ul > li")[i].getElementsByClassName("numerando")[0].innerText, "path": this.name + "/getLinks/" + window.enc(doc.querySelectorAll("div.se-c > div > ul > li")[i].getElementsByTagName("a")[0].getAttribute("href"))});
           }
         }catch(e){/*continue*/}
-        if((chapters.length == 0) && (window.dec(path).indexOf("/pelicula/") != -2)){
+        if((chapters.length == 0) && (window.dec(path).indexOf("/pelicula/") != -1)){
           chapters.push({"name":"Película", "path":this.name + "/getLinks/" + path});
         }
         after({"name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items":[description], "chapters": chapters});

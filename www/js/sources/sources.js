@@ -7,6 +7,7 @@ import { TioAnime } from "./tioanime.js";
 import { NOTestServer } from "./test.js";
 import { PanDramaTV } from "./pandrama.js";
 import { DeadServer } from "./deadserver.js";
+import { CuevaRun } from "./cuevarun.js";
 
 export function openInNewTab(url) {
         window.open(url, '_blank').focus();
@@ -20,6 +21,7 @@ let servers = {"animeflv.net": new AnimeFlvNet(),
 "PanDrama": new PanDramaTV(),
 "testserver": new NOTestServer(),
 "DeadServer": new DeadServer(),
+"CuevaRun": new CuevaRun(),
 };
 export function getSource(name) {
     return (servers[name])? servers[name]:servers["DeadServer"]
