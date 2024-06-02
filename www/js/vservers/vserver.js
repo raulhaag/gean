@@ -19,6 +19,12 @@ import {Plustr} from "./plustr.js";
 import { VK } from "./vk.js";
 import { DailyMotion } from "./dailymot.js";
 
+let interceptors = []
+
+export function registerInterceptor(contains, callback){
+    interceptors.push({"contains": contains, "callback": callback});
+}
+
 let servers = {"fembed": new Fembed(),
                 "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
@@ -48,6 +54,11 @@ let servers = {"fembed": new Fembed(),
             };
 
 export async function getDDL(after, onError, web) {
+    for(let a in interceptors){
+            if(web.indexOf(interceptors[a].contains) != -1){
+                web = await interceptors[a].callback(cleanInfo(web));
+            }
+    }
     web = web.replace(/\|\|info.+/gm, "");
   /*   if(web.startsWith("https://jkanime.net/c3.php?u=")){
         let sname = getFirstMatch(/s\=(.+)/gm, web);
