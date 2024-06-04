@@ -12,7 +12,7 @@ export class CuevaRun {
                 nas.push({
                   "name": flis[i].getElementsByTagName("h2")[0].innerText,
                   "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
-                  "path": this.name + "/getDescription/" + enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
+                  "path": this.name + "/getDescription/" + window.enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
                 });
             }
           } catch (nerror) {
@@ -87,21 +87,17 @@ export class CuevaRun {
 
     async getSearch(after, onError, query) {
       try{
-        let response = await fGet(this.baseUrl + "/?s=" + query);
-        if (response.indexOf("error") == 0) {
-          onError(response);
-          return;
-        }
+        let response = await fGet(this.baseUrl + "/search?q=" + query);
         var parser = new DOMParser();
         var doc = parser.parseFromString(response, "text/html");
-        let flis = doc.querySelectorAll("div.result-item > article")
+        let flis = doc.querySelector(".row-cols-xl-5").getElementsByTagName("article");
       let nas = [];
         try {
             for (var i = 0; i < flis.length; i++) {
                 nas.push({
-                    "name": flis[i].getElementsByClassName('title')[0].innerText,
-                    "image": flis[i].getElementsByTagName('img')[0].getAttribute('data-src'),
-                    "path": this.name + "/getDescription/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
+                    "name": flis[i].getElementsByTagName("h2")[0].innerText,
+                    "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
+                    "path": this.name + "/getDescription/" + window.enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
                 });
             }
           } catch (nerror) {
@@ -119,7 +115,7 @@ export class CuevaRun {
           let data = await fGet(web);
           return getFirstMatch(/var url = '(.+?)'/gm, data);
         });
-        let result = await fGet(dec(path));
+        let result = await fGet(window.dec(path));
         if (result.indexOf("error") == 0) {
           onError(result);
           return;
@@ -127,7 +123,13 @@ export class CuevaRun {
         let id = getFirstMatch(/postid-(\d+)/gm, result);
         var parser = new DOMParser();
         var doc = parser.parseFromString(result, "text/html");
-        let data = JSON.parse(doc.getElementById('__NEXT_DATA__').innerText).props.pageProps.post.players;
+        let fdata = JSON.parse(doc.getElementById('__NEXT_DATA__').innerText);
+        let data = {};
+        if(fdata.props.pageProps.post){
+          data = fdata.props.pageProps.post.players;
+        }else{
+          data = fdata.props.pageProps.episode.players;
+        }
         let vlinks = []
         for(let lan in data){
           if(lan){
