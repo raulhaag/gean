@@ -29,6 +29,9 @@ export class Scene{
     saveState(){
         throw new Error("need implementation to save state in subclass");
     }
+    getMore(server, ref){
+        throw new Error("need implementation to save state in subclass");
+    }
     dispose(){
         if(!this.full_menu){
             throw new Error("need implementation dispose in subclass");

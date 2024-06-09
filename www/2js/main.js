@@ -467,6 +467,12 @@ window.route = function (path, ppath = null) {
     showLoading();
     let term = document.getElementsByClassName("search__text")[0].value;
     server.getSearch(window.posSearch, window.error, term);
+  } else if (action == "getMore") {
+    try{
+      currentScene.getMore(server, fpath[2]);
+    }catch(e){
+      hideLoading()
+    }
   }
 };
 
