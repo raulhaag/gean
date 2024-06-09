@@ -194,7 +194,7 @@ export class JKAnime {
       if (remote) {
         const ssjs = JSON.parse(getFirstMatch(/var servers = (.+?}]);/gm,result).trim());
         for (var ss in ssjs) {
-          links.push(dec(ssjs[ss].remote) + "||server_name_" + ssjs[ss].server.toLowerCase() + ".")
+          links.push(dec(ssjs[ss].remote).trim()); //+ "||server_name_" + ssjs[ss].server.toLowerCase() + ".")
         }
       }
       after(links);
