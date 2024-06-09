@@ -9,8 +9,10 @@ export class SceneHome extends Scene{
     last = {video:null, chapter:null};
     chapter = null;
     home = null;
-    constructor(){
+    more = null;
+    constructor(more = null){
         super(true);
+        this.more = more;
         //this.lastKeyManager = this.video_nav;
     }
     initBody(){
@@ -55,6 +57,10 @@ export class SceneHome extends Scene{
     initHome = (reload = true) => {
         this.lastKeyManager = this.videos_nav
         changeKeyManager();
+        if(this.more){
+            this.fillVideos(this.more);
+            return
+        }
         if(!window.appSettings["lockfronpage"][0]){
             if(reload) getResponse(sid, this.fillVideos, error);
         }else{
@@ -251,6 +257,32 @@ export class SceneHome extends Scene{
         }
         //unsetLoadingInfo();
     };
+    getMore = async(server, from, title) => {
+        window.showLoading();
+        server.getMore((more)=>{
+            this.fillVideos(more);
+            let isPrefered = (id) => {
+                let nf = document.getElementById(id);
+                if (nf && (nf.dataset.path.indexOf("getMore") == -1)){
+                    return nf;
+                }
+                return undefined;
+            }
+            let prefered = isPrefered("videos_0_0");
+            if(prefered === undefined){
+                prefered = isPrefered("videos_0_1");
+            }
+            if(prefered === undefined){
+                prefered = isPrefered("videos_0_2");
+            }
+            if(prefered === undefined){
+                prefered = document.getElementById("videos_0_0");
+            }
+            if(prefered){
+                this.setNewVideoSelected(prefered);
+            }
+        }, error, from);
+    }
 
     setSerieInfo = (info) => {
         this.info.title.innerHTML = info.name;
@@ -282,6 +314,9 @@ export class SceneHome extends Scene{
     };
 
     setResume(seriePath, pg = false){
+        if(seriePath.indexOf("/getMore")!= -1){
+            return;
+        }
         if(resumes[seriePath]){
             if(seriePath == this.last.video.dataset.path || seriePath == this.last.video.dataset.ppath){
                 this.info.resume.innerHTML = resumes[seriePath];
