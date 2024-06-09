@@ -170,6 +170,8 @@ window.onHomeItemClick = (item) => {
             }
         }
         
+    }else if(path[1].includes("getMore")){
+        getSource(path[0]).getMore(fillVideos, window.showError, path[2])
     }
 }
 

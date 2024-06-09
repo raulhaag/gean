@@ -128,6 +128,9 @@ window.mediaClick = function (e, path) {
   } else if (action == "search") {
     let term = document.getElementsByClassName("search__text")[0].value;
     server.getSearch(posSearch, error, term);
+  } else if(action == "getMore"){
+      server.getMore(
+      posServerClick, window.showError, fpath[2])
   } else {
     loading.style.visibility = "hidden";
   }
@@ -401,7 +404,6 @@ window.openPlayer = function (options,  items = [], subtitle = "",res = true) {
   vp.innerHTML = getPlayer(options, items, videoSrc, subtitle);
   vp.style.display = "flex";
   var elem = document.getElementsByClassName("videoview")[0];
-  window.player = new Plyr("#player");
   if (videoSrc.indexOf(".m3u") != -1) {
     var hls_config = {
       autoStartLoad: true,
@@ -419,7 +421,7 @@ window.openPlayer = function (options,  items = [], subtitle = "",res = true) {
   loading.style.visibility = "hidden";
   initVideoNav();
   if (window.getStorageDefault("fullscreen")) {
-    window.player.fullscreen.enter();
+    window.requestFullScreen(window.player);
   }
   elem.focus();
   addBackStack(vp);
