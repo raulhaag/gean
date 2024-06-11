@@ -529,3 +529,20 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.more{
+  height: 12vh;
+  font-size: 12vh;
+  line-height: 9.5vh;
+  background-color: #111;
+}
+.more div{
+  font-size: 12vh;
+  line-height: 12vh;
+}
+.more img{
+  height: 0px !important;
+}
+.more h2{
+  top: 0px;
+}
