@@ -77,13 +77,18 @@ let generateCategory = (title, items) =>{
     if(items == null) return "";
     let result = '<div class="content_group"><div class="content_group_title">' + title + `<img class= "sicon" src="${icon}" onClick="{switchListToGrid();}"></div> <div class="content_group_items">`;
     let ppath = "";
+    let extraImg = "";
+    let extraClass = " more"
     for (let i = 0; i < items.length; i++) {
-        if(items[i]["parentPath"]){
-            ppath = '" data-ppath="' + items[i]["parentPath"];
+        ppath = (items[i]["parentPath"])? '" data-ppath="' + items[i]["parentPath"]: ''
+        if((items[i].image == undefined) && (items[i].path.indexOf("/getMore/") != -1)){
+            extraImg = "";
+            extraClass = " more";
         }else{
-            ppath = '';
-        }
-        result += '<div class="content_item" onClick="{window.onHomeItemClick(this);}" data-name="' + items[i]["name"] + '" data-image="' + items[i]["image"] + '" data-path="' + items[i]["path"] + ppath +'"><img class="item__image" src="' + items[i]['image'] + '" alt="">  <div class="content_item_title">' + items[i]['name'] + '</div></div>';
+            extraImg = '<img class="item__image" src="' + items[i]['image'] + '" alt="">';
+            extraClass = "";
+        }        
+        result += '<div class="content_item' + extraClass + '" onClick="{window.onHomeItemClick(this);}" data-name="' + items[i]["name"] + '" data-image="' + items[i]["image"] + '" data-path="' + items[i]["path"] + ppath +'">' + extraImg + '<div class="content_item_title">' + items[i]['name'] + '</div></div>';
     }
     return result + '</div>';
 };
