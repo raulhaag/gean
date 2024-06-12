@@ -35,7 +35,6 @@ export class CuevaRun {
         }
       ];
       let posLinks = [];
-      let next;
       if(/^.*(\d)$/gm.test(web)){
         let parted = web.split("/");
         let page = parseInt(parted.pop(), 10);
@@ -54,8 +53,9 @@ export class CuevaRun {
         var doc = parser.parseFromString(result, "text/html");
         let allPages = doc.getElementsByClassName('row');
         let pd = this.getSeries(allPages[2].getElementsByTagName("article"));
+        title = doc.getElementsByTagName("h1")[0].innerText;
         after({
-          title: preLinks.concat(pd, posLinks),
+          [title]: preLinks.concat(pd, posLinks),
         });
       }catch(e){
         onError(e);
@@ -73,19 +73,32 @@ export class CuevaRun {
       var doc = parser.parseFromString(result, "text/html");
       let allPages = doc.getElementsByClassName('row');
       let pd = this.getSeries(allPages[3].getElementsByTagName("article"));
-      pd.push({"name": "Más películas destacadas","path": this.name + "/getMore/" + window.enc("https://www.cuevana2.run/peliculas/top-hoy"),"image": "./images/next_nav.png"});
+      pd.push({"name": "Más películas destacadas","path": this.name + "/getMore/" + window.enc(this.baseUrl + "/peliculas/top-hoy"),"image": "./images/next_nav.png"});
       let up = this.getSeries(allPages[7].getElementsByTagName("article"));
-      up.push({"name": "Más películas","path": this.name + "/getMore/" + window.enc("https://www.cuevana2.run/peliculas"),"image": "./images/next_nav.png"});
+      up.push({"name": "Más películas","path": this.name + "/getMore/" + window.enc(this.baseUrl + "/peliculas"),"image": "./images/next_nav.png"});
       let sd = this.getSeries(allPages[5].getElementsByTagName("article")); 
-      sd.push({"name": "Más series destacadas","path": this.name + "/getMore/" + window.enc("https://www.cuevana2.run/series/top-hoy"),"image": "./images/next_nav.png"});
+      sd.push({"name": "Más series destacadas","path": this.name + "/getMore/" + window.enc(this.baseUrl + "/series/top-hoy"),"image": "./images/next_nav.png"});
       let us = this.getSeries(allPages[9].getElementsByTagName("article"));
-      us.push({"name": "Más series","path": this.name + "/getMore/" + window.enc("https://www.cuevana2.run/series"),"image": "./images/next_nav.png"});
+      us.push({"name": "Más series","path": this.name + "/getMore/" + window.enc(this.baseUrl + "/series"),"image": "./images/next_nav.png"});
 
       after({
         "Películas destacadas": pd,
         "Últimas películas": up,
         "Series destacadas": sd,
-        "Últimas series": us
+        "Últimas series": us,
+        "Por género": [{"name": "Acción", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/accion")},
+          {"name": "Animación", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/animacion")},
+          {"name": "Crimen", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/crimen")},
+          {"name": "Fámilia", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/familia")},
+          {"name": "Misterio", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/misterio")},
+          {"name": "Suspenso", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/suspenso")},
+          {"name": "Aventura", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/aventura")},
+          {"name": "Ciencia ficción", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/ciencia-ficcion")},
+          {"name": "Drama", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/drama")},
+          {"name": "Fantasia", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/fantasia")},
+          {"name": "Romance", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/romance")},
+          {"name": "Terror", "path": this.name + "/getMore/" + window.enc(this.baseUrl + "/genero/terror")},
+        ]
       });
     }
 

@@ -302,13 +302,11 @@ export class SceneHome extends Scene{
         if(items == null) return "";
         let result = '<div class="items demitransparent"><h2 class="items__title">' + title + '</h2><div class="items__list" value="0"><div class="item_gap"></div>';
         let ppath = "";
+        let extraClass = "";
         for (let i = 0; i < items.length; i++) {
-            if(items[i]["parentPath"]){
-                ppath = '" data-ppath="' + items[i]["parentPath"];
-            }else{
-                ppath = '';
-            }
-            result += '<div class="item focusable" data-name="' + items[i]["name"] + '" data-image="' + items[i]["image"] + '" data-path="' + items[i]["path"] + ppath +'"><img class="item__image" src="' + items[i]['image'] + '" alt=""> <h2 class="item__title">' + items[i]['name'] + '</h2></div>';
+            ppath = (items[i]["parentPath"])? '" data-ppath="' + items[i]["parentPath"]: ''
+            extraClass =  ((items[i].image == undefined) && (items[i].path.indexOf("/getMore/") != -1))? " more": "";
+            result += `<div class="item focusable${extraClass}" data-name="${items[i]["name"]}" data-image="${items[i]["image"]}" data-path="${items[i]["path"] + ppath}"><img class="item__image" src="${items[i]['image']}" alt=""> <h2 class="item__title">${items[i]['name']}</h2></div>`;
         }
         return result + '</div></div>';
     };
