@@ -4,45 +4,131 @@ export class SoloLatino {
     this.baseUrl = "https://sololatino.net/animes/";
   }
   async getFrontPage(after, onError) {
-    var nc = [];
-    var na = [];
     var out = {};
-    let result = await fGet("https://sololatino.net/animes/novedades/");
+    let result = await window.fGet("https://sololatino.net/animes/novedades/");
     try{
       var parser = new DOMParser();
       var doc = parser.parseFromString(result, "text/html");
       let flis = doc.getElementsByClassName("item se episodes"); //doc.querySelectorAll("html body.error404 div#dt_contenedor div#contenedor div.module div.content.full_width_layout div#archive-content.animation-2.items div.items article");
-      for (var i = 0; i < flis.length; i++) {
-        nc.push({
-          name: flis[i].getElementsByTagName("h3")[0].innerText,
-          path:
-            this.name +
-            "/getLinks/" +
-            window.enc(
-              flis[i].getElementsByTagName("a")[0].getAttribute("href")
-            ),
-          image: flis[i]
-            .getElementsByTagName("img")[0]
-            .getAttribute("data-srcset"),
-        });
-      }
-      out["Nuevos capítulos"] = nc;
+      out["Nuevos capítulos"] = this.parseList(flis);
     }catch(e){}
-    result = await fGet("https://sololatino.net/animes/");
+    result = await window.fGet("https://sololatino.net/animes/");
     try{
       var parser = new DOMParser();
       var doc = parser.parseFromString(result, "text/html");
       let flis = doc.getElementsByClassName("item animes"); //doc.querySelectorAll("html body.error404 div#dt_contenedor div#contenedor div.module div.content.full_width_layout div#archive-content.animation-2.items div.items article");
-      for (var i = 0; i < flis.length; i++) {
-        na.push({
-          "name": flis[i].getElementsByTagName("h3")[0].innerText,
-          "path": this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href")),
-          "image": flis[i].getElementsByTagName("img")[0].getAttribute("data-srcset")
-        });
-      }
-      out["Nuevos animes"] = na;
+      out["Nuevos animes"] = this.parseList(flis);
     }catch(e){}
+    out["Por genero"] = [
+      {
+        "name": "Acción",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=accion/')
+      },
+      {
+        "name": "Acción y Aventura",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=action-adventure/')
+      },
+      {
+        "name": "Anime",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=anime/')
+      },
+      {
+        "name": "Aventura",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=aventura/')
+      },
+      {
+        "name": "Comedia",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=comedia/')
+      },
+      {
+        "name": "Crimen",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=crimen/')
+      },
+      {
+        "name": "Drama",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=drama/')
+      },
+      {
+        "name": "Familia",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=familia/')
+      },
+      {
+        "name": "Fantasía",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=fantasia/')
+      },
+      {
+        "name": "Kids",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=kids/')
+      },
+      {
+        "name": "Misterio",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=misterio/')
+      },
+      {
+        "name": "Romance",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=romance/')
+      },
+      {
+        "name": "SCI-FI & Fantasia",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=sci-fi-fantasy/')
+      },
+      {
+        "name": "Terror",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=terror/')
+      },
+      {
+        "name": "Belica",
+        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=war-politics/')
+      }
+    ]
     after(out);
+  }
+
+  async getMore(after, onError = console.log, more , title = ""){
+    let web = window.dec(more);
+    if(web === "Homepage"){
+      this.getFrontPage(after, onError);
+      return;
+    }
+    let preLinks = [
+      {
+        "name": "Home",
+        "image": "./images/home_nav.png",
+        "path": this.name + "/getMore/" + window.enc("Homepage"),
+      }
+    ];
+    let posLinks = [];
+    try{
+      let result = await window.fGet(window.dec(more));
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(result, "text/html");
+      let pages = doc.getElementsByClassName("pagMovidy")[0].getElementsByTagName("a");
+      if(pages.length == 2){
+        preLinks.push({"name": "Pagina Anterior", "image": "./images/prev_nav.png", "path": this.name + "/getMore/" + window.enc(pages[0].getAttribute("href"))}); 
+        posLinks.push({"name": "Pagina siguiente", "image": "./images/next_nav.png", "path": this.name + "/getMore/" + window.enc(pages[1].getAttribute("href"))});
+      }else{
+        posLinks.push({"name": "Pagina siguiente", "image": "./images/next_nav.png", "path": this.name + "/getMore/" + window.enc(pages[0].getAttribute("href"))});
+      }
+      let allPages = doc.getElementsByClassName("item");;
+      let pd = this.parseList(allPages);
+      after({
+        [title]: preLinks.concat(pd, posLinks),
+      });
+    }catch(e){
+      onError(e);
+    }
+  }
+
+  parseList(flis) {
+    let nc = [];
+    for (var i = 0; i < flis.length; i++) {
+      nc.push({
+        "name": flis[i].getElementsByTagName("h3")[0].innerText,
+        "path": this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href")),
+        "image": flis[i].getElementsByTagName("img")[0].getAttribute("data-srcset")
+      });
+    }
+    return nc;
   }
 
   async getDescription(after, onError, path, page = 0) {
