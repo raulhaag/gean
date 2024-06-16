@@ -7,6 +7,7 @@ from urllib import request, parse
 from urllib.request import urlopen
 import traceback
 import re, subprocess, platform
+from urllib.error import HTTPError
 
 thread = None
 server = None
@@ -22,6 +23,22 @@ cache = {}
 cachedir = "cache/"
 lastBase_m3u8 = ""
 last_m3u8_headers = ""
+
+
+def handle_308_redirect(self, req, fp, code, msg, headers):
+    if code == 308:
+        new_url = headers.get('Location')
+        if new_url:
+            req = request.Request(new_url, headers=req.headers, method='GET')
+            fp.close()
+            return request.urlopen(req)
+        else:
+            raise HTTPError(req.full_url, code, msg, headers, fp)
+    else:
+        return self.http_error_default(req, fp, code, msg, headers)
+
+# Monkey patching urllib.request.HTTPRedirectHandler
+urllib.request.HTTPRedirectHandler.http_error_308 = handle_308_redirect
 
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
