@@ -53,12 +53,18 @@ body {
 }
 
 .site_name{
-  display: flex;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: inline-flexbox;
   justify-content: center;
   font-size: inherit;
   width: 100%;
   align-items: center;
   line-height: 68px;
+  white-space: nowrap;
+  overflow: hidden;
+  align-items: center;
+  text-overflow: ellipsis;
 }
 
 
@@ -184,7 +190,7 @@ li:hover{
     right: 10px;
   }
   
-  @media (orientation: landscape) {
+  @media (height > width) {
     /* applies to devices in landscape mode */
     .content_group_items{
       display: flex;
@@ -193,7 +199,7 @@ li:hover{
       height:50vh;
     }
   }
-  @media (orientation: portrait) {
+  @media (width > height) {
     /* applies to devices in portrait mode */
     .content_group_items{
       display: flex;
@@ -451,8 +457,6 @@ input:focus{
 }
 
 
-
-
 /* Details */
 #details{
   position: absolute;
@@ -620,9 +624,7 @@ input:focus{
 }
 
 
-
 /* Options dialog */
-
 .options_box{
   width: calc(100% - 20px);
   position: absolute;
@@ -736,7 +738,6 @@ input:focus{
 
 
 /* Load screen */
-
 #load_background {
   color: #c4c7c5;
   background-color: #000;
