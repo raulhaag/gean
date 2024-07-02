@@ -680,6 +680,10 @@ function loadSettings() {
       false,
       "Usar cache de video en disco (solo pc/firefx, necesita espacio disponible en disco)",
     ],
+    srecent:[
+      true,
+      "No recomendado desactivar",
+    ],
     /*useBlob: [
       false,
       "Usar cache blob (usa mucha memoria y hay que esperar la carga, pero despues no se corta)",

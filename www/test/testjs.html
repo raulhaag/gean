@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="https://unpkg.com/plyr@3/dist/plyr.css">    
     <script type="module">
         //import {DailyMotion} from "../js/vservers/dailymot.js"
-        import {Vidguard} from "../js/vservers/vidgd.js"
+        import {Vidguard} from "../js/vservers/vidgd.js";
+        import{DoraFlixIn} from "../js/sources/doraflixin.js";
         //import {AnimeOnlineNinja} from "../js/sources/aoninja.js"
         /*import {FileMoon} from '../js/vservers/filemoon.js'*/
         window.serverHost = "http://127.0.0.1:8080/";
@@ -30,12 +31,13 @@
         window.getAllMatches = function(regex, str){
             return [...str.matchAll(regex)];
         }
-        let data = new Vidguard().getDDL(console.log, console.log(), "https://vgfplay.com/e/k3gG5q3ZymkE1N2");
+        //let data = new Vidguard().getDDL(console.log, console.log(), "https://vgfplay.com/e/k3gG5q3ZymkE1N2");
         //let data = new DailyMotion().getDDL(console.log, console.log, "https://www.dailymotion.com/embed/video/x8qa1qc");
-        console.log(data)
+        //console.log(data)
+        new DoraFlixIn().getLinks(console.log, console.log, enc("https://doramasflix.in/episodios/hierarchy-1x1"));
         /*document.addEventListener("DOMContentLoaded", ()=>{
         
-
+    
 	const source = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
 	const video = document.querySelector('video');
 	
