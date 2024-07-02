@@ -79,7 +79,7 @@ export class SceneHome extends Scene{
         }else{
             videoContent += "<div id='favlist'></div>";
         }
-        if(recent.length > 0) {videoContent += ("<div id='reclist'>" + this.generateCategory("Recientes", recent) + "</div>")
+        if((recent.length > 0) && (window.appSettings["srecent"][0])) {videoContent += ("<div id='reclist'>" + this.generateCategory("Recientes", recent) + "</div>")
         }else{
             videoContent += "<div id='reclist'></div>";
         };
