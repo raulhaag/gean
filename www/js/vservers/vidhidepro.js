@@ -1,11 +1,10 @@
-export class Mediafire {
+export class VidHidepro {
     constructor() {}
     async getDDL(after, onError, web){
         try{
             let data = await fGet(web);
-            let dlink = getFirstMatch(/Download file\"\s+href=\"(.+?)\"/gm, data);
+            let dlink = getFirstMatch(/file:"(.+?)"/gm, data);
             after({video: dlink});
-            // then recaptcha f***
         }catch(e){
             onError(e);
         }
