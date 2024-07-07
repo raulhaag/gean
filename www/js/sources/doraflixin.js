@@ -1,6 +1,6 @@
 // player_.+?=({.+?})< player config
 // enc 1 unnescaper(atob(src))
-export class NoDoraFlixIn {
+export class NODoraFlixIn {
     constructor() {
       this.name = "DoraFlixIn";
       this.host = atob("aHR0cHM6Ly9kb3JhbWFzZmxpeC5pbi8=");//

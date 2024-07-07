@@ -18,7 +18,8 @@ import { FileLions } from "./filelions.js";
 import {Plustr} from "./plustr.js";
 import { VK } from "./vk.js";
 import { DailyMotion } from "./dailymot.js";
-
+import { VidHidepro } from "./vidhidepro.js";
+import { DoodStream } from "./doodstream.js";
 let interceptors = []
 
 export function registerInterceptor(contains, callback){
@@ -51,6 +52,8 @@ let servers = {"fembed": new Fembed(),
                 "plustr": new Plustr(),
                 "vk.com/": new VK(),
                 "dailymotion.com": new DailyMotion(),
+                "vidhide": new VidHidepro(),
+                "doodstream": new DoodStream(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -111,6 +114,8 @@ export async function getDDL(after, onError, web) {
         return servers["streamsb"].getDDL (after, onError, web);
     }else if ((web.indexOf("voe") != -1)) {
         return servers["voe"].getDDL (after, onError, cleanInfo(web));
+    }else if ((web.indexOf("vidhide") != -1)) {
+        return servers["vidhide"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("wish.") != -1)) {
         return servers["streamwish"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("filemoon.") != -1)) {
@@ -123,6 +128,8 @@ export async function getDDL(after, onError, web) {
         return servers["vk.com/"].getDDL(after, onError, cleanInfo(web))
     }else if(web.indexOf("dailymotion.com") != -1){
         return servers["dailymotion.com"].getDDL(after, onError, cleanInfo(web));
+    }else if(web.indexOf("doodstream") != -1){
+        return servers["doodstream"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -187,9 +194,13 @@ export function getName(web) {
     }else if (web.indexOf("plustr") != -1) {
         name = "Plustream (Solo reproductor interno android)";
     }else if ((web.indexOf("vk.com/") != -1)){
-            return "VK"
+        name =  "VK";
     }else if(web.indexOf("dailymotion.com") != -1){
-        return "DailyMotion";
+        name =  "DailyMotion";
+    }else if(web.indexOf("vidhide") != -1){
+        name =  "vidhide";
+    }else if(web.indexOf("doodstream") != -1){
+        name =  "doodstream";
     }else {
         name = "";
     }
@@ -219,9 +230,11 @@ export function getPreferer(list){
                     "yourupload",
                     "mixdrop",
                     "um.php?e=",
-                    "plustr",
+                    //"plustr",
                     "vk.com/",
-                    "dailymotion.com"
+                    "dailymotion.com",
+                    "vidhide",
+                    //"doodstream",
                 ];
     
     let ordered = [];
