@@ -234,7 +234,7 @@ export function getPreferer(list){
                     "vk.com/",
                     "dailymotion.com",
                     "vidhide",
-                    //"doodstream",
+                    "doodstream",
                 ];
     
     let ordered = [];
