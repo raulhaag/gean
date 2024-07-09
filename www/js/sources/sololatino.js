@@ -10,7 +10,7 @@ export class SoloLatino {
       var parser = new DOMParser();
       var doc = parser.parseFromString(result, "text/html");
       let flis = doc.getElementsByClassName("item se episodes"); //doc.querySelectorAll("html body.error404 div#dt_contenedor div#contenedor div.module div.content.full_width_layout div#archive-content.animation-2.items div.items article");
-      out["Nuevos capítulos"] = this.parseList(flis);
+      out["Nuevos capítulos"] = this.parseList(flis, "/getLinks/");
     }catch(e){}
     result = await window.fGet("https://sololatino.net/animes/");
     try{
@@ -119,12 +119,12 @@ export class SoloLatino {
     }
   }
 
-  parseList(flis) {
+  parseList(flis, mode = "/getDescription/") {
     let nc = [];
     for (var i = 0; i < flis.length; i++) {
       nc.push({
         "name": flis[i].getElementsByTagName("h3")[0].innerText,
-        "path": this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href")),
+        "path": this.name + mode + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href")),
         "image": flis[i].getElementsByTagName("img")[0].getAttribute("data-srcset")
       });
     }
@@ -138,7 +138,7 @@ export class SoloLatino {
       var doc = parser.parseFromString(result, "text/html");
       let sname =  doc.getElementsByTagName("h1")[1].innerText;
       let description =  doc.getElementsByTagName("p")[0].innerText.trim();
-      let image = doc.getElementsByClassName("poster")[0].getElementsByTagName("img")[0].getAttribute("src");
+      let image = doc.querySelectorAll('meta[property~="og:image"]')[0].content.trim();
       let chapters = [];
       let ch = [];
       let sh = doc.querySelectorAll("ul.episodios");

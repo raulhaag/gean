@@ -3,8 +3,15 @@ export class Voe {
     async getDDL(after, onError, web){
             let data = await fGet(web, {"User-Agent":navigator.userAgent});
             let dlink = getFirstMatch(/sources [^\{]+{([^}]+)/gm, data);
+            if(dlink == ''){
+                let nlink = getFirstMatch(/href = '(ht.+?)'/gm, data);
+                data = await fGet(nlink, {"User-Agent":navigator.userAgent, "Referer": web});
+                dlink = getFirstMatch(/sources [^\{]+{([^}]+)/gm, data);
+            }
+
             let filev = getAllMatches(/['"]([^'"]+?)["']\s*:\s*['"]([^'"]+?)["']/gm, dlink);
             if (filev.length == 1){
+                
                 after({"video":  atob(filev[0][2])});
                 return;
             }
