@@ -10,7 +10,7 @@ export class DoodStream {
                            "User-Agent": window.navigator.userAgent};
             let data2 = await fGet(host + dlink[1], headers);
             let dlink2 = this.randomize(data2) + dlink[1] + dlink[2] + (new Date()).getTime();
-            after({video:  window.serverHost + "m3u8/" + enc(dlink2) + "/" + enc(JSON.stringify(headers)) + "/maskfile.m3u8"})
+            after({video:  window.serverHost + "file/" + enc(dlink2) + "/" + enc(JSON.stringify(headers))})
         }catch(e){
             onError(e);
         }
