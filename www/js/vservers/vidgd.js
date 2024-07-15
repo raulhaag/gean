@@ -2,23 +2,23 @@
 export class Vidguard{
     constructor() {}
     async getDDL(after, onError, web) {
-        let headers = { "User-Agent": window.navigator.userAgent};
-        let result = await fGet(web, headers);
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(result, "text/html");
-        let data4 = doc.getElementsByTagName("script")[6];
-        let data = getFirstMatch(/eval\("window\.ADBLOCKER\s*=\s*false;(\\n.+?);"\);<\/script/gm, result);
-        data = data.replaceAll('\\u0027', "'");
-        data = data.replaceAll('\\u0022', '"');
-        data = data.replaceAll('\\u002b', '+');
-        data = data.replaceAll('\\/', '/');
-        data = data.replaceAll('\\\\', '\\');
-        data = data.replaceAll('\\"', '"');
-        console.log(data4);
-        data = AADecode.decode(data4);
-        eval(data);
-        console.log(svg);
         try{
+            let headers = { "User-Agent": window.navigator.userAgent};
+            let result = await fGet(web, headers);
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(result, "text/html");
+            let data4 = doc.getElementsByTagName("script")[6];
+            let data = getFirstMatch(/eval\("window\.ADBLOCKER\s*=\s*false;(\\n.+?);"\);<\/script/gm, result);
+            data = data.replaceAll('\\u0027', "'");
+            data = data.replaceAll('\\u0022', '"');
+            data = data.replaceAll('\\u002b', '+');
+            data = data.replaceAll('\\/', '/');
+            data = data.replaceAll('\\\\', '\\');
+            data = data.replaceAll('\\"', '"');
+            console.log(data4);
+            data = AADecode.decode(data4);
+            eval(data);
+            console.log(svg);
             let videos = {};
            /*if(filev2.length > 0) {
                 let cwe = filev2[0][2].replace(/\\/g, "");

@@ -28,7 +28,7 @@ export class ZippyShare {
             after({"video": video});
             return
         }catch(e){
-            console.log("Error getting video from server: " + e.message);
+            onError("Error getting video from server: " + e.message);
         }
     }
 }
