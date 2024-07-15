@@ -1,11 +1,11 @@
 export class VK{
     constructor() {}
     async getDDL(after, onError, web) {
-        let headers = { "User-Agent": window.navigator.userAgent};
-        let result = await fGet(web, headers);
-        let filev = getAllMatches(/"(url\d+)":"(.+?)"/gm, result)
-        //let filev2 = getAllMatches(/"(hls)":"(.+?)"/gm, result)
         try{
+            let headers = { "User-Agent": window.navigator.userAgent};
+            let result = await fGet(web, headers);
+            let filev = getAllMatches(/"(url\d+)":"(.+?)"/gm, result)
+            //let filev2 = getAllMatches(/"(hls)":"(.+?)"/gm, result)
             let videos = {};
            /*if(filev2.length > 0) {
                 let cwe = filev2[0][2].replace(/\\/g, "");

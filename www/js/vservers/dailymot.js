@@ -19,7 +19,7 @@ export class DailyMotion{
             after(videos);
             return
         }catch(e){
-            //ignore
+            onError(e);
         }      
         onError(`can't find video (${web})` );
     }
