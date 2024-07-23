@@ -10,7 +10,7 @@ export class AnimeOnlineNinja {
             for (var i = 0; i < flis.length; i++) {
                 nas.push({
                     "name": flis[i].getElementsByTagName('h3')[0].innerText,
-                    "image": flis[i].getElementsByTagName('img')[0].getAttribute('data-src'),
+                    "image": flis[i].getElementsByTagName('img')[0].getAttribute('data-src').replace("https:", "http:"),
                     "path": this.name + "/getDescription/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
                 });
             }
@@ -35,7 +35,7 @@ export class AnimeOnlineNinja {
         for (var i = 1; i < flis.length; i++) {
             ncs.push({
               "name": flis[i].getElementsByTagName('h3')[0].innerText + " - " + flis[i].getElementsByTagName('h4')[0].innerText.trim(),
-              "image": flis[i].getElementsByTagName('img')[0].getAttribute('data-src'),
+              "image": flis[i].getElementsByTagName('img')[0].getAttribute('data-src').replace("https:", "http:"),
               "path": this.name + "/getLinks/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
             });
           }
@@ -89,7 +89,7 @@ export class AnimeOnlineNinja {
         for(let i = 0; i < ps.length; i++){
           description += ps[i].innerText;
         }
-        let image = doc.querySelector(".poster > img:nth-child(1)").getAttribute("data-src");
+        let image = doc.querySelector(".poster > img:nth-child(1)").getAttribute("data-src").replace("https:", "http:");
         let jsChapters = doc.querySelectorAll("div.se-c > div > ul > li");
         let chapters = [];
         let clen = 0;
