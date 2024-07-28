@@ -124,7 +124,7 @@ window.getFirstMatch = function (regex, str) {
     return m[1];
   };
   
-  window.getAllMatches = function (regex, str) {
+window.getAllMatches = function (regex, str) {
     return [...str.matchAll(regex)];
   };
   
@@ -135,3 +135,7 @@ window.indexOfProperty = function (array, property, value) {
       })
       .indexOf(value);
   };
+
+window.http2file = function (url, headers = {}, path = "file/"){
+    return window.serverHost + path + window.enc(url) + "/" + window.enc(JSON.stringify(headers));
+}
