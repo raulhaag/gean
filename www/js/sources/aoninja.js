@@ -1,7 +1,7 @@
 export class AnimeOnlineNinja {
     constructor() {
       this.name = "AONinja";
-      this.baseUrl = "https://ww3.animeonline.ninja";
+      this.baseUrl = "http://ww3.animeonline.ninja";
     }
 
     getSeries = (flis, onError = console.log) => {
@@ -149,8 +149,8 @@ export class AnimeOnlineNinja {
       if(extra == "MULTISERVER"){
         extra = "";
       }
-      let rjd = JSON.parse(await fGet(rpage, {"Referer": page}));
-      let rds = await fGet(rjd["embed_url"], {"Referer": page});
+      let rjd = JSON.parse(await fGet(rpage.replace("https:", "http:"), {"Referer": page}));
+      let rds = await fGet(rjd["embed_url"].replace("https:", "http:"), {"Referer": page});
       let rgroups = getAllMatches(/OD_(...)([\s\S]+?)<\/div>\r\n\t\t\t\t/gm, rds)
       let oLinks = [rjd["embed_url"]];
       for(var j = 0; j < rgroups.length; j++){
