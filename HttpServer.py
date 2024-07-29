@@ -59,7 +59,7 @@ class handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         defaultUserAgent = self.headers.get("User-Agent")
         ssl._create_default_https_context = ssl._create_unverified_context#not recomended but those sites dont have updates certs or w...
-        path = self.path.replace("/fscache.mp4", "").replace("/maskfile.ts", "").replace("/maskfile.m3u8", "").split("/")
+        path = replaceKnows(self.path.replace("/fscache.mp4", "").replace("/maskfile.ts", "").replace("/maskfile.m3u8", "").split("/"))
         try:
             if (len(path) >= 2) and not ("." in path[-1]):
                 dp = path[1] + " -> " + ", ".join([decode(p) for p in path[2:]])
@@ -270,8 +270,67 @@ def encode(input):
 def getResponseGet(path=[]):
     return bytesDecode(getGet(path).read())
 
+def getFile(url, headers = {}, server=None):
+    rcode = 200
+    #preparar y combinar headers de peticion remota
+    pHeaders = server.headers
+    for key in pHeaders:
+        if (key not in headers) and (key.lower() not in["host", "referer"]):
+            headers[key] = pHeaders[key]
+    #pasarlas a formato para hacer peticion en contexto
+    contextPetitionHeaders = []
+    for key in headers:
+        contextPetitionHeaders.append((key, headers[key]))
+        
+    opener = urllib.request.build_opener()
+    opener.addheaders = contextPetitionHeaders
+    urllib.request.install_opener(opener)
+    try:
+        with contextlib.closing(urlopen(url, None, context=ssl._create_unverified_context)) as fp:
+            headers = fp.info()
+            bs = 8192
+            size = -1
+            read = 0
+            blocknum = 0        
+            server.send_response(fp.code)
+            for header in headers._headers:
+                if header[0].lower() == "connection":
+                    server.send_header(header[0], "keep-alive")
+                elif (header[0].lower() == "content-type") or (header[0].lower() == "content-length") or (header[0].lower() == "range"):
+                    server.send_header(header[0], header[1])
+
+            server.send_header("Access-Control-Allow-Origin", "*")
+            server.send_header("Access-Control-Expose-Headers", "*")
+            server.send_header("Access-Control-Allow-Headers", "*")
+            server.send_header('Pragma', 'public')
+            server.send_header('Cache-Control', 'max-age=86400')
+            server.end_headers()
+            if "content-length" in headers:
+                size = int(headers["Content-Length"])
+            while True:
+                block = fp.read(bs)
+                if not block:
+                    break
+                read += len(block)
+                server.wfile.write(block)
+                blocknum += 1
+    except:
+        pass
+    urllib.request.urlcleanup()
+    #preparar headers de respuesta local
+    rHeaders = {}
 
 def getResponseFile(path=[], server=None):
+    headers = {}
+    url = decode(path[2])
+    if len(path) == 4:
+        try:
+            headers = json.loads(decode(path[3]))
+        except (json.JSONDecodeError, UnicodeDecodeError) as e:
+            print(f"Error decoding headers: {e}")
+    getFile(url, headers, server)
+
+def getResponseFile1(path=[], server=None):
     headers = {}
     rcode = 200    
     url = decode(path[2])
@@ -288,9 +347,6 @@ def getResponseFile(path=[], server=None):
         if not (("host" in key.lower()) or ("referer" in key.lower())):
             ho.append((key, rheaders.get(key)))
 
-    if "User-Agent" not in headers:
-        headers["User-Agent"] = defaultUserAgent
-
     range_header = server.headers.get("Range")
     if range_header is not None:
         headers["Range"] = range_header
@@ -301,9 +357,9 @@ def getResponseFile(path=[], server=None):
     opener = urllib.request.build_opener()
     opener.addheaders = ho
     urllib.request.install_opener(opener)
-    ssl._create_default_https_context = ssl._create_unverified_context
+    
     try:
-        with contextlib.closing(urlopen(url, None)) as fp:
+        with contextlib.closing(urlopen(url, None, context=ssl._create_unverified_context)) as fp:
             headers = fp.info()
             bs = 8192
             size = -1
@@ -530,6 +586,29 @@ def cacheAndGet(path=[], server=None):
                 time.sleep(0.5)
     # urllib.request.urlcleanup()
 
+def replaceKnows(path):
+    try:
+        url = decode(path[2])
+        knows = [("ww3.animeonline.ninja", "MzguNjIuMjI0Ljc3", "animeonline.ninja"), 
+                 ("www.animeonline.ninja", "MzguNjIuMjI0Ljc3", "animeonline.ninja"),
+                 ("animeonline.ninja", "MzguNjIuMjI0Ljc3", "animeonline.ninja")]
+        for key in knows:
+            if(key[0] in url):
+                headers = {}
+                if len(path) == 4:
+                    try:
+                        headers = json.loads(decode(path[3]))
+                        headers["host"] = key[2]
+                        path[3] = encode(json.dumps(headers))
+                        break
+                    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                        print(f"Error decoding headers: {e}")
+                else:
+                    path.append(encode('{"host": "'+ key[2] + '"}'))   
+                path[2] = encode(url.replace(key[0], decode(key[1])))
+    except:
+        pass
+    return path
 
 def check_for_update():
     import sys
