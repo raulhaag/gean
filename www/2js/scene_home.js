@@ -198,10 +198,19 @@ export class SceneHome extends Scene{
                         }, 5000);
                 }else{
                     let item = recent[idx];
-                    recent.splice(idx ,1);
-                    recent.unshift(item);
+                    instance.add_recent(item);
+
                     if("ppath" in instance.last.video.dataset)
                         markViewed(null, this.last.video.dataset.ppath, this.last.video.dataset.path);
+                    if(this.last.video.parentElement.parentElement.outerText.startsWith("Recientes")){
+                        newselection = document.getElementById("videos_" + (cr) + "_0");
+                        if(newselection){
+                            this.setNewVideoSelected(newselection);
+                            document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - this.inigap - 32;
+                            this.last.video.parentNode.scrollLeft = newselection.offsetLeft - this.items_gap - 10;
+                            this.last.video.parentElement.parentElement.classList.remove("demitransparent");
+                        }
+                    }
                 }
                 break;
             default:
@@ -349,10 +358,10 @@ export class SceneHome extends Scene{
 
     add_recent = function(item) {
         let idx = indexOfProperty(recent, 'path', item.path);
-        let update = true;
+        let update = false;
         if(idx > -1){
             recent.splice(idx, 1);
-            update = false;
+            update = true;
         }
         recent.unshift(item);
         if(update){
