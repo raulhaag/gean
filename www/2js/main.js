@@ -552,25 +552,17 @@ window.generateSelectorDialog = (
         case "NumpadEnter":
         case "Space":
         case " ":   
-          document.onkeydown = ()=>{}
           dialog = false;
-          try{
+          document.onkeydown = document.__selectPrekeydown;
+          document.__selectPrekeydown = null;
+          document.body.removeChild(document.__optionsDiv);
           if (!lOSelected.classList.contains("option-selector-cancel")) {
             postAction(
               window.dec(lOSelected.dataset["info"]),
               lOSelected.innerHTML,
             );
-          }else{
-            document.onkeydown = document.__selectPrekeydown;
-            document.__selectPrekeydown = null;
-            window.hideLoading();
-            window.unlockKeyboard();
           }
-        }catch(ignore){
-
-        }finally{
-          document.body.removeChild(document.__optionsDiv);
-        }
+        
       }
   };
 };
