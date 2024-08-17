@@ -375,6 +375,7 @@ window.route = function (path, ppath = null) {
       fpath[2]
     );
   } else if (action == "getLinks") {
+    lockKeyboard();
     showLoading();
     server.getLinks(
       (linkList, subtitles = "") => {
@@ -407,6 +408,7 @@ window.route = function (path, ppath = null) {
                       "Error al abrir reproductor externo: \n" + result
                     );
                   }
+                  unlockKeyboard();
                 });
               hideLoading();
               return;
