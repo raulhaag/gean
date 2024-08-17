@@ -400,6 +400,8 @@ window.route = function (path, ppath = null) {
               if(subtitles.length > 1){
                 videoSrc = videoSrc + "||subtitle:" + subtitles;
               }
+              hideLoading();
+              unlockKeyboard();
               fetch(window.serverHost + op + window.enc(videoSrc))
                 .then((response) => response.text())
                 .then((result) => {
@@ -408,9 +410,7 @@ window.route = function (path, ppath = null) {
                       "Error al abrir reproductor externo: \n" + result
                     );
                   }
-                  unlockKeyboard();
-                });
-              hideLoading();
+                });                  
               return;
             }else if(appSettings["selected_player"] === "videojs"){
               window.setScene(new ScenePlayerVideoJs(value, best, currentScene));
@@ -548,25 +548,17 @@ window.generateSelectorDialog = (
         case "NumpadEnter":
         case "Space":
         case " ":   
-          document.onkeydown = ()=>{}
-          try{
+          dialog = false;
+          document.onkeydown = document.__selectPrekeydown;
+          document.__selectPrekeydown = null;
+          document.body.removeChild(document.__optionsDiv);
           if (!lOSelected.classList.contains("option-selector-cancel")) {
             postAction(
               window.dec(lOSelected.dataset["info"]),
               lOSelected.innerHTML,
             );
-          }else{
-            document.onkeydown = document.__selectPrekeydown;
-            document.__selectPrekeydown = null;
-            dialog = false;
-            window.unlockKeyboard();
-            hideLoading();
           }
-        }catch(ignore){
-
-        }finally{
-          document.body.removeChild(document.__optionsDiv);
-        }
+        
       }
   };
 };

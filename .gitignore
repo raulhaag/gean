@@ -1,6 +1,8 @@
 env/*
 *.pyc
 *.mp4
+www/output.zip
+zipit.py
 update.zip
 www/w2/*
 www/js/jwp/*
