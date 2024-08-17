@@ -102,16 +102,12 @@ window.lockKeyboard = () => {
 };
 
 window.unlockKeyboard = () => {
-  console.log("unlock 0");
   if (menuLock) {
     window.menuManager();
-    console.log("unlock 1");
   } else if (dialog) {
-    console.log("unlock 2");
     return;
   } else {
     window.changeKeyManager();
-    console.log("unlock 3");
   }
 };
 
