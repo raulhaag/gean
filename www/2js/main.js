@@ -102,12 +102,16 @@ window.lockKeyboard = () => {
 };
 
 window.unlockKeyboard = () => {
+  console.log("unlock 0");
   if (menuLock) {
     window.menuManager();
+    console.log("unlock 1");
   } else if (dialog) {
+    console.log("unlock 2");
     return;
   } else {
     window.changeKeyManager();
+    console.log("unlock 3");
   }
 };
 
@@ -408,9 +412,9 @@ window.route = function (path, ppath = null) {
                       "Error al abrir reproductor externo: \n" + result
                     );
                   }
-                  unlockKeyboard();
-                });
+                });                  
               hideLoading();
+              unlockKeyboard();
               return;
             }else if(appSettings["selected_player"] === "videojs"){
               window.setScene(new ScenePlayerVideoJs(value, best, currentScene));
@@ -559,8 +563,8 @@ window.generateSelectorDialog = (
           }else{
             document.onkeydown = document.__selectPrekeydown;
             document.__selectPrekeydown = null;
+            window.hideLoading();
             window.unlockKeyboard();
-            hideLoading();
           }
         }catch(ignore){
 
