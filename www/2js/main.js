@@ -549,6 +549,7 @@ window.generateSelectorDialog = (
         case "Space":
         case " ":   
           document.onkeydown = ()=>{}
+          dialog = false;
           try{
           if (!lOSelected.classList.contains("option-selector-cancel")) {
             postAction(
@@ -558,7 +559,6 @@ window.generateSelectorDialog = (
           }else{
             document.onkeydown = document.__selectPrekeydown;
             document.__selectPrekeydown = null;
-            dialog = false;
             window.unlockKeyboard();
             hideLoading();
           }
