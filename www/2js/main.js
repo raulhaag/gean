@@ -404,6 +404,8 @@ window.route = function (path, ppath = null) {
               if(subtitles.length > 1){
                 videoSrc = videoSrc + "||subtitle:" + subtitles;
               }
+              hideLoading();
+              unlockKeyboard();
               fetch(window.serverHost + op + window.enc(videoSrc))
                 .then((response) => response.text())
                 .then((result) => {
@@ -413,8 +415,6 @@ window.route = function (path, ppath = null) {
                     );
                   }
                 });                  
-              hideLoading();
-              unlockKeyboard();
               return;
             }else if(appSettings["selected_player"] === "videojs"){
               window.setScene(new ScenePlayerVideoJs(value, best, currentScene));
