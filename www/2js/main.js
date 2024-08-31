@@ -557,8 +557,10 @@ window.generateSelectorDialog = (
               window.dec(lOSelected.dataset["info"]),
               lOSelected.innerHTML,
             );
+          }else{
+            window.hideLoading();
+            window.changeKeyManager();
           }
-        
       }
   };
 };
