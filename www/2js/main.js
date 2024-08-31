@@ -164,6 +164,21 @@ window.hideLoading = () => {
   }, 250);
 };
 
+window.backClick = () => {
+  if(!dialog){
+    popScene();
+  }else{
+    dialog = false;
+    document.onkeydown = document.__selectPrekeydown;
+    document.__selectPrekeydown = null;
+    document.body.removeChild(document.__optionsDiv);
+    window.hideLoading();
+    window.changeKeyManager();
+  }
+
+}
+
+
 window.setScene = (nScene) => {
   window.showLoading();
   try {
