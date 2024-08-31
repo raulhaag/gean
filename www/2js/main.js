@@ -165,9 +165,11 @@ window.hideLoading = () => {
 };
 
 window.backClick = () => {
+  
   if(!dialog){
-    popScene();
+    if(backScenePH.length > 0) popScene();
   }else{
+    window.backScenePoll.pop();
     dialog = false;
     document.onkeydown = document.__selectPrekeydown;
     document.__selectPrekeydown = null;
@@ -506,6 +508,7 @@ window.generateSelectorDialog = (
   }
 
   dialog = true;
+  window.backScenePoll.push("dialog");
   document.__selectPrekeydown = document.onkeydown;
   var div = document.createElement("div");
   let content =
@@ -563,6 +566,7 @@ window.generateSelectorDialog = (
         case "NumpadEnter":
         case "Space":
         case " ":   
+          window.backScenePoll.pop();
           dialog = false;
           document.onkeydown = document.__selectPrekeydown;
           document.__selectPrekeydown = null;
