@@ -140,7 +140,7 @@ export function playVideo (title, path, servers = [], noBack = false) {
         subtitles = subtitles_;
         vServers = getPreferer(links);
         if(vServers.length == 0){
-            //TODO trow error
+            window.showError("No se encotraron links");
             return;
         }
         for(let i = 0; i < vServers.length; i++){
