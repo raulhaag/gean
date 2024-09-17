@@ -2,6 +2,7 @@ export class NOAnimeFenix {
     constructor() {
       this.name = "AnimeFenix";
       this.baseUrl = "https://www3.animefenix.tv/";
+      this.slist = JSON.parse(window.dec("eyIxIjogImh0dHBzOi8vdXB2aWQuY28vZW1iZWQtJCQkJCQkLmh0bWwiLCAiMiI6ICJodHRwczovL2ZpbGVsaW9ucy5saXZlL3YvJCQkJCQkIiwgIjMiOiAiaHR0cHM6Ly93d3cubXA0dXBsb2FkLmNvbS9lbWJlZC0kJCQkJCQuaHRtbCIsICI0IjogImh0dHBzOi8vc2VuZHZpZC5jb20vZW1iZWQvJCQkJCQkIiwgIjUiOiBudWxsLCAiNiI6ICJodHRwczovL3d3dy55b3VydXBsb2FkLmNvbS9lbWJlZC8kJCQkJCQiLCAiNyI6IG51bGwsICI4IjogbnVsbCwgIjkiOiAiLi4vc3RyZWFtL2Ftei5waHA/dj0kJCQkJCQiLCAiMTAiOiAiPHN0eWxlPiN2aWRlb19wbGF5ZXJ7cGFkZGluZzogMDt9PC9zdHlsZT48ZGl2IHN0eWxlPSIsICIxMSI6ICIvc3RyZWFtL2Ftei5waHA/dj0kJCQkJCQmZXh0PWVzIiwgIjEyIjogImh0dHBzOi8vb2sucnUvdmlkZW9lbWJlZC8kJCQkJCQiLCAiMTMiOiAiaHR0cHM6Ly9nYW1vdmlkZW8uY29tL2VtYmVkLSQkJCQkJC5odG1sIiwgIjE0IjogImh0dHBzOi8vY2RuLmp3cGxheWVyLmNvbS9wbGF5ZXJzLyQkJCQkJC5odG1sIiwgIjE1IjogImh0dHBzOi8vbWVnYS5uei9lbWJlZC8kJCQkJCQiLCAiMTYiOiAiaHR0cHM6Ly9zdHJlYW13aXNoLnRvL2UvJCQkJCQkIiwgIjE3IjogImh0dHBzOi8vdGVyYWJveC5jb20vc2hhcmluZy9lbWJlZD9zdXJsPSQkJCQkJCIsICIxOCI6IG51bGwsICIxOSI6ICIvL3ZpZGVhLmh1L3BsYXllcj92PSQkJCQkJCIsICIyMCI6ICJodHRwczovL3d3dy5zb2xpZGZpbGVzLmNvbS9lLyQkJCQkJCIsICIyMSI6ICJodHRwczovL3d3dy5idXJzdGNsb3VkLmNvL2VtYmVkLyQkJCQkJCIsICIyMiI6ICIvc3RyZWFtL2ZsLnBocD92PWh0dHBzOi8vJCQkJCQkJmZsPXRydWUiLCAiMjMiOiAiaHR0cHM6Ly9zYnRoZS5jb20vZS8kJCQkJCQuaHRtbCIsICIyNCI6ICJodHRwczovL3N0cmVhbWhpZGUuY29tL2UvJCQkJCQkIn0="));
     }
     async getFrontPage(after, onError) {
       let result = await fGet(this.baseUrl + "zerotwo");
@@ -329,10 +330,10 @@ export class NOAnimeFenix {
           onError(result);
           return;
         }
-        let fames = [...result.matchAll(/code":"(.+?)"/gm)];
+        let fames = [...result.matchAll(/player=(\d+).+?code=(.+?)&/gm)];
         let links = [];
         for (let i = 0; i < fames.length; i++) {
-            links.push((fames[i][1]).replace(/\\/g, ""));
+            links.push(this.slist[fames[i][1]].replace("$$$$$$", fames[i][2]));
         }
         after(links);
       } catch (error) {
@@ -340,17 +341,3 @@ export class NOAnimeFenix {
       }
     }
   }
-
-
-  /*
-  tera | 17 | https://terabox.com/sharing/embed?surl=
-  YourUpload | 6 | https://www.yourupload.com/embed/
-  M | 15 | https://mega.nz/embed/
-  STREAM2 | 16 | https://streamwish.to/e/
-  LION | 2 | https://filelions.live/v/
-  Burst | 21 | https://www.burstcloud.co/embed/
-  RU | 12 | https://ok.ru/videoembed/8188456864367
-  Fireload | 22 | 
-  Mp4upload | 3 | https://www.mp4upload.com/embed-  .html
-//
-  */
