@@ -3,15 +3,23 @@ export class StreamWish {
     async getDDL(after, onError, web){
         try{
             let content = await fGet(web);
-            let vLink = getFirstMatch(/file:"(.+?)"/gm, content)
-            let videos = {};
-            if(vLink === ''){
-                onError("Error: video no encontrado");
-                return;
+            var match = getFirstMatch(/(eval\(function\(p,a,c,k,e,d\)[\S\s]+?\.split\('\|'\)\)\))/gm, content);
+            if (match) {
+                var funcionDesofuscada = match.replace('eval', 'return');
+                var desofuscado = new Function(funcionDesofuscada);
+                var data = desofuscado();
+                var dlink = getFirstMatch(/file:"(.+?)"/gm, data);
+                after({"video":dlink});
+            }else{
+                let dlink = getFirstMatch(/file:"(.+?)"/gm, content);
+                if(dlink != ""){
+                    after({"video": dlink});
+                }else{
+                    onError("No se encontro el enlace");
+                }
             }
-            videos["video"] = vLink;
-            after(videos);
-        }catch (e) {onError(e)}
+        }catch(error){
+            onError(error);
+        }
     }
-    
 }
