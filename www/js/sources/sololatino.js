@@ -192,14 +192,20 @@ export class SoloLatino {
     try{
       let result = await fGet(dec(path));
       let links = [];
-      let linkpages = [...result.matchAll(/data-type='([^']+)' data-post='([^']+)' data-nume='([^']+)'/gm)];
+      let linkpages = [...result.matchAll(/data-type=["'](.+?)["'] data-post=["'](.+?)["'] data-nume=["'](.+?)["']/gm)];
       for(let i = 0; i < linkpages.length; i++){
+        try{
           let presp = await fPost("https://sololatino.net/wp-admin/admin-ajax.php",
-          {"Referer": dec(path)},
+          { "Referer": window.dec(path),
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept-Encoding": "deflate"
+          },
           {"action":"doo_player_ajax", "post": linkpages[i][2], "nume": linkpages[i][3],"type":	linkpages[i][1]}
           );
           let bData = await fGet(getFirstMatch(/<iframe class='[^']+' src='([^']+)/gm, presp), {"Referer": dec(path)});
           links = links.concat(this.parseLinks(bData));
+        }catch(ignoreAndContinue){}
       }
       if (links.length === 0) {// if no links
         let web = [...result.matchAll(/"pframe"><iframe class="[^"]+" src="([^"]+)/gm)][0][1];
