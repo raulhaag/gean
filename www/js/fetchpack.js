@@ -40,24 +40,23 @@ window.fGet = async function (url, header = {}, returnHeaders = false) {
     return data;
 }
 
-window.fPost = async function (url, header, data) {
+window.fPost = async function (url, header, post) {
     new URL(url) //just to throw exeption if not valid
     try{window.setLoading();}catch(e){};
-    var out = "";
+    let data  = "", response = null;
     try{
-        var response = await fetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(data)));  // `false` makes the request synchronous
-        let out = "";
+        response = await fetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(post)));  // `false` makes the request synchronous
         if (response.status === 200) {
-            out =  await response.text();
+            data =  await response.text();
         }else{
-            out = "error " + response.status;
+            data = "error " + response.status;
         }
     }catch(e){
         try{window.unsetLoading();}catch(e2){}; 
         throw e;
     }
     try{window.unsetLoading();}catch(e){};
-    return out;
+    return data;
 }
 
 window.fetchRedirectPost = async function (url, header) {
