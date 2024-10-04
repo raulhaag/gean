@@ -178,7 +178,7 @@ export class AnimeFenix {
         let fames = [...result.matchAll(/player=(\d+).+?code=(.+?)&/gm)];
         let links = [];
         for (let i = 0; i < fames.length; i++) {
-            links.push(this.slist[fames[i][1]].replace("$$$$$$", fames[i][2]));
+            links.push(this.slist[fames[i][1]].replace("$$$$$$", decodeURIComponent(fames[i][2])));
         }
         after(links);
       } catch (error) {

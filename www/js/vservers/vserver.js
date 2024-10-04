@@ -20,6 +20,7 @@ import { VK } from "./vk.js";
 import { DailyMotion } from "./dailymot.js";
 import { VidHidepro } from "./vidhidepro.js";
 import { DoodStream } from "./doodstream.js";
+import { BurstCloud } from "./burst.js";
 let interceptors = []
 
 export function registerInterceptor(contains, callback){
@@ -54,6 +55,7 @@ let servers = {"fembed": new Fembed(),
                 "dailymotion.com": new DailyMotion(),
                 "vidhide": new VidHidepro(),
                 "doodstream": new DoodStream(),
+                "burstcloud.co": new BurstCloud(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -130,6 +132,8 @@ export async function getDDL(after, onError, web) {
         return servers["dailymotion.com"].getDDL(after, onError, cleanInfo(web));
     }else if(web.indexOf("doodstream") != -1){
         return servers["doodstream"].getDDL(after, onError, cleanInfo(web));
+    }else if(web.indexOf("burstcloud.co") != -1){
+        return servers["burstcloud.co"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -201,10 +205,11 @@ export function getName(web) {
         name =  "vidhide";
     }else if(web.indexOf("doodstream") != -1){
         name =  "doodstream";
+    }else if(web.indexOf("burstcloud.co") != -1){
+        name =  "BurstCloud";
     }else {
         name = "";
     }
-
     return name + info;
 }
 
@@ -233,6 +238,7 @@ export function getPreferer(list){
                     //"plustr",
                     "vk.com/",
                     "dailymotion.com",
+                    "burstcloud.co",
                     "vidhide",
                     "doodstream",
                 ];
