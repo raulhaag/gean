@@ -21,6 +21,8 @@ import { DailyMotion } from "./dailymot.js";
 import { VidHidepro } from "./vidhidepro.js";
 import { DoodStream } from "./doodstream.js";
 import { BurstCloud } from "./burst.js";
+import { Mp4Upload } from "./mp4upload.js";
+
 let interceptors = []
 
 export function registerInterceptor(contains, callback){
@@ -56,6 +58,7 @@ let servers = {"fembed": new Fembed(),
                 "vidhide": new VidHidepro(),
                 "doodstream": new DoodStream(),
                 "burstcloud.co": new BurstCloud(),
+                "mp4upload.com": new Mp4Upload(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -134,6 +137,8 @@ export async function getDDL(after, onError, web) {
         return servers["doodstream"].getDDL(after, onError, cleanInfo(web));
     }else if(web.indexOf("burstcloud.co") != -1){
         return servers["burstcloud.co"].getDDL(after, onError, cleanInfo(web));
+    }else if(web.indexOf("mp4upload.com") != -1){
+        return servers["mp4upload.com"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -177,6 +182,8 @@ export function getName(web) {
         name = "MediaFire";
     }else if(web.indexOf("plusvip.net") != -1) {
         name = "Plusvip";
+    }else if(web.indexOf("mp4upload.com") != -1) {
+            name = "Mp4Upload.com";
     }else if((web.indexOf("streamlare.com") != -1) || (web.indexOf("slmaxed.com") != -1) || (web.indexOf("slwatch.c") != -1)) {
         name = "StreamLare";
     }else if(web.indexOf("embedsito.net/reproamz") != -1) {
@@ -232,13 +239,14 @@ export function getPreferer(list){
                     "wish",
                     "filemoon",
                     "filelions",
+                    "mp4upload.com",
+                    "burstcloud.co",
                     "yourupload",
                     "mixdrop",
                     "um.php?e=",
                     //"plustr",
                     "vk.com/",
                     "dailymotion.com",
-                    "burstcloud.co",
                     "vidhide",
                     "doodstream",
                 ];
