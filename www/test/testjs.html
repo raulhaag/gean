@@ -31,9 +31,14 @@
         window.getAllMatches = function(regex, str){
             return [...str.matchAll(regex)];
         }
-
-        let data = await fGet("https://www.burstcloud.co/embed/94d26085c98ab98054a4bf864342923671effd686a8d62734e2db6034f8530a0/AF%20Shinu%2012.mp4")
-        console.log(data);
+        let web = "https://www.mp4upload.com/embed-661w9ve7magb.html";
+        let content = await fGet(web);
+        var match = getFirstMatch(/data-file-id="(.+?)"/gm, content);
+        if (match) {
+            content = await fPost("https://www.burstcloud.co/file/play-request/", {"Referer": web}, {"fileId": match});
+            let jsondata = JSON.parse(content);
+            after(jsondata['purchase']['cdnUrl'])                
+        }
         //let data = new Vidguard().getDDL(console.log, console.log(), "https://vgfplay.com/e/k3gG5q3ZymkE1N2");
         //let data = new DailyMotion().getDDL(console.log, console.log, "https://www.dailymotion.com/embed/video/x8qa1qc");
         //console.log(data)
