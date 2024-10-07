@@ -15,12 +15,12 @@ export class AnimeFenix {
       let ncs = [];
       let flis;
       try {
-        flis = doc.getElementsByClassName("capitulos-grid")[0].getElementsByClassName("item");
+        flis = doc.getElementsByClassName("py-5")[0].getElementsByTagName("a");
         for (var i = 1; i < flis.length; i++) {
           ncs.push({
-            "name": flis[i].getElementsByClassName("overtitle")[0].innerText + " - " + flis[i].getElementsByClassName("overepisode")[0].innerText,
+            "name": flis[i].getElementsByTagName("h3")[0].innerText + " - " + flis[i].getElementsByTagName("p")[0].innerText,
             "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
-            "path": this.name + "/getLinks/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href")),
+            "path": this.name + "/getLinks/" + window.enc(flis[i].getAttribute("href")),
           });
         }
       } catch (nerror) {
@@ -28,10 +28,10 @@ export class AnimeFenix {
       }
       let nas = [];
       try {
-        flis = doc.getElementsByClassName("rounded-container")[0].getElementsByClassName("serie-card");
+        flis = doc.getElementsByClassName("py-16")[1].getElementsByClassName("group");
         for(let i = 0; i < flis.length; i++){
           nas.push({
-            "name": flis[i].getElementsByClassName("title")[0].innerText,
+            "name": flis[i].getElementsByTagName("h3")[0].innerText,
             "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
             "path": this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href")),
           });        
@@ -41,10 +41,10 @@ export class AnimeFenix {
       }
       let naa = []
       try{
-        flis= doc.getElementsByClassName("list-series")[0].getElementsByClassName("serie-card");
+        flis= doc.getElementsByClassName("swiper-wrapper")[0].getElementsByClassName("swiper-slide");
         for(let i = 0; i < flis.length; i++){
           naa.push({
-            "name": flis[i].getElementsByClassName("title")[0].innerText,
+            "name": flis[i].getElementsByTagName("h2")[0].innerText,
             "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
             "path": this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href")),
           });    
@@ -53,8 +53,8 @@ export class AnimeFenix {
 
       after({
         "Últimos Capítulos": ncs,
-        "Animes Populares": nas,
-        "Últimos añadidos": naa,
+        "Animes Populares": naa,
+        "Últimos añadidos": nas,
         "Por genero": [{"name":"Acción","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=accion&order=default')},{"name":"Artes Marciales","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=artes-marciales&order=default')},{"name":"Aventura","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=aventura&order=default')},{"name":"Ciencia Ficción","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=Ciencia Ficción&order=default')},{"name":"Comedia","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=comedia&order=default')},{"name":"Cyberpunk","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=cyberpunk&order=default')},{"name":"Demonios","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=demonios&order=default')},{"name":"Deportes","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=deportes&order=default')},{"name":"Dragones","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=dragones&order=default')},{"name":"Drama","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=drama&order=default')},{"name":"Ecchi","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=ecchi&order=default')},{"name":"Escolares","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=escolares&order=default')},{"name":"Fantasía","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=fantasia&order=default')},{"name":"Gore","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=gore&order=default')},{"name":"Harem","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=harem&order=default')},{"name":"Histórico","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=historico&order=default')},{"name":"Horror","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=horror&order=default')},{"name":"Infantil","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=infantil&order=default')},{"name":"Isekai","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=isekai&order=default')},{"name":"Josei","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=josei&order=default')},{"name":"Juegos","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=juegos&order=default')},{"name":"Magia","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=magia&order=default')},{"name":"Mecha","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=mecha&order=default')},{"name":"Militar","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=militar&order=default')},{"name":"Misterio","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=misterio&order=default')},{"name":"Música","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=Musica&order=default')},{"name":"Ninjas","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=ninjas&order=default')},{"name":"Parodia","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=parodia&order=default')},{"name":"Policía","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=policia&order=default')},{"name":"Psicológico","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=psicologico&order=default')},{"name":"Recuerdos de la vida","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=Recuerdos de la vida&order=default')},{"name":"Romance","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=romance&order=default')},{"name":"Samurai","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=samurai&order=default')},{"name":"Sci-Fi","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=sci-fi&order=default')},{"name":"Seinen","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=seinen&order=default')},{"name":"Shoujo","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=shoujo&order=default')},{"name":"Shoujo Ai","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=shoujo-ai&order=default')},{"name":"Shounen","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=shounen&order=default')},{"name":"Slice of life","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=slice-of-life&order=default')},{"name":"Sobrenatural","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=sobrenatural&order=default')},{"name":"Space","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=space&order=default')},{"name":"Spokon","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=spokon&order=default')},{"name":"Steampunk","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=steampunk&order=default')},{"name":"Superpoder","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=superpoder&order=default')},{"name":"Thriller","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=thriller&order=default')},{"name":"Vampiro","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=vampiro&order=default')},{"name":"Zombies","path":this.name + '/getMore/' + window.enc('https://www3.animefenix.tv/animes?genero%5B%5D=zombies&order=default')}]
       });
     }
@@ -116,9 +116,10 @@ export class AnimeFenix {
         var parser = new DOMParser();
         var doc = parser.parseFromString(result, "text/html");
         let sname =  doc.getElementsByTagName("h1")[0].innerText;
-        let description =  doc.getElementsByClassName("sinopsis")[0].innerText.trim();
-        let image = doc.querySelector(".image > img:nth-child(1)").getAttribute("src");
-        let generosT = doc.getElementsByClassName("genres")[0].getElementsByTagName("a");
+        let descmb = doc.getElementsByClassName("mb-6");
+        let description = descmb[1].innerText.trim();
+        let image = doc.querySelector("img.w-full").getAttribute("src");
+        let generosT = descmb[2].getElementsByTagName("a");
         let genres = ""; 
         let chapters = [];
         let chaptersT = doc.getElementsByTagName("ul")[1].getElementsByTagName("li");
