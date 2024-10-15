@@ -5,7 +5,7 @@ export class Mp4Upload {
             let data = await fGet(web, {"User-Agent": window.navigator.userAgent});
             let dlink = getFirstMatch(/src:\s*\"(.+?)\"/gm, data);
             if(dlink){
-                after({video: dlink});
+                after({video: window.serverHost + "file/" + enc(dlink) + "/" + enc(JSON.stringify({"Referer": web}))});
             }else{
                 onError("Video no encontrado");
             }

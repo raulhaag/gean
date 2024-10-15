@@ -4,7 +4,8 @@ import ssl, urllib, contextlib, base64, os, json, time, shutil
 from threading import Thread
 from zipfile import ZipFile
 from urllib import request, parse
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError, URLError
 import traceback
 import re, subprocess, platform
 from urllib.error import HTTPError
@@ -322,6 +323,69 @@ def getFile(url, headers = {}, server=None):
     rHeaders = {}
 
 def getResponseFile(path=[], server=None):
+        buffer_size = 8192  # Tamaño del buffer para leer el archivo en bloques
+        custom_headers = {}
+        url = decode(path[2])
+        if len(path) == 4:
+            try:
+                custom_headers = json.loads(decode(path[3]))
+            except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                print(f"Error decoding headers: {e}")
+        pet_range = content_length = server.headers.get("Range")
+        if pet_range and len(pet_range) > 2:
+            custom_headers["Range"] = pet_range
+        try:
+            request = Request(url, headers=custom_headers)
+            with urlopen(request) as inputStream:
+                content_length = inputStream.headers.get("Content-Length")
+                tlength = int(content_length) if content_length else 0
+                content_type = inputStream.headers.get("Content-Type")
+                # Si el archivo se encuentra y la respuesta es 200 o 206
+                if inputStream.status in (200, 206):
+                    server.send_response(200 if inputStream.status == 200 else 206)
+
+                    # Agregar el header CORS para aceptar solicitudes desde cualquier origen
+                    server.send_header('Access-Control-Allow-Origin', '*')
+
+                    if content_type and len(content_type) > 2:
+                        server.send_header('Content-Type', content_type)
+                    else:
+                        server.send_header('Content-Type', 'application/octet-stream')
+
+                    server.send_header('Connection', 'keep-alive')
+
+                    range_header = server.headers.get('Range')
+                    if range_header:
+                        # Reenviar la información del rango
+                        content_range = inputStream.headers.get('Content-Range')
+                        server.send_header('Content-Range', content_range)
+                        partial_content_length = inputStream.headers.get("Content-Length")
+                        server.send_header('Content-Length', partial_content_length)
+                        server.send_header('Accept-Ranges', 'bytes')
+                    else:
+                        server.send_header('Content-Length', str(tlength))
+
+                    server.end_headers()
+
+                    # Leer y transmitir el archivo en bloques pequeños
+                    while True:
+                        chunk = inputStream.read(buffer_size)
+                        if not chunk:
+                            break
+                        server.wfile.write(chunk)
+
+                else:
+                    server.send_response(500)
+                    server.end_headers()
+                    server.wfile.write(b"Unsupported response: " + str(inputStream.status).encode('utf-8'))
+
+        except (HTTPError, URLError) as e:
+            server.send_response(404)
+            server.send_header('Access-Control-Allow-Origin', '*')  # CORS también para errores
+            server.end_headers()
+            server.wfile.write(f"File not found: {e}".encode('utf-8'))
+
+def getResponseFile0(path=[], server=None):
     headers = {}
     url = decode(path[2])
     if len(path) == 4:
@@ -499,9 +563,10 @@ def downloadCacheFile(cache, path):
         urlretrievecache(web, cache[web]["name"], cache)
     except Exception as e:
         print("Error: " + str(e) + " en " + web + "\n")
-        traceback.print_exc()
         cache[web]["status"] = -2
         cache[web]["errdetails"] = str(e)
+        traceback.format_exc()
+
 
 
 def cacheAndGet(path=[], server=None):
@@ -730,7 +795,7 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
             try:
                 import webbrowser
 
-                window = webbrowser.open(page)
+                #window = webbrowser.open(page)
             except Exception as e:
                 print(e)
             thread.join()
