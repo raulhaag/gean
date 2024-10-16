@@ -3,7 +3,8 @@ export class VidHidepro {
     async getDDL(after, onError, web){
         try{
             let data = await fGet(web);
-            let dlink = getFirstMatch(/file:"(.+?)"/gm, data);
+            let pf = eval(getFirstMatch(/eval([\s\S]+?)<\/script>/gm, data));
+            let dlink = getFirstMatch(/file:"(.+?)"/gm, pf);
             after({video: dlink});
         }catch(e){
             onError(e);

@@ -795,7 +795,7 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
             try:
                 import webbrowser
 
-                #window = webbrowser.open(page)
+                window = webbrowser.open(page)
             except Exception as e:
                 print(e)
             thread.join()

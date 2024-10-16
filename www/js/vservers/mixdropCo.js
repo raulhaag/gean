@@ -11,7 +11,7 @@ export class Mixdrop{
         let m3 = getFirstMatch(/=\"([^;]+?mp4[^;]+?)\";/gm, m2);
         //videos["video"] = "https:" + m3;
         if(m3){
-            videos["video"] = window.serverHost + "file/" + enc("https:" + m3) + "/" + enc(JSON.stringify({"Referer": urlw.protocol + "//" +urlw.hostname}));
+            videos["video"] = window.serverHost + "file/" + enc("https:" + m3) + "/" + enc(JSON.stringify({"Referer": urlw.protocol + "//" +urlw.hostname, "User-Agent": window.navigator.userAgent}));
             after(videos);
         }else{
             onError("Mixdrop: video no encontrado")
