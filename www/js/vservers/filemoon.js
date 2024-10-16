@@ -6,7 +6,6 @@ export class FileMoon {
             var match = getFirstMatch(/iframe src="(.+?)"/gm, content)
             if(match){
                 let content2 = await fGet(match);
-                console.log(content2)
                 match = getFirstMatch(/(eval\(function\(p,a,c,k,e,d\)[\S\s]+?\.split\('\|'\)\)\))/gm, content2);
                 if (match) {
                     var funcionDesofuscada = match.replace('eval', 'return');
