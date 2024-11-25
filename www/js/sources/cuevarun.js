@@ -2,7 +2,7 @@ import { registerInterceptor } from "../vservers/vserver.js";
 export class CuevaRun {
     constructor() {
       this.name = "CuevaRun";
-      this.baseUrl = "https://cuevana2.run";
+      this.baseUrl = "https://www.cuevana2espanol.net";
     }
     
     getSeries = (flis, onError = console.log) => {
@@ -10,7 +10,7 @@ export class CuevaRun {
         try {
             for (var i = 0; i < flis.length; i++) {
                 nas.push({
-                  "name": flis[i].getElementsByTagName("h2")[0].innerText,
+                  "name": flis[i].getElementsByTagName("h3")[0].innerText,
                   "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
                   "path": this.name + "/getDescription/" + window.enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
                 });
