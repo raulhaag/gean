@@ -161,13 +161,24 @@ export class JKAnime {
         if(pl.length > 0){
           pd.push({"name": "Pagina Anterior", "image": "./images/prev_nav.png", "path": this.name + "/getMore/" + window.enc(pl[0].getAttribute("href"))});  
         }
-        
-        let series = doc.getElementsByClassName("custom_item2");
-        for(let s = 0; s < series.length; s++){
-          pd.push({"name":series[s].getElementsByTagName("a")[1].getAttribute('title'),
-            "path":this.name + "/getDescription/" + window.enc(series[s].getElementsByTagName("a")[0].getAttribute("href")),
-            "image":series[s].getElementsByTagName("img")[0].getAttribute("src")
+        try{
+          let jsSerie = JSON.parse(getFirstMatch(/var animes = (\[[\s\S]+?\]);/gm, result));
+          for(let i = 0; i < jsSerie.length; i++){
+            pd.push({"name": jsSerie[i].title, 
+                     "path": this.name + "/getDescription/" + window.enc(this.baseUrl + "/" + jsSerie[i].slug + '/'),
+                     "image": jsSerie[i].image
             })
+          }
+        }catch(e){
+        }
+        if(pd.length == 0){
+          let series = doc.getElementsByClassName("custom_item2");
+          for(let s = 0; s < series.length; s++){
+            pd.push({"name":series[s].getElementsByTagName("a")[1].getAttribute('title'),
+              "path":this.name + "/getDescription/" + window.enc(series[s].getElementsByTagName("a")[0].getAttribute("href")),
+              "image":series[s].getElementsByTagName("img")[0].getAttribute("src")
+              })
+          }
         }
         if(nl.length > 0){
           pd.push({"name": "Pagina siguiente", "image": "./images/next_nav.png", "path": this.name + "/getMore/" + window.enc(nl[0].getAttribute("href"))});
