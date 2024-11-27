@@ -23,7 +23,7 @@ export class SceneHome extends Scene{
                 <div class="info-data"></div>
             </div>
             <div class="info-image-ph">
-                <img class="info-image" src="">
+                <img class="info-image" onerror="this.src='images/black.jpg'" src="images/black.jpg">
                 <div class="info-image-overlap"></div>
             </div>
         </div>
@@ -255,7 +255,8 @@ export class SceneHome extends Scene{
 
     loadData = () => {
         this.info.title.innerHTML = this.last.video.dataset.name;
-        this.info.image.src = this.last.video.dataset.image;
+
+        this.info.image.src = this.last.video.dataset.image != 'undefined' ? this.last.video.dataset.image : "/images/black.jpg"
         this.info.resume.innerHTML = "";
         //TODO
         //setLoadingInfo();
@@ -295,7 +296,7 @@ export class SceneHome extends Scene{
 
     setSerieInfo = (info) => {
         this.info.title.innerHTML = info.name;
-        this.info.image.src = info.image;
+        this.info.image.src = info.image != 'undefined' ? info.image : "/images/black.jpg"
     };
 
     generateCategories(options) {
