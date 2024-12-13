@@ -159,7 +159,7 @@ export class CuevaRun {
                 nas.push({
                     "name": jsonResponse.pageProps.results.data[i].titles.name,
                     "image": jsonResponse.pageProps.results.data[i].images.poster,
-                    "path": this.name + "/getDescription/" + window.enc(this.baseUrl + "/" + jsonResponse.pageProps.results.data[i].url.slug.replaceAll(/\/\d+?\//gm, "/")),
+                    "path": this.name + "/getDescription/" + window.enc(this.baseUrl + "/" + jsonResponse.pageProps.results.data[i].url.slug.replace(/\/\d+?\//gm, "/")),
                 });
             }
           } catch (nerror) {
