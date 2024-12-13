@@ -151,17 +151,15 @@ export class CuevaRun {
 
     async getSearch(after, onError, query) {
       try{
-        let response = await fGet(this.baseUrl + "/search?q=" + query);
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(response, "text/html");
-        let flis = doc.querySelector(".row-cols-xl-5").getElementsByTagName("article");
-      let nas = [];
+        let response = await fGet(this.baseUrl + "/_next/data/VcChYvu2RioxW1swpu-nU/es/search.json?q=" + query);
+        let jsonResponse = JSON.parse(response);
+        let nas = [];
         try {
-            for (var i = 0; i < flis.length; i++) {
+            for (var i = 0; i < jsonResponse.pageProps.results.data.length; i++) {
                 nas.push({
-                    "name": flis[i].getElementsByTagName("h2")[0].innerText,
-                    "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
-                    "path": this.name + "/getDescription/" + window.enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
+                    "name": jsonResponse.pageProps.results.data[i].titles.name,
+                    "image": jsonResponse.pageProps.results.data[i].images.poster,
+                    "path": this.name + "/getDescription/" + window.enc(this.baseUrl + "/" + jsonResponse.pageProps.results.data[i].url.slug.replaceAll(/\/\d+?\//gm, "/")),
                 });
             }
           } catch (nerror) {
