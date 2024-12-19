@@ -25,14 +25,14 @@
       "request": "launch",
       "type": "firefox",
       "reAttach": true,
-      "url": "http://localhost:5500/main.html",
+      "url": "http://127.0.0.1:8080/main.html",
       "webRoot": "${workspaceFolder}/www"
     },
     {
       "name": "Launch Chrome m2",
       "request": "launch",
       "type": "chrome",
-      "url": "http://localhost:8080/main_2.html",
+      "url": "http://127.0.0.1:8080/main_2.html",
       "webRoot": "${workspaceFolder}/www",
       "skipFiles": [
         "${workspaceFolder}/www/w2/videojs/video.min.js",
@@ -44,14 +44,14 @@
       "name": "Test jwp",
       "request": "launch",
       "type": "chrome",
-      "url": "http://127.0.0.1:5500/w2/videojwp.html",
+      "url": "http://127.0.0.1:8080/w2/videojwp.html",
       "webRoot": "${workspaceFolder}/www"
     },
     {
       "name": "Test JS Chrome",
       "request": "launch",
       "type": "chrome",
-      "url": "http://localhost:8080/test/testjs.html",
+      "url": "http://127.0.0.1:8080/test/testjs.html",
       "webRoot": "${workspaceFolder}/www",
       "skipFiles": [
         "${workspaceFolder}/www/w2/videojs/video.min.js",
@@ -62,7 +62,7 @@
       "name": "Launch Chrome NA",
       "request": "launch",
       "type": "chrome",
-      "url": "http://localhost:5500/main_na.html",
+      "url": "http://127.0.0.1:8080/main_na.html",
       "webRoot": "${workspaceFolder}/www"
     },
     {
