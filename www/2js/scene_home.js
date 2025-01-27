@@ -79,7 +79,7 @@ export class SceneHome extends Scene{
         }else{
             videoContent += "<div id='favlist'></div>";
         }
-        if((recent.length > 0) && (window.appSettings["srecent"][0])) {videoContent += ("<div id='reclist'>" + this.generateCategory("Recientes", recent) + "</div>")
+        if((recent.length > 0) && (!window.appSettings["srecent"][0])) {videoContent += ("<div id='reclist'>" + this.generateCategory("Recientes", recent) + "</div>")
         }else{
             videoContent += "<div id='reclist'></div>";
         };
@@ -316,7 +316,7 @@ export class SceneHome extends Scene{
         for (let i = 0; i < items.length; i++) {
             ppath = (items[i]["parentPath"])? '" data-ppath="' + items[i]["parentPath"]: ''
             extraClass =  ((items[i].image == undefined) && (items[i].path.indexOf("/getMore/") != -1))? " more": "";
-            result += `<div class="item focusable${extraClass}" data-name="${items[i]["name"]}" data-image="${items[i]["image"]}" data-path="${items[i]["path"] + ppath}"><img class="item__image" src="${items[i]['image']}" alt=""> <h2 class="item__title">${items[i]['name']}</h2></div>`;
+            result += `<div class="item focusable${extraClass}" data-name="${items[i]["name"]}" data-image="${items[i]["image"]}" data-path="${items[i]["path"] + ppath}"><img class="item__image" loading="lazy" src="${items[i]['image']}" alt=""> <h2 class="item__title">${items[i]['name']}</h2></div>`;
         }
         return result + '</div></div>';
     };
@@ -359,15 +359,10 @@ export class SceneHome extends Scene{
 
     add_recent = function(item) {
         let idx = indexOfProperty(recent, 'path', item.path);
-        let update = false;
         if(idx > -1){
             recent.splice(idx, 1);
-            update = true;
         }
-        recent.unshift(item);
-        if(update){
-            this.updateRecents();
-        }
+        this.updateRecents();
     }
 
     updateAndTryToKeepPos = () =>{
