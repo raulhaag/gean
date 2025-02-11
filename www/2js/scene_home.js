@@ -216,7 +216,6 @@ export class SceneHome extends Scene{
             default:
                 return;
         }
-
         if(this.last.video.id.endsWith("_0")){
             tease_menu(true);
         }else{
@@ -234,6 +233,7 @@ export class SceneHome extends Scene{
     updatePositions = function (containerCN = "content", className = "focusable"){
         this.container = document.getElementsByClassName(containerCN)[0];
         let items = this.container.getElementsByClassName(className);//focusable next??
+        if (items.length == 0) return
         let ctop = items[0].parentNode.offsetTop;
         let rc = 0, cc = 0;
         for(let i = 0; i < items.length; i++){
@@ -362,6 +362,7 @@ export class SceneHome extends Scene{
         if(idx > -1){
             recent.splice(idx, 1);
         }
+        recent.unshift(item);
         this.updateRecents();
     }
 
