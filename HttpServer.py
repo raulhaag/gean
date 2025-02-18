@@ -214,6 +214,7 @@ class handler(SimpleHTTPRequestHandler):
             self.return_response(404, "Not Found")
 
     def end_headers(self):
+        self.add_origin_headers()
         try:
             if (
                 self.path.endswith(".js")
@@ -225,6 +226,11 @@ class handler(SimpleHTTPRequestHandler):
             pass
         SimpleHTTPRequestHandler.end_headers(self)
 
+    def add_origin_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Expose-Headers", "*")
+        self.send_header("Access-Control-Allow-Headers", "*")
+
     def send_my_headers(self):
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.send_header("Pragma", "no-cache")
@@ -234,7 +240,6 @@ class handler(SimpleHTTPRequestHandler):
     def return_response(self, code, message):
         self.send_response(code)
         self.send_header("Content-type", "text/html")
-        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(bytes(message, "utf8"))
 
@@ -246,17 +251,12 @@ class handler(SimpleHTTPRequestHandler):
                 self.send_header("gean_" + header[0], header[1])
             if "content" in header[0].lower():
                 self.send_header(header[0], header[1])
-
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Expose-Headers", "*")
-        self.send_header("Access-Control-Allow-Headers", "*")
         self.end_headers()
         self.wfile.write(bytes(content, "utf8"))
 
     def return_response_file(self, code, message):
         self.send_response(code)
         self.send_header("Content-type", "text/html")
-        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(message)
 
@@ -300,10 +300,6 @@ def getFile(url, headers = {}, server=None):
                     server.send_header(header[0], "keep-alive")
                 elif (header[0].lower() == "content-type") or (header[0].lower() == "content-length") or (header[0].lower() == "range"):
                     server.send_header(header[0], header[1])
-
-            server.send_header("Access-Control-Allow-Origin", "*")
-            server.send_header("Access-Control-Expose-Headers", "*")
-            server.send_header("Access-Control-Allow-Headers", "*")
             server.send_header('Pragma', 'public')
             server.send_header('Cache-Control', 'max-age=86400')
             server.end_headers()
@@ -381,7 +377,7 @@ def getResponseFile(path=[], server=None):
 
         except (HTTPError, URLError) as e:
             server.send_response(404)
-            server.send_header('Access-Control-Allow-Origin', '*')  # CORS también para errores
+            #server.send_header('Access-Control-Allow-Origin', '*')  # CORS también para errores
             server.end_headers()
             server.wfile.write(f"File not found: {e}".encode('utf-8'))
 
@@ -436,10 +432,6 @@ def getResponseFile1(path=[], server=None):
                     server.send_header(header[0], "keep-alive")
                 elif (header[0].lower() == "content-type") or (header[0].lower() == "content-length"):
                     server.send_header(header[0], header[1])
-
-            server.send_header("Access-Control-Allow-Origin", "*")
-            server.send_header("Access-Control-Expose-Headers", "*")
-            server.send_header("Access-Control-Allow-Headers", "*")
             server.end_headers()
             if "content-length" in headers:
                 size = int(headers["Content-Length"])
@@ -622,10 +614,6 @@ def cacheAndGet(path=[], server=None):
             server.send_header(header[0], header[1])
         """elif header[0].lower() == "content-length":
             server.send_header(header[0], header[1])"""
-    server.send_header("Access-Control-Allow-Origin", "*")
-    server.send_header("Access-Control-Expose-Headers", "*")
-    server.send_header("Access-Control-Allow-Headers", "*")
-
     # print(server.headers)
     server.end_headers()
     while not cache[web]["progress"] > start:
