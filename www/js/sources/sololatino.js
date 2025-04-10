@@ -269,7 +269,10 @@ export class SoloLatino {
       for(let i = 0; i < items.length; i++){
         let lang = items[i]["video_language"]
         for(let j = 0; j < items[i]['sortedEmbeds'].length; j++){
-          links.push(dcl(items[i]['sortedEmbeds'][j]['link']) + "||info_" + lang);
+          if(items[i]['sortedEmbeds'][j]['link'].indexOf('http') == -1)
+            links.push(dcl(items[i]['sortedEmbeds'][j]['link']) + "||info_" + lang);
+          else
+            links.push((items[i]['sortedEmbeds'][j]['link']) + "||info_" + lang);
         }
       }
 
@@ -278,6 +281,7 @@ export class SoloLatino {
   }
 }
 function dcl(el){
+
   const bytes = CryptoJS.AES.decrypt(el, 'Ak7qrvvH4WKYxV2OgaeHAEg2a5eh16vE');
   const dclk = bytes.toString(CryptoJS.enc.Utf8);
   return dclk;
