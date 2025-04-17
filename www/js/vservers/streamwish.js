@@ -8,8 +8,13 @@ export class StreamWish {
                 var funcionDesofuscada = match.replace('eval', 'return');
                 var desofuscado = new Function(funcionDesofuscada);
                 var data = desofuscado();
-                var dlink = getFirstMatch(/file:"(.+?)"/gm, data);
-                after({"video":dlink});
+                var dlink = JSON.parse(getFirstMatch(/var links\s*=\s*(.+?})/gm, data));//getFirstMatch(/file:"(.+?)"/gm, data);
+                for(const key in dlink){
+                    if(dlink[key].indexOf("http") != -1){
+                        after({"video":dlink[key]});
+                        break;
+                    }
+                }
             }else{
                 let dlink = getFirstMatch(/file:"(.+?)"/gm, content);
                 if(dlink != ""){
