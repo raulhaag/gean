@@ -228,7 +228,7 @@ export function getPreferer(list){
                     "plusvip.net",
                     "streamtape.com",
                     "ghbrisk.com",
-                    //"voe",
+                    "voe",
                     "embedsito.net/reproamz",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",
