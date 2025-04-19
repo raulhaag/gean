@@ -18,6 +18,8 @@
         //import{DoraFlixIn} from "../js/sources/doraflixin.js";
         //import {AnimeOnlineNinja} from "../js/sources/aoninja.js"
         /*import {FileMoon} from '../js/vservers/filemoon.js'*/
+        import {StreamWish} from '../js/vservers/streamwish.js'
+
         window.serverHost = "http://127.0.0.1:8080/";
 
         window.getFirstMatch = function(regex, str){
@@ -31,7 +33,8 @@
         window.getAllMatches = function(regex, str){
             return [...str.matchAll(regex)];
         }
-        let web = "https://www.mp4upload.com/embed-661w9ve7magb.html";
+        new StreamWish().getDDL(console.log,console.log,"https://ghbrisk.com/e/0ph9wqbvse42")
+        let web = "https://ghbrisk.com/e/0ph9wqbvse42";
         let content = await fGet(web);
         var match = getFirstMatch(/data-file-id="(.+?)"/gm, content);
         if (match) {
