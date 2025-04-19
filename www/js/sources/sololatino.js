@@ -280,9 +280,33 @@ export class SoloLatino {
     return links;
   }
 }
-function dcl(el){
+function dcl_old(el){
 
   const bytes = CryptoJS.AES.decrypt(el, 'Ak7qrvvH4WKYxV2OgaeHAEg2a5eh16vE');
   const dclk = bytes.toString(CryptoJS.enc.Utf8);
   return dclk;
+}
+
+function dcl(encryptedLinkBase64, secretKey = 'Ak7qrvvH4WKYxV2OgaeHAEg2a5eh16vE'){
+  const encryptedData = CryptoJS.enc.Base64.parse(encryptedLinkBase64);
+  const encryptedStr = CryptoJS.enc.Base64.stringify(encryptedData);
+
+  const iv = encryptedData.words.slice(0, 4); // 
+  const encryptedBytes = encryptedData.words.slice(4); // 
+
+  
+  const ivWordArray = CryptoJS.lib.WordArray.create(iv);
+  const encryptedWordArray = CryptoJS.lib.WordArray.create(encryptedBytes);
+
+ 
+  const decrypted = CryptoJS.AES.decrypt(
+      { ciphertext: encryptedWordArray },
+      CryptoJS.enc.Utf8.parse(secretKey),
+      { iv: ivWordArray, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+  );
+
+  
+  const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8);
+
+  return decryptedStr;
 }

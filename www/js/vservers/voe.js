@@ -10,7 +10,7 @@ export class Voe {
           "User-Agent": navigator.userAgent,
           Referer: web,
         });
-        const jsonData = this.decryptString(getFirstMatch(/MKGMa="(DQ.+?)"/gm, data));
+        const jsonData = this.decryptString(getFirstMatch(/"(DQAk.+?)"/gm, data));
         dlink = jsonData['source'];
         after({video: dlink})
         return

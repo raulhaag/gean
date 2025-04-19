@@ -121,7 +121,7 @@ export async function getDDL(after, onError, web) {
         return servers["voe"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("vidhide") != -1)) {
         return servers["vidhide"].getDDL (after, onError, cleanInfo(web));
-    }else if ((web.indexOf("wish.") != -1)) {
+    }else if (((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com")) ) {
         return servers["streamwish"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("filemoon.") != -1)) {
         return servers["filemoon"].getDDL (after, onError, cleanInfo(web));
@@ -200,7 +200,7 @@ export function getName(web) {
         name = "FileLions";
     }else if((web.indexOf("voe") != -1)){
         name = "VOE";
-    }else if (web.indexOf("wish") != -1) {
+    }else if ((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com")) {
         name = "StreamWish";
     }else if (web.indexOf("plustr") != -1) {
         name = "Plustream (Solo reproductor interno android)";
@@ -227,7 +227,8 @@ export function getPreferer(list){
                     "mediafire.com",
                     "plusvip.net",
                     "streamtape.com",
-                    "voe",
+                    "ghbrisk.com",
+                    //"voe",
                     "embedsito.net/reproamz",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",
