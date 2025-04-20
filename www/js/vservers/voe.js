@@ -12,6 +12,10 @@ export class Voe {
         });
         const jsonData = this.decryptString(getFirstMatch(/="([^"]+?)";func/gm, data));
         dlink = jsonData['source'];
+        if('direct_access_url' in jsonData){
+          after({video: dlink, mp4: jsonData['direct_access_url'], hls: dlink});
+          return
+        }
         after({video: dlink})
         return
       }
