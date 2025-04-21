@@ -119,9 +119,9 @@ export async function getDDL(after, onError, web) {
         return servers["streamsb"].getDDL (after, onError, web);
     }else if ((web.indexOf("voe") != -1)) {
         return servers["voe"].getDDL (after, onError, cleanInfo(web));
-    }else if ((web.indexOf("vidhide") != -1)) {
+    }else if((web.indexOf("vidhide") != -1)|| (web.indexOf('ryderjet.com') != -1)) {
         return servers["vidhide"].getDDL (after, onError, cleanInfo(web));
-    }else if (((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com")) ) {
+    }else if (((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) ) {
         return servers["streamwish"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("filemoon.") != -1)) {
         return servers["filemoon"].getDDL (after, onError, cleanInfo(web));
@@ -200,7 +200,7 @@ export function getName(web) {
         name = "FileLions";
     }else if((web.indexOf("voe") != -1)){
         name = "VOE";
-    }else if ((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com")) {
+    }else if ((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) {
         name = "StreamWish";
     }else if (web.indexOf("plustr") != -1) {
         name = "Plustream (Solo reproductor interno android)";
@@ -208,7 +208,7 @@ export function getName(web) {
         name =  "VK";
     }else if(web.indexOf("dailymotion.com") != -1){
         name =  "DailyMotion";
-    }else if(web.indexOf("vidhide") != -1){
+    }else if((web.indexOf("vidhide") != -1) || (web.indexOf('ryderjet.com') != -1)){
         name =  "vidhide";
     }else if(web.indexOf("doodstream") != -1){
         name =  "doodstream";
@@ -229,6 +229,7 @@ export function getPreferer(list){
                     "streamtape.com",
                     "ghbrisk.com",
                     "voe",
+                    'ryderjet.com',
                     "embedsito.net/reproamz",
                     "https://re.sololatino.net/p/embed.php",
                     "https://sololatino.xyz/v/",
