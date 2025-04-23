@@ -22,6 +22,7 @@ import { VidHidepro } from "./vidhidepro.js";
 import { DoodStream } from "./doodstream.js";
 import { BurstCloud } from "./burst.js";
 import { Mp4Upload } from "./mp4upload.js";
+import { MaRu } from "./maru.js";
 
 let interceptors = []
 
@@ -59,6 +60,7 @@ let servers = {"fembed": new Fembed(),
                 "doodstream": new DoodStream(),
                 "burstcloud.co": new BurstCloud(),
                 "mp4upload.com": new Mp4Upload(),
+                'mail.ru': new MaRu(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -139,6 +141,8 @@ export async function getDDL(after, onError, web) {
         return servers["burstcloud.co"].getDDL(after, onError, cleanInfo(web));
     }else if(web.indexOf("mp4upload.com") != -1){
         return servers["mp4upload.com"].getDDL(after, onError, cleanInfo(web));
+    }else if(web.indexOf("mail.ru") != -1){
+            return servers["mail.ru"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -213,7 +217,9 @@ export function getName(web) {
     }else if(web.indexOf("doodstream") != -1){
         name =  "doodstream";
     }else if(web.indexOf("burstcloud.co") != -1){
-        name =  "BurstCloud";
+        name =  "BurstCloud";    
+    }else if(web.indexOf("mail.ru") != -1){
+            name =  "mail.ru";
     }else {
         name = "";
     }
@@ -251,6 +257,7 @@ export function getPreferer(list){
                     "dailymotion.com",
                     "vidhide",
                     "doodstream",
+                    "mail.ru"
                 ];
     
     let ordered = [];
