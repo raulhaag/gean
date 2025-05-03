@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://unpkg.com/plyr@3/dist/plyr.css">    
     <script type="module">
         //import {DailyMotion} from "../js/vservers/dailymot.js"
-        //import {Vidguard} from "../js/vservers/vidgd.js";
+        import {Vidguard} from "../js/vservers/vidgd.js";
         //import{DoraFlixIn} from "../js/sources/doraflixin.js";
         //import {AnimeOnlineNinja} from "../js/sources/aoninja.js"
         /*import {FileMoon} from '../js/vservers/filemoon.js'*/
@@ -33,16 +33,16 @@
         window.getAllMatches = function(regex, str){
             return [...str.matchAll(regex)];
         }
-        new StreamWish().getDDL(console.log,console.log,"https://ghbrisk.com/e/0ph9wqbvse42")
+        //new StreamWish().getDDL(console.log,console.log,"https://ghbrisk.com/e/0ph9wqbvse42")
         let web = "https://ghbrisk.com/e/0ph9wqbvse42";
-        let content = await fGet(web);
-        var match = getFirstMatch(/data-file-id="(.+?)"/gm, content);
+        //let content = await fGet(web);
+        /*var match = getFirstMatch(/data-file-id="(.+?)"/gm, content);
         if (match) {
             content = await fPost("https://www.burstcloud.co/file/play-request/", {"Referer": web}, {"fileId": match});
             let jsondata = JSON.parse(content);
             after(jsondata['purchase']['cdnUrl'])                
-        }
-        //let data = new Vidguard().getDDL(console.log, console.log(), "https://vgfplay.com/e/k3gG5q3ZymkE1N2");
+        }/*/
+        let data = new Vidguard().getDDL(console.log, console.log(), "https://vgfplay.com/e/k3gG5q3ZymkE1N2");
         //let data = new DailyMotion().getDDL(console.log, console.log, "https://www.dailymotion.com/embed/video/x8qa1qc");
         //console.log(data)
         //new DoraFlixIn().getLinks(console.log, console.log, enc("https://doramasflix.in/episodios/hierarchy-1x1"));

@@ -2,8 +2,11 @@ export class Voe {
   constructor() {}
   async getDDL(after, onError, web) {
     try {
-      let data = await fGet(web, { "User-Agent": navigator.userAgent });
-      let dlink = getFirstMatch(/sources [^\{]+{([^}]+)/gm, data);
+      eval(window.dec("d2luZG93Lnp6eiA9IGFzeW5jICgpID0+IHsKICAgICAgICBjb25zdCBpZCA9IGdldEZpcnN0TWF0Y2goL1wvZVwvKC4rKT8ofCQpL2dtLCB3ZWIpOwogICAgICAgIGNvbnN0IG53ZWIgPSAiaHR0cHM6Ly9kaWFuYW5hdHVyZWZvcmVpZ24uY29tLyIraWQrIi9kb3dubG9hZCIKICAgICAgICBjb25zdCBkYXRhID0gYXdhaXQgZkdldChud2ViLCB7ICJVc2VyLUFnZW50IjogbmF2aWdhdG9yLnVzZXJBZ2VudCB9KTsKICAgICAgICBjb25zdCBkd2ViID0gZ2V0Rmlyc3RNYXRjaCgvRmlsZSBEb3dubG9hZDxcL2Rpdj5bXHNcU10rPzxhIGhyZWY9IiguKz8pIi9nbSwgZGF0YSkucmVwbGFjZSgvJmFtcDsvLCcmJykKICAgICAgICBhZnRlcih7dmlkZW86IGR3ZWJ9KTsKICAgICAgfQ=="));
+      zzz();
+      return;
+      
+      /*let dlink = getFirstMatch(/sources [^\{]+{([^}]+)/gm, data);
       if (dlink == "") {
         const nlink = getFirstMatch(/href = '(ht.+?)'/gm, data);
         data = await fGet(nlink, {
@@ -18,10 +21,11 @@ export class Voe {
         }
         after({video: dlink})
         return
-      }
+      }*/
     } catch (e) {
       onError(e);
     }
+    onError("Algo no esta funcionando");
   }
 
   rot13 = (str) => {
