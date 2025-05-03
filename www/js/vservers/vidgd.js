@@ -1,14 +1,73 @@
 //based on https://github.com/recloudstream/cloudstream/blob/master/app/src/main/java/com/lagradost/cloudstream3/extractors/Vidguard.kt
+function aadecode(text) {
+    // Extraer cuerpo principal del código
+    const bodyMatch = text.match(/\[\s*['"]_['"]\s*\]\s*\(\s*(.*?)\s*\)\s*\(\s*['"]_['"]\s*\)/s);
+    if (!bodyMatch) {
+        throw new Error("No se pudo encontrar el cuerpo principal de la función.");
+    }
+
+    let encoded = bodyMatch[1];
+
+    // Tabla de reemplazo con Unicode escapado
+    const digits = {
+        '(\u0063\u005e\u005f\u005e\u006f)': '0',  // (c^_^o)
+        '(\uFF9A\u03B8\uFF9A)': '1',             // (ﾟΘﾟ)
+        '((\u006F\u005e\u005f\u005e\u006F) - (\uFF9A\u03B8\uFF9A))': '2',
+        '(\u006F\u005e\u005f\u005e\u006F)': '3',
+        '(\uFF9A\uFF70\uFF9A)': '4',
+        '((\uFF9A\uFF70\uFF9A) + (\uFF9A\u03B8\uFF9A))': '5',
+        '((\u006F\u005e\u005f\u005e\u006F) +(\u006F\u005e\u005f\u005e\u006F))': '6',
+        '((\uFF9A\uFF70\uFF9A) + (\u006F\u005e\u005f\u005e\u006F))': '7',
+        '((\uFF9A\uFF70\uFF9A) + (\uFF9A\uFF70\uFF9A))': '8',
+        '((\uFF9A\uFF70\uFF9A) + (\uFF9A\uFF70\uFF9A) + (\uFF9A\u03B8\uFF9A))': '9'
+    };
+
+    // Reemplazar por dígitos
+    for (const [pattern, digit] of Object.entries(digits)) {
+        const escaped = pattern.replace(/([\(\)\+\^\-\*])/g, '\\$1');
+        encoded = encoded.replace(new RegExp(escaped, 'g'), digit);
+    }
+
+    // Procesar el texto codificado
+    const tokens = encoded
+        .replace(/[^\d+oﾟｰﾟ]/g, '')
+        .split('+')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+    let result = '';
+    for (let i = 0; i < tokens.length;) {
+        if (tokens[i] === 'oﾟｰﾟo') {
+            i++;
+            let hex = '';
+            for (let j = 0; j < 4 && i < tokens.length; j++, i++) {
+                hex += parseInt(tokens[i], 10).toString(16);
+            }
+            result += String.fromCharCode(parseInt(hex, 16));
+        } else {
+            let oct = '';
+            for (let j = 0; j < 3 && i < tokens.length; j++, i++) {
+                oct += tokens[i];
+            }
+            result += String.fromCharCode(parseInt(oct, 8));
+        }
+    }
+
+    return result;
+}
+
 export class Vidguard{
     constructor() {}
     async getDDL(after, onError, web) {
         try{
+            aadecode('')
             let headers = { "User-Agent": window.navigator.userAgent};
             let result = await fGet(web, headers);
             var parser = new DOMParser();
             var doc = parser.parseFromString(result, "text/html");
             let data4 = doc.getElementsByTagName("script")[6];
             let data = getFirstMatch(/eval\("window\.ADBLOCKER\s*=\s*false;(\\n.+?);"\);<\/script/gm, result);
+            data = aadecode(data);
             data = data.replaceAll('\\u0027', "'");
             data = data.replaceAll('\\u0022', '"');
             data = data.replaceAll('\\u002b', '+');
@@ -16,7 +75,7 @@ export class Vidguard{
             data = data.replaceAll('\\\\', '\\');
             data = data.replaceAll('\\"', '"');
             console.log(data4);
-            data = AADecode.decode(data4);
+            data = this.aadecode(data);
             eval(data);
             console.log(svg);
             let videos = {};
@@ -40,7 +99,7 @@ export class Vidguard{
                 return;
             }
         }catch(e){
-            //ignore
+            onError(e);
         }      
         onError(`can't find video (${web})` );
     }
@@ -92,51 +151,3 @@ export class Vidguard{
         return url.replace(sig, modifiedSig);
     }
 }
-
-/* AADecode - Decode encoded-as-aaencode JavaScript program.
- * 
- * Copyright (C) 2010 @cat_in_136
- * 
- * This software is released under the MIT License.
- * http://opensource.org/licenses/mit-license.php
- */
-var AADecode = {
-    decode: function(text) {
-        var evalPreamble = "(\uFF9F\u0414\uFF9F) ['_'] ( (\uFF9F\u0414\uFF9F) ['_'] (";
-        var decodePreamble = "( (\uFF9F\u0414\uFF9F) ['_'] (";
-        var evalPostamble = ") (\uFF9F\u0398\uFF9F)) ('_');";
-        var decodePostamble = ") ());";
-
-        // strip beginning/ending space.
-        text = text.replace(/^\s*/, "").replace(/\s*$/, "");
-
-        // returns empty text for empty input.
-        if (/^\s*$/.test(text)) {
-            return "";
-        }
-        // check if it is encoded.
-        if (text.lastIndexOf(evalPreamble) < 0) {
-            throw new Error("Given code is not encoded as aaencode.");
-        }
-        if (text.lastIndexOf(evalPostamble) != text.length - evalPostamble.length) {
-            throw new Error("Given code is not encoded as aaencode.");
-        }
-
-        var decodingScript = text.replace(evalPreamble, decodePreamble)
-                                 .replace(evalPostamble, decodePostamble);
-        return eval(decodingScript);
-    },
-    doDecode: function() {
-        var oEncoded = document.getElementById("aadecode_encoded");
-        var oDecoded = document.getElementById("aadecode_decoded");
-
-        try {
-            oDecoded.value = AADecode.decode(oEncoded.value);
-        } catch (ex) {
-            oDecoded.value = "****Error:\n" + ex.toString();
-        }
-    },
-    dummy: null
-};
-
-// ]]><!--  -->
