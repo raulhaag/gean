@@ -7,9 +7,10 @@ export class MaRu {
             const meta = 'https:' + jsonData['flashVars']['metadataUrl'] + "?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=" + Date.now();
             jsonData = JSON.parse(await fGet(meta, {Referer:web}));
             let video = {};
-            for(let vid in jsonData['videos']){
-                videos[jsonData['videos'][vid]['url']] = jsonData['videos'][vid]['url'];
-            }
+            //llenar el array con las url de todos los objetos dentro de jsonData['videos']
+            jsonData['videos'].forEach(vid => {
+                video[vid['key']] = vid['url'];
+            });
             video["video"] = jsonData['videos'][0]['url'];
             after(video);
         }catch(e){
