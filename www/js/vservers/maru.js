@@ -7,7 +7,6 @@ export class MaRu {
             const meta = 'https:' + jsonData['flashVars']['metadataUrl'] + "?xemail=&ajax_call=1&func_name=&mna=&mnb=&ext=1&_=" + Date.now();
             jsonData = JSON.parse(await fGet(meta, {Referer:web}));
             let video = {};
-            //llenar el array con las url de todos los objetos dentro de jsonData['videos']
             jsonData['videos'].forEach(vid => {
                 video[vid['key']] = vid['url'];
             });
