@@ -151,21 +151,12 @@ export class CuevaRun {
 
     async getSearch(after, onError, query) {
       try{
-        let response = await fGet(this.baseUrl + "/_next/data/VcChYvu2RioxW1swpu-nU/es/search.json?q=" + query);
-        let jsonResponse = JSON.parse(response);
-        let nas = [];
-        try {
-            for (var i = 0; i < jsonResponse.pageProps.results.data.length; i++) {
-                nas.push({
-                    "name": jsonResponse.pageProps.results.data[i].titles.name,
-                    "image": jsonResponse.pageProps.results.data[i].images.poster,
-                    "path": this.name + "/getDescription/" + window.enc(this.baseUrl + "/" + jsonResponse.pageProps.results.data[i].url.slug.replace(/\/\d+?\//gm, "/")),
-                });
-            }
-          } catch (nerror) {
-            onError(nerror);
-          }
-        after(nas);
+        let response = await fGet(this.baseUrl + "/search?q=eternauta" + query);
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(result, "text/html");
+        let allPages = doc.getElementsByClassName('row');
+        let pd = this.getSeries(allPages[3].getElementsByTagName("article"));
+        after(pd);
       } catch (error) {
         onError(error);
       }
