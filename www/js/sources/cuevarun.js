@@ -119,13 +119,13 @@ export class CuevaRun {
         let chapters = [];
        
         try{
-          if(window.dec(path).indexOf("/serie/") != -1){
+          if(window.dec(path).indexOf("/series/") != -1){
             
             let season = data.seasons;
             for(let i in season){
               for(let c in season[i].episodes){
-                let slug = data.slug.name + "-" + season[i].number + "x" + season[i].episodes[c].number;
-                chapters.push({"name": season[i].episodes[c].title, "path": this.name + "/getLinks/" + window.enc(this.baseUrl + "/episodio/" + slug)});
+                //let slug = data.slug.name + "-" + season[i].number + "x" + season[i].episodes[c].number; ///series/el-eternauta/seasons/1/episodes/1
+                chapters.push({"name": season[i].episodes[c].title, "path": this.name + "/getLinks/" + window.enc(this.baseUrl + "/series/" + data.slug.name + "/seasons/" + season[i].number + "/episodes/" + season[i].episodes[c].number)});
               }
             }
           }else{
@@ -151,7 +151,7 @@ export class CuevaRun {
 
     async getSearch(after, onError, query) {
       try{
-        let response = await fGet(this.baseUrl + "/search?q=eternauta" + query);
+        let response = await fGet(this.baseUrl + "/search?q=" + query);
         var parser = new DOMParser();
         var doc = parser.parseFromString(result, "text/html");
         let allPages = doc.getElementsByClassName('row');
@@ -173,7 +173,7 @@ export class CuevaRun {
           onError(result);
           return;
         }
-        let id = getFirstMatch(/postid-(\d+)/gm, result);
+        //let id = getFirstMatch(/postid-(\d+)/gm, result);
         var parser = new DOMParser();
         var doc = parser.parseFromString(result, "text/html");
         let fdata = JSON.parse(doc.getElementById('__NEXT_DATA__').innerText);
