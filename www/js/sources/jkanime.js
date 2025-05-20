@@ -4,6 +4,21 @@ export class JKAnime {
     this.baseUrl = "https://jkanime.net"
   }
   
+  getSection = (lista) => {
+    let out = [];
+    for(let i = 0; i < lista.length; i++){
+      const element = lista[i];
+      const pparts = element.getElementsByTagName('a')[0].getAttribute("href").split("/");
+      out.push({
+        'name': element.innerText,
+        'path': this.name + "/getLinks/" + window.enc(element.getElementsByTagName('a')[0].getAttribute("href")),
+        'image': element.getElementsByTagName('img')[0].getAttribute('src'),
+        'parentPath': this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/"))
+      })
+    };
+    return out;
+  }
+
   async getFrontPage(after, error) {
     let result = await fGet("https://jkanime.net/");
     if (result.indexOf("error") == 0) {
@@ -15,23 +30,18 @@ export class JKAnime {
     let ncs = [];
     let flis;
     try {
-      flis = doc.querySelectorAll("body section.hero div.container div.row div.col-lg-4.pt-3 div.anime__sidebar__comment div.listadoanime-home div.maximoaltura a.bloqq");
-      for (var i = 0; i < flis.length; i++) {
-        let name =
-          flis[i].getElementsByTagName("h5")[0].textContent + " - " + flis[i].getElementsByTagName("h6")[0].textContent.replace(/\s+/gm, " ").trim();
-        let epath = this.name + "/getLinks/" + window.enc(flis[i].getAttribute("href"));
-        let pparts = flis[i].getAttribute("href").split("/");
-        let ppath = this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/"));
-        ncs.push({
-          "name": name,
-          "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
-          "path": epath,
-          "parentPath": ppath
-        });
-      }
+      ncs = this.getSection(doc.getElementById('animes').getElementsByClassName('dir1'))
     } catch (nerror) {
       error(nerror);
     }
+
+    let dcs = [];
+    try {
+      dcs = this.getSection(doc.getElementById('donghuas').getElementsByClassName('dir1'))
+    }catch (nerror) {
+      error(nerror);
+    }
+
     let nas = [];
     try {
       flis = doc.querySelectorAll("html body section.contenido.spad div.container div.row div.col-lg-8 div.trending__anime div.row div.col-lg-3.col-md-6.col-sm-6 div.anime__item");
@@ -51,25 +61,7 @@ export class JKAnime {
     }
     let etc = [];
     try {
-      flis = doc.querySelectorAll("html body section.hero div.container div.row div.col-lg-8 div.solopc div.row div.col-lg-3.col-md-6.col-sm-6.col-6 div.anime__item");
-      for (var i = 0; i < flis.length; i++) {
-        let name =
-          flis[i].getElementsByTagName("h5")[0].textContent.trim() + " - " + flis[i].getElementsByTagName("li")[0].textContent.replace(/\s+/gm, " ").trim();
-        let epath;
-        if (flis[i].getElementsByTagName("a")[0].getAttribute("href").match(/\/\d+\/$/) != null) {
-          epath =
-            this.name + "/getLinks/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
-        } else {
-          epath = this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
-        }
-        etc.push({
-          "name": name,
-          "image": flis[i]
-            .getElementsByTagName("div")[0]
-            .getAttribute("data-setbg"),
-          "path": epath,
-        });
-      }
+      etc = this.getSection(doc.getElementById('ovas-tab').getElementsByClassName('dir1'));
     } catch (nerror) {
       error(nerror);
     }
@@ -117,6 +109,7 @@ export class JKAnime {
       {"name":"Onas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio/onas/')}];
     after({
       "Últimos Capítulos": ncs,
+      "Últimos donghuas": dcs,
       "Últimos animes": nas,
       "Ovas, Películas, etc.": etc,
       "Generos": pg,
