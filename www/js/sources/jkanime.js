@@ -4,6 +4,21 @@ export class JKAnime {
     this.baseUrl = "https://jkanime.net"
   }
   
+  getSection = (lista) => {
+    let out = [];
+    for(let i = 0; i < lista.length; i++){
+      const element = lista[i];
+      const pparts = element.getElementsByTagName('a')[0].getAttribute("href").split("/");
+      out.push({
+        'name': element.getElementsByTagName('img')[0].getAttribute('alt'),
+        'path': this.name + "/getLinks/" + window.enc(element.getElementsByTagName('a')[0].getAttribute("href")),
+        'image': element.getElementsByTagName('img')[0].getAttribute('src'),
+        'parentPath': this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/"))
+      })
+    };
+    return out;
+  }
+
   async getFrontPage(after, error) {
     let result = await fGet("https://jkanime.net/");
     if (result.indexOf("error") == 0) {
@@ -13,36 +28,28 @@ export class JKAnime {
     var parser = new DOMParser();
     var doc = parser.parseFromString(result, "text/html");
     let ncs = [];
-    let flis;
     try {
-      flis = doc.querySelectorAll("body section.hero div.container div.row div.col-lg-4.pt-3 div.anime__sidebar__comment div.listadoanime-home div.maximoaltura a.bloqq");
-      for (var i = 0; i < flis.length; i++) {
-        let name =
-          flis[i].getElementsByTagName("h5")[0].textContent + " - " + flis[i].getElementsByTagName("h6")[0].textContent.replace(/\s+/gm, " ").trim();
-        let epath = this.name + "/getLinks/" + window.enc(flis[i].getAttribute("href"));
-        let pparts = flis[i].getAttribute("href").split("/");
-        let ppath = this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/"));
-        ncs.push({
-          "name": name,
-          "image": flis[i].getElementsByTagName("img")[0].getAttribute("src"),
-          "path": epath,
-          "parentPath": ppath
-        });
-      }
+      ncs = this.getSection(doc.getElementById('animes').getElementsByClassName('dir1'))
     } catch (nerror) {
       error(nerror);
     }
+
+    let dcs = [];
+    try {
+      dcs = this.getSection(doc.getElementById('donghuas').getElementsByClassName('dir1'))
+    }catch (nerror) {
+      error(nerror);
+    }
+
     let nas = [];
     try {
-      flis = doc.querySelectorAll("html body section.contenido.spad div.container div.row div.col-lg-8 div.trending__anime div.row div.col-lg-3.col-md-6.col-sm-6 div.anime__item");
+      const flis = doc.getElementsByClassName('trending_div')[0].getElementsByClassName('d-flex');
       for (var i = 0; i < flis.length; i++) {
-        let name = flis[i].getElementsByTagName("h5")[0].textContent.trim();
-        let epath = this.name + "/getDescription/" + window.enc(flis[i].firstChild.nextSibling.getAttribute("href"));
+        const element = flis[i];
+        const epath = this.name + "/getDescription/" + window.enc(element.getElementsByTagName("a")[0].getAttribute("href"));
         nas.push({
-          "name": name,
-          "image": flis[i]
-            .getElementsByTagName("div")[0]
-            .getAttribute("data-setbg"),
+          'name': element.getElementsByTagName('img')[0].getAttribute('alt'),
+          'image': element.getElementsByTagName('img')[0].getAttribute('src'),
           "path": epath,
         });
       }
@@ -51,25 +58,7 @@ export class JKAnime {
     }
     let etc = [];
     try {
-      flis = doc.querySelectorAll("html body section.hero div.container div.row div.col-lg-8 div.solopc div.row div.col-lg-3.col-md-6.col-sm-6.col-6 div.anime__item");
-      for (var i = 0; i < flis.length; i++) {
-        let name =
-          flis[i].getElementsByTagName("h5")[0].textContent.trim() + " - " + flis[i].getElementsByTagName("li")[0].textContent.replace(/\s+/gm, " ").trim();
-        let epath;
-        if (flis[i].getElementsByTagName("a")[0].getAttribute("href").match(/\/\d+\/$/) != null) {
-          epath =
-            this.name + "/getLinks/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
-        } else {
-          epath = this.name + "/getDescription/" + window.enc(flis[i].getElementsByTagName("a")[0].getAttribute("href"));
-        }
-        etc.push({
-          "name": name,
-          "image": flis[i]
-            .getElementsByTagName("div")[0]
-            .getAttribute("data-setbg"),
-          "path": epath,
-        });
-      }
+      etc = this.getSection(doc.getElementById('ovas').getElementsByClassName('dir1'));
     } catch (nerror) {
       error(nerror);
     }
@@ -117,6 +106,7 @@ export class JKAnime {
       {"name":"Onas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio/onas/')}];
     after({
       "Últimos Capítulos": ncs,
+      "Últimos donghuas": dcs,
       "Últimos animes": nas,
       "Ovas, Películas, etc.": etc,
       "Generos": pg,
@@ -193,22 +183,32 @@ export class JKAnime {
 
   async getDescription(after, onError, path, page = 0,) {
     try {
-      let result = await window.fGet(window.dec(path));
+      const data = await window.fGet(window.dec(path),{"User-Agent": window.navigator.userAgent}, true);
+      const result = data.body;
       if (result.indexOf("error") == 0) {
         onError(result + ": " + window.dec(path));
         return;
       }
+      const tok = getFirstMatch(/<meta name="csrf-token" content="(.+?)"/gm, result);
+      const id = getFirstMatch(/\/ajax\/episodes\/(.+?)\//gm, result);
       var parser = new DOMParser();
       var doc = parser.parseFromString(result, "text/html");
-      let sname = doc.querySelector("html body section.contenido.spad div.container div.anime__details__content div.row div.col-lg-9 div.anime__details__text div.anime__details__title h3").innerText;
-      let description = doc.querySelector("html body section.contenido.spad div.container div.anime__details__content div.row div.col-lg-9 div.anime__details__text p").textContent.trim();
-      let genres = doc.querySelector("html body section.contenido.spad div.container div.anime__details__content div.row div.col-lg-9 div.anime__details__text div.anime__details__widget div.row div.col-lg-6.col-md-6 ul li").textContent.trim();
-      let image = doc.querySelector("html body section.contenido.spad div.container div.anime__details__content div.row div.col-lg-3 div.anime__details__pic.set-bg").getAttribute("data-setbg");
-      let chapters = [];
-      let clen = 0;
-      try { clen = parseInt([...result.matchAll(/#pag\d*" rel="nofollow">.+?(\d+)<\/a>[\s]+?<\/div/gm)][0][1]); } catch (e) { }
+      const sname = doc.querySelector(".anime_info > h3:nth-child(2)").innerText;
+      const description = doc.querySelector(".scroll").textContent.trim();
+      const genres = doc.querySelector("div.card:nth-child(3) > div:nth-child(1) > ul:nth-child(1) > li:nth-child(2)").textContent.trim();
+      const image = doc.querySelector(".anime_pic > img:nth-child(1)").getAttribute("src");
+      const chapters = [];
+      let lep = getFirstMatch(/<div id="proxep".+?\/(\d+?)\/"/gm, result);
+      if(lep == ""){
+        lep = getFirstMatch(/Episodios:<\/span> (\d+)/gm, result);
+      }
+      const clen = parseInt(lep);
+      let dpath = window.dec(path);
+      if(!dpath.endsWith("/")){
+        dpath = dpath + "/";
+      }
       for (let i = 1; i <= clen; i++) {
-        chapters.push({ "name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(window.dec(path) + "/" + i + "/") });
+        chapters.push({ "name": "Capítulo " + i, "path": this.name + "/getLinks/" + window.enc(dpath+ i + "/") });
       }
       after({ "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": [description, genres], "chapters": chapters });
     } catch (error) {
@@ -244,7 +244,7 @@ export class JKAnime {
     let fres = [];
     let cidx = 1;
     while (true) {
-      let response = await fGet("https://jkanime.net/buscar/" + encodeURIComponent(query) + "/" + cidx);
+      let response = await fGet("https://jkanime.net/buscar/" + encodeURIComponent(query));
       if (response.indexOf("error") == 0) {
         onError(response);
         return;
