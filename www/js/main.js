@@ -4,17 +4,14 @@ import {
   generateCategories,
   generateDescription,
   getPlayer,
-  getSearch,
   getSettings,
 } from "./coder.js";
 import { getDDL, getPreferer, getName } from "./vservers/vserver.js";
-import { arrowNav, updatePositions, initVideoNav } from "./keynav.js";
 
 let loading;
-let dp, vp, pp, sp, setp, content;
+let content_root;
 let sid; // server selection
 let sn; // server name
-let isKeyNav = false;
 window.favorites = [];
 let recent = [];
 window.backStack = [];
@@ -28,16 +25,15 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
   window.serverHost = "http://" + window.location.hostname + ":8080/";
-  document.getElementById("search_button").style.display = "block";
-  document.getElementById("more_button").style.display = "block";
-  vp = document.getElementsByClassName("video_placeholder")[0];
-  dp = document.getElementsByClassName("details_placeholder")[0];
-  pp = document.getElementsByClassName("pages_placeholder")[0];
-  sp = document.getElementsByClassName("search_placeholder")[0];
-  setp = document.getElementsByClassName("settings_placeholder")[0];
-  content = document.getElementsByClassName("content")[0];
 
-  loading = document.getElementsByClassName("lds-group")[0];
+  loading = new bootstrap.Modal(document.getElementById("loading"), {
+    backdrop: false,
+    keyboard: false,
+    focus: true
+  });
+
+  content_root = document.getElementById("content-root");
+
   try {
     favorites = JSON.parse(localStorage.getItem("favorites"));
     updateFavorites();
@@ -56,57 +52,36 @@ document.addEventListener("DOMContentLoaded", function () {
     sn = "JkAnime";
   }
   server_selected(sid, sn);
-  loadSourcesList(document.getElementById("server__select__menu"));
-  document.onkeydown = lauchKeyNav;
+  loadSourcesList(document.getElementById("server_list_dropdown"));
+  loadSettings();
 });
+
+const loadSettings = () => {
+  const settings_container = document.getElementById("opciones-body");
+  settings_container.innerHTML = getSettings();
+}
 
 let loadSourcesList = (container) => {
   let sl = getSourceList();
   let ac = "";
   sl.forEach((key) => {
+    //<li><a class="dropdown-item" href="#">JKAnime</a></li>
+
     ac +=
-      '<div class="menu__server__item" id="' +
+      ' <li><a class="dropdown-item" id="' +
       key +
       '" onclick="{server_selected_click(this)}">' +
       key +
-      "</div>";
+      "</a></li>";
   });
   container.innerHTML = ac;
 };
 
-let lauchKeyNav = function (e) {
-  let code = e || window.event;
-  if (
-    code.keyCode >= 37 &&
-    code.keyCode <= 40 &&
-    !document.activeElement.classList.contains("search__text")
-  ) {
-    const mc = document.getElementsByTagName("body")[0];
-    mc.classList.add("no_mouse");
-    mc.addEventListener("mousemove", (e) => {
-      const timer = mc.getAttribute("timer");
-      if (timer) {
-        clearTimeout(timer);
-        mc.setAttribute("timer", "");
-      }
-      const t = setTimeout(() => {
-        mc.setAttribute("timer", "");
-        mc.classList.add("no_mouse");
-      }, 3500);
-      mc.setAttribute("timer", t);
-      mc.classList.remove("no_mouse");
-    });
-    document.onkeydown = arrowNav;
-    isKeyNav = true;
-    arrowNav(e);
-  }
-};
-
 window.mediaClick = function (e, path) {
-  loading.style.visibility = "visible";
-  let fpath = path.split("/");
-  let server = getSource(fpath[0]);
-  let action = fpath[1];
+  loading.show();
+  const fpath = path.split("/");
+  const server = fpath[0] == "sid"? getSource(sid): getSource(fpath[0]);
+  const action = fpath[1];
   let params;
   if (fpath.length == 3) {
     params = atob(fpath[2]);
@@ -126,7 +101,7 @@ window.mediaClick = function (e, path) {
     };
     server.getParent(ppf, fpath[2]);
   } else if (action == "search") {
-    let term = document.getElementsByClassName("search__text")[0].value;
+    const term = document.getElementById("search-text").value;
     server.getSearch(posSearch, error, term);
   } else if(action == "getMore"){
       server.getMore(
@@ -151,45 +126,27 @@ window.backClick = function (e) {
     window.location.reload();
   }
   if (window.backStack.length > 0) {
-    let last = window.backStack.pop();
-    last.style.display = "none";
     let video = document.getElementsByTagName("VIDEO")[0];
     if (video) {
       video.pause();
       video.src = "";
       video.load();
-    }
-    last.innerHTML = "";
+    }    
+    const last = window.backStack.pop();
+    loadState(last, content_root);
     if (window.backStack.length == 0) {
       document.getElementById("back_button").style.display = "none";
-      document.getElementById("search_button").style.display = "block";
-      document.getElementById("more_button").style.display = "block";
-      document.getElementById("settings_button").style.display = "block";
-      document
-        .getElementById("select_server")
-        .classList.add("select_server_active");
-    }
-    if (isKeyNav) {
-      updatePositions(null);
+      updateFavorites();
+      updateRecents();
     }
   }
 };
 
-let addBackStack = function (e) {
+let addBackStack = function () {
   if (window.backStack.length == 0) {
-    document.getElementById("server__select__menu").style.display = "none";
     document.getElementById("back_button").style.display = "block";
-    document.getElementById("search_button").style.display = "none";
-    document.getElementById("more_button").style.display = "none";
-    document.getElementById("settings_button").style.display = "none";
-    document
-      .getElementById("select_server")
-      .classList.remove("select_server_active");
   }
-  if (window.backStack.indexOf(e) != -1) {
-    window.backStack.splice(window.backStack.indexOf(e), 1);
-  }
-  window.backStack.push(e);
+  window.backStack.push(saveState(content_root));
 };
 
 
@@ -204,7 +161,6 @@ window.switch_fab = function (e, name, image, path) {
     e.classList.add("favorite");
     e.innerHTML = "Quitar de favoritos";
   }
-  updateFavorites();
 };
 
 let add_recent = function (item) {
@@ -213,15 +169,13 @@ let add_recent = function (item) {
     recent.splice(idx, 1);
   }
   recent.unshift(item);
-  updateRecents();
 };
 
 let updateFavorites = function () {
   if (favorites != null) {
     localStorage.setItem("favorites", JSON.stringify(favorites));
     if (favorites.length > 0) {
-      document.getElementsByClassName("fav_placeholder")[0].innerHTML =
-        generateCategory("Favoritos", favorites);
+      document.getElementsByClassName("fav_placeholder")[0].innerHTML = generateCategory("Favoritos", favorites);
     }
   } else {
     favorites = [];
@@ -246,13 +200,12 @@ let updateRecents = function () {
 let posServerClick = function (response) {
   let ss = document.getElementsByClassName("servers_container__section");
   ss[0].innerHTML = generateCategories(response);
-  loading.style.visibility = "hidden";
-  updatePositions();
+  loading.hide();
 };
 
 let error = function (error_message) {
   alert(error_message);
-  loading.style.visibility = "hidden";
+  loading.hide();
 };
 
 window.server_selected_click = function (e) {
@@ -262,23 +215,22 @@ window.server_selected_click = function (e) {
 };
 
 let server_selected = function (sid, sn) {
-  document.getElementById("server__select__menu").style.display = "none";
-  document.getElementById("select_server").innerHTML = sn;
-  loading.style.visibility = "visible";
+  document.getElementById("selected_dropdown").innerHTML = sn;
+  loading.show();
   localStorage.setItem("lastServer", sid);
   localStorage.setItem("lastServerName", sn);
   if (!window.getStorageDefault("lockfronpage", true)) {
     getResponse(sid, posServerClick, error);
   } else {
-    loading.style.visibility = "hidden";
+    loading.hide();
   }
 };
 
 let posDescription = function (response) {
-  dp.innerHTML = generateDescription(response);
-  dp.style.display = "block";
-  loading.style.visibility = "hidden";
-  addBackStack(dp);
+  addBackStack();
+  content_root.scrollTop = 0;
+  content_root.innerHTML = generateDescription(response);
+  loading.hide();
   let vc = JSON.parse(localStorage.getItem(window.lastDescription));
   if (vc != null) {
     let lastOpenedChapter = vc.pop();
@@ -287,18 +239,9 @@ let posDescription = function (response) {
     for (var i = vchapters.length - 1; i >= 0; i--) {
       if (vchapters[i].outerHTML.indexOf(lastOpenedChapter) >= 0) {
         let nsc = vchapters[i];
-        if (lastPos["details_placeholder"] != undefined) {
-          lastPos["details_placeholder"].classList.remove("focus");
-        }
-        lastPos["details_placeholder"] = nsc;
         document.getElementsByClassName("details_placeholder")[0].scrollTop =
           nsc.offsetTop - 70;
-        nsc.parentElement.scrollLeft =
-          nsc.offsetLeft -
-          nsc.parentElement.offsetLeft -
-          nsc.parentElement.offsetWidth / 3 +
-          nsc.offsetWidth;
-        nsc.classList.add("focus");
+          nsc.classList.add("focus");
       }
     }
   }
@@ -348,7 +291,7 @@ window.posLinks = function (linkList, subtitle, order = true, select = true) {
   }
 };
 
-window.openPlayer = function (options,  items = [], subtitle = "",res = true) {
+window.openPlayer = (options,  items = [], subtitle = "",res = true) => {
   let video = document.getElementsByTagName("VIDEO")[0];
   if (video) {
     video.pause();
@@ -401,8 +344,8 @@ window.openPlayer = function (options,  items = [], subtitle = "",res = true) {
     loading.style.visibility = "hidden";
     return;
   }
-  vp.innerHTML = getPlayer(options, items, videoSrc, subtitle);
-  vp.style.display = "flex";
+  addBackStack();
+  content_root.innerHTML = getPlayer(options, items, videoSrc, subtitle);
   var elem = document.getElementsByClassName("videoview")[0];
   if (videoSrc.indexOf(".m3u") != -1) {
     var hls_config = {
@@ -418,22 +361,18 @@ window.openPlayer = function (options,  items = [], subtitle = "",res = true) {
       window.hls.attachMedia(elem);
     }
   }
-  loading.style.visibility = "hidden";
-  initVideoNav();
   if (window.getStorageDefault("fullscreen")) {
-    window.requestFullScreen(window.player);
+    window.requestFullScreen(document.getElementsByTagName('video')[0]);
   }
   elem.focus();
-  addBackStack(vp);
 };
 
 let posSearch = function (response) {
-  let search = document.getElementById("search");
-  search.style.marginTop = 50 + "px";
-  let rc = document.getElementById("results_container");
-  rc.innerHTML = generateCategory("Resultados", response);
+  addBackStack();
+  content_root.innerHTML = generateCategory("Resultado de la busqueda", response);
+  const searchbox = new bootstrap.Collapse('#searchbox', {});
+  searchbox.hide();
   loading.style.visibility = "hidden";
-  updatePositions("search_placeholder");
 };
 
 window.markViewed = function (e, spath, path) {
@@ -453,20 +392,6 @@ window.markViewed = function (e, spath, path) {
   }
 };
 
-window.search = function () {
-  sp.innerHTML = getSearch(sid);
-  sp.style.display = "block";
-  addBackStack(sp);
-  var si = document.getElementsByClassName("search__text")[0];
-  si.focus();
-  si.addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      mediaClick(self, sid + "/search");
-    }
-  });
-};
-
 window.toggleView = function (name) {
   var mdiv = document.getElementById(name);
   if (mdiv.style.display === "none") {
@@ -476,24 +401,16 @@ window.toggleView = function (name) {
   }
 };
 
-window.settings = function () {
-  setp.innerHTML = getSettings(sid);
-  setp.style.display = "block";
-  addBackStack(setp);
-};
-
-window.toggleOption = function (e) {
+window.toggleOption = (e) => {
   reload = true;
-  if (e.children[1].innerText == "✓") {
-    e.children[1].innerText = "✗";
-    localStorage.setItem(e.children[1].id, "false");
+  if (e.checked) {
+    localStorage.setItem(e.id, "true");
   } else {
-    e.children[1].innerText = "✓";
-    localStorage.setItem(e.children[1].id, "true");
+    localStorage.setItem(e.id, "false");
   }
 };
 
-window.getStorageDefault = function (key, defa) {
+window.getStorageDefault = (key, defa) => {
   let val = localStorage.getItem(key);
   if (val == null) {
     val = defa;
@@ -507,13 +424,13 @@ window.getStorageDefault = function (key, defa) {
   return val;
 };
 
-window.optionClicked = function (e) {
+window.optionClicked = (e) => {
   let key = e.id;
   let val = e.checked;
   localStorage.setItem(key, val);
 };
 
-window.requestFullScreen = function (elem) {
+window.requestFullScreen = (elem) => {
   if (elem.requestFullscreen) {
     elem.requestFullscreen();
   } else if (elem.mozRequestFullScreen) {
@@ -525,7 +442,7 @@ window.requestFullScreen = function (elem) {
   }
 };
 
-window.exitFullScreen = function () {
+window.exitFullScreen = () => {
   const document = window.document;
   if (document.exitFullscreen) {
     document.exitFullscreen();
@@ -538,7 +455,7 @@ window.exitFullScreen = function () {
   }
 };
 
-window.destroyPlayer = function () {
+window.destroyPlayer = () => {
   try {
     window.hls.destroy();
   } catch (e) {
@@ -551,7 +468,7 @@ window.destroyPlayer = function () {
   }
 };
 
-window.changeSrcRes = function (src) {
+window.changeSrcRes = (src) => {
   if (src.classList.contains("selected")) {
     return;
   }
@@ -586,47 +503,9 @@ window.changeSrc = function (src) {
   posLinks(JSON.parse(src.dataset.src), false, false);
 };
 
-function loadm2() {
-  let exta = window.getStorageDefault("modo_2", "false") ? "_m2" : "";
-  var link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "css/items" + exta + ".css";
-  document.getElementsByTagName("head")[0].appendChild(link);
-}
-
-loadm2();
-
-// selection message start
-let navOptions = (event) => {
-  event.preventDefault();
-  if (!(event.keyCode === 38 || event.keyCode === 40 || event.keyCode === 13)) {
-    return;
-  }
-  let options = document.getElementsByClassName("optionSelection__option");
-  let selected = document.getElementsByClassName("optionSelection__focused")[0];
-  let cidx = Array.from(options).indexOf(selected);
-  switch (event.keyCode) {
-    case 40: // down arrow
-      if (cidx + 1 < options.length) {
-        selected.classList.remove("optionSelection__focused");
-        options[cidx + 1].classList.add("optionSelection__focused");
-      }
-      break;
-    case 38: // up arrow
-      if (cidx - 1 >= 0) {
-        selected.classList.remove("optionSelection__focused");
-        options[cidx - 1].classList.add("optionSelection__focused");
-      }
-      break;
-    case 13:
-      document.body.removeChild(document.__optionsDiv);
-      document.onkeydown = document.__selectPrekeydown;
-      document.__selectpostSelect(selected.dataset.src);
-      break;
-  }
-};
-
 function optionSelection(title, options, postSelect) {
+  const title_container = document.getElementById("modal-title");
+  const list_container = document.getElementById("modal-body");
   let postSelectPP = (value) => {
     postSelect(value, document.__selectpostSelectOptions);
   };
@@ -637,34 +516,23 @@ function optionSelection(title, options, postSelect) {
   document.__selectpostSelect = postSelectPP;
   document.__selectpostSelectOptions = options;
   document.__selectPrekeydown = document.onkeydown;
-  document.onkeydown = navOptions;
-  var div = document.createElement("div");
-  let content =
-    `<div class="optionSelection">
-    <div class="optionSelection__title">` +
-    title +
-    `</div>
-    <div class="optionSelection__options">`;
+  title_container.innerText = title;
+  let content = `<div class="list-group">`;
   for (var key in options) {
     content +=
-      '<div class="optionSelection__option" onclick="{onOptionSelectionSelected(this)}" data-src="' +
+      '<div class="list-group-item list-group-item-action" onclick="{onOptionSelectionSelected(this)}" data-src="' +
       options[key] +
       '">' +
       key +
       "</div>";
   }
-  content +=
-    '<div class="optionSelection__option optionSelection__Cancel" onclick="{onOptionSelectionSelected(this)}" data-src="cancel">Cancelar</div></div>';
-  div.innerHTML = content;
-  div
-    .getElementsByClassName("optionSelection__option")[0]
-    .classList.add("optionSelection__focused");
-  document.body.appendChild(div);
-  document.__optionsDiv = div;
+  list_container.innerHTML = content + "</div>";
+  window.current_modal = new bootstrap.Modal(document.getElementById("modal-list"))
+  window.current_modal.show();
 }
 
 document.onOptionSelectionSelected = (option) => {
-  document.body.removeChild(document.__optionsDiv);
+  window.current_modal.hide();
   document.onkeydown = document.__selectPrekeydown;
   if (option.dataset.src === "cancel") {
     loading.style.visibility = "hidden";
@@ -673,3 +541,17 @@ document.onOptionSelectionSelected = (option) => {
   document.__selectpostSelect(option.dataset.src);
 };
 // selection message end
+
+const saveState = (element) => {
+  return {
+    innerHTML: element.innerHTML,
+    scrollTop: element.scrollTop,
+    scrollLeft: element.scrollLeft
+   }
+}
+
+const loadState = (from, to) => {
+  to.innerHTML = from.innerHTML;
+  to.scrollTop = from.scrollTop;
+  to.scrollLeft = from.scrollLeft;
+}

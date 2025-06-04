@@ -10,22 +10,24 @@ export function generateCategories(options) {
 }
 
 export function generateCategory(title, items) {
-  let result =
-    '<div class="items"><h2 class="items__title">' +
-    title +
-    '</h2><div class="items__list">';
-  for (let i = 0; i < items.length; i++) {
-    result +=
-      '<div class="item focusable" onclick="{mediaClick(self, \'' +
-      items[i]["path"] +
-      '\')}"><img class="item__image" src="' +
-      items[i]["image"] +
-      '" alt="" referrerpolicy="no-referrer"> <h2 class="item__title">' +
-      items[i]["name"] +
-      "</h2></div>";
-  }
-  return result + "</div></div>";
-}
+    let out =`
+          <h5 class="mt-3">${title}</h5>
+          <div class="row text-center  g-3" id="anime-list">
+      `;
+      for (let i = 0; i < items.length; i++) {
+          out = out + `
+              <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"]}')}">
+                <div class="card text-bg-dark" style="width:100%; aspect-ratio:0.65;">
+                  <img src="${items[i]["image"]}" alt="Image 1" class="card-img" style="width:100%; aspect-ratio:0.65; object-fit: cover;">
+                  <div class="card-img-overlay" style="display:flex; align-items:flex-end; backgroud-color='#FFF9'">
+                    <p class="card-text" style="text-shadow: 0px 0px 5px black, 0px 0px 2px black ;">${items[i]["name"]}</p>
+                  </div>
+                </div>
+              </div>
+          `
+      }
+      return out + "</div>";
+  };
 
 export function generateDescription(options) {
   let vieweds = [];
@@ -37,42 +39,48 @@ export function generateDescription(options) {
   } catch (e) {
     vieweds = [];
   }
-  let result =
-    '<div class="main-content"><div class="details"><div class="details__container">';
-  result +=
-    '<img class="details__image" src="' +
-    options["image"] +
-    '" alt="" class=><div class="details__items"><div class="details__item"><h2 class="focusable">' +
-    options["name"] +
-    "</div>";
+  let result = `
+      <div class="container text-centered">
+      <div class="row g-3 rounded-2">
+          <div class="col-12 col-md-3 col-xl-2">
+            <img class="img-fluid" style="width:100%"
+            src="${options["image"]}" alt="${options["name"]}" />
+          </div>
+            <div class="col-12 col-md-9 col-xl-10 ps-md-3">
+              <div class=""><h2 class="focusable">${options["name"]}</h2></div>`
   for (let i = 0; i < options["items"].length; i++) {
-    result += '<div class="details__item">' + options["items"][i] + "</div>";
+    result += `<div class="mt-3">${options["items"][i]}</div>`;
   }
   let idx = indexOfProperty(favorites, "path", options.path);
   if (idx > -1) {
     result +=
-      '<div class="details__add focusable favorite" onclick="{switch_fab(this, \'' +
+      '<Button class="container-fluid mt-3 p-2" onclick="{switch_fab(this, \'' +
       options["name"] +
       "', '" +
       options["image"] +
       "','" +
       options["path"] +
-      "')}\">Quitar de favoritos</div>";
+      "')}\">Quitar de favoritos</Button>";
   } else {
     result +=
-      '<div class="details__add focusable" onclick="{switch_fab(this, \'' +
+      '<Button class="container-fluid mt-3 p-2" onclick="{switch_fab(this, \'' +
       options["name"] +
       "', '" +
       options["image"] +
       "','" +
       options["path"] +
-      "')}\">Agregar a favoritos</div>";
+      "')}\">Agregar a favoritos</Button>";
   }
-  result += '</div></div><div class="details__chapters">';
-  for (let i = 0; i < options["chapters"].length; i++) {
+
+  result +=   `
+            </div>
+          </div>
+          
+    <div id="chapters" class="row text-center g-3 gx-2 my-3">`
+    for (let i = 0; i < options["chapters"].length; i++) {
     if (vieweds.indexOf(options["chapters"][i]["path"]) == -1) {
       result +=
-        '<div class="button focusable" onclick="{markViewed(this,\'' +
+        '<div class="col-6 col-md-4 col-xl-3 "><div class="p-3 chapter-button" onclick="{markViewed(this,\'' +
         options["path"] +
         "', '" +
         options["chapters"][i]["path"] +
@@ -80,59 +88,61 @@ export function generateDescription(options) {
         options["chapters"][i]["path"] +
         "')}\">" +
         options["chapters"][i]["name"] +
-        "</div>";
+        "</div></div>";
     } else {
       result +=
-        '<div class="button viewed focusable" onclick="{mediaClick(this, \'' +
+        '<div class="col-6 col-md-4 col-xl-3 "><div class="p-3 chapter-button viewed" onclick="{mediaClick(this, \'' +
         options["chapters"][i]["path"] +
         "')}\">" +
         options["chapters"][i]["name"] +
-        "</div>";
+        "</div></div>";
     }
   }
-  result += "</div></div>";
+  result +=  `</div></div>`;
   return result;
 }
 
-export function getPlayer(options, items = [], videoSrc, subtitles = "") {
-  let rv = '<div class="source_list">';
-  let extra = " selected";
-  items.forEach(function (item) {
-    let osar = [item];
-    for (let i = 0; i < items.length; i++) {
-      if (osar.indexOf(items[i]) == -1) {
-        osar.push(items[i]);
-      }
-    }
-    rv +=
-      '<div class="source_item focusable ' +
-      extra +
-      "\" data-src='" +
-      JSON.stringify(osar) +
-      '\' onclick="{changeSrc(this)}">' +
-      getName(item) +
-      "</div>";
-    extra = "";
+export function getPlayer(options, items = [], videoSrc, subtitles = "", title='') {
+  window.last_players_options = {options: options, items:items, videoSrc: videoSrc, subtitles:subtitles, title:title};
+  let rv = `<div class="d-flex align-content-end">
+        <h5 class="align-content-center">${title}</h5>
+        <div class="dropdown ms-auto me-3"> 
+        <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-quality-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ${'video'/*TODO dinamico*/}
+        </a>          
+        <ul class="dropdown-menu">`;
+  items.forEach((item) => {
+    rv += `<li><a class="dropdown-item" href="#">${getName(item)}</a></li>`;
   });
-  rv += `</div><div class="source_list">`;
-  Object.keys(options).forEach(function (item) {
-    if (item != "video") {
-      if (options["video"] == options[item]) {
-        extra = " selected";
-      } else {
-        extra = "";
-      }
-      rv +=
-        '<div class="source_item focusable' +
-        extra +
-        '" data-src="' +
-        options[item] +
-        '" onclick="{changeSrcRes(this)}">' +
-        item +
-        "</div>";
-    }
+
+  rv += `
+          </ul>
+        </div>
+        <div class="dropdown">
+          <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-server-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Servidor  
+          </a>
+          <ul class="dropdown-menu">
+  `;
+  Object.keys(options).forEach((item) => {
+    rv += `<li><a class="dropdown-item" href="#">${item}</a></li>`;
   });
-  rv += `</div><div class="video_container"><video id="player" class="videoview focusable" controls autoplay>`;
+  rv += `</ul>
+        </div>
+      </div>
+    </div>
+      <div class="mt-3 h-auto  container">
+        <video
+          id="video_placeholder_2_0 m-3"
+          style="max-height: calc(100vh - 130px);"
+          class="w-100 videoview"
+          controls="controls"
+          autoplay="autoplay"
+        >
+          <source
+            type="video/mp4"
+            src="${videoSrc}"
+          />`;
   /*Object.keys(options).forEach(function(option){
             rv +=  `<source src="` + options[option]+ `" label="` + option + `">`
         });*/
@@ -145,41 +155,31 @@ export function getPlayer(options, items = [], videoSrc, subtitles = "") {
     src="${subtitles}"
     default />`
   }
-  rv += `</video>
-                </div>`;
+  rv += `        </video>
+      </div>
+    </div>`;
   return rv;
 }
 
-export function getSearch(server) {
-  return (
-    `<div id="search">
-    <div id="search__box">
-    <input autoComplete='none' class="search__text focusable" type="text" onkeypress="{}"></input>
-    <div class="button focusable" onclick="{mediaClick(self, '` +
-    server +
-    `/search')}"><div>Buscar</div></div>
-    </div>
-    <div id="results_container"></div>
-    </div>
-   `
-  );
-}
-
 export function getSettings() {
+  /*
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" checked>
+          <label class="form-check-label" for="switchCheckChecked">Checked switch checkbox input</label>
+        </div>
+  */
+
+
   let options = {
-    lockfronpage: " Bloquear pagina principal",
-    fullscreen: " Iniciar video en pantalla completa",
-    autoplay: " Autoplay de video",
+    lockfronpage: "Bloquear pagina principal",
+    fullscreen: "Iniciar video en pantalla completa",
+    autoplay: "Autoplay de video",
     vserSelect: "Seleccionar servidor antes de reproducir.",
     resSelect: "Selección de resolución manual",
     external_player: "Usar reproductor externo(Solo Android)",
-    internal_player:
-      "Usar reproductor integrado (Solo Android/ recomendado, bloquea opcion externo)",
-    cache:
-      "Usar cache de video en disco (solo pc/firefx o última version de la app), necesita espacio disponible en disco)",
-    modo_2: "Usar modo de vista 2(necesita recargar la pagina)",
-    modotv:
-      "Modo pensado para tv (usa cursores para navegar y enter/ no tactil)",
+    internal_player: "Usar reproductor integrado (Solo Android/ recomendado, bloquea opcion externo)",
+    cache: "Usar cache de video en disco (solo pc/firefx o última version de la app), necesita espacio disponible en disco)",
+    modotv: "Modo pensado para tv (usa cursores para navegar y enter/ no tactil)",
   };
   const defv = [
     "false",
@@ -191,10 +191,8 @@ export function getSettings() {
     "false",
     "false",
     "false",
-    "false",
   ];
-  let result =
-    '<div class="container"><div class="settings_group main-content">';
+  let result = '';
   let aval = false;
   var i = 0;
   let extra = "";
@@ -204,24 +202,17 @@ export function getSettings() {
       aval = defv[i];
     }
     if (aval == "true") {
-      extra = "✓";
+      extra = " checked";
     } else {
-      extra = "✗";
+      extra = "";
     }
-    result +=
-      '<div class="setting_option focusable" onclick="{toggleOption(this)}"><div class="setting_label">' +
-      options[key] +
-      '</div><div class="setting_state" id="' +
-      key +
-      '">' +
-      extra +
-      "</div></div>";
+    result += `
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input" type="checkbox" role="switch" id="${key}"${extra} onclick="{toggleOption(this)}">
+          <label class="form-check-label" for="${key}">${options[key]}</label>
+        </div>
+    `;
     i++;
   }
-  return (
-    result +
-    '</div></div><div><p style="position: absolute;bottom: 10px;text-align: center; width:100%">' +
-    window.navigator.userAgent +
-    "</p></div>"
-  );
+  return result;
 }

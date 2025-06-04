@@ -1,0 +1,30 @@
+/*fixed navbar space*/
+body { padding-top: 70px; }
+
+.chapter-button.viewed{
+    background-color:  #444;
+}
+
+.chapter-button:hover {
+    background-color: dimgrey;
+}
+
+i:hover, .dropdown-toggle:hover{
+    background-color: dimgrey;
+    border-radius: 0.35rem;
+}
+
+*{/*hacer no seleccionable*/
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */    
+}
+
+.chapter-button {
+    background-color: var(--bs-dark-bg-subtle);
+
+}
+

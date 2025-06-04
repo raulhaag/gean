@@ -29,6 +29,7 @@ export class Voe {
     }catch(e){
       onError(e);
     }
+    onError("video no encontrado");
   }
 
   rot13 = (str) => {

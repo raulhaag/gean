@@ -185,10 +185,12 @@ class handler(SimpleHTTPRequestHandler):
         except Exception as e:
             print("Error: " + str(e) + "en" + decode(path[2]) + "\n")
             traceback.format_exc()
+            self.return_response(404, "Error: " + str(e) + "en" + decode(path[2]) + "\n")
             return
         except Exception as e:
             print("Error: " + str(e) + "en" + decode(path[2]) + "\n")
             traceback.format_exc()
+            self.return_response(404, "Error: " + str(e) + "en" + decode(path[2]) + "\n")
             return
         if self.path.endswith("sources.js"):
             if not os.path.exists("temp"):

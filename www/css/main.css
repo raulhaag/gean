@@ -157,7 +157,7 @@ div{
 
 /* menu styles */
 .menu{
-    display: flex;
+    display: none;
     justify-content: flex-end;
     top :0;
     width: 100%;
