@@ -107,7 +107,7 @@ window.mediaClick = function (e, path) {
       server.getMore(
       posServerClick, window.showError, fpath[2])
   } else {
-    loading.style.visibility = "hidden";
+    loading.hide();
   }
 };
 
@@ -341,7 +341,7 @@ window.openPlayer = (options,  items = [], subtitle = "",res = true) => {
           error("Error al abrir reproductor externo/interno: \n" + result);
         }
       });
-    loading.style.visibility = "hidden";
+    loading.hide();
     return;
   }
   addBackStack();
@@ -372,7 +372,7 @@ let posSearch = function (response) {
   content_root.innerHTML = generateCategory("Resultado de la busqueda", response);
   const searchbox = new bootstrap.Collapse('#searchbox', {});
   searchbox.hide();
-  loading.style.visibility = "hidden";
+  loading.hide();
 };
 
 window.markViewed = function (e, spath, path) {
@@ -535,7 +535,7 @@ document.onOptionSelectionSelected = (option) => {
   window.current_modal.hide();
   document.onkeydown = document.__selectPrekeydown;
   if (option.dataset.src === "cancel") {
-    loading.style.visibility = "hidden";
+    loading.hide();
     return;
   }
   document.__selectpostSelect(option.dataset.src);
