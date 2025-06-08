@@ -15,8 +15,9 @@ export function generateCategory(title, items) {
           <div class="row text-center  g-3" id="anime-list">
       `;
       for (let i = 0; i < items.length; i++) {
-          out = out + `
-              <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"]}')}">
+        if(items[i]['image']){
+          out += `
+              <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"] + "/" + items[i]["name"]}')}">
                 <div class="card text-bg-dark" style="width:100%; aspect-ratio:0.65;">
                   <img src="${items[i]["image"]}" alt="Image 1" class="card-img" style="width:100%; aspect-ratio:0.65; object-fit: cover;">
                   <div class="card-img-overlay" style="display:flex; align-items:flex-end; backgroud-color='#FFF9'">
@@ -25,6 +26,13 @@ export function generateCategory(title, items) {
                 </div>
               </div>
           `
+        }else{
+           out +=    `<div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"]}')}">
+                <div class="card text-bg-dark chapter-button" style="width:100%">
+                  <h4 class="card-title text-truncate py-3 px-1">${items[i]["name"]}</h4>
+                </div>
+              </div>`;
+        }
       }
       return out + "</div>";
   };
@@ -85,7 +93,7 @@ export function generateDescription(options) {
         "', '" +
         options["chapters"][i]["path"] +
         "') ;mediaClick(self, '" +
-        options["chapters"][i]["path"] +
+        options["chapters"][i]["path"] + "/" + options["chapters"][i]["name"] +
         "')}\">" +
         options["chapters"][i]["name"] +
         "</div></div>";
@@ -102,36 +110,41 @@ export function generateDescription(options) {
   return result;
 }
 
-export function getPlayer(options, items = [], videoSrc, subtitles = "", title='') {
+export function getPlayer(options, items = [], videoSrc, subtitles = "", title='', selected_server= 'Servidor') {
   window.last_players_options = {options: options, items:items, videoSrc: videoSrc, subtitles:subtitles, title:title};
+  
   let rv = `<div class="d-flex align-content-end">
         <h5 class="align-content-center">${title}</h5>
         <div class="dropdown ms-auto me-3"> 
-        <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-quality-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              ${'video'/*TODO dinamico*/}
+        <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-server-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ${selected_server}
         </a>          
         <ul class="dropdown-menu">`;
   items.forEach((item) => {
     rv += `<li><a class="dropdown-item" href="#">${getName(item)}</a></li>`;
   });
 
+  let quality_list = '', selected_quality;
+  Object.keys(options).forEach((item) => {
+    quality_list += `<li><a class="dropdown-item" href="#" data-src="${options[item]}" data-name="${item}" onclick="{changeSrcRes(this)}">${item}</a></li>`;
+    if(options[item].indexOf(videoSrc) != -1){
+      selected_quality = item
+    }
+  });
   rv += `
           </ul>
         </div>
         <div class="dropdown">
-          <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-server-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Servidor  
+          <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-quality-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ${selected_quality}  
           </a>
           <ul class="dropdown-menu">
-  `;
-  Object.keys(options).forEach((item) => {
-    rv += `<li><a class="dropdown-item" href="#">${item}</a></li>`;
-  });
-  rv += `</ul>
+              ${quality_list}
+          </ul>
         </div>
       </div>
     </div>
-      <div class="mt-3 h-auto  container">
+      <div class="mt-3 h-auto">
         <video
           id="video_placeholder_2_0 m-3"
           style="max-height: calc(100vh - 130px);"

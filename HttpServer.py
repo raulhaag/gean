@@ -208,6 +208,8 @@ class handler(SimpleHTTPRequestHandler):
             "ico",
             "svg",
             "mp4",
+            "woff",
+            "woff2"
         ]:
             self.path = web_path + self.path
             # read file to string

@@ -8,8 +8,9 @@ import {
 } from "./coder.js";
 import { getDDL, getPreferer, getName } from "./vservers/vserver.js";
 
-let loading;
+
 let content_root;
+const scroll = document.getElementsByTagName("html")[0];
 let sid; // server selection
 let sn; // server name
 window.favorites = [];
@@ -26,11 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   window.serverHost = "http://" + window.location.hostname + ":8080/";
 
-  loading = new bootstrap.Modal(document.getElementById("loading"), {
-    backdrop: false,
-    keyboard: false,
-    focus: true
-  });
+  window.loading = new bootstrap.Modal(document.getElementById("loading"));
 
   content_root = document.getElementById("content-root");
 
@@ -78,7 +75,7 @@ let loadSourcesList = (container) => {
 };
 
 window.mediaClick = function (e, path) {
-  loading.show();
+  window.loading.show();
   const fpath = path.split("/");
   const server = fpath[0] == "sid"? getSource(sid): getSource(fpath[0]);
   const action = fpath[1];
@@ -94,6 +91,7 @@ window.mediaClick = function (e, path) {
     window.lastDescription = path;
     server.getDescription(posDescription, error, fpath[2]);
   } else if (action == "getLinks") {
+    window.lastVideoTitle = fpath[3];
     server.getLinks(posLinks, error, fpath[2]);
     let ppf = function (item) {
       add_recent(item);
@@ -105,9 +103,9 @@ window.mediaClick = function (e, path) {
     server.getSearch(posSearch, error, term);
   } else if(action == "getMore"){
       server.getMore(
-      posServerClick, window.showError, fpath[2])
+      posMoreClick, window.showError, fpath[2])
   } else {
-    loading.hide();
+    window.loading.hide();
   }
 };
 
@@ -197,15 +195,21 @@ let updateRecents = function () {
   }
 };
 
-let posServerClick = function (response) {
-  let ss = document.getElementsByClassName("servers_container__section");
+const posMoreClick = (response) => {
+  addBackStack();
+  posServerClick(response)
+}
+
+const posServerClick = (response)  => {
+  const ss = document.getElementsByClassName("servers_container__section");
   ss[0].innerHTML = generateCategories(response);
-  loading.hide();
+  scroll.scrollTo({top:0, left:0, behavior:'instant'});
+  window.loading.hide();
 };
 
-let error = function (error_message) {
+const error = function (error_message) {
   alert(error_message);
-  loading.hide();
+  window.loading.hide();
 };
 
 window.server_selected_click = function (e) {
@@ -214,32 +218,34 @@ window.server_selected_click = function (e) {
   server_selected(sid, sn);
 };
 
-let server_selected = function (sid, sn) {
+const server_selected = (sid, sn) => {
   document.getElementById("selected_dropdown").innerHTML = sn;
-  loading.show();
+  window.loading.show();
   localStorage.setItem("lastServer", sid);
   localStorage.setItem("lastServerName", sn);
   if (!window.getStorageDefault("lockfronpage", true)) {
     getResponse(sid, posServerClick, error);
   } else {
-    loading.hide();
+    window.loading.hide();
   }
 };
 
-let posDescription = function (response) {
+const posDescription = (response) => {
   addBackStack();
-  content_root.scrollTop = 0;
   content_root.innerHTML = generateDescription(response);
-  loading.hide();
-  let vc = JSON.parse(localStorage.getItem(window.lastDescription));
+  window.loading.hide();
+  let vc = JSON.parse(localStorage.getItem(response.path));
   if (vc != null) {
     let lastOpenedChapter = vc.pop();
     vc.push(lastOpenedChapter);
     let vchapters = document.getElementsByClassName("viewed");
-    for (var i = vchapters.length - 1; i >= 0; i--) {
+    if(vchapters.length == 0) { 
+      scroll.scrollTop = 0;
+    }
+    for (var i = vchapters.length - 1; i >= 0; i--) {//TODO more check needed
       if (vchapters[i].outerHTML.indexOf(lastOpenedChapter) >= 0) {
         let nsc = vchapters[i];
-        document.getElementsByClassName("details_placeholder")[0].scrollTop =
+        scroll.scrollTop =
           nsc.offsetTop - 70;
           nsc.classList.add("focus");
       }
@@ -247,7 +253,7 @@ let posDescription = function (response) {
   }
 };
 
-let linkError = function (error_message) {
+const linkError = (error_message) => {
   if (window.lastLink.length > 1) {
     window.lastLink.shift();
     posLinks(window.lastLink);
@@ -256,7 +262,7 @@ let linkError = function (error_message) {
   }
 };
 
-window.posLinks = function (linkList, subtitle, order = true, select = true) {
+window.posLinks = function (linkList, subtitle, order = true, select = true, addBack = true) {
   let best = null;
   if (order) {
     best = getPreferer(linkList);
@@ -264,7 +270,7 @@ window.posLinks = function (linkList, subtitle, order = true, select = true) {
     best = linkList;
   }
   let mask = (value) => {
-    openPlayer(value, best, subtitle);
+    openPlayer(value, best, subtitle, window.lastVideoTitle, getName(best[0]));
   };
   window.lastLink = best;
   if (
@@ -305,14 +311,14 @@ window.openPlayer = (options,  items = [], subtitle = "",res = true) => {
         options,
         (selection, options) => {
           options.video = selection;
-          openPlayer(options, items, subtitle, false);
+          openPlayer(options, items, subtitle, window.lastVideoTitle, getName(items[0]));
         }
       );
       return;
     }
   }
   let videoSrc = options["video"];
-  let useCache =
+  const useCache =
     localStorage.getItem("cache") == "true" &&
     !(videoSrc.indexOf(".m3u") != -1);
 
@@ -341,11 +347,12 @@ window.openPlayer = (options,  items = [], subtitle = "",res = true) => {
           error("Error al abrir reproductor externo/interno: \n" + result);
         }
       });
-    loading.hide();
+    window.loading.hide();
     return;
   }
-  addBackStack();
-  content_root.innerHTML = getPlayer(options, items, videoSrc, subtitle);
+  if(addBack) addBackStack();
+  content_root.innerHTML = getPlayer(options, items, videoSrc, subtitle, window.lastVideoTitle, getName(items[0]));
+  window.loading.hide();
   var elem = document.getElementsByClassName("videoview")[0];
   if (videoSrc.indexOf(".m3u") != -1) {
     var hls_config = {
@@ -367,15 +374,15 @@ window.openPlayer = (options,  items = [], subtitle = "",res = true) => {
   elem.focus();
 };
 
-let posSearch = function (response) {
+const posSearch = (response) => {
   addBackStack();
   content_root.innerHTML = generateCategory("Resultado de la busqueda", response);
   const searchbox = new bootstrap.Collapse('#searchbox', {});
   searchbox.hide();
-  loading.hide();
+  window.loading.hide();
 };
 
-window.markViewed = function (e, spath, path) {
+window.markViewed = (e, spath, path) => {
   let vc = [];
   try {
     vc = JSON.parse(localStorage.getItem(spath));
@@ -392,7 +399,7 @@ window.markViewed = function (e, spath, path) {
   }
 };
 
-window.toggleView = function (name) {
+window.toggleView = (name) => {
   var mdiv = document.getElementById(name);
   if (mdiv.style.display === "none") {
     mdiv.style.display = "block";
@@ -472,18 +479,22 @@ window.changeSrcRes = (src) => {
   if (src.classList.contains("selected")) {
     return;
   }
+  const player = document.getElementsByTagName("video")[0];
+  const dd = document.getElementById("dropdown-quality-select");
+  dd.innerHTML = src.dataset.name;
+  const currentTime = player.currentTime;
+
   window.destroyPlayer();
-  let options = src.parentNode.getElementsByClassName("source_item");
+  const options = src.parentNode.getElementsByClassName("source_item");
   for (let i = 0; i < options.length; i++) {
     options[i].classList.remove("selected");
   }
   src.classList.add("selected");
-  let player = document.getElementsByTagName("video")[0];
-  let currentTime = player.currentTime;
+
   player.src = src.dataset.src;
   player.currentTime = currentTime;
   if (src.dataset.src.indexOf(".m3u") != -1) {
-    var hls_config = {
+    const hls_config = {
       autoStartLoad: true,
       maxMaxBufferLength: 10 * 60,
       maxBufferSize: 50 * 1000 * 1000,
@@ -498,9 +509,9 @@ window.changeSrcRes = (src) => {
   }
 };
 
-window.changeSrc = function (src) {
+window.changeSrc = (src)  => {
   window.destroyPlayer();
-  posLinks(JSON.parse(src.dataset.src), false, false);
+  posLinks(JSON.parse(src.dataset.src), false, false, false);
 };
 
 function optionSelection(title, options, postSelect) {
@@ -535,7 +546,7 @@ document.onOptionSelectionSelected = (option) => {
   window.current_modal.hide();
   document.onkeydown = document.__selectPrekeydown;
   if (option.dataset.src === "cancel") {
-    loading.hide();
+    window.loading.hide();
     return;
   }
   document.__selectpostSelect(option.dataset.src);
@@ -545,13 +556,12 @@ document.onOptionSelectionSelected = (option) => {
 const saveState = (element) => {
   return {
     innerHTML: element.innerHTML,
-    scrollTop: element.scrollTop,
-    scrollLeft: element.scrollLeft
+    scrollTop: scroll.scrollTop,
+    scrollLeft: scroll.scrollLeft
    }
 }
 
 const loadState = (from, to) => {
   to.innerHTML = from.innerHTML;
-  to.scrollTop = from.scrollTop;
-  to.scrollLeft = from.scrollLeft;
+  scroll.scrollTo({top:from.scrollTop, left:from.scrollLeft, behavior:'instant'});
 }
