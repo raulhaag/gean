@@ -134,15 +134,17 @@ window.backClick = function (e) {
     loadState(last, content_root);
     if (window.backStack.length == 0) {
       document.getElementById("back_button").style.display = "none";
+      document.getElementById("server_list_dropdown").style.display = "block";
       updateFavorites();
       updateRecents();
     }
   }
 };
 
-let addBackStack = function () {
+const addBackStack = function () {
   if (window.backStack.length == 0) {
     document.getElementById("back_button").style.display = "block";
+    document.getElementById("server_list_dropdown").style.display = "none";
   }
   window.backStack.push(saveState(content_root));
 };
@@ -270,7 +272,7 @@ window.posLinks = function (linkList, subtitle, order = true, select = true, add
     best = linkList;
   }
   let mask = (value) => {
-    openPlayer(value, best, subtitle, window.lastVideoTitle, getName(best[0]));
+    openPlayer(value, best, subtitle, window.lastVideoTitle, getName(best[0]), addBack);
   };
   window.lastLink = best;
   if (
@@ -297,7 +299,7 @@ window.posLinks = function (linkList, subtitle, order = true, select = true, add
   }
 };
 
-window.openPlayer = (options,  items = [], subtitle = "",res = true) => {
+window.openPlayer = (options,  items = [], subtitle = "",res = true, addBack = true) => {
   let video = document.getElementsByTagName("VIDEO")[0];
   if (video) {
     video.pause();
