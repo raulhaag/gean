@@ -134,7 +134,7 @@ window.backClick = function (e) {
     loadState(last, content_root);
     if (window.backStack.length == 0) {
       document.getElementById("back_button").style.display = "none";
-      document.getElementById("server_list_dropdown").style.display = "block";
+      document.getElementById("selected_dropdown").style.display = "block";
       updateFavorites();
       updateRecents();
     }
@@ -144,7 +144,7 @@ window.backClick = function (e) {
 const addBackStack = function () {
   if (window.backStack.length == 0) {
     document.getElementById("back_button").style.display = "block";
-    document.getElementById("server_list_dropdown").style.display = "none";
+    document.getElementById("selected_dropdown").style.display = "none";
   }
   window.backStack.push(saveState(content_root));
 };
