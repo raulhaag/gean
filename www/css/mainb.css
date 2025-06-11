@@ -1,18 +1,33 @@
 /*fixed navbar space*/
 body { padding-top: 70px; }
 
+.chapter-button{
+    min-height: 48px;
+    min-width: 96px;
+    transition:.3s;
+}
+
 .chapter-button.viewed{
     background-color:  #444;
 }
 
 .chapter-button:hover {
-    background-color: dimgrey;
+    background-color: dimgrey !important;
+    transform:scale(1.05);
 }
 
 i:hover, .dropdown-toggle:hover{
     background-color: dimgrey;
     border-radius: 0.35rem;
 }
+.dropdown-toggle{
+    border-radius: 0.35rem;
+}
+
+.card{
+}
+
+
 
 *{/*hacer no seleccionable*/
     -webkit-user-select: none;

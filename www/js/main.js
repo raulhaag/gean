@@ -79,14 +79,9 @@ window.mediaClick = function (e, path) {
   const fpath = path.split("/");
   const server = fpath[0] == "sid"? getSource(sid): getSource(fpath[0]);
   const action = fpath[1];
-  let params;
-  if (fpath.length == 3) {
-    params = atob(fpath[2]);
-  }
+
   if (action == "getFrontPage") {
     server.getFrontPage(posServerClick, error);
-  } else if (action == "getCategory") {
-    //server.getCategory(params, posServerClick, error);
   } else if (action == "getDescription") {
     window.lastDescription = path;
     server.getDescription(posDescription, error, fpath[2]);
@@ -198,7 +193,7 @@ let updateRecents = function () {
 };
 
 const posMoreClick = (response) => {
-  addBackStack();
+  if(window.backStack.length == 0) addBackStack();
   posServerClick(response)
 }
 
@@ -235,16 +230,14 @@ const server_selected = (sid, sn) => {
 const posDescription = (response) => {
   addBackStack();
   content_root.innerHTML = generateDescription(response);
+  scroll.scrollTo({top:0, left:0, behavior:'instant'});
   window.loading.hide();
   let vc = JSON.parse(localStorage.getItem(response.path));
   if (vc != null) {
     let lastOpenedChapter = vc.pop();
     vc.push(lastOpenedChapter);
     let vchapters = document.getElementsByClassName("viewed");
-    if(vchapters.length == 0) { 
-      scroll.scrollTop = 0;
-    }
-    for (var i = vchapters.length - 1; i >= 0; i--) {//TODO more check needed
+    for (var i = vchapters.length - 1; i >= 0; i--) {
       if (vchapters[i].outerHTML.indexOf(lastOpenedChapter) >= 0) {
         let nsc = vchapters[i];
         scroll.scrollTop =

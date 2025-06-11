@@ -29,7 +29,7 @@ export function generateCategory(title, items) {
         }else{
            out +=    `<div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"]}')}">
                 <div class="card text-bg-dark chapter-button" style="width:100%">
-                  <h4 class="card-title text-truncate py-3 px-1">${items[i]["name"]}</h4>
+                  <h4 class="card-title text-truncate pt-3 pb-2 px-1">${items[i]["name"]}</h4>
                 </div>
               </div>`;
         }
@@ -88,7 +88,7 @@ export function generateDescription(options) {
     for (let i = 0; i < options["chapters"].length; i++) {
     if (vieweds.indexOf(options["chapters"][i]["path"]) == -1) {
       result +=
-        '<div class="col-6 col-md-4 col-xl-3 "><div class="p-3 chapter-button" onclick="{markViewed(this,\'' +
+        '<div class="col-6 col-md-4 col-xl-3 "><div class="p-3 card chapter-button" onclick="{markViewed(this,\'' +
         options["path"] +
         "', '" +
         options["chapters"][i]["path"] +
@@ -99,7 +99,7 @@ export function generateDescription(options) {
         "</div></div>";
     } else {
       result +=
-        '<div class="col-6 col-md-4 col-xl-3 "><div class="p-3 chapter-button viewed" onclick="{mediaClick(this, \'' +
+        '<div class=" col-6 col-md-4 col-xl-3 "><div class="p-3 card chapter-button viewed" onclick="{mediaClick(this, \'' +
         options["chapters"][i]["path"] +
         "')}\">" +
         options["chapters"][i]["name"] +
@@ -113,13 +113,14 @@ export function generateDescription(options) {
 export function getPlayer(options, items = [], videoSrc, subtitles = "", title='', selected_server= 'Servidor') {
   window.last_players_options = {options: options, items:items, videoSrc: videoSrc, subtitles:subtitles, title:title};
   
-  let rv = `<div class="d-flex align-content-end">
-        <h5 class="align-content-center">${title}</h5>
-        <div class="dropdown ms-auto me-3"> 
-        <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-server-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+  let rv = `<div class="row">
+        <h5 class="align-content-center col-12 col-md-7">${title}</h5>
+        <div class="dropdown-group d-flex align-content-end align-items-end col-12 col-md-5" >
+          <div class="dropdown ms-auto me-3"> 
+          <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-server-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               ${selected_server}
-        </a>          
-        <ul class="dropdown-menu">`;
+          </a>          
+          <ul class="dropdown-menu">`;
   items.forEach((item) => {
     rv += `<li><a class="dropdown-item" href="#">${getName(item)}</a></li>`;
   });
@@ -132,15 +133,16 @@ export function getPlayer(options, items = [], videoSrc, subtitles = "", title='
     }
   });
   rv += `
-          </ul>
-        </div>
-        <div class="dropdown">
-          <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-quality-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              ${selected_quality}  
-          </a>
-          <ul class="dropdown-menu">
-              ${quality_list}
-          </ul>
+            </ul>
+          </div>
+          <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-quality-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                ${selected_quality}  
+            </a>
+            <ul class="dropdown-menu">
+                ${quality_list}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
