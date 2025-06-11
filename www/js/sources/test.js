@@ -8,7 +8,7 @@ export class NOTestServer {
   }
 
   waitOrFail() {
-	  return false
+	  //return false
     this.wait(Math.floor(Math.random() * 3000));
     return Math.random() > 0.95;
   }

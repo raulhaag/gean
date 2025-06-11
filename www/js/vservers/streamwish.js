@@ -12,7 +12,7 @@ export class StreamWish {
                 for(const key in dlink){
                     if(dlink[key].indexOf("http") != -1){
                         after({"video":dlink[key]});
-                        break;
+                        return;
                     }
                 }
             }else{
