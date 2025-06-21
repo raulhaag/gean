@@ -115,16 +115,18 @@ window.shutdown = function () {
 };
 
 window.backClick = function (e) {
+  if(window.cancelAllPetitions())return;
   if (reload) {
     window.location.reload();
   }
   if (window.backStack.length > 0) {
     let video = document.getElementsByTagName("VIDEO")[0];
     if (video) {
+      window.destroyPlayer();
       video.pause();
       video.src = "";
       video.load();
-    }    
+    }
     const last = window.backStack.pop();
     loadState(last, content_root);
     if (window.backStack.length == 0) {
@@ -257,7 +259,7 @@ const linkError = (error_message) => {
   }
 };
 
-window.posLinks = function (linkList, subtitle, order = true, select = true, addBack = true) {
+window.posLinks = (linkList, subtitle, order = true, select = true, addBack = true) => {
   let best = null;
   if (order) {
     best = getPreferer(linkList);
@@ -265,7 +267,7 @@ window.posLinks = function (linkList, subtitle, order = true, select = true, add
     best = linkList;
   }
   let mask = (value) => {
-    openPlayer(value, best, subtitle, window.lastVideoTitle, getName(best[0]), addBack);
+    openPlayer(value, best, subtitle, order, select, addBack);
   };
   window.lastLink = best;
   if (
@@ -292,8 +294,8 @@ window.posLinks = function (linkList, subtitle, order = true, select = true, add
   }
 };
 
-window.openPlayer = (options,  items = [], subtitle = "",res = true, addBack = true) => {
-  let video = document.getElementsByTagName("VIDEO")[0];
+window.openPlayer = (options,  items = [], subtitle = "", res = true, addBack = true) => {
+  const video = document.getElementsByTagName("VIDEO")[0];
   if (video) {
     video.pause();
     video.src = "";
@@ -306,7 +308,7 @@ window.openPlayer = (options,  items = [], subtitle = "",res = true, addBack = t
         options,
         (selection, options) => {
           options.video = selection;
-          openPlayer(options, items, subtitle, window.lastVideoTitle, getName(items[0]));
+          openPlayer(options, items, subtitle, res, addBack);
         }
       );
       return;
@@ -505,6 +507,7 @@ window.changeSrcRes = (src) => {
 };
 
 window.changeSrc = (src)  => {
+  window.loading.show();
   window.destroyPlayer();
   posLinks(JSON.parse(src.dataset.src), false, false, false);
 };

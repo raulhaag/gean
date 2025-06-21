@@ -4,199 +4,203 @@ export class AnimeFlvNet {
       this.baseUrl = "https://www3.animeflv.net";
     }
     async getFrontPage(after, onError) {
-      let result = await fGet(this.baseUrl);
-      if(result.indexOf("error") == 0){
-        onError(result);
-        return;
-      }
-      var parser = new DOMParser();
-      var doc = parser.parseFromString(result, "text/html");
-      let ncs = [];
-      let flis;
       try {
-        flis = doc.getElementsByClassName("fa-play");
-        for (var i = 1; i < flis.length; i++) {
-          ncs.push({
-            "name": flis[i].getElementsByClassName("Title")[0].innerText + " - " + flis[i].getElementsByClassName("Capi")[0].innerText,
-            "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
-            "path": this.name + "/getLinks/" + enc(this.baseUrl + flis[i].getAttribute("href")),
-          });
+        let result = await fGet(this.baseUrl);
+        if(result.indexOf("error") == 0){
+          onError(result);
+          return;
         }
-      } catch (nerror) {
-        onError(nerror);
-      }
-      let nas = [];
-      try {
-        flis = doc.getElementsByClassName("Anime alt B");
-        for (var i = 0; i < flis.length; i++) {
-            nas.push({
-                "name": flis[i].getElementsByClassName("Title")[0].innerText,
-                "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
-                "path": this.name + "/getDescription/" + enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(result, "text/html");
+        let ncs = [];
+        let flis;
+        try {
+          flis = doc.getElementsByClassName("fa-play");
+          for (var i = 1; i < flis.length; i++) {
+            ncs.push({
+              "name": flis[i].getElementsByClassName("Title")[0].innerText + " - " + flis[i].getElementsByClassName("Capi")[0].innerText,
+              "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
+              "path": this.name + "/getLinks/" + enc(this.baseUrl + flis[i].getAttribute("href")),
             });
+          }
+        } catch (nerror) {
+          onError(nerror);
         }
-      } catch (nerror) {
-        onError(nerror);
+        let nas = [];
+        try {
+          flis = doc.getElementsByClassName("Anime alt B");
+          for (var i = 0; i < flis.length; i++) {
+              nas.push({
+                  "name": flis[i].getElementsByClassName("Title")[0].innerText,
+                  "image": this.baseUrl + flis[i].getElementsByTagName('img')[0].getAttribute('src'),
+                  "path": this.name + "/getDescription/" + enc(this.baseUrl + flis[i].getElementsByTagName('a')[0].getAttribute("href")),
+              });
+          }
+        } catch (nerror) {
+          onError(nerror);
+        }
+  
+        after({
+          "Últimos Capítulos": ncs,
+          "Últimas Péliculas, Ovas y Animes": nas,
+          "Por genero": [
+            {
+              "name": "Acción",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=accion&order=default")
+            },
+            {
+              "name": "Artes Marciales",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=artes-marciales&order=default")
+            },
+            {
+              "name": "Aventuras",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=aventura&order=default")
+            },
+            {
+              "name": "Carreras",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=carreras&order=default")
+            },
+            {
+              "name": "Ciencia Ficción",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=ciencia-ficcion&order=default")
+            },
+            {
+              "name": "Comedia",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=comedia&order=default")
+            },
+            {
+              "name": "Demencia",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=demencia&order=default")
+            },
+            {
+              "name": "Demonios",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=demonios&order=default")
+            },
+            {
+              "name": "Deportes",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=deportes&order=default")
+            },
+            {
+              "name": "Drama",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=drama&order=default")
+            },
+            {
+              "name": "Ecchi",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=ecchi&order=default")
+            },
+            {
+              "name": "Escolares",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=escolares&order=default")
+            },
+            {
+              "name": "Espacial",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=espacial&order=default")
+            },
+            {
+              "name": "Fantasía",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=fantasia&order=default")
+            },
+            {
+              "name": "Harem",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=harem&order=default")
+            },
+            {
+              "name": "Historico",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=historico&order=default")
+            },
+            {
+              "name": "Infantil",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=infantil&order=default")
+            },
+            {
+              "name": "Josei",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=josei&order=default")
+            },
+            {
+              "name": "Juegos",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=juegos&order=default")
+            },
+            {
+              "name": "Magia",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=magia&order=default")
+            },
+            {
+              "name": "Mecha",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=mecha&order=default")
+            },
+            {
+              "name": "Militar",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=militar&order=default")
+            },
+            {
+              "name": "Misterio",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=misterio&order=default")
+            },
+            {
+              "name": "Música",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=musica&order=default")
+            },
+            {
+              "name": "Parodia",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=parodia&order=default")
+            },
+            {
+              "name": "Policía",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=policia&order=default")
+            },
+            {
+              "name": "Psicológico",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=psicologico&order=default")
+            },
+            {
+              "name": "Recuentos de la vida",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=recuentos-de-la-vida&order=default")
+            },
+            {
+              "name": "Romance",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=romance&order=default")
+            },
+            {
+              "name": "Samurai",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=samurai&order=default")
+            },
+            {
+              "name": "Seinen",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=seinen&order=default")
+            },
+            {
+              "name": "Shoujo",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=shoujo&order=default")
+            },
+            {
+              "name": "Shounen",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=shounen&order=default")
+            },
+            {
+              "name": "Sobrenatural",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=sobrenatural&order=default")
+            },
+            {
+              "name": "Superpoderes",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=superpoderes&order=default")
+            },
+            {
+              "name": "Suspenso",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=suspenso&order=default")
+            },
+            {
+              "name": "Terror",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=terror&order=default")
+            },
+            {
+              "name": "Vampiros",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=vampiros&order=default")
+            },
+          ]
+        });
+      } catch (error) {
+        onError(error.name)
       }
-
-      after({
-        "Últimos Capítulos": ncs,
-        "Últimas Péliculas, Ovas y Animes": nas,
-        "Por genero": [
-          {
-            "name": "Acción",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=accion&order=default")
-          },
-          {
-            "name": "Artes Marciales",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=artes-marciales&order=default")
-          },
-          {
-            "name": "Aventuras",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=aventura&order=default")
-          },
-          {
-            "name": "Carreras",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=carreras&order=default")
-          },
-          {
-            "name": "Ciencia Ficción",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=ciencia-ficcion&order=default")
-          },
-          {
-            "name": "Comedia",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=comedia&order=default")
-          },
-          {
-            "name": "Demencia",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=demencia&order=default")
-          },
-          {
-            "name": "Demonios",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=demonios&order=default")
-          },
-          {
-            "name": "Deportes",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=deportes&order=default")
-          },
-          {
-            "name": "Drama",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=drama&order=default")
-          },
-          {
-            "name": "Ecchi",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=ecchi&order=default")
-          },
-          {
-            "name": "Escolares",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=escolares&order=default")
-          },
-          {
-            "name": "Espacial",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=espacial&order=default")
-          },
-          {
-            "name": "Fantasía",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=fantasia&order=default")
-          },
-          {
-            "name": "Harem",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=harem&order=default")
-          },
-          {
-            "name": "Historico",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=historico&order=default")
-          },
-          {
-            "name": "Infantil",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=infantil&order=default")
-          },
-          {
-            "name": "Josei",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=josei&order=default")
-          },
-          {
-            "name": "Juegos",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=juegos&order=default")
-          },
-          {
-            "name": "Magia",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=magia&order=default")
-          },
-          {
-            "name": "Mecha",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=mecha&order=default")
-          },
-          {
-            "name": "Militar",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=militar&order=default")
-          },
-          {
-            "name": "Misterio",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=misterio&order=default")
-          },
-          {
-            "name": "Música",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=musica&order=default")
-          },
-          {
-            "name": "Parodia",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=parodia&order=default")
-          },
-          {
-            "name": "Policía",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=policia&order=default")
-          },
-          {
-            "name": "Psicológico",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=psicologico&order=default")
-          },
-          {
-            "name": "Recuentos de la vida",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=recuentos-de-la-vida&order=default")
-          },
-          {
-            "name": "Romance",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=romance&order=default")
-          },
-          {
-            "name": "Samurai",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=samurai&order=default")
-          },
-          {
-            "name": "Seinen",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=seinen&order=default")
-          },
-          {
-            "name": "Shoujo",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=shoujo&order=default")
-          },
-          {
-            "name": "Shounen",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=shounen&order=default")
-          },
-          {
-            "name": "Sobrenatural",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=sobrenatural&order=default")
-          },
-          {
-            "name": "Superpoderes",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=superpoderes&order=default")
-          },
-          {
-            "name": "Suspenso",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=suspenso&order=default")
-          },
-          {
-            "name": "Terror",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=terror&order=default")
-          },
-          {
-            "name": "Vampiros",
-            "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/browse?genre%5B%5D=vampiros&order=default")
-          },
-        ]
-      });
     }
 
     async getMore(after, onError = console.log, more , title = ""){

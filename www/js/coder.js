@@ -122,7 +122,13 @@ export function getPlayer(options, items = [], videoSrc, subtitles = "", title='
           </a>          
           <ul class="dropdown-menu">`;
   items.forEach((item) => {
-    rv += `<li><a class="dropdown-item" href="#">${getName(item)}</a></li>`;
+    let citems = [...items];
+    const idx = items.indexOf(item);
+    if(idx != -1){
+      citems.splice(idx, 1);
+      citems.unshift(item);
+    }
+    rv += `<li><a class="dropdown-item" href="#" data-src='${JSON.stringify(citems)}' onclick="{changeSrc(this)}">${getName(item)}</a></li>`;
   });
 
   let quality_list = '', selected_quality;

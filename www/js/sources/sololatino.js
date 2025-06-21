@@ -4,84 +4,88 @@ export class SoloLatino {
     this.baseUrl = "https://sololatino.net/animes/";
   }
   async getFrontPage(after, onError) {
-    var out = {};
-    let result = await window.fGet("https://sololatino.net/animes/novedades/");
-    try{
-      var parser = new DOMParser();
-      var doc = parser.parseFromString(result, "text/html");
-      let flis = doc.getElementsByClassName("item se episodes"); //doc.querySelectorAll("html body.error404 div#dt_contenedor div#contenedor div.module div.content.full_width_layout div#archive-content.animation-2.items div.items article");
-      out["Nuevos capítulos"] = this.parseList(flis, "/getLinks/");
-    }catch(e){}
-    result = await window.fGet("https://sololatino.net/animes/");
-    try{
-      var parser = new DOMParser();
-      var doc = parser.parseFromString(result, "text/html");
-      let flis = doc.getElementsByClassName("item animes"); //doc.querySelectorAll("html body.error404 div#dt_contenedor div#contenedor div.module div.content.full_width_layout div#archive-content.animation-2.items div.items article");
-      out["Nuevos animes"] = this.parseList(flis);
-    }catch(e){}
-    out["Por genero"] = [
-      {
-        "name": "Acción",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=accion/')
-      },
-      {
-        "name": "Acción y Aventura",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=action-adventure/')
-      },
-      {
-        "name": "Anime",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=anime/')
-      },
-      {
-        "name": "Aventura",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=aventura/')
-      },
-      {
-        "name": "Comedia",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=comedia/')
-      },
-      {
-        "name": "Crimen",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=crimen/')
-      },
-      {
-        "name": "Drama",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=drama/')
-      },
-      {
-        "name": "Familia",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=familia/')
-      },
-      {
-        "name": "Fantasía",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=fantasia/')
-      },
-      {
-        "name": "Kids",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=kids/')
-      },
-      {
-        "name": "Misterio",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=misterio/')
-      },
-      {
-        "name": "Romance",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=romance/')
-      },
-      {
-        "name": "SCI-FI & Fantasia",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=sci-fi-fantasy/')
-      },
-      {
-        "name": "Terror",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=terror/')
-      },
-      {
-        "name": "Belica",
-        "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=war-politics/')
-      }
-    ]
-    after(out);
+    try {
+      var out = {};
+      let result = await window.fGet("https://sololatino.net/animes/novedades/");
+      try{
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(result, "text/html");
+        let flis = doc.getElementsByClassName("item se episodes"); //doc.querySelectorAll("html body.error404 div#dt_contenedor div#contenedor div.module div.content.full_width_layout div#archive-content.animation-2.items div.items article");
+        out["Nuevos capítulos"] = this.parseList(flis, "/getLinks/");
+      }catch(e){}
+      result = await window.fGet("https://sololatino.net/animes/");
+      try{
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(result, "text/html");
+        let flis = doc.getElementsByClassName("item animes"); //doc.querySelectorAll("html body.error404 div#dt_contenedor div#contenedor div.module div.content.full_width_layout div#archive-content.animation-2.items div.items article");
+        out["Nuevos animes"] = this.parseList(flis);
+      }catch(e){}
+      out["Por genero"] = [
+        {
+          "name": "Acción",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=accion/')
+        },
+        {
+          "name": "Acción y Aventura",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=action-adventure/')
+        },
+        {
+          "name": "Anime",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=anime/')
+        },
+        {
+          "name": "Aventura",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=aventura/')
+        },
+        {
+          "name": "Comedia",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=comedia/')
+        },
+        {
+          "name": "Crimen",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=crimen/')
+        },
+        {
+          "name": "Drama",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=drama/')
+        },
+        {
+          "name": "Familia",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=familia/')
+        },
+        {
+          "name": "Fantasía",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=fantasia/')
+        },
+        {
+          "name": "Kids",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=kids/')
+        },
+        {
+          "name": "Misterio",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=misterio/')
+        },
+        {
+          "name": "Romance",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=romance/')
+        },
+        {
+          "name": "SCI-FI & Fantasia",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=sci-fi-fantasy/')
+        },
+        {
+          "name": "Terror",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=terror/')
+        },
+        {
+          "name": "Belica",
+          "path": this.name + '/getMore/' + window.enc(this.baseUrl + 'filtro/?genre=war-politics/')
+        }
+      ]
+      after(out);
+    } catch (error) {
+      onError(error.name);
+    }
   }
 
   async getMore(after, onError = console.log, more , title = ""){
