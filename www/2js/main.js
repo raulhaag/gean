@@ -165,7 +165,7 @@ window.hideLoading = () => {
 };
 
 window.backClick = () => {
-  
+  if(window.cancelAllPetitions())return;
   if(!dialog){
     if(backScenePH.length > 0) popScene();
   }else{
@@ -177,7 +177,6 @@ window.backClick = () => {
     window.hideLoading();
     window.changeKeyManager();
   }
-
 }
 
 

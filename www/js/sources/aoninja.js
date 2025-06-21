@@ -21,55 +21,59 @@ export class AnimeOnlineNinja {
     }
 
     async getFrontPage(after, onError = console.log) {
-      let result = await fGet(this.baseUrl);
-      if(result.indexOf("error") == 0){
-        onError(result);
-        return;
-      }
-      var parser = new DOMParser();
-      var doc = parser.parseFromString(result, "text/html");
-      let ncs = [];
-      let flis;
       try {
-        flis = doc.getElementsByClassName("animation-2 items")[0].getElementsByTagName("article");
-        for (var i = 1; i < flis.length; i++) {
-            ncs.push({
-              "name": flis[i].getElementsByTagName('h3')[0].innerText + " - " + flis[i].getElementsByTagName('h4')[0].innerText.trim(),
-              "image": window.http2file(flis[i].getElementsByTagName('img')[0].getAttribute('data-src').replace("https:", "http:")),
-              "path": this.name + "/getLinks/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
-            });
-          }
-      } catch (nerror) {
-        onError(nerror);
+        let result = await fGet(this.baseUrl);
+        if(result.indexOf("error") == 0){
+          onError(result);
+          return;
+        }
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(result, "text/html");
+        let ncs = [];
+        let flis;
+        try {
+          flis = doc.getElementsByClassName("animation-2 items")[0].getElementsByTagName("article");
+          for (var i = 1; i < flis.length; i++) {
+              ncs.push({
+                "name": flis[i].getElementsByTagName('h3')[0].innerText + " - " + flis[i].getElementsByTagName('h4')[0].innerText.trim(),
+                "image": window.http2file(flis[i].getElementsByTagName('img')[0].getAttribute('data-src').replace("https:", "http:")),
+                "path": this.name + "/getLinks/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
+              });
+            }
+        } catch (nerror) {
+          onError(nerror);
+        }
+        let nas = [];
+        try {
+          flis = doc.getElementById("featured-titles").getElementsByClassName("tvshows");
+          nas = this.getSeries(flis);
+        } catch (nerror) {
+          onError(nerror);
+        }
+        let naa;
+        try {
+          flis = doc.getElementsByClassName("items")[2].getElementsByTagName("article");
+          naa = this.getSeries(flis);
+        } catch (nerror) {
+          onError(nerror);
+        }
+        let nam;
+        try {
+          flis = doc.getElementsByClassName("items")[3].getElementsByTagName("article");
+          nam = this.getSeries(flis);
+        } catch (nerror) {
+          onError(nerror);
+        }
+  
+        after({
+          "Últimos Episodios": ncs,
+          "En Emisión": nas,
+          "Últimos Animes Agregados": naa,
+          "Últimos Peliculas Agregadas": nam
+        });
+      } catch (error) {
+        onError(error.name);
       }
-      let nas = [];
-      try {
-        flis = doc.getElementById("featured-titles").getElementsByClassName("tvshows");
-        nas = this.getSeries(flis);
-      } catch (nerror) {
-        onError(nerror);
-      }
-      let naa;
-      try {
-        flis = doc.getElementsByClassName("items")[2].getElementsByTagName("article");
-        naa = this.getSeries(flis);
-      } catch (nerror) {
-        onError(nerror);
-      }
-      let nam;
-      try {
-        flis = doc.getElementsByClassName("items")[3].getElementsByTagName("article");
-        nam = this.getSeries(flis);
-      } catch (nerror) {
-        onError(nerror);
-      }
-
-      after({
-        "Últimos Episodios": ncs,
-        "En Emisión": nas,
-        "Últimos Animes Agregados": naa,
-        "Últimos Peliculas Agregadas": nam
-      });
     }
 
 

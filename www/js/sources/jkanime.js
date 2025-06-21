@@ -20,100 +20,103 @@ export class JKAnime {
   }
 
   async getFrontPage(after, error) {
-    let result = await fGet("https://jkanime.net/");
-    if (result.indexOf("error") == 0) {
-      error(result);
-      return;
-    }
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(result, "text/html");
-    let ncs = [];
     try {
-      ncs = this.getSection(doc.getElementById('animes').getElementsByClassName('dir1'))
-    } catch (nerror) {
-      error(nerror);
-    }
-
-    let dcs = [];
-    try {
-      dcs = this.getSection(doc.getElementById('donghuas').getElementsByClassName('dir1'))
-    }catch (nerror) {
-      error(nerror);
-    }
-
-    let nas = [];
-    try {
-      const flis = doc.getElementsByClassName('trending_div')[0].getElementsByClassName('d-flex');
-      for (var i = 0; i < flis.length; i++) {
-        const element = flis[i];
-        const epath = this.name + "/getDescription/" + window.enc(element.getElementsByTagName("a")[0].getAttribute("href"));
-        nas.push({
-          'name': element.getElementsByTagName('img')[0].getAttribute('alt'),
-          'image': element.getElementsByTagName('img')[0].getAttribute('src'),
-          "path": epath,
-        });
+      let result = await fGet("https://jkanime.net/");
+      if (result.indexOf("error") == 0) {
+        error(result);
+        return;
       }
-    } catch (nerror) {
-      error(nerror);
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(result, "text/html");
+      let ncs = [];
+      try {
+        ncs = this.getSection(doc.getElementById('animes').getElementsByClassName('dir1'))
+      } catch (nerror) {
+        error(nerror);
+      }
+  
+      let dcs = [];
+      try {
+        dcs = this.getSection(doc.getElementById('donghuas').getElementsByClassName('dir1'))
+      }catch (nerror) {
+        error(nerror);
+      }
+  
+      let nas = [];
+      try {
+        const flis = doc.getElementsByClassName('trending_div')[0].getElementsByClassName('d-flex');
+        for (var i = 0; i < flis.length; i++) {
+          const element = flis[i];
+          const epath = this.name + "/getDescription/" + window.enc(element.getElementsByTagName("a")[0].getAttribute("href"));
+          nas.push({
+            'name': element.getElementsByTagName('img')[0].getAttribute('alt'),
+            'image': element.getElementsByTagName('img')[0].getAttribute('src'),
+            "path": epath,
+          });
+        }
+      } catch (nerror) {
+        error(nerror);
+      }
+      let etc = [];
+      try {
+        etc = this.getSection(doc.getElementById('ovas').getElementsByClassName('dir1'));
+      } catch (nerror) {
+        error(nerror);
+      }
+  
+      let pg = [
+        {"name":"Accion","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=accion')},
+        {"name":"Aventura","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=aventura')},
+        {"name":"Autos","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=autos')},
+        {"name":"Comedia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=comedia')},
+        {"name":"Dementia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=dementia')},
+        {"name":"Demonios","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=demonios')},
+        {"name":"Misterio","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=misterio')},
+        {"name":"Drama","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=drama')},
+        {"name":"Ecchi","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=ecchi')},
+        {"name":"Fantasia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=fantasia')},
+        {"name":"Juegos","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=juegos')},
+        {"name":"Historico","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=historico')},
+        {"name":"Terror","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=terror')},
+        {"name":"Magia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=magia')},
+        {"name":"Artes Marciales","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=artes-marciales')},
+        {"name":"Mecha","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=mecha')},
+        {"name":"Musica","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=musica')},
+        {"name":"Parodia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=parodia')},
+        {"name":"Samurai","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=samurai')},
+        {"name":"Romance","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=romance')},
+        {"name":"Colegial","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=colegial')},
+        {"name":"Sci-Fi","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=sci-fi')},
+        {"name":"Space","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=space')},
+        {"name":"Deportes","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=deportes')},
+        {"name":"Super Poderes","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=super-poderes')},
+        {"name":"Vampiros","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=vampiros')},
+        {"name":"Harem","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=harem')},
+        {"name":"Cosas de la vida","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=cosas-de-la-vida')},
+        {"name":"Sobrenatural","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=sobrenatural')},
+        {"name":"Militar","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=militar')},
+        {"name":"Policial","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=policial')},
+        {"name":"Psicologico","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=psicologico')},
+        {"name":"Thriller","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=thriller')},
+        {"name":"Español Latino","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=espaol-latino')},
+        {"name":"Isekai","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=isekai')}]
+      let tipo = [{"name":"Animes","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=animes')},
+        {"name":"Peliculas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=peliculas')},
+        {"name":"Especiales","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=especiales')},
+        {"name":"Ovas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=ovas')},
+        {"name":"Onas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=onas')}];
+      after({
+        "Últimos Capítulos": ncs,
+        "Últimos donghuas": dcs,
+        "Últimos animes": nas,
+        "Ovas, Películas, etc.": etc,
+        "Generos": pg,
+        "Tipo": tipo
+      });
+  
+    } catch (error) {
+      onError(error.name);
     }
-    let etc = [];
-    try {
-      etc = this.getSection(doc.getElementById('ovas').getElementsByClassName('dir1'));
-    } catch (nerror) {
-      error(nerror);
-    }
-
-    let pg = [
-      {"name":"Accion","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=accion')},
-      {"name":"Aventura","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=aventura')},
-      {"name":"Autos","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=autos')},
-      {"name":"Comedia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=comedia')},
-      {"name":"Dementia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=dementia')},
-      {"name":"Demonios","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=demonios')},
-      {"name":"Misterio","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=misterio')},
-      {"name":"Drama","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=drama')},
-      {"name":"Ecchi","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=ecchi')},
-      {"name":"Fantasia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=fantasia')},
-      {"name":"Juegos","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=juegos')},
-      {"name":"Historico","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=historico')},
-      {"name":"Terror","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=terror')},
-      {"name":"Magia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=magia')},
-      {"name":"Artes Marciales","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=artes-marciales')},
-      {"name":"Mecha","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=mecha')},
-      {"name":"Musica","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=musica')},
-      {"name":"Parodia","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=parodia')},
-      {"name":"Samurai","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=samurai')},
-      {"name":"Romance","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=romance')},
-      {"name":"Colegial","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=colegial')},
-      {"name":"Sci-Fi","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=sci-fi')},
-      {"name":"Space","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=space')},
-      {"name":"Deportes","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=deportes')},
-      {"name":"Super Poderes","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=super-poderes')},
-      {"name":"Vampiros","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=vampiros')},
-      {"name":"Harem","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=harem')},
-      {"name":"Cosas de la vida","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=cosas-de-la-vida')},
-      {"name":"Sobrenatural","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=sobrenatural')},
-      {"name":"Militar","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=militar')},
-      {"name":"Policial","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=policial')},
-      {"name":"Psicologico","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=psicologico')},
-      {"name":"Thriller","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=thriller')},
-      {"name":"Español Latino","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=espaol-latino')},
-      {"name":"Isekai","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=isekai')}]
-    let tipo = [{"name":"Animes","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=animes')},
-      {"name":"Peliculas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=peliculas')},
-      {"name":"Especiales","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=especiales')},
-      {"name":"Ovas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=ovas')},
-      {"name":"Onas","path":this.name + '/getMore/' + window.enc(this.baseUrl + '/directorio?genero=onas')}];
-    after({
-      "Últimos Capítulos": ncs,
-      "Últimos donghuas": dcs,
-      "Últimos animes": nas,
-      "Ovas, Películas, etc.": etc,
-      "Generos": pg,
-      "Tipo": tipo
-    });
-
-
   }
 
   /*
@@ -152,14 +155,15 @@ export class JKAnime {
           pd.push({"name": "Pagina Anterior", "image": "./images/prev_nav.png", "path": this.name + "/getMore/" + window.enc(pl.getAttribute("href"))});  
         }
         try{
-          let jsSerie = JSON.parse(getFirstMatch(/var animes = (\[[\s\S]+?\]);/gm, result));
-          for(let i = 0; i < jsSerie.length; i++){
-            pd.push({"name": jsSerie[i].title, 
-                     "path": this.name + "/getDescription/" + window.enc(this.baseUrl + "/" + jsSerie[i].slug + '/'),
-                     "image": jsSerie[i].image
+          let jsSerie = JSON.parse(getFirstMatch(/var animes = ({".+?});/gm, result));
+          for(let i = 0; i < jsSerie.data.length; i++){
+            pd.push({"name": jsSerie.data[i].title, 
+                     "path": this.name + "/getDescription/" + window.enc(this.baseUrl + "/" + jsSerie.data[i].slug + '/'),
+                     "image": jsSerie.data[i].image
             })
           }
         }catch(e){
+          console.log(e.name);
         }
         if(pd.length == 0){
           let series = doc.getElementsByClassName("custom_item2");

@@ -1,5 +1,6 @@
 
 window.serverHost = "http://127.0.0.1:8080/";
+window.petition_controllers = [];
 
 window.atobo = window.atob;
 
@@ -17,20 +18,38 @@ window.dec = function(e){
     return atobo(e.replace(/_/g, '/'));
 }
 
-window.fGet = async function (url, header = {}, returnHeaders = false) {
-    new URL(url) //just to throw exeption if not valid
-    try{window.setLoading();}catch(e){};
-    let data  = "", response = null;
+const removeController = (controller) => {
     try{
-        response = await fetch(window.serverHost + "get/" + enc(url) + "/" + enc(JSON.stringify(header)));
+        window.petition_controllers.splice(window.petition_controllers.indexOf(controller), 1)
+    }catch(e){}//pass
+}
+
+const addController = (controller) => {
+    window.petition_controllers.push(controller);
+}
+
+mFetch = async (path, returnHeaders = false) => {
+    new URL(path) 
+    try{window.setLoading();}catch(e){};
+    let data  = "", response = null;        
+    const control = new AbortController();
+    try{
+        addController(control);
+        response = await fetch(path,{signal:control.signal});
         if (response.status === 200) {
             data =  await response.text();
         }else{
             data = "error " + response.status;
         }
     }catch(e){
-
+        removeController(control);
+        try{window.unsetLoading();}catch(e2){}; 
+        if (e.name === 'AbortError') {
+            throw new Error( 'Consulta interrumpida');
+        } 
+        throw e;
     }
+    removeController(control);
     try{window.unsetLoading();}catch(e){};
     if(returnHeaders){
         let rHeaders =  {};
@@ -40,61 +59,20 @@ window.fGet = async function (url, header = {}, returnHeaders = false) {
     return data;
 }
 
+window.fGet = async function (url, header = {}, returnHeaders = false) {
+    return await mFetch(window.serverHost + "get/" + enc(url) + "/" + enc(JSON.stringify(header)), returnHeaders);
+}
+
 window.fPost = async function (url, header, post) {
-    new URL(url) //just to throw exeption if not valid
-    try{window.setLoading();}catch(e){};
-    let data  = "", response = null;
-    try{
-        response = await fetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(post)));  // `false` makes the request synchronous
-        if (response.status === 200) {
-            data =  await response.text();
-        }else{
-            data = "error " + response.status;
-        }
-    }catch(e){
-        try{window.unsetLoading();}catch(e2){}; 
-        throw e;
-    }
-    try{window.unsetLoading();}catch(e){};
-    return data;
+    return await mFetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(post)));  
 }
 
 window.fetchRedirectPost = async function (url, header) {
-    new URL(url) //just to throw exeption if not valid
-    try{window.setLoading();}catch(e){};
-    let data  = "";
-    try{
-        var response = await fetch(window.serverHost + "rget/" + enc(url) + "/" + enc(JSON.stringify(header)));
-        if (response.status === 200) {
-            data =  await response.text();
-        }else{
-            data = "error " + response.status;
-        }
-    }catch(e){
-        try{window.unsetLoading();}catch(e2){}; 
-        throw e;
-    }
-    try{window.unsetLoading();}catch(e){};
-    return data;
+    return await mFetch(window.serverHost + "rget/" + enc(url) + "/" + enc(JSON.stringify(header)));
 }
 
 window.fRGet = async function (url, header = {}) {
-    new URL(url) //just to throw exeption if not valid
-    let data  = "";
-    try{window.setLoading();}catch(e){};
-    try{
-        var response = await fetch(window.serverHost + "rget/" + enc(url) + "/" + enc(JSON.stringify(header)));  // `false` makes the request synchronous
-        if (response.status === 200) {
-            data =  await response.text();
-        }else{
-            data = "error " + response.status;
-        }
-    }catch(e){
-        try{window.unsetLoading();}catch(e2){}; 
-        throw e;
-    }
-    try{window.unsetLoading();}catch(e){};
-    return data;
+    return await mFetch(window.serverHost + "rget/" + enc(url) + "/" + enc(JSON.stringify(header)));  
 }
 
 window.singleMatch = function (regex, string) {
@@ -137,4 +115,12 @@ window.indexOfProperty = function (array, property, value) {
 
 window.http2file = function (url, headers = {}, path = "file/"){
     return window.serverHost + path + window.enc(url) + "/" + window.enc(JSON.stringify(headers));
+}
+
+window.cancelAllPetitions = () => {
+    const rv = window.petition_controllers.length > 0;
+    window.petition_controllers.forEach(ac => ac.abort());
+    window.petition_controllers = [];
+    try{window.unsetLoading();}catch(e2){};
+    return rv;
 }
