@@ -1,97 +1,13 @@
-<!DOCTYPE html>
-<html lang="es" data-bs-theme ="dark">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>EAnime</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="css/mainb.css">
-  <script type="text/javascript" src="js/fetchpack.js"></script>
-  <script src="../js/lib/aes.js"></script>
-  <script src="../js/lib/mode-ecb.min.js"></script>
-  <script src="../js/lib/hls.js"></script>
-  <script type="module" src="js/main.js"></script>
-  <script src="js/bootstrap.bundle.min.js"></script>
-</head>
-
-<body>
-  <div class="container">
-    <nav class="navbar bg-body-tertiary fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-brand" id="back_button" style="display: none;" onclick="{window.backClick()}">   
-          <i class="bi bi-arrow-left p-2"></i>
-        </div>
-        <a class="navbar-brand">Gean</a>
-        <div class="navbar-brand dropdown mx-auto">
-          <a class="nav-link dropdown-toggle px-3 py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="selected_dropdown">
-              
-          </a>
-          <ul class="dropdown-menu dropdown-menu-start" id="server_list_dropdown">
-              <!--<li><a class="dropdown-item" href="#">JKAnime</a></li>
-              <li><a class="dropdown-item" href="#">CuevanaRun</a></li>-->
-          </ul>
-        </div>
-        <div class="navbar-brand"> 
-          <i class="bi bi-gear-wide p-2" data-bs-toggle="offcanvas" data-bs-target="#opcionesNavbar" aria-expanded="false" aria-label="show options"></i>
-        </div>
-        <div class="navbar-brand"> 
-          <i class="bi bi-search p-2" data-bs-toggle="collapse" data-bs-target="#searchbox" aria-controls="searchbox" aria-expanded="false" aria-label="show search"></i>
-        </div>
-        <div class="collapse navbar-collapse" id="searchbox">
-          <div class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Buscar" id="search-text" aria-label="Search"/>
-              <button class="btn btn-outline-success" onclick="{mediaClick(this, 'sid/search')}">Buscar</button>
-          </div>
-        </div>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="opcionesNavbar" aria-labelledby="OpcionesNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="OpcionesNavbarLabel">Opciones</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body" id="opciones-body">
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" checked>
-          <label class="form-check-label" for="switchCheckChecked">Checked switch checkbox input</label>
-        </div>
-      </div>
-    </div>
-      </div>
-    </nav>
-  </div> 
-
-  <div class="container" id="content-root">
-    <div class="main-content">
-      <div class="servers_container__section"></div>
-      <div class="recent_placeholder"></div>
-      <div class="fav_placeholder"></div>
-    </div>
-</div>
-    <div class="modal text-center" data-bs-backdrop="static" tabindex="-1" id="loading">
-      <div class="modal-dialog modal-dialog-centered" >
-        <div class="spinner-grow m-auto" style="width: 3rem; height: 3rem;" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-  </div>
-  <div id="modal-list" class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 id="modal-title" class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"  onclick="{window.loading.hide()}"></button>
-      </div>
-      <div class="modal-body" id="modal-body">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="{window.loading.hide()}">Cancelar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+<!DOCTYPE HTML>
+ 
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="1; url=main.html">
+ 
+<script>
+  window.location.href = "main.html"
+</script>
+ 
+<title>main redirect</title>
+<body background="#000">
+Accede desde <a href='main.html'>aquí.</a>
 </body>
-
-</html>

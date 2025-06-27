@@ -26,8 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
   window.serverHost = "http://" + window.location.hostname + ":8080/";
-
-  window.loading = new bootstrap.Modal(document.getElementById("loading"));
+  initLoading();
 
   content_root = document.getElementById("content-root");
 
@@ -51,6 +50,24 @@ document.addEventListener("DOMContentLoaded", function () {
   server_selected(sid, sn);
   loadSourcesList(document.getElementById("server_list_dropdown"));
   loadSettings();
+
+  function initLoading() {
+    const loadingDiv = document.getElementById("loading");
+    window.loading = new bootstrap.Modal(loadingDiv);
+    loadingDiv.addEventListener('shown.bs.modal', () => {
+      window.loading.timeOutId = setTimeout(() => {
+        loadingDiv.addEventListener('click', window.backClick);
+        document.getElementById("modal-cancel-button").classList.remove("d-none");
+      }, 5000);
+      return true;
+    });
+    loadingDiv.addEventListener('hide.bs.modal', () => {
+      clearTimeout(window.loading.timeOutId);
+      document.getElementById("modal-cancel-button").classList.add("d-none");
+      loadingDiv.removeEventListener('click', window.backClick);
+      return true;
+    });
+  }
 });
 
 const loadSettings = () => {

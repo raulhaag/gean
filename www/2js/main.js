@@ -135,6 +135,22 @@ window.changeKeyManager = () => {
 
 let loadingDiv = null;
 let timeOutLoadingId = null;
+let timeOutCancelLoading = null;
+const calcelLoad = (event) => {
+  if (event == null) {
+    return;
+  }    
+  stopPropagationForKeys(event);
+  switch (event.key) {
+      case "Enter":
+      case "NumpadEnter":
+      case "Space":
+      case " ":
+      backClick();
+      window.onkeydown = stopPropagationForKeys
+  }
+}
+
 window.showLoading = () => {
   if (window.lockKeys) {
     window.lockKeyboard();
@@ -148,12 +164,19 @@ window.showLoading = () => {
       '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
     loadingDiv.classList.add("loading_container");
     document.body.append(loadingDiv);
+    timeOutCancelLoading = setTimeout(()=>{
+      document.getElementById('loading-cancel-message').classList.remove('message-hide');
+      window.onkeydown = calcelLoad
+    }, 5000);
   } else {
     clearTimeout(timeOutLoadingId);
   }
 };
 
 window.hideLoading = () => {
+  clearTimeout(timeOutCancelLoading);
+  window.onkeydown = stopPropagationForKeys
+  document.getElementById('loading-cancel-message').classList.add('message-hide');
   timeOutLoadingId = setTimeout(() => {
     window.unlockKeyboard();
     try {
@@ -538,6 +561,7 @@ window.generateSelectorDialog = (
   document.body.appendChild(div);
   let list = document.getElementsByClassName("option-selector-list")[0];
   document.__optionsDiv = div;
+  window.hideLoading();
   document.onkeydown = (event) => {
     let cidx = parseInt(lOSelected.id.split("_")[1]);
     switch (event.key) {
