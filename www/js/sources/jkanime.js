@@ -12,7 +12,8 @@ export class JKAnime {
       out.push({
         'name': element.getElementsByTagName('img')[0].getAttribute('alt'),
         'path': this.name + "/getLinks/" + window.enc(element.getElementsByTagName('a')[0].getAttribute("href")),
-        'image': element.getElementsByTagName('img')[0].getAttribute('src'),
+        'image': `https://cdn.jkdesu.com/assets/images/animes/image/${pparts[3]}.jpg`,
+        'image2': element.getElementsByTagName('img')[0].getAttribute('src'),
         'parentPath': this.name + "/getDescription/" + window.enc(pparts.slice(0, pparts.length - 2).join("/"))
       })
     };
