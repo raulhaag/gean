@@ -9,6 +9,7 @@ from urllib.error import HTTPError, URLError
 import traceback
 import re, subprocess, platform
 from urllib.error import HTTPError
+import sys
 
 thread = None
 server = None
@@ -669,7 +670,6 @@ def replaceKnows(path):
     return path
 
 def check_for_update():
-    import sys
 
     if os.path.exists("version"):
         c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
@@ -707,9 +707,11 @@ def check_for_update():
 def download_file(url, filename):
     request.urlretrieve(url, filename)
 
-
-server = ThreadingSimpleServer(("127.0.0.1", 8080), handler)
-
+server = None
+if len(sys.argv) == 2 and sys.argv[1] == "r": #enable remote
+    server = ThreadingSimpleServer(("", 8080), handler)
+else:
+    server = ThreadingSimpleServer(("127.0.0.1", 8080), handler)
 
 def sf(path):
     web_path = path
@@ -786,7 +788,6 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
             thread.start()
             try:
                 import webbrowser
-
                 window = webbrowser.open(page)
             except Exception as e:
                 print(e)
