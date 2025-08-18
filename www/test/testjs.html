@@ -15,6 +15,7 @@
     <script type="module">
         //import {DailyMotion} from "../js/vservers/dailymot.js"
         import {Vidguard} from "../js/vservers/vidgd.js";
+        import {Hglink} from "../js/vservers/hglink.js"
         //import{DoraFlixIn} from "../js/sources/doraflixin.js";
         //import {AnimeOnlineNinja} from "../js/sources/aoninja.js"
         /*import {FileMoon} from '../js/vservers/filemoon.js'*/
@@ -34,7 +35,8 @@
             return [...str.matchAll(regex)];
         }
         //new StreamWish().getDDL(console.log,console.log,"https://ghbrisk.com/e/0ph9wqbvse42")
-        let web = "https://ghbrisk.com/e/0ph9wqbvse42";
+        let web = "https://hglink.to/e/bv0ay2p5vd8t";
+        let data = new Hglink().getDDL(console.log, console.log(), web);
         //let content = await fGet(web);
         /*var match = getFirstMatch(/data-file-id="(.+?)"/gm, content);
         if (match) {
@@ -42,7 +44,7 @@
             let jsondata = JSON.parse(content);
             after(jsondata['purchase']['cdnUrl'])                
         }/*/
-        let data = new Vidguard().getDDL(console.log, console.log(), "https://vgfplay.com/e/k3gG5q3ZymkE1N2");
+        //let data = new Vidguard().getDDL(console.log, console.log(), "https://vgfplay.com/e/k3gG5q3ZymkE1N2");
         //let data = new DailyMotion().getDDL(console.log, console.log, "https://www.dailymotion.com/embed/video/x8qa1qc");
         //console.log(data)
         //new DoraFlixIn().getLinks(console.log, console.log, enc("https://doramasflix.in/episodios/hierarchy-1x1"));

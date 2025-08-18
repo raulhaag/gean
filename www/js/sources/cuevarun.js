@@ -153,9 +153,9 @@ export class CuevaRun {
       try{
         let response = await fGet(this.baseUrl + "/search?q=" + query);
         var parser = new DOMParser();
-        var doc = parser.parseFromString(result, "text/html");
-        let allPages = doc.getElementsByClassName('row');
-        let pd = this.getSeries(allPages[3].getElementsByTagName("article"));
+        var doc = parser.parseFromString(response, "text/html");
+        let allPages = doc.getElementsByClassName('container');
+        let pd = this.getSeries(allPages[2].getElementsByTagName("article"));
         after(pd);
       } catch (error) {
         onError(error);
