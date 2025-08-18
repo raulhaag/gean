@@ -23,7 +23,7 @@ import { DoodStream } from "./doodstream.js";
 import { BurstCloud } from "./burst.js";
 import { Mp4Upload } from "./mp4upload.js";
 import { MaRu } from "./maru.js";
-
+import { Hglink } from "./hglink.js";
 let interceptors = []
 
 export function registerInterceptor(contains, callback){
@@ -61,6 +61,7 @@ let servers = {"fembed": new Fembed(),
                 "burstcloud.co": new BurstCloud(),
                 "mp4upload.com": new Mp4Upload(),
                 'mail.ru': new MaRu(),
+                'hglink': new Hglink(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -142,7 +143,9 @@ export async function getDDL(after, onError, web) {
     }else if(web.indexOf("mp4upload.com") != -1){
         return servers["mp4upload.com"].getDDL(after, onError, cleanInfo(web));
     }else if(web.indexOf("mail.ru") != -1){
-            return servers["mail.ru"].getDDL(after, onError, cleanInfo(web));
+        return servers["mail.ru"].getDDL(after, onError, cleanInfo(web));
+    }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
+        return servers["hglink"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -220,6 +223,8 @@ export function getName(web) {
         name =  "BurstCloud";    
     }else if(web.indexOf("mail.ru") != -1){
             name =  "mail.ru";
+    }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
+        name =  "hglinkwish";
     }else {
         name = "";
     }
@@ -257,7 +262,9 @@ export function getPreferer(list){
                     "dailymotion.com",
                     "vidhide",
                     "doodstream",
-                    "mail.ru"
+                    "mail.ru",
+                    'dhcplay.com',
+                    'hglink.to'
                 ];
     
     let ordered = [];
