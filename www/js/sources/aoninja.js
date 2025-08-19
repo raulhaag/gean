@@ -1,7 +1,7 @@
 export class AnimeOnlineNinja {
     constructor() {
       this.name = "AONinja";
-      this.baseUrl = "http://ww3.animeonline.ninja";
+      this.baseUrl = window.dec("aHR0cHM6Ly93dzMuYW5pbWVvbmxpbmUubmluamE=");
     }
 
     getSeries = (flis, onError = console.log) => {
@@ -10,7 +10,7 @@ export class AnimeOnlineNinja {
             for (var i = 0; i < flis.length; i++) {
                 nas.push({
                     "name": flis[i].getElementsByTagName('h3')[0].innerText,
-                    "image": window.http2file(flis[i].getElementsByTagName('img')[0].getAttribute('data-src').replace("https:", "http:")),
+                    "image": flis[i].getElementsByTagName('img')[0].getAttribute('data-src'),
                     "path": this.name + "/getDescription/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
                 });
             }
@@ -18,6 +18,49 @@ export class AnimeOnlineNinja {
             onError(nerror);
           }
         return nas;
+    }
+
+    async getMore(after, onError, more , title = ""){
+      let web = window.dec(more);
+      if(web === "Homepage"){
+        this.getFrontPage(after, onError);
+        return;
+      }
+      let preLinks = [
+        {
+          "name": "Home",
+          "image": "./images/home_nav.png",
+          "path": this.name + "/getMore/" + window.enc("Homepage"),
+        }
+      ];
+      let posLinks = [];
+      try{
+        let result = await window.fGet(web, {referer: this.baseUrl});
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(result, "text/html");
+        if(/^.*(\d)\/$/gm.test(web)){
+          let parted = web.split("/");
+          let page = 0;
+            try{
+              parted.pop();
+              page = parseInt(parted.pop(), 10);
+            }catch{}
+          let wbase = parted.join("/") + "/";
+          if(page > 1){
+            preLinks.push({"name": "Pagina Anterior", "image": "./images/prev_nav.png", "path": this.name + "/getMore/" + window.enc(wbase + (page - 1) + "/")}); 
+          }
+          posLinks.push({"name": "Pagina siguiente", "image": "./images/next_nav.png", "path": this.name + "/getMore/" + window.enc(wbase + (page + 1) + "/")});
+        }else{
+          posLinks.push({"name": "Pagina siguiente", "image": "./images/next_nav.png", "path": this.name + "/getMore/" + window.enc(web + "page/2/")});
+        }
+          let flis = doc.getElementsByClassName("items")[0].getElementsByClassName("tvshows");
+          let naa = this.getSeries(flis);
+           after({
+          [title]: preLinks.concat(naa, posLinks),
+        });
+      }catch(e){
+        onError(e);
+      }
     }
 
     async getFrontPage(after, onError = console.log) {
@@ -36,7 +79,7 @@ export class AnimeOnlineNinja {
           for (var i = 1; i < flis.length; i++) {
               ncs.push({
                 "name": flis[i].getElementsByTagName('h3')[0].innerText + " - " + flis[i].getElementsByTagName('h4')[0].innerText.trim(),
-                "image": window.http2file(flis[i].getElementsByTagName('img')[0].getAttribute('data-src').replace("https:", "http:")),
+                "image": flis[i].getElementsByTagName('img')[0].getAttribute('data-src'),
                 "path": this.name + "/getLinks/" + enc(flis[i].getElementsByTagName('a')[0].getAttribute("href")),
               });
             }
@@ -69,7 +112,29 @@ export class AnimeOnlineNinja {
           "Últimos Episodios": ncs,
           "En Emisión": nas,
           "Últimos Animes Agregados": naa,
-          "Últimos Peliculas Agregadas": nam
+          "Últimos Peliculas Agregadas": nam,
+          "Navegar": [
+            {
+              "name": "Audio latino",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/genero/audio-latino/")
+            },
+            {
+              "name": "Peliculas",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/pelicula/")
+            },
+            {
+              "name": "Live Action",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/genero/live-action/")
+            },
+            {
+              "name": "Blu ray - dvd",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/genero/blu-ray-dvd-2/")
+            },
+            {
+              "name": "Sin censura",
+              "path": this.name + '/getMore/' + window.enc(this.baseUrl + "/genero/sin-censura/")
+            },
+          ]
         });
       } catch (error) {
         onError(error.name);
@@ -93,7 +158,7 @@ export class AnimeOnlineNinja {
         for(let i = 0; i < ps.length; i++){
           description += ps[i].innerText;
         }
-        let image = window.http2file(doc.querySelector(".poster > img:nth-child(1)").getAttribute("data-src").replace("https:", "http:"));
+        let image = doc.querySelector(".poster > img:nth-child(1)").getAttribute("data-src");
         let jsChapters = doc.querySelectorAll("div.se-c > div > ul > li");
         let chapters = [];
         let clen = 0;
@@ -153,8 +218,8 @@ export class AnimeOnlineNinja {
       if(extra == "MULTISERVER"){
         extra = "";
       }
-      let rjd = JSON.parse(await fGet(rpage.replace("https:", "http:"), {"Referer": page}));
-      let rds = await fGet(rjd["embed_url"].replace("https:", "http:"), {"Referer": page});
+      let rjd = JSON.parse(await fGet(rpage, {"Referer": page}));
+      let rds = await fGet(rjd["embed_url"], {"Referer": page});
       let rgroups = getAllMatches(/OD_(...)([\s\S]+?)<\/div>\r\n\t\t\t\t/gm, rds)
       let oLinks = [rjd["embed_url"]];
       for(var j = 0; j < rgroups.length; j++){

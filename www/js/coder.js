@@ -19,7 +19,7 @@ export function generateCategory(title, items) {
           out += `
               <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"] + "/" + items[i]["name"]}')}">
                 <div class="card text-bg-dark" style="width:100%; aspect-ratio:0.65;">
-                  <img src="${items[i]["image"]}" alt="Image 1" class="card-img" style="width:100%; aspect-ratio:0.65; object-fit: cover;">
+                  <img src="${items[i]["image"]}" referrerpolicy="no-referrer" alt="Image 1" class="card-img" style="width:100%; aspect-ratio:0.65; object-fit: cover;">
                   <div class="card-img-overlay" style="display:flex; align-items:flex-end; backgroud-color='#FFF9'">
                     <p class="card-text" style="text-shadow: 0px 0px 5px black, 0px 0px 2px black ;">${items[i]["name"]}</p>
                   </div>
@@ -117,7 +117,7 @@ export function getPlayer(options, items = [], videoSrc, subtitles = "", title='
         <h5 class="align-content-center col-12 col-md-7">${title}</h5>
         <div class="dropdown-group d-flex align-content-end align-items-end col-12 col-md-5" >
           <div class="dropdown ms-auto me-3"> 
-          <a class="btn btn-secondary dropdown-toggle" style="width: 120px;" href="#" id="dropdown-server-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="btn btn-secondary dropdown-toggle" style="width: 120px;overflow: hidden;" href="#" id="dropdown-server-select" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               ${selected_server}
           </a>          
           <ul class="dropdown-menu">`;
