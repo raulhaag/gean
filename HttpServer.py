@@ -647,7 +647,7 @@ def cacheAndGet(path=[], server=None):
 
 def replaceKnows(path):
     try:
-        url = decode(path[2])
+        '''url = decode(path[2])
         knows = [("ww3.animeonline.ninja", "MzguNjIuMjI0Ljc3", "animeonline.ninja"), 
                  ("www.animeonline.ninja", "MzguNjIuMjI0Ljc3", "animeonline.ninja"),
                  ("animeonline.ninja", "MzguNjIuMjI0Ljc3", "animeonline.ninja")]
@@ -664,7 +664,7 @@ def replaceKnows(path):
                         print(f"Error decoding headers: {e}")
                 else:
                     path.append(encode('{"host": "'+ key[2] + '"}'))   
-                path[2] = encode(url.replace(key[0], decode(key[1])))
+                path[2] = encode(url.replace(key[0], decode(key[1])))'''
     except:
         pass
     return path

@@ -1,5 +1,4 @@
 import { AnimeFlvNet } from "./animeflv.js";
-import {  AnimeFenix } from "./animefenix.js";
 import { JKAnime } from "./jkanime.js";
 import { SoloLatino } from "./sololatino.js";
 import { SoloLatinoSyP } from "./sololatinosyp.js";
@@ -13,7 +12,6 @@ export function openInNewTab(url) {
         window.open(url, '_blank').focus();
 }
 let servers = {"animeflv.net": new AnimeFlvNet(),
-"AnimeFenix": new AnimeFenix(),
 "jkanime": new JKAnime(),
 "sololatino": new SoloLatino(),
 "sololatinosyp": new SoloLatinoSyP(),
