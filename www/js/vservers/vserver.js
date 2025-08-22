@@ -24,6 +24,7 @@ import { BurstCloud } from "./burst.js";
 import { Mp4Upload } from "./mp4upload.js";
 import { MaRu } from "./maru.js";
 import { Hglink } from "./hglink.js";
+import { Uqload } from "./uqload.js";
 let interceptors = []
 
 export function registerInterceptor(contains, callback){
@@ -62,6 +63,7 @@ let servers = {"fembed": new Fembed(),
                 "mp4upload.com": new Mp4Upload(),
                 'mail.ru': new MaRu(),
                 'hglink': new Hglink(),
+                'uqload': new Uqload(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -114,7 +116,7 @@ export async function getDDL(after, onError, web) {
         return servers["streamlare.com"].getDDL(after, onError, web);*/
     }else if(web.indexOf("embedsito.net/reproamz") != -1){
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
-    }else if(web.indexOf("mixdrop") != -1){
+    }else if((web.indexOf("mixdrop") != -1) || (web.indexOf('mxdrop') != -1)){
             return servers["mixdrop"].getDDL (after, onError, cleanInfo(web));
     }else if(web.indexOf("streamtape.com") != -1){
         return servers["streamtape.com"].getDDL(after,onError, web);
@@ -146,6 +148,8 @@ export async function getDDL(after, onError, web) {
         return servers["mail.ru"].getDDL(after, onError, cleanInfo(web));
     }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
         return servers["hglink"].getDDL(after, onError, cleanInfo(web));
+    }else if((web.indexOf("uqload") != -1)){
+        return servers["uqload"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -197,7 +201,7 @@ export function getName(web) {
         name = "Embedsito(Amz)";
     }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
         name = "StreamSB";
-    }else if(web.indexOf("mixdrop") != -1){
+    }else if((web.indexOf("mixdrop") != -1) || (web.indexOf('mxdrop') != -1)){
         name = "Mixdrop";
     }else if(web.indexOf("streamtape.com") != -1){
         name = "Streamtape";
@@ -225,6 +229,8 @@ export function getName(web) {
             name =  "mail.ru";
     }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
         name =  "hglinkwish";
+    }else if((web.indexOf("uqload") != -1)){
+        name = "Uqload";
     }else {
         name = "";
     }
@@ -255,7 +261,7 @@ export function getPreferer(list){
                     "mp4upload.com",
                     "burstcloud.co",
                     "yourupload",
-                    "mixdrop",
+                    "mixdrop","mxdrop",
                     "um.php?e=",
                     //"plustr",
                     "vk.com/",
@@ -264,7 +270,8 @@ export function getPreferer(list){
                     "doodstream",
                     "mail.ru",
                     'dhcplay.com',
-                    'hglink.to'
+                    'hglink.to',
+                    'uqload'
                 ];
     
     let ordered = [];
