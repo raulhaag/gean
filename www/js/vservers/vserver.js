@@ -25,6 +25,7 @@ import { Mp4Upload } from "./mp4upload.js";
 import { MaRu } from "./maru.js";
 import { Hglink } from "./hglink.js";
 import { Uqload } from "./uqload.js";
+import { Hexload } from "./hexload.js";
 let interceptors = []
 
 export function registerInterceptor(contains, callback){
@@ -64,6 +65,7 @@ let servers = {"fembed": new Fembed(),
                 'mail.ru': new MaRu(),
                 'hglink': new Hglink(),
                 'uqload': new Uqload(),
+                'hexload': new Hexload(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -150,6 +152,8 @@ export async function getDDL(after, onError, web) {
         return servers["hglink"].getDDL(after, onError, cleanInfo(web));
     }else if((web.indexOf("uqload") != -1)){
         return servers["uqload"].getDDL(after, onError, cleanInfo(web));
+    }else if((web.indexOf("hexload") != -1)){
+        return servers["hexload"].getDDL(after, onError, cleanInfo(web));
     }else{
         onError("Not supported server");
     }
@@ -231,6 +235,8 @@ export function getName(web) {
         name =  "hglinkwish";
     }else if((web.indexOf("uqload") != -1)){
         name = "Uqload";
+    }else if((web.indexOf("hexload") != -1)){
+        name = "Hexload";
     }else {
         name = "";
     }
@@ -271,6 +277,7 @@ export function getPreferer(list){
                     "mail.ru",
                     'dhcplay.com',
                     'hglink.to',
+                    'hexload',
                     'uqload'
                 ];
     
