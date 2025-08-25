@@ -1,4 +1,4 @@
-import { Hglink } from "./hglink";
+import { Hglink } from "./hglink.js";
 
 export class StreamWish {
     constructor() {}
