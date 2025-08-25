@@ -1,8 +1,24 @@
 export class StreamWish {
     constructor() {}
     async getDDL(after, onError, web){
-        try{
-            let content = await fGet(web);
+    try{
+            const main = [
+                'kravaxxa.com',
+                'davioad.com',
+                'haxloppd.com',
+                'tryzendm.com',
+                'dumbalag.com',
+            ];
+            const rules = [
+                'dhcplay.com',
+                'hglink.to',
+                'test.hglink.to',
+                'wish-redirect.aiavh.com',
+            ];
+            const url = new URL(web);
+            const destination = main[Math.floor(Math.random() * main.length)];
+            const finalURL = 'https://' + destination + url.pathname + url.search
+            const content = await fGet(finalURL, {referer: 'https://' + url.hostname});
             var match = getFirstMatch(/(eval\(function\(p,a,c,k,e,d\)[\S\s]+?\.split\('\|'\)\)\))/gm, content);
             if (match) {
                 var funcionDesofuscada = match.replace('eval', 'return');
