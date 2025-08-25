@@ -23,7 +23,6 @@ import { DoodStream } from "./doodstream.js";
 import { BurstCloud } from "./burst.js";
 import { Mp4Upload } from "./mp4upload.js";
 import { MaRu } from "./maru.js";
-import { Hglink } from "./hglink.js";
 import { Uqload } from "./uqload.js";
 import { Hexload } from "./hexload.js";
 let interceptors = []
@@ -63,7 +62,6 @@ let servers = {"fembed": new Fembed(),
                 "burstcloud.co": new BurstCloud(),
                 "mp4upload.com": new Mp4Upload(),
                 'mail.ru': new MaRu(),
-                'hglink': new Hglink(),
                 'uqload': new Uqload(),
                 'hexload': new Hexload(),
             };
@@ -128,7 +126,7 @@ export async function getDDL(after, onError, web) {
         return servers["voe"].getDDL (after, onError, cleanInfo(web));
     }else if((web.indexOf("vidhide") != -1)|| (web.indexOf('ryderjet.com') != -1)) {
         return servers["vidhide"].getDDL (after, onError, cleanInfo(web));
-    }else if (((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) ) {
+    }else if (((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) || (web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)) {
         return servers["streamwish"].getDDL (after, onError, cleanInfo(web));
     }else if ((web.indexOf("filemoon.") != -1)) {
         return servers["filemoon"].getDDL (after, onError, cleanInfo(web));
@@ -148,8 +146,6 @@ export async function getDDL(after, onError, web) {
         return servers["mp4upload.com"].getDDL(after, onError, cleanInfo(web));
     }else if(web.indexOf("mail.ru") != -1){
         return servers["mail.ru"].getDDL(after, onError, cleanInfo(web));
-    }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
-        return servers["hglink"].getDDL(after, onError, cleanInfo(web));
     }else if((web.indexOf("uqload") != -1)){
         return servers["uqload"].getDDL(after, onError, cleanInfo(web));
     }else if((web.indexOf("hexload") != -1)){
@@ -215,7 +211,7 @@ export function getName(web) {
         name = "FileLions";
     }else if((web.indexOf("voe") != -1)){
         name = "VOE";
-    }else if ((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) {
+    }else if (((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) || (web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)) {
         name = "StreamWish";
     }else if (web.indexOf("plustr") != -1) {
         name = "Plustream (Solo reproductor interno android)";
@@ -231,8 +227,6 @@ export function getName(web) {
         name =  "BurstCloud";    
     }else if(web.indexOf("mail.ru") != -1){
             name =  "mail.ru";
-    }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
-        name =  "hglinkwish";
     }else if((web.indexOf("uqload") != -1)){
         name = "Uqload";
     }else if((web.indexOf("hexload") != -1)){
@@ -276,7 +270,7 @@ export function getPreferer(list){
                     "doodstream",
                     "mail.ru",
                     'dhcplay.com',
-                    'hglink.to',
+                    'hglink',
                     'hexload',
                     'uqload'
                 ];
