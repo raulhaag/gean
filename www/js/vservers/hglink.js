@@ -26,7 +26,7 @@ export class Hglink {
                 var data = desofuscado();
                 var dlink = JSON.parse(getFirstMatch(/var links\s*=\s*(.+?})/gm, data));
                 for(const key in dlink){
-                    if(dlink[key].indexOf("http") != -1){
+                    if((dlink[key].indexOf("http") != -1) && (dlink[key].indexOf(".m3u8") != -1)){
                         after({"video":dlink[key]});
                         return;
                     }
