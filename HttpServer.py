@@ -689,6 +689,8 @@ def check_for_update():
         "https://github.com/raulhaag/gean/archive/refs/heads/master.zip", "update.zip"
     )
     with ZipFile("update.zip", "r") as zipf:
+        if os.path.exists('./www'):
+            shutil.rmtree('./www')
         zipinfos = zipf.infolist()
         for zipinfo in zipinfos:
             zipinfo.filename = zipinfo.filename.replace("gean-master/", "")

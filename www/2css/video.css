@@ -102,4 +102,20 @@ video::cue {
     color: white; /* Color del texto */
     background-color: transparent; /* Fondo transparente */
     text-shadow: -1px -1px 0 black, 2px -1px 0 black, -1px 2px 0 black, 2px 2px 0 black; /* Contorno */
-  }
+}
+.seek-preview {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 2em;
+    z-index: 1020;
+    pointer-events: none;
+    text-align: center; /* Añadido para centrar el texto */
+    line-height: 1.2; /* Añadido para un mejor espaciado */
+}
+
