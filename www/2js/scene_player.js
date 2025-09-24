@@ -11,7 +11,11 @@ export class ScenePlayer extends Scene {
   maxDoubleAccumulator = 7;
   player = null;
   last = null;
-  constructor(options, items, parent, subtitles = '') {
+  seekTimeout = null;
+  previewTime = 0;
+  seekStartTime = 0;
+  previewElement = null;
+  constructor(options, items, parent, subtitles = '', currentTime = 0) {
     super(false);
     this.preTitle = document.title
     document.title = window.currentTitle + window.currentChapter
@@ -21,6 +25,7 @@ export class ScenePlayer extends Scene {
     this.items = items;
     this.cache = appSettings["cache"][0];
     this.subtitles = subtitles;
+    this.startTime = currentTime;
     if(this.options["video"].indexOf(".m3u") != -1){
       this.cache = false;
       this.hls = true;
@@ -87,6 +92,7 @@ export class ScenePlayer extends Scene {
       getName(this.items[0]) +
       `</div>
             </div><div class="player-video-container">
+                    <div class="seek-preview" style="display: none;"></div>
                     <video id="player-container_1_0" class="video-js" controls>
                     <source src="` +
       videoSrc +
@@ -108,6 +114,12 @@ export class ScenePlayer extends Scene {
       return;
     }
     this.player = document.getElementsByTagName("video")[0];
+    this.previewElement = document.getElementsByClassName("seek-preview")[0];
+    if (this.startTime > 0) {
+      this.player.onloadedmetadata = () => {
+          this.player.currentTime = this.startTime;
+      };
+    }
     if(this.hls){
       var hls_config = {
         autoStartLoad: true,
@@ -115,21 +127,253 @@ export class ScenePlayer extends Scene {
         maxBufferSize: 50*1000*1000,
       };
       if (!Hls.isSupported()) {
-        alert("Hls no soportado por el navegador");
+        error("Hls no es soportado por este navegador.");
       } else {
         this.hlsObj = new Hls(hls_config);
         this.hlsObj.loadSource(this.options["video"].split("|||")[0]);
         this.hlsObj.attachMedia(this.player);
       }
     }
-
-    this.last = document.getElementsByTagName("video")[0];
+    this.last = this.player;
     if (appSettings["fullscreen"][0]) this.goFullScreen();
-    if (appSettings["autoplay"][0]) {
+    if (appSettings["autoplay"][0] || this.startTime > 0) {
       this.player.play();
     }
     hideLoading();
     changeKeyManager();
+  }
+
+  _formatTime(timeInSeconds) {
+    const date = new Date(null);
+    date.setSeconds(timeInSeconds);
+    const timeString = date.toISOString().substr(11, 8);
+    if (timeInSeconds < 3600) {
+        return timeString.substr(3);
+    }
+    return timeString;
+  }
+
+  _commitSeek() {
+    if (this.seekTimeout) {
+        clearTimeout(this.seekTimeout);
+        this.player.currentTime = this.previewTime;
+        this.seekStartTime = 0;
+        this.previewTime = 0;
+        this.previewElement.style.display = 'none';
+        this.seekTimeout = null;
+    }
+  }
+
+  _cancelSeek() {
+    if (this.seekTimeout) {
+        clearTimeout(this.seekTimeout);
+        this.previewTime = 0;
+        this.seekStartTime = 0;
+        this.previewElement.style.display = 'none';
+        this.seekTimeout = null;
+    }
+  }
+
+  _handlePlayerKeys(event) {
+    switch (
+      event.key //control player
+    ) {
+      case 'ArrowUp':
+        this._cancelSeek();
+        if (this.isFullscreen()) {
+          exitFullScreen();
+        } else {
+          if (this.itemExists(0, 0)) {
+            this.last.classList.remove("selected");
+            this.last = this.getItem(0, 0);
+            this.last.classList.add("selected");
+          }
+          tease_menu(true);
+        }
+        break;
+      case 'ArrowDown':
+        this._cancelSeek();
+        if (this.isFullscreen()) {
+          this.switchPlayer();
+        } else {
+          this.switchPlayer();
+          this.goFullScreen();
+          this.switchPlayer();
+        }
+        break;
+      case 'ArrowLeft':
+        clearTimeout(this.seekTimeout);
+        if (this.previewTime === 0) {
+            this.seekStartTime = this.player.currentTime;
+            this.previewTime = this.player.currentTime;
+        }
+        this.previewTime -= this.increments[this.doubleAccumulator];
+        if (this.previewTime < 0) this.previewTime = 0;
+        
+        const differenceLeft = this.previewTime - this.seekStartTime;
+        const signLeft = differenceLeft > 0 ? '+' : '';
+        this.previewElement.innerHTML = `${this._formatTime(this.previewTime)} / ${this._formatTime(this.player.duration)} <br> (${signLeft}${Math.round(differenceLeft)}s)`;
+        this.previewElement.style.display = 'block';
+
+        this.seekTimeout = setTimeout(() => {
+            this.player.currentTime = this.previewTime;
+            this.previewTime = 0;
+            this.seekStartTime = 0;
+            this.previewElement.style.display = 'none';
+            this.seekTimeout = null;
+        }, 500);
+        break;
+      case 'ArrowRight':
+        clearTimeout(this.seekTimeout);
+        if (this.previewTime === 0) {
+            this.seekStartTime = this.player.currentTime;
+            this.previewTime = this.player.currentTime;
+        }
+        this.previewTime += this.increments[this.doubleAccumulator];
+        if (this.previewTime > this.player.duration) this.previewTime = this.player.duration;
+        
+        const differenceRight = this.previewTime - this.seekStartTime;
+        const signRight = differenceRight > 0 ? '+' : '';
+        this.previewElement.innerHTML = `${this._formatTime(this.previewTime)} / ${this._formatTime(this.player.duration)} <br> (${signRight}${Math.round(differenceRight)}s)`;
+        this.previewElement.style.display = 'block';
+
+        this.seekTimeout = setTimeout(() => {
+            this.player.currentTime = this.previewTime;
+            this.previewTime = 0;
+            this.seekStartTime = 0;
+            this.previewElement.style.display = 'none';
+            this.seekTimeout = null;
+        }, 500);
+        break;
+      case "Enter":
+      case "NumpadEnter":
+      case "Space":
+      case " ":
+        if (this.seekTimeout) {
+            this._commitSeek();
+            return;
+        }
+        if (this.doublepress) {
+          this.switchPlayer();
+          this.goFullScreen();
+          this.switchPlayer();
+          return;
+        }
+        this.switchPlayer();
+        break;
+      default:
+        this._cancelSeek();
+        break;
+    }
+  }
+
+  _handleOptionsKeys(event) {
+    let itempos = this.last.id.split("_");
+    let cc = parseInt(itempos[itempos.length - 1]);
+    let cr = parseInt(itempos[itempos.length - 2]);
+    switch (
+      event.key //control nav options
+    ) {
+      case 'ArrowUp':
+        if (cr == 0) {
+          //manageMenu(null);
+          return;
+        }
+        let desph = cc;
+        while (desph >= 0) {
+          if (this.itemExists(cr - 1, desph)) {
+            this.last.classList.remove("selected");
+            this.last = this.getItem(cr - 1, desph);
+            this.last.classList.add("selected");
+            break;
+          }
+          desph--;
+        }
+        break;
+      case 'ArrowDown':
+        this.last.classList.remove("selected");
+        this.last = this.player;
+        this.last.classList.add("selected");
+        break;
+      case 'ArrowLeft':
+        if (cc == 1) {
+          tease_menu(true);
+        }
+        if (cc == 0) {
+          this.last.classList.remove("selected");
+          menuManager();
+        } else {
+          this.last.classList.remove("selected");
+          this.last = this.getItem(cr, cc - 1);
+          this.last.classList.add("selected");
+        }
+        break;
+      case 'ArrowRight':
+        if (this.itemExists(cr, cc + 1)) {
+          this.last.classList.remove("selected");
+          this.last = this.getItem(cr, cc + 1);
+          this.last.classList.add("selected");
+        }
+        if (cc == 0) {
+          tease_menu(false);
+        }
+        break;
+      case "Enter":
+      case "NumpadEnter":
+      case "Space":
+      case " ":
+        let options = JSON.parse(this.last.dataset["options"]);
+        if (options.hasOwnProperty("video")) {
+          delete options.video;
+          generateSelectorDialog(
+            (value, tagName) => {
+              this.last.innerHTML = tagName;
+              const currentTime = this.player.currentTime;
+              const vdata = value.split("|||");
+              this.player.src = vdata[0];
+              this.player.onloadedmetadata = () => {
+                  this.player.currentTime = currentTime;
+                  this.player.play();
+              };
+            },
+            "Elige una resolución",
+            options
+          );
+          return;
+        }
+        generateSelectorDialog(
+          (selected) => {
+            let best = [selected];
+            var keys = Object.keys(options);
+            keys.forEach(function (key) {
+              if (options[key] != selected) {
+                best.push(options[key]);
+              }
+            });
+            let mask = (value) => {
+              const currentTime = this.player.currentTime;
+              setScene(new ScenePlayer(value, best, this.parent, this.subtitles, currentTime));
+            };
+            let tryOtherOnError = (errorMessage) => {
+              if (best.length > 1) {
+                best.shift();
+                getDDL(mask, tryOtherOnError, best[0]);
+              } else {
+                error(errorMessage);
+              }
+            };
+            if (best.length > 0) {
+              getDDL(mask, tryOtherOnError, best[0]);
+            } else {
+              error("No supported servers");
+            }
+          },
+          "Aquí están tus opciones",
+          options
+        );
+      default:
+        break;
+    }
   }
 
   playerNav(event) {
@@ -152,154 +396,18 @@ export class ScenePlayer extends Scene {
       this.doubleAccumulator = 0;
     }
     if (this.last.id.indexOf("1_0") !== -1) {
-      switch (
-        event.key //control player
-      ) {
-        case 'ArrowUp':
-          if (this.isFullscreen()) {
-            exitFullScreen();
-          } else {
-            if (this.itemExists(0, 0)) {
-              this.last = this.getItem(0, 0);
-              this.last.classList.add("selected");
-            }
-            tease_menu(true);
-          }
-          break;
-        case 'ArrowDown':
-          if (this.isFullscreen()) {
-            this.switchPlayer();
-          } else {
-            this.switchPlayer();
-            this.goFullScreen();
-            this.switchPlayer();
-          }
-          break;
-        case 'ArrowLeft':
-          this.last.currentTime -= this.increments[this.doubleAccumulator];
-          break;
-        case 'ArrowRight':
-          this.last.currentTime += this.increments[this.doubleAccumulator];
-          break;
-        case "Enter":
-        case "NumpadEnter":
-        case "Space":
-        case " ":
-          if (this.doublepress) {
-            this.switchPlayer();
-            this.goFullScreen();
-            this.switchPlayer();
-            return;
-          }
-          this.switchPlayer();
-          break;
-        default:
-          break;
-      }
+      this._handlePlayerKeys(event);
     } else {
-      let itempos = this.last.id.split("_");
-      let cc = parseInt(itempos[itempos.length - 1]);
-      let cr = parseInt(itempos[itempos.length - 2]);
-      switch (
-        event.key //control nav options
-      ) {
-        case 'ArrowUp':
-          if (cr == 0) {
-            //manageMenu(null);
-            return;
-          }
-          let desph = cc;
-          while (desph >= 0) {
-            if (itemExists(cr - 1, desph)) {
-              this.last.classList.remove("selected");
-              this.last = getItem(cr - 1, desph);
-              this.last.classList.add("selected");
-              break;
-            }
-            desph--;
-          }
-          break;
-        case 'ArrowDown':
-          this.last.classList.remove("selected");
-          this.last = document.getElementsByTagName("VIDEO")[0];
-          break;
-        case 'ArrowLeft':
-          if (cc == 1) {
-            tease_menu(true);
-          }
-          if (cc == 0) {
-            this.last.classList.remove("selected");
-            menuManager();
-          } else {
-            this.last.classList.remove("selected");
-            this.last = this.getItem(cr, cc - 1);
-            this.last.classList.add("selected");
-          }
-          break;
-        case 'ArrowRight':
-          if (this.itemExists(cr, cc + 1)) {
-            this.last.classList.remove("selected");
-            this.last = this.getItem(cr, cc + 1);
-            this.last.classList.add("selected");
-          }
-          if (cc == 0) {
-            tease_menu(false);
-          }
-          break;
-        case "Enter":
-        case "NumpadEnter":
-        case "Space":
-        case " ":
-          let options = JSON.parse(this.last.dataset["options"]);
-          if (options.hasOwnProperty("video")) {
-            delete options.video;
-            generateSelectorDialog(
-              (value, tagName) => {
-                this.last.innerHTML = tagName;
-                document.getElementsByTagName("video")[0].src = value;
-              },
-              "Elige una resolución",
-              options
-            );
-            return;
-          }
-          generateSelectorDialog(
-            (selected) => {
-              let best = [selected];
-              var keys = Object.keys(options);
-              keys.forEach(function (key) {
-                if (options[key] != selected) {
-                  best.push(options[key]);
-                }
-              });
-              let mask = (value) => {
-                setScene(new ScenePlayer(value, best, this.parent, this.subtitles));
-              };
-              let tryOtherOnError = (errorMessage) => {
-                if (best.length > 1) {
-                  best.shift();
-                  getDDL(mask, tryOtherOnError, best[0]);
-                } else {
-                  error(errorMessage);
-                }
-              };
-              if (best.length > 0) {
-                getDDL(mask, tryOtherOnError, best[0]);
-              } else {
-                error("No supported servers");
-              }
-            },
-            "Aquí están tus opciones",
-            options
-          );
-        default:
-          break;
-      }
+      this._handleOptionsKeys(event);
     }
   }
 
   goFullScreen() {
-      requestFullScreen(this.last);
+      if (this.last.id.indexOf("1_0") !== -1) {
+        requestFullScreen(this.player.parentNode);
+      } else {
+        requestFullScreen(this.last);
+      }
   }
 
   dispose() {
