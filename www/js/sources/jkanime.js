@@ -164,7 +164,7 @@ export class JKAnime {
             })
           }
         }catch(e){
-          console.log(e.name);
+          console.error("Error parsing JSON series in getMore:", e);
         }
         if(pd.length == 0){
           let series = doc.getElementsByClassName("custom_item2");
@@ -321,4 +321,3 @@ export class JKAnime {
     }
   }
 }
-
