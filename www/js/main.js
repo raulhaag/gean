@@ -325,7 +325,7 @@ window.openPlayer = (options,  items = [], subtitle = "", res = true, addBack = 
         options,
         (selection, options) => {
           options.video = selection;
-          openPlayer(options, items, subtitle, res, addBack);
+          openPlayer(options, items, subtitle, false, addBack);
         }
       );
       return;
