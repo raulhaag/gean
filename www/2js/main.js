@@ -22,6 +22,7 @@ window.favorites = {};
 window.recent = [];
 window.resumes = {};
 
+window.progress = {};
 let stopPropagationForKeys = (event) => {
   if (event != null) {
     event.stopPropagation();
@@ -41,6 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
   } catch (e) {}
   try {
     window.recent = JSON.parse(window.getStorageDefault("recent"), "[]");
+  } catch (e) {}
+  try {
+    window.progress = JSON.parse(window.getStorageDefault("progress", "{}"));
   } catch (e) {}
   loadResumes();
   loadSettings();
@@ -439,7 +443,30 @@ window.route = function (path, ppath = null) {
                 });                  
               return;
             }else{
-              window.setScene(new ScenePlayer(value, best, currentScene, subtitles));
+              const videoPath = fpath[2];
+              if (window.progress && window.progress[videoPath]) {
+                const progressData = window.progress[videoPath];
+                const resumeTime = progressData.time;
+                const totalDuration = progressData.duration;
+                if (totalDuration - resumeTime > 120) { // More than 2 minutes left
+                  window.generateSelectorDialog(
+                    (key, data) => {
+                      if (key === 'resume') {
+                        window.setScene(new ScenePlayer(value, best, currentScene, subtitles, videoPath, resumeTime));
+                      } else {
+                        window.setScene(new ScenePlayer(value, best, currentScene, subtitles, videoPath));
+                      }
+                    },
+                    `Viste este video hasta ${new Date(resumeTime * 1000).toISOString().substr(11, 8)}. ¿Deseas continuar?`,
+                    {
+                      'Sí, continuar': 'resume',
+                      'No, empezar desde el principio': 'start_over'
+                    }
+                  );
+                  return;
+                }
+              }
+              window.setScene(new ScenePlayer(value, best, currentScene, subtitles, videoPath));
             }
           };
           if (window.appSettings["res_select"][0]) {
@@ -666,13 +693,16 @@ window.markViewed = function (e, spath, path) {
       vc = [];
     }
   } catch (error) {}
-  if (vc.indexOf(path) == -1) {
-    if (e != null) {
-      e.classList.add("viewed");
-    }
-    vc.push(path);
-    localStorage.setItem(spath, JSON.stringify(vc));
+  const index = vc.indexOf(path);
+  if (index > -1) {
+    // Si ya existe, lo removemos para volver a agregarlo al final.
+    vc.splice(index, 1);
   }
+  if (e != null) {
+    e.classList.add("viewed");
+  }
+  vc.push(path);
+  localStorage.setItem(spath, JSON.stringify(vc));
 };
 
 function loadResumes() {
@@ -749,6 +779,20 @@ window.saveFavorites = () => {
     localStorage.setItem("favorites", JSON.stringify(window.favorites));
   } else {
     window.favorites = [];
+  }
+};
+
+window.saveProgress = () => {
+  if (window.progress != null) {
+    const progressKeys = Object.keys(window.progress);
+    if (progressKeys.length > 100) {
+      const sorted = Object.entries(window.progress).sort(([,a],[,b]) => b.lastWatched - a.lastWatched);
+      const sliced = sorted.slice(0, 100);
+      window.progress = Object.fromEntries(sliced);
+    }
+    localStorage.setItem("progress", JSON.stringify(window.progress));
+  } else {
+    window.progress = {};
   }
 };
 

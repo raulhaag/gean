@@ -15,7 +15,7 @@ export class ScenePlayer extends Scene {
   previewTime = 0;
   seekStartTime = 0;
   previewElement = null;
-  constructor(options, items, parent, subtitles = '', currentTime = 0) {
+  constructor(options, items, parent, subtitles = '', videoPath = '', currentTime = 0) {
     super(false);
     this.preTitle = document.title
     document.title = window.currentTitle + window.currentChapter
@@ -26,6 +26,7 @@ export class ScenePlayer extends Scene {
     this.cache = appSettings["cache"][0];
     this.subtitles = subtitles;
     this.startTime = currentTime;
+    this.videoPath = videoPath;
     if(this.options["video"].indexOf(".m3u") != -1){
       this.cache = false;
       this.hls = true;
@@ -411,11 +412,24 @@ export class ScenePlayer extends Scene {
   }
 
   dispose() {
-    let video = document.getElementsByTagName("VIDEO")[0];
-    if (video) {
-      video.pause();
-      video.src = "";
-      video.load();
+    if (this.player) {
+      const currentTime = this.player.currentTime;
+      const duration = this.player.duration;
+
+      if (this.videoPath) {
+        if (duration - currentTime > 120) { // More than 2 minutes left
+          window.progress[this.videoPath] = {
+            time: currentTime,
+            duration: duration,
+            lastWatched: Date.now()
+          };
+        } else if (window.progress[this.videoPath]) {
+          delete window.progress[this.videoPath];
+        }
+        window.saveProgress();
+      }
+      this.player.pause();
+      this.player.src = "";
     }
     if(this.hls) this.hlsObj.destroy();
     document.title = this.preTitle;
@@ -440,6 +454,7 @@ export class ScenePlayer extends Scene {
       this.player.play();
     } else {
       this.player.pause();
+      window.saveProgress();
     }
   }
   isFullscreen() {
