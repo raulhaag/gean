@@ -366,7 +366,7 @@ window.openPlayer = (options,  items = [], subtitle = "", res = true, addBack = 
   }
   if(addBack) addBackStack();
   content_root.innerHTML = getPlayer(options, items, videoSrc, subtitle, window.lastVideoTitle, getName(items[0]));
-  window.loading.hide();
+  setupCursorHiding('.player-container');
   var elem = document.getElementsByClassName("videoview")[0];
   if (videoSrc.indexOf(".m3u") != -1) {
     var hls_config = {
@@ -385,6 +385,7 @@ window.openPlayer = (options,  items = [], subtitle = "", res = true, addBack = 
   if (window.getStorageDefault("fullscreen")) {
     window.requestFullScreen(document.getElementsByTagName('video')[0]);
   }
+  window.loading.hide();
   elem.focus();
 };
 
@@ -580,3 +581,21 @@ const loadState = (from, to) => {
   to.innerHTML = from.innerHTML;
   scroll.scrollTo({top:from.scrollTop, left:from.scrollLeft, behavior:'instant'});
 }
+
+const setupCursorHiding = (containerSelector) => {
+  let cursorTimeout;
+  const videoContainer = document.querySelector(containerSelector) || document.body;
+
+  const hideCursor = () => {
+    videoContainer.style.cursor = 'none';
+  };
+
+  const showCursor = () => {
+    videoContainer.style.cursor = 'auto';
+    clearTimeout(cursorTimeout);
+    cursorTimeout = setTimeout(hideCursor, 3000);
+  };
+
+  videoContainer.addEventListener('mousemove', showCursor);
+  cursorTimeout = setTimeout(hideCursor, 3000); // Ocultar inicialmente
+};
