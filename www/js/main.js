@@ -6,7 +6,7 @@ import {
   getPlayer,
   getSettings,
 } from "./coder.js";
-import { getDDL, getPreferer, getName } from "./vservers/vserver.js";
+import { getDDL, getPreferer, getName, setServerAsLast } from "./vservers/vserver.js";
 
 
 let content_root;
@@ -300,11 +300,13 @@ window.posLinks = (linkList, subtitle, order = true, select = true, addBack = tr
       let aux = best[0];
       best[0] = best[parseInt(key, 10)];
       best[parseInt(key, 10)] = aux;
+      setServerAsLast(best[0]);
       getDDL(mask, linkError, best[0]);
     });
     return;
   }
   if (best.length > 0) {
+    setServerAsLast(best[0]);
     getDDL(mask, linkError, best[0]);
   } else {
     error("No supported servers");

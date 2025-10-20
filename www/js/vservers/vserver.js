@@ -244,42 +244,7 @@ export function getName(web) {
 }
 
 export function getPreferer(list){
-    let preferer = ["/um2.php?e=",
-                    "server_name_EnlaceDirecto",
-                    "jk.php?u=stream",
-                    "mediafire.com",
-                    "plusvip.net",
-                    "streamtape.com",
-                    "ghbrisk.com",
-                    "voe",
-                    'ryderjet.com',
-                    "embedsito.net/reproamz",
-                    "https://re.sololatino.net/p/embed.php",
-                    "https://sololatino.xyz/v/",
-                    "owodeuwu.xyz" ,
-                    "ok.ru" ,
-                    "zippishare",
-                    "/reproamz/",
-                    "zplayer.live",
-                    "wish",
-                    "filemoon",
-                    "filelions",
-                    "mp4upload.com",
-                    "burstcloud.co",
-                    "yourupload",
-                    "mixdrop","mxdrop",
-                    "um.php?e=",
-                    //"plustr",
-                    "vk.com/",
-                    "dailymotion.com",
-                    "vidhide",
-                    "doodstream",
-                    "mail.ru",
-                    'dhcplay.com',
-                    'hglink.to',
-                    'hexload',
-                    'uqload'
-                ];
+    let preferer = getServerPreferences();
     
     let ordered = [];
     for(let i = 0; i < preferer.length; i++){
@@ -290,24 +255,60 @@ export function getPreferer(list){
           }
         }
 
-/*
-    for(let i = 0; i < list.length; i++){
-         /* if(list[i].startsWith("{")){
-            ordered.push(list[i]);
-        }else{
-          if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(list[j])) {
-                ordered.push(list[j]);
-            }else if((list[j].indexOf("streamlare.com") != -1) || (list[j].indexOf("slmaxed.com") != -1) || (list[j].indexOf("slwatch.c") != -1)) {
-                ordered.push(list[j]);
-            }
-        for(let j = 0; j < preferer.length; j++){
-            if(list[i].indexOf(preferer[j]) != -1){
-                ordered[ordered.length] = list[i];
-            }
-          }
-        }
-        */
-   // }
-
     return ordered;
+}
+
+export function setServerAsLast(server){
+    let serverPreferences = getServerPreferences();
+    const index = serverPreferences.indexOf(server);
+    if (index > -1) {
+        serverPreferences.splice(index, 1);
+    }
+    serverPreferences.unshift(server);
+    localStorage.setItem("server_preferences", JSON.stringify(serverPreferences));
+}
+
+function getServerPreferences(){
+    let serverPreferences = localStorage.getItem("server_preferences");
+    if(!serverPreferences){
+        serverPreferences = ["/um2.php?e=",
+        "server_name_EnlaceDirecto",
+        "jk.php?u=stream",
+        "mediafire.com",
+        "plusvip.net",
+        "streamtape.com",
+        "ghbrisk.com",
+        "voe",
+        'ryderjet.com',
+        "embedsito.net/reproamz",
+        "https://re.sololatino.net/p/embed.php",
+        "https://sololatino.xyz/v/",
+        "owodeuwu.xyz" ,
+        "ok.ru" ,
+        "zippishare",
+        "/reproamz/",
+        "zplayer.live",
+        "wish",
+        "filemoon",
+        "filelions",
+        "mp4upload.com",
+        "burstcloud.co",
+        "yourupload",
+        "mixdrop","mxdrop",
+        "um.php?e=",
+        //"plustr",
+        "vk.com/",
+        "dailymotion.com",
+        "vidhide",
+        "doodstream",
+        "mail.ru",
+        'dhcplay.com',
+        'hglink.to',
+        'hexload',
+        'uqload'
+    ];
+    }else{
+        serverPreferences = JSON.parse(serverPreferences);
+    }
+    return serverPreferences;
 }
