@@ -1,5 +1,5 @@
 import { getSource } from "../js/sources/sources.js";
-import { getDDL, getName, getPreferer } from "../js/vservers/vserver.js";
+import { getDDL, getName, getPreferer, setServerAsLast } from "../js/vservers/vserver.js";
 import { SceneHome } from "./scene_home.js";
 import { SceneDetails } from "./scene_details.js";
 import { SceneSearch } from "./scene_search.js";
@@ -496,6 +496,7 @@ window.route = function (path, ppath = null) {
             best.forEach((link) => (names[getName(link)] = link));
             window.generateSelectorDialog(
               (key, data) => {
+                setServerAsLast(key);
                 best.splice(best.indexOf(key), 1);
                 best.unshift(key);
                 getDDL(mask, tryOtherOnError, best[0]);
@@ -505,6 +506,7 @@ window.route = function (path, ppath = null) {
             );
             return;
           }
+          setServerAsLast(best[0]);
           getDDL(mask, tryOtherOnError, best[0]);
         } else {
           hideLoading()
@@ -552,8 +554,8 @@ window.generateSelectorDialog = (
   let id = 0;
   for (var key in options) {
     content +=
-      '<div class="option-selector-list-item" id="os_' +
-      id +
+      '<div class="option-selector-list-item" id="os_'
+      + id +
       '" data-info="' +
       window.enc(options[key]) +
       '">' +
@@ -562,8 +564,8 @@ window.generateSelectorDialog = (
     id++;
   }
   content +=
-    '</div><div class="option-selector-cancel" id="os_' +
-    id +
+    '</div><div class="option-selector-cancel" id="os_'
+    + id +
     '"> Cancelar</div></div>';
   div.innerHTML = content;
   let lOSelected = div.getElementsByClassName("option-selector-list-item")[0];
@@ -720,7 +722,7 @@ function loadSettings() {
     fullscreen: [
         true,
         "Iniciar video en pantalla completa. (si el navegador no lo bloquea).",
-      ],   
+      ],
     autoplay: [
         true,
         "Reproducir automaticamente al abrir video.",

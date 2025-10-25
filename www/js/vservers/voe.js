@@ -16,8 +16,10 @@ export class Voe {
           after({video: dlink, mp4: jsonData['direct_access_url'], hls: dlink});
           return
         }
-        after({video: dlink})
-        return
+        if (dlink){
+          after({video: dlink})
+          return
+        }
       }
     } catch (e) {
       //onError(e);
