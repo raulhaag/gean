@@ -669,18 +669,40 @@ def replaceKnows(path):
         pass
     return path
 
+def getCurrentVersion():
+    r_version = None
+    try: 
+        req = request.Request(
+            "https://github.com/raulhaag/gean/blob/master/version"
+        )            
+        regex = r"\"rawLines\":\[\"(.+?)\"\]"
+        data = request.urlopen(req).read().decode("utf-8").strip()
+        re.findall(regex, data, re.MULTILINE)
+        r_version = re.findall(regex, data, re.MULTILINE)[0].split(".")
+    except Exception as e:
+        print(e)
+        
+    if r_version == None:
+        try:
+            req = request.Request(
+                    "https://raw.githubusercontent.com/raulhaag/gean/master/version"
+                )
+            r_version = request.urlopen(req).read().decode("utf-8").strip().split(".")
+        except Exception as e:
+            print(e)
+            return None
+    r_version = [int(x) for x in r_version]
+    r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
+    return r_version
+    
 def check_for_update():
-
     if os.path.exists("version"):
         c_version = open("version", "r", encoding="utf-8").read().strip().split(".")
         c_version = [int(x) for x in c_version]
         c_version = c_version[0] * 100000000 + c_version[1] * 100000 + c_version[2]
-        req = request.Request(
-            "https://raw.githubusercontent.com/raulhaag/gean/master/version"
-        )
-        r_version = request.urlopen(req).read().decode("utf-8").strip().split(".")
-        r_version = [int(x) for x in r_version]
-        r_version = r_version[0] * 100000000 + r_version[1] * 100000 + r_version[2]
+        r_version = getCurrentVersion()
+        if r_version == None:
+            return False
         if c_version >= r_version:
             return False
 
