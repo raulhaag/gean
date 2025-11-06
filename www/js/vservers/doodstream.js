@@ -3,9 +3,10 @@ export class DoodStream {
     constructor() {}
     async getDDL(after, onError, web){
         try{
-            let data = await fGet(web,{},true);
+            let rlink = await window.fRGet(web,{},true);
+            let data = await window.fGet(rlink,{Referer: web},true);
             let dlink = (/dsplayer\.hotkeys[^']+'([^']+).+?function\s*makePlay.+?return[^?]+([^"]+)/gm).exec(data.body);
-            let host = "https://" + getFirstMatch(/domain=\.(.+?);/gm, data.headers["gean_set-cookie"]);
+            let host = new URL(rlink).origin;
             let headers = {"Referer": host,
                            "User-Agent": window.navigator.userAgent};
             let data2 = await fGet(host + dlink[1], headers);
