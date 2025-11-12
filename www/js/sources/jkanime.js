@@ -20,11 +20,11 @@ export class JKAnime {
     return out;
   }
 
-  async getFrontPage(after, error) {
+  async getFrontPage(after, onError) {
     try {
       let result = await fGet("https://jkanime.net/");
       if (result.indexOf("error") == 0) {
-        error(result);
+        onError(result);
         return;
       }
       var parser = new DOMParser();
@@ -33,14 +33,14 @@ export class JKAnime {
       try {
         ncs = this.getSection(doc.getElementById('animes').getElementsByClassName('dir1'))
       } catch (nerror) {
-        error(nerror);
+        onError(nerror);
       }
   
       let dcs = [];
       try {
         dcs = this.getSection(doc.getElementById('donghuas').getElementsByClassName('dir1'))
       }catch (nerror) {
-        error(nerror);
+        onError(nerror);
       }
   
       let nas = [];
@@ -56,13 +56,13 @@ export class JKAnime {
           });
         }
       } catch (nerror) {
-        error(nerror);
+        onError(nerror);
       }
       let etc = [];
       try {
         etc = this.getSection(doc.getElementById('ovas').getElementsByClassName('dir1'));
       } catch (nerror) {
-        error(nerror);
+        onError(nerror);
       }
   
       let pg = [

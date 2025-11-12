@@ -17,7 +17,7 @@ export function generateCategory(title, items) {
       for (let i = 0; i < items.length; i++) {
         if(items[i]['image']){
           out += `
-              <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"] + "/" + items[i]["name"]}')}">
+              <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(this, \'${items[i]["path"] + "/" + items[i]["name"]}')}">
                 <div class="card text-bg-dark" style="width:100%; aspect-ratio:0.65;">
                   <img src="${items[i]["image"]}" referrerpolicy="no-referrer" alt="Image 1" class="card-img" style="width:100%; aspect-ratio:0.65; object-fit: cover;">
                   <div class="card-img-overlay" style="display:flex; align-items:flex-end; backgroud-color='#FFF9'">
@@ -27,7 +27,7 @@ export function generateCategory(title, items) {
               </div>
           `
         }else{
-           out +=    `<div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(self, \'${items[i]["path"]}')}">
+           out +=    `<div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(this, \'${items[i]["path"]}')}">
                 <div class="card text-bg-dark chapter-button" style="width:100%">
                   <h4 class="card-title text-truncate pt-3 pb-2 px-1">${items[i]["name"]}</h4>
                 </div>
@@ -92,7 +92,7 @@ export function generateDescription(options) {
         options["path"] +
         "', '" +
         options["chapters"][i]["path"] +
-        "') ;mediaClick(self, '" +
+        "') ;mediaClick(this, '" +
         options["chapters"][i]["path"] + "/" + options["chapters"][i]["name"] +
         "')}\">" +
         options["chapters"][i]["name"] +

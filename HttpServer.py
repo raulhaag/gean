@@ -324,7 +324,7 @@ def getFile(url, headers = {}, server=None):
     rHeaders = {}
 
 def getResponseFile(path=[], server=None):
-        buffer_size = 8192  # Tamaño del buffer para leer el archivo en bloques
+        buffer_size = 4194304  # Tamaño del buffer para leer el archivo en bloques
         custom_headers = {}
         url = decode(path[2])
         if len(path) == 4:
@@ -343,8 +343,7 @@ def getResponseFile(path=[], server=None):
                 content_type = inputStream.headers.get("Content-Type")
                 # Si el archivo se encuentra y la respuesta es 200 o 206
                 if inputStream.status in (200, 206):
-                    server.send_response(200 if inputStream.status == 200 else 206)
-
+                    server.send_response(inputStream.status)
                     # Agregar el header CORS para aceptar solicitudes desde cualquier origen
                     server.send_header('Access-Control-Allow-Origin', '*')
 
@@ -354,7 +353,6 @@ def getResponseFile(path=[], server=None):
                         server.send_header('Content-Type', 'application/octet-stream')
 
                     server.send_header('Connection', 'keep-alive')
-
                     range_header = server.headers.get('Range')
                     if range_header:
                         # Reenviar la información del rango
@@ -365,7 +363,6 @@ def getResponseFile(path=[], server=None):
                         server.send_header('Accept-Ranges', 'bytes')
                     else:
                         server.send_header('Content-Length', str(tlength))
-
                     server.end_headers()
 
                     # Leer y transmitir el archivo en bloques pequeños
@@ -385,6 +382,8 @@ def getResponseFile(path=[], server=None):
             #server.send_header('Access-Control-Allow-Origin', '*')  # CORS también para errores
             server.end_headers()
             server.wfile.write(f"File not found: {e}".encode('utf-8'))
+        except (ConnectionAbortedError, ConnectionResetError) as e:
+            print("Conección abortada o reseteada por el cliente.")
 
 def getResponseFile0(path=[], server=None):
     headers = {}

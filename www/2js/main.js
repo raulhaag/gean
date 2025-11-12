@@ -199,13 +199,11 @@ window.setScene = (nScene) => {
   try {
     if (nScene.full_menu) {
       //replace main escene
-      for (let i in backScenePoll) {
-        i.dispose();
-      }
+      backScenePoll.forEach((i) => {i.dispose()})
       backScenePoll = [];
-      for (let i in backScenePH) {
-        document.body.removeChild(i);
-      }
+      backScenePH.forEach((ph) => {
+        document.body.removeChild(ph);
+      });
       backScenePH = [];
       if (currentScene != null) {
         currentScene.dispose();
@@ -240,7 +238,7 @@ let popScene = () => {
   if (backScenePoll.length > 1) {
     currentScene = backScenePoll[backScenePoll.length - 1];
   } else {
-    document.title = "Gean"
+    document.title = "GEAn"
     currentScene = currentScene.parent;
     backMenuSwitch();
   }
@@ -388,7 +386,7 @@ window.route = function (path, ppath = null) {
   }
   if (action == "getFrontPage") {
     showLoading();
-    document.title("GEAn")
+    document.title = "GEAn";
     server.getFrontPage(window.posServerClick, window.error);
     return;
   } else if (action == "getCategory") {
@@ -711,7 +709,7 @@ function loadResumes() {
   window.resumes = JSON.parse(window.getStorageDefault("resumes", "{}"));
   Object.keys(window.resumes).forEach((key) => {
     if (window.resumes[key] == "Sin sinopsis por el momento") {
-      delete window.resume[key];
+      delete window.resumes[key];
     }
   });
 }
@@ -799,7 +797,7 @@ window.saveProgress = () => {
 };
 
 window.getSettingsDefault = (key, defaultValue) => {
-  if (key in Object.keys(window.appSettings)) {
+  if (Object.keys(window.appSettings).includes(key)) {
     return window.appSettings[key];
   }
   return defaultValue;

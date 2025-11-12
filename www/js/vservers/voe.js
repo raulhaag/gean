@@ -14,16 +14,16 @@ export class Voe {
         dlink = jsonData['source'];
         if('direct_access_url' in jsonData){
           after({video: dlink, mp4: jsonData['direct_access_url'], hls: dlink});
-          return
+          return;
         }
         if (dlink){
-          after({video: dlink})
-          return
+          after({video: dlink});
+          return;
         }
       }
     } catch (e) {
-      //onError(e);
-    }
+      onError(e);
+    }/*
     try{
     eval(window.dec("d2luZG93Lnp6eiA9IGFzeW5jICgpID0+IHsKICAgICAgICBjb25zdCBpZCA9IGdldEZpcnN0TWF0Y2goL1wvZVwvKC4rKT8ofCQpL2dtLCB3ZWIpOwogICAgICAgIGNvbnN0IG53ZWIgPSAiaHR0cHM6Ly9kaWFuYW5hdHVyZWZvcmVpZ24uY29tLyIraWQrIi9kb3dubG9hZCIKICAgICAgICBjb25zdCBkYXRhID0gYXdhaXQgZkdldChud2ViLCB7ICJVc2VyLUFnZW50IjogbmF2aWdhdG9yLnVzZXJBZ2VudCB9KTsKICAgICAgICBjb25zdCBkd2ViID0gZ2V0Rmlyc3RNYXRjaCgvRmlsZSBEb3dubG9hZDxcL2Rpdj5bXHNcU10rPzxhIGhyZWY9IiguKz8pIi9nbSwgZGF0YSkucmVwbGFjZSgvJmFtcDsvLCcmJyk7CgkJaWYoZHdlYiAmJiBkd2ViLmxlbmd0aCA+IDUpewoJCQlhZnRlcih7dmlkZW86IGR3ZWJ9KTsKCQkJcmV0dXJuOwoJCX1lbHNlewoJCQl0aHJvdyBuZXcgRXJyb3IoIlZpZGVvIG5vIGVuY29udHJhZG8iKTsgCgkJfQogICAgICB9"));
       await zzz();
@@ -31,7 +31,8 @@ export class Voe {
     }catch(e){
       onError(e);
       return;
-    }
+    }/*/
+    onError("No se encontro el enlace");
   }
 
   rot13 = (str) => {

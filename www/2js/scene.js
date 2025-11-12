@@ -1,5 +1,5 @@
 export class Scene{
-    #lastSelection = null;
+    lastSelection = null;
     constructor(full_menu){
         if(this.constructor === Scene){
             throw new Error("Abstract class, use a subclass");
@@ -24,7 +24,7 @@ export class Scene{
     }
     lastKeyManager(){return this.lastKeyManager;}
     clear(){
-        lastSelection = null;
+        this.lastSelection = null;
     }
     saveState(){
         throw new Error("need implementation to save state in subclass");

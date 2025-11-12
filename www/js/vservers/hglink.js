@@ -6,7 +6,7 @@ export class Hglink {
                 'kravaxxa.com',
                 'davioad.com',
                 'haxloppd.com',
-                'tryzendm.com',
+                'auvexiug.com',
                 'dumbalag.com',
             ];
             const rules = [
@@ -19,12 +19,9 @@ export class Hglink {
             const destination = main[Math.floor(Math.random() * main.length)];
             const finalURL = 'https://' + destination + url.pathname + url.search
             const content = await fGet(finalURL, {referer: 'https://' + url.hostname});
-            var match = getFirstMatch(/(eval\(function\(p,a,c,k,e,d\)[\S\s]+?\.split\('\|'\)\)\))/gm, content);
-            if (match) {
-                var funcionDesofuscada = match.replace('eval', 'return');
-                var desofuscado = new Function(funcionDesofuscada);
-                var data = desofuscado();
-                var dlink = JSON.parse(getFirstMatch(/var links\s*=\s*(.+?})/gm, data));
+            const res = window.__unpack(content);
+            if (res) {
+                var dlink = JSON.parse(getFirstMatch(/var links\s*=\s*(.+?})/gm, res));
                 for(const key in dlink){
                     if((dlink[key].indexOf("http") != -1) && (dlink[key].indexOf(".m3u8") != -1)){
                         after({"video":dlink[key]});
