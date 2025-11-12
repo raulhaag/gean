@@ -337,7 +337,7 @@ export class SceneHome extends Scene{
                 this.info.resume.innerHTML =  "Obteniendo sinopsis.";
             }
             let pgerr = (info) => {
-                resumes[seriePath] = "Sin sinopsis por el momento".
+                resumes[seriePath] = "Sin sinopsis por el momento";
                 this.saveResumes();
                 this.setResume(seriePath, true);
             };

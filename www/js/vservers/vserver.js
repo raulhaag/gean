@@ -1,4 +1,3 @@
-import {Fembed} from "./fembed.js";
 import {JKAPI, JKXtreme, Desu} from "./jkapi.js";
 import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, EmbedsitoNet, MamazonPlayer} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
@@ -32,7 +31,7 @@ export function registerInterceptor(contains, callback){
     interceptors.push({"contains": contains, "callback": callback});
 }
 
-let servers = {"fembed": new Fembed(),
+let servers = {
                 "jkapi": new JKAPI(),
                 "jkxtreme": new JKXtreme(),
                 "desu": new Desu(),
@@ -114,8 +113,6 @@ export async function getDDL(after, onError, web) {
         servers["zippishare"].getDDL(after, onError, web);
     }else if(web.indexOf("mediafire.com") != -1) {
         servers["mediafire.com"].getDDL(after, onError, web);
-    /*}else if(web.indexOf("streamlare.com") != -1 || web.indexOf("slmaxed.com") != -1) {
-        return servers["streamlare.com"].getDDL(after, onError, web);*/
     }else if(web.indexOf("embedsito.net/reproamz") != -1){
         return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
     }else if((web.indexOf("mixdrop") != -1) || (web.indexOf('mxdrop') != -1)){
@@ -187,8 +184,6 @@ export function getName(web) {
         name = "OkRu";
     }else if(web.indexOf("/reproamz/") != -1){
         name = "AMZ ReSololatino" ;
-    }else if(web.indexOf("owodeuwu.xyz") != -1) {
-        name = "owodeuwu.xyz (fembed)";
     }else if(web.indexOf("zippishare") != -1) {
         name = "Zippishare";
     }else if(web.indexOf("zplayer.live") != -1) {
@@ -296,7 +291,6 @@ function getServerPreferences(){
         "yourupload",
         "mixdrop","mxdrop",
         "um.php?e=",
-        //"plustr",
         "vk.com/",
         "dailymotion.com",
         "vidhide",

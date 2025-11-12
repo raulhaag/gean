@@ -48,9 +48,10 @@ mFetch = async (path, returnHeaders = false) => {
             throw new Error( 'Consulta interrumpida');
         } 
         throw e;
+    }finally{
+        removeController(control);    
+        try{window.unsetLoading();}catch(e){};
     }
-    removeController(control);
-    try{window.unsetLoading();}catch(e){};
     if(returnHeaders){
         let rHeaders =  {};
         response.headers.forEach(function(val, key) {rHeaders[key] =val});
@@ -123,4 +124,32 @@ window.cancelAllPetitions = () => {
     window.petition_controllers = [];
     try{window.unsetLoading();}catch(e2){};
     return rv;
+}
+
+
+// Función segura para desofuscar el "packer" de JavaScript.
+// Reimplementa la lógica de `eval(function(p,a,c,k,e,d){...})` de forma segura.
+window.__unpack = (data) => {
+    // Extraer los argumentos del packer.
+    const packerRegex = /eval\(function\(p,a,c,k,e,d\)\{while\(c--\).*?\}\('(.+?)',(\d+),(\d+),'(.+?)'\.split\('\|'\)/;
+    const match = data.match(packerRegex);
+
+    if (!match) {
+        return null;
+    }
+
+    // Asignar los argumentos capturados.
+    let p = match[1];
+    const a = parseInt(match[2]);
+    let c = parseInt(match[3]);
+    const k = match[4].split('|');
+    const e = 0; // No se usa en esta variante del packer
+    const d = {}; // No se usa en esta variante del packer
+
+    while (c--) {
+        if (k[c]) {
+            p = p.replace(new RegExp('\\b' + c.toString(a) + '\\b', 'g'), k[c]);
+        }
+    }
+    return p;
 }

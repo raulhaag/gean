@@ -52,10 +52,6 @@
     box-shadow: 0px 0px 2px #FFFA;
 }
 
-.details__chaptes{
-    margin-top: 10px;
-}
-
 @media screen and (max-width: 500px) {
     .details__chapters{
         display: block;

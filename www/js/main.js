@@ -51,6 +51,28 @@ document.addEventListener("DOMContentLoaded", function () {
   loadSourcesList(document.getElementById("server_list_dropdown"));
   loadSettings();
 
+  const searchText = document.getElementById("search-text");
+  searchText.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      window.mediaClick(this, "sid/search");
+    }
+  });
+
+  const searchButton = document.getElementById("search-button");
+  if(searchButton){
+    searchButton.addEventListener("click", function () {
+      window.mediaClick(this, "sid/search");
+    });
+  }
+
+  const searchBox = document.getElementById("searchbox");
+  if (searchBox) {
+    searchBox.addEventListener('shown.bs.collapse', function () {
+      document.getElementById("search-text").focus();
+    });
+  }
+
   function initLoading() {
     const loadingDiv = document.getElementById("loading");
     window.loading = new bootstrap.Modal(loadingDiv);
@@ -118,16 +140,6 @@ window.mediaClick = function (e, path) {
       posMoreClick, window.showError, fpath[2])
   } else {
     window.loading.hide();
-  }
-};
-
-window.shutdown = function () {
-  if (confirm("¿Desea apagar el servidor?")) {
-    fetch(serverHost + "shutdown")
-      .then((response) => response.text())
-      .then((text) => {
-        document.body.innerHTML = "Ya puede cerrar esta ventana";
-      });
   }
 };
 
@@ -536,15 +548,15 @@ function optionSelection(title, options, postSelect) {
   const title_container = document.getElementById("modal-title");
   const list_container = document.getElementById("modal-body");
   let postSelectPP = (value) => {
-    postSelect(value, document.__selectpostSelectOptions);
+    postSelect(value, window.__selectpostSelectOptions);
   };
   if (Object.keys(options).length == 1) {
     postSelectPP(options[Object.keys(options)[0]], options);
     return;
   }
-  document.__selectpostSelect = postSelectPP;
-  document.__selectpostSelectOptions = options;
-  document.__selectPrekeydown = document.onkeydown;
+  window.__selectpostSelect = postSelectPP;
+  window.__selectpostSelectOptions = options;
+  window.__selectPrekeydown = document.onkeydown;
   title_container.innerText = title;
   let content = `<div class="list-group">`;
   for (var key in options) {
@@ -556,18 +568,18 @@ function optionSelection(title, options, postSelect) {
       "</div>";
   }
   list_container.innerHTML = content + "</div>";
-  window.current_modal = new bootstrap.Modal(document.getElementById("modal-list"))
+  window.current_modal = new bootstrap.Modal(document.getElementById("staticBackdrop"))
   window.current_modal.show();
 }
 
 document.onOptionSelectionSelected = (option) => {
   window.current_modal.hide();
-  document.onkeydown = document.__selectPrekeydown;
+  document.onkeydown = window.__selectPrekeydown;
   if (option.dataset.src === "cancel") {
     window.loading.hide();
     return;
   }
-  document.__selectpostSelect(option.dataset.src);
+  window.__selectpostSelect(option.dataset.src);
 };
 // selection message end
 

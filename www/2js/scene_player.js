@@ -15,7 +15,7 @@ export class ScenePlayer extends Scene {
   previewTime = 0;
   seekStartTime = 0;
   previewElement = null;
-  constructor(options, items, parent, subtitles = '', videoPath = '', currentTime = 0) {
+  constructor(options, items, parent, subtitles = "", videoPath = "", currentTime = 0, chapters = {}, currentIdx = -1) {
     super(false);
     this.idleMouseTimeout = null;
     this._boundIdleMouseMoveHandler = null;
@@ -29,6 +29,8 @@ export class ScenePlayer extends Scene {
     this.subtitles = subtitles;
     this.startTime = currentTime;
     this.videoPath = videoPath;
+    this.chapters = chapters;
+    this.currentIdx = currentIdx;
     if(this.options["video"].indexOf(".m3u") != -1){
       this.cache = false;
       this.hls = true;
