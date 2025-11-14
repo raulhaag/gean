@@ -618,6 +618,7 @@ window.generateSelectorDialog = (
 };
 
 window.error = (error_message) => {
+  console.error(error_message);
   alert(error_message);
   window.hideLoading();
   //TODO: Error
