@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VServer Tester</title>
+    <style>
+        body { font-family: sans-serif; background-color: #111; color: #eee;}
+        #urls { width: 90%; background-color: #222; color: #eee; border: 1px solid #444;}
+        .success { color: #4CAF50; }
+        .error { color: #F44336; }
+        button { background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+        button:disabled { background-color: #555; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
+        th, td { border: 1px solid #444; padding: 8px; text-align: left; word-wrap: break-word; }
+        th { background-color: #333; }
+        td textarea { width: 100%; box-sizing: border-box; background-color: #222; color: #eee; border: none; resize: vertical;}
+    </style>
+</head>
+<body>
+    <h1>VServer Tester</h1>
+    <textarea id="urls" rows="10" cols="80" placeholder="Enter one URL per line"></textarea>
+    <br>
+    <button id="start-test">Start Test</button>
+    <h2>Results:</h2>
+    <table id="results-table">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Server Name</th>
+                <th style="width: 40%;">Web Address</th>
+                <th style="width: 45%;">Result</th>
+            </tr>
+        </thead>
+        <tbody id="results-tbody">
+        </tbody>
+    </table>
+
+    <script type="text/javascript" src="js/fetchpack.js"></script>
+    <script type="module">
+        import { getDDL, getName } from './js/vservers/vserver.js';
+
+        const urlsTextarea = document.getElementById('urls');
+        const testButton = document.getElementById('start-test');
+        const resultsBody = document.getElementById('results-tbody');
+        const storageKey = 'vserver-test-urls';
+
+        // Load saved URLs
+        const savedUrls = localStorage.getItem(storageKey);
+        if (savedUrls) {
+            urlsTextarea.value = savedUrls;
+        }
+
+        function getDDLAsPromise(url) {
+            return new Promise((resolve, reject) => {
+                try {
+                    getDDL(
+                        (result) => {
+                            let videoUrlText = '';
+                            if (result && result.video) {
+                                videoUrlText = typeof result.video === 'string' ? result.video : JSON.stringify(result.video, null, 2);
+                            } else if (result) {
+                                videoUrlText = JSON.stringify(result, null, 2);
+                            }
+                            resolve(videoUrlText);
+                        },
+                        (error) => reject(error),
+                        url
+                    );
+                } catch(e) {
+                    reject(e.message);
+                }
+            });
+        }
+
+        testButton.addEventListener('click', async () => {
+            const urlsValue = urlsTextarea.value;
+            localStorage.setItem(storageKey, urlsValue);
+
+            const urls = urlsValue.split('\n').filter(url => url.trim() !== '');
+            resultsBody.innerHTML = '';
+
+            if (urls.length === 0) {
+                const row = resultsBody.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = 3;
+                cell.innerHTML = 'Please enter at least one URL.';
+                return;
+            }
+
+            testButton.disabled = true;
+
+            for (const url of urls) {
+                const serverName = getName(url) || 'Unknown';
+                const row = resultsBody.insertRow();
+
+                row.insertCell().textContent = serverName;
+                row.insertCell().textContent = url;
+                const resultCell = row.insertCell();
+                resultCell.textContent = 'Testing...';
+
+                try {
+                    const result = await getDDLAsPromise(url);
+                    resultCell.innerHTML = `<span class="success">SUCCESS</span>`;
+                    if(result){
+                        resultCell.innerHTML += `<br><textarea rows="4" readonly>${result}</textarea>`;
+                    }
+                } catch (error) {
+                    resultCell.innerHTML = `<span class="error">ERROR:</span> ${error}`;
+                }
+            }
+
+            testButton.disabled = false;
+        });
+    </script>
+</body>
+</html>

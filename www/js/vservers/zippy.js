@@ -16,7 +16,7 @@ export class ZippyShare {
             var url = new URL(web);
             var video = url.protocol + "//" + url.hostname + zout.href
             after({"video": video});
-            return
+            return;
         }catch(e){
             onError(e);
         }
@@ -26,7 +26,7 @@ export class ZippyShare {
             let result = await fGet(web, headers);
             let video = "https:" + getFirstMatch(/source src="([^"]+)/gm, result);
             after({"video": video});
-            return
+            return;
         }catch(e){
             onError("Error getting video from server: " + e.message);
         }

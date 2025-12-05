@@ -617,10 +617,31 @@ window.generateSelectorDialog = (
   };
 };
 
-window.error = (error_message) => {
+window.showToast = (message) => {
+    const toastContainer = document.createElement("div");
+    toastContainer.className = "alert-message-contianer";
+    const toastMessage = document.createElement("div");
+    toastMessage.className = "alert-message";
+    toastMessage.innerHTML = message;
+    toastContainer.appendChild(toastMessage);
+    document.body.appendChild(toastContainer);
+  
+    setTimeout(() => {
+      toastContainer.style.opacity = '0';
+      setTimeout(() => {
+        if (toastContainer.parentNode === document.body) {
+            document.body.removeChild(toastContainer);
+        }
+      }, 500);
+    }, 3000);
+  };
+
+window.error = (error_message, showAlert = true) => {
   console.error(error_message);
-  alert(error_message);
-  window.hideLoading();
+  if(showAlert){
+    window.showToast(error_message);
+    window.hideLoading();
+  }
   //TODO: Error
   //loading.style.visibility = 'hidden';
 };

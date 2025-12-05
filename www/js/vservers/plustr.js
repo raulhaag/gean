@@ -10,7 +10,8 @@ export class Plustr {
                     {   "Referer": web, 
                         "Sec-Fetch-Dest": "empty",
                         "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin"})) + "/maskfile.m3u8"})
+                        "Sec-Fetch-Site": "same-origin"})) + "/maskfile.m3u8"});
+                return;
             }catch(error){
                 onError(error);
             }

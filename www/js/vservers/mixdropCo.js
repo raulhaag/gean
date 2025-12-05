@@ -13,6 +13,7 @@ export class Mixdrop{
         if(m3){
             videos["video"] = window.serverHost + "file/" + enc("https:" + m3) + "/" + enc(JSON.stringify({"Referer": urlw.protocol + "//" +urlw.hostname, "User-Agent": window.navigator.userAgent}));
             after(videos);
+            return;
         }else{
             onError("Mixdrop: video no encontrado")
         }

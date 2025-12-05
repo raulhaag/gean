@@ -21,7 +21,6 @@ export class Hexload {
                     }
                 ));
             }
-            
             after({video: data['result']['url']});
         }catch(e){
             onError(e);

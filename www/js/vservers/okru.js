@@ -13,7 +13,7 @@ export class OkRu{
                 }
                 videos["video"] = filev[filev.length - 1][2];
                 after(videos);
-                return
+                return;
             }else{
                 let data = getFirstMatch(/data-video="({.+?})"/gm, result);
                 let jsd = JSON.parse(data.replace(/&quot;/g, "\"").replace(/%3B/g, ";").replace(/\\u0026/g, "&"));   

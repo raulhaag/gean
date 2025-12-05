@@ -18,6 +18,7 @@ export class StreamWish {
                 let dlink = getFirstMatch(/file:"(.+?)"/gm, content);
                 if(dlink != ""){
                     after({"video": dlink});
+                    return;
                 }else{
                     new Hglink().getDDL(after, onError, web);
                 }

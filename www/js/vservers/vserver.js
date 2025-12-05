@@ -137,7 +137,7 @@ export async function getDDL(after, onError, web) {
         return servers["vk.com/"].getDDL(after, onError, cleanInfo(web))
     }else if(web.indexOf("dailymotion.com") != -1){
         return servers["dailymotion.com"].getDDL(after, onError, cleanInfo(web));
-    }else if(web.indexOf("doodstream") != -1){
+    }else if((web.indexOf("doodstream") != -1) || (web.indexOf('dsvplay') != -1)){
         return servers["doodstream"].getDDL(after, onError, cleanInfo(web));
     }else if(web.indexOf("burstcloud.co") != -1){
         return servers["burstcloud.co"].getDDL(after, onError, cleanInfo(web));
@@ -220,7 +220,7 @@ export function getName(web) {
         name =  "DailyMotion";
     }else if((web.indexOf("vidhide") != -1) || (web.indexOf('ryderjet.com') != -1)){
         name =  "vidhide";
-    }else if(web.indexOf("doodstream") != -1){
+    }else if((web.indexOf("doodstream") != -1) || (web.indexOf('dsvplay') != -1)){
         name =  "doodstream";
     }else if(web.indexOf("burstcloud.co") != -1){
         name =  "BurstCloud";    
@@ -253,6 +253,45 @@ export function getPreferer(list){
     return ordered;
 }
 
+const defaultPreferences = ["/um2.php?e=",
+    "server_name_EnlaceDirecto",
+    "jk.php?u=stream",
+    "mediafire.com",
+    "plusvip.net",
+    "streamtape.com",
+    "ghbrisk.com",
+    "voe",
+    'ryderjet.com',
+    "embedsito.net/reproamz",
+    "https://re.sololatino.net/p/embed.php",
+    "https://sololatino.xyz/v/",
+    "owodeuwu.xyz" ,
+    "ok.ru" ,
+    "zippishare",
+    "/reproamz/",
+    "zplayer.live",
+    "wish",
+    "filemoon",
+    "filelions",
+    "mp4upload.com",
+    "burstcloud.co",
+    "yourupload",
+    "mixdrop","mxdrop",
+    "um.php?e=",
+    "vk.com/",
+    "dailymotion.com",
+    "vidhide",
+    "doodstream",
+    "mail.ru",
+    'dhcplay.com',
+    'hglink.to',
+    'hexload',
+    'uqload',
+    'dsvplay'
+];
+
+let serverPreferencesCache = null;
+
 export function setServerAsLast(server){
     let serverPreferences = getServerPreferences();
     const index = serverPreferences.indexOf(server);
@@ -264,45 +303,24 @@ export function setServerAsLast(server){
 }
 
 function getServerPreferences(){
-    let serverPreferences = localStorage.getItem("server_preferences");
-    if(!serverPreferences){
-        serverPreferences = ["/um2.php?e=",
-        "server_name_EnlaceDirecto",
-        "jk.php?u=stream",
-        "mediafire.com",
-        "plusvip.net",
-        "streamtape.com",
-        "ghbrisk.com",
-        "voe",
-        'ryderjet.com',
-        "embedsito.net/reproamz",
-        "https://re.sololatino.net/p/embed.php",
-        "https://sololatino.xyz/v/",
-        "owodeuwu.xyz" ,
-        "ok.ru" ,
-        "zippishare",
-        "/reproamz/",
-        "zplayer.live",
-        "wish",
-        "filemoon",
-        "filelions",
-        "mp4upload.com",
-        "burstcloud.co",
-        "yourupload",
-        "mixdrop","mxdrop",
-        "um.php?e=",
-        "vk.com/",
-        "dailymotion.com",
-        "vidhide",
-        "doodstream",
-        "mail.ru",
-        'dhcplay.com',
-        'hglink.to',
-        'hexload',
-        'uqload'
-    ];
-    }else{
-        serverPreferences = JSON.parse(serverPreferences);
+    if (serverPreferencesCache) {
+        return serverPreferencesCache;
     }
-    return serverPreferences;
+
+    let serverPreferences;
+    const savedPreferencesStr = localStorage.getItem("server_preferences");
+
+    if (!savedPreferencesStr) {
+        serverPreferences = defaultPreferences;
+    } else {
+        const savedPreferences = JSON.parse(savedPreferencesStr);
+        const filteredPrefs = savedPreferences.filter(p => defaultPreferences.includes(p));
+        const newServers = defaultPreferences.filter(p => !savedPreferences.includes(p));
+        serverPreferences = filteredPrefs.concat(newServers);
+    }
+
+    localStorage.setItem("server_preferences", JSON.stringify(serverPreferences));
+    
+    serverPreferencesCache = serverPreferences;
+    return serverPreferencesCache;
 }
