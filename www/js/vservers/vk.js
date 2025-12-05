@@ -20,7 +20,6 @@ export class VK{
                     videos[filev[i][1]] = filev[i][2].replace(/\\/g, "");
                 }
                 videos["video"] = filev[filev.length - 1][2].replace(/\\/g, "");
-
             }
             if(videos["video"]){
                 after(videos);

@@ -21,6 +21,7 @@ export class ZPlayer {
         fetch(window.serverHost + "get/"+ window.enc(nw)).then(res => res.text())
         .then(response => {
           after({"video": [...response.matchAll(/href="([^"]+)" class="uk-button/gm)][0][1]});
+          return;
         })
         .catch(err => {onError(err);});
       }).catch(err => {onError(err)})

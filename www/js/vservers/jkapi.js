@@ -31,13 +31,16 @@ export class JKAPI {
                         this.getDDL(after, onError, web, false);
                     }else if(result["file"] == null){
                       onError("No se pudo obtener el video");
+                      return;
                     }else{
                       let response = {"video": result['file']}
                       after(response);
+                      return;
                     }
                 })
             }).catch((error) => {
                 onError(error);
+                return;
             });
         })
         .catch((error) => {
@@ -65,7 +68,7 @@ export class Desu{
       var match = getFirstMatch(/url:\s*'(.+?)'/gm, content);
       if (match) {
         after({"video": match});
-        return
+        return;
       }
     }catch(e){};
     onError("Error al obtener video")

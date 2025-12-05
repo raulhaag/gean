@@ -16,11 +16,12 @@ export class FileLions{
                 let dlink = getFirstMatch(/file:"(.+?)"/gm, content);
                 if(dlink != ""){
                     after({"video": dlink});
+                    return;
                 }else{
                     onError("No se encontro el enlace");
+                    return;
                 }
             }
-
         }catch(error){
             onError(error);
         }

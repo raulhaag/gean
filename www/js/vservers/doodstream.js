@@ -13,6 +13,7 @@ export class DoodStream {
             let dlink2 = this.randomize(data2) + dlink[1] + dlink[2] + (new Date()).getTime();
             //after({video:  window.serverHost + "file/" + enc(dlink2) + "/" + enc(JSON.stringify(headers))})
             after({video:  dlink2})
+            return;
         }catch(e){
             onError(e);
         }

@@ -6,8 +6,10 @@ export class Mp4Upload {
             let dlink = getFirstMatch(/src:\s*\"(.+?)\"/gm, data);
             if(dlink){
                 after({video: window.serverHost + "file/" + enc(dlink) + "/" + enc(JSON.stringify({"Referer": web}))});
+                return;
             }else{
                 onError("Video no encontrado");
+                return;
             }
         }catch(e){
             onError(e);

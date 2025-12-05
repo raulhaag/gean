@@ -6,6 +6,7 @@ export class Mediafire {
             //let dlink = getFirstMatch(/Download file\"\s+href=\"(.+?)\"/gm, data);
             let dlink = window.dec(getFirstMatch(/data-scrambled-url="([^"]+)/gm, data));
             after({video: dlink});
+            return;
             // then recaptcha f***
         }catch(e){
             onError(e);
