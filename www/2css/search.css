@@ -115,4 +115,22 @@
     text-align: center;
 }
 
+.search-history-ph{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5px;
+}
 
+.search-history-item{
+    border: #555 1px solid;
+    margin: 5px;
+    padding: 5px 10px;
+    font-size: 18px;
+    text-align: center;
+    background-color: #333;
+    border-radius: 10px;
+}
+
+.search-history-item.focus{
+    outline: 3px white solid;
+}
