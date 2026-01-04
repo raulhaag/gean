@@ -41,7 +41,8 @@
         </div>
         <div class="collapse navbar-collapse" id="searchbox">
           <div class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Buscar" id="search-text" aria-label="Search"/>
+              <input class="form-control me-2" type="search" placeholder="Buscar" id="search-text" aria-label="Search" list="search-history"/>
+              <datalist id="search-history"></datalist>
               <button class="btn btn-outline-success" onclick="{mediaClick(this, 'sid/search')}">Buscar</button>
           </div>
         </div>
