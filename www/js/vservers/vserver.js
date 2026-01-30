@@ -25,6 +25,7 @@ import { MaRu } from "./maru.js";
 import { Hglink } from "./hglink.js";
 import { Uqload } from "./uqload.js";
 import { Hexload } from "./hexload.js";
+import { Vimeos } from "./vimeos.js";
 let interceptors = []
 
 export function registerInterceptor(contains, callback){
@@ -65,6 +66,7 @@ let servers = {
                 'hglink': new Hglink(),
                 'uqload': new Uqload(),
                 'hexload': new Hexload(),
+                'vimeos': new Vimeos(),
             };
 
 export async function getDDL(after, onError, web) {
@@ -89,6 +91,8 @@ export async function getDDL(after, onError, web) {
         return;
     }else if(web.indexOf("jk.php?u=stream") != -1) {
         servers["jkxtreme"].getDDL(after, onError, web);
+    }else if(web.indexOf("vimeos") != -1) {
+        servers["vimeos"].getDDL(after, onError, cleanInfo(web));
     }else if(web.indexOf("plusvip.net") != -1) {
         servers["plusvip.net"].getDDL(after, onError, web);
     }else if(web.indexOf("um.php?e=") != -1) {
@@ -172,6 +176,8 @@ export function getName(web) {
         name = "jkxtreme";
     }else if(web.indexOf("um.php?e=") != -1) {
         name = "Desu";
+    }else if(web.indexOf("vimeos") != -1) {
+        name = "Vimeos";
     }else if(web.indexOf("/um2.php?e=") != -1) {
         name = "Gdrive_JKAPI";
     }else if(web.startsWith("https://sololatino.xyz/v/")){
@@ -254,6 +260,7 @@ export function getPreferer(list){
 }
 
 const defaultPreferences = ["/um2.php?e=",
+    "vimeos",
     "server_name_EnlaceDirecto",
     "jk.php?u=stream",
     "mediafire.com",

@@ -137,9 +137,10 @@ export class LaMovie {
             for(let i = 0; i < response.data.embeds.length; i++){
                 links.push(response.data.embeds[i].url + "||info_" + response.data.embeds[i].lang);
             }
+            /* al parecer son comprimidos por lo que no nos sirve
             for(let i = 0; i < response.data.downloads.length; i++){
                 links.push(response.data.downloads[i].url + "||info_" + response.data.downloads[i].lang);
-            }
+            } */
             after(links);
         } catch (error) {
             onError(error.toString());
