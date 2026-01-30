@@ -323,7 +323,7 @@ function getServerPreferences(){
         const savedPreferences = JSON.parse(savedPreferencesStr);
         const filteredPrefs = savedPreferences.filter(p => defaultPreferences.includes(p));
         const newServers = defaultPreferences.filter(p => !savedPreferences.includes(p));
-        serverPreferences = filteredPrefs.concat(newServers);
+        serverPreferences = newServers.concat(filteredPrefs);
     }
 
     localStorage.setItem("server_preferences", JSON.stringify(serverPreferences));
