@@ -64,8 +64,7 @@ export class LaMovie {
 
     async getSearch(after, onError, query) {
         try {
-            const data = JSON.parse(await window.fGet(`${this.apiUrl}search?filter={}&postType=any&q=one&postsPerPage=26`));
-            console.log(data.data.posts.length);
+            const data = JSON.parse(await window.fGet(`${this.apiUrl}search?filter={}&postType=any&q=${encodeURI(query)}&postsPerPage=26`));
             after(this.getSeries(data, "others"));
         } catch (error) {
             onError(error.toString());
@@ -91,13 +90,15 @@ export class LaMovie {
                         chapters.push({"name": "Capítulo " + (i + 1), "path": this.name + "/getLinks/" + window.enc(itemdata.id + "_1_" + i)});
                     }
                 }else{
+                    data.data.seasons.sort((a, b) => a - b);
+                    const seasons = data.data.seasons;
                     for (let i = 0; i < data.data.pagination.total; i++) {
                         chapters.push({"name": "Temp 1 Capítulo " + (i + 1), "path": this.name + "/getLinks/" + window.enc(itemdata.id + "_1_" + i)});
                     }
-                    for (let i = 1; i < data.data.seasons.length; i++) {
+                    for (let i = 1; i < seasons.length; i++) {
                         data = JSON.parse(await window.fGet(`${this.apiUrl}single/episodes/list?_id=${itemdata.id}&season=${data.data.seasons[i]}&page=1&postsPerPage=15`));
                         for (let j = 0; j < data.data.pagination.total; j++) {
-                            chapters.push({"name": "Temp "+ data.data.seasons[i] + " Capítulo " + (j + 1), "path": this.name + "/getLinks/" + window.enc(itemdata.id + "_" + i + "_" + j)});
+                            chapters.push({"name": "Temp "+ seasons[i] + " Capítulo " + (j + 1), "path": this.name + "/getLinks/" + window.enc(itemdata.id + "_" + seasons[i] + "_" + j)});
                         }
                     }
                 }
