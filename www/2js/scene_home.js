@@ -260,6 +260,11 @@ export class SceneHome extends Scene{
         this.info.resume.innerHTML = "";
         //TODO
         //setLoadingInfo();
+        if("resume" in this.last.video.dataset){
+            this.info.resume.innerHTML = this.last.video.dataset.resume;
+            return;
+        }
+
         if(this.last.video.dataset.path.indexOf("getLinks") == -1) {
             this.setResume(this.last.video.dataset.path);
         }else if("ppath" in this.last.video.dataset){
@@ -311,12 +316,13 @@ export class SceneHome extends Scene{
     generateCategory(title, items) {
         if(items == null) return "";
         let result = '<div class="items demitransparent"><h2 class="items__title">' + title + '</h2><div class="items__list" value="0"><div class="item_gap"></div>';
-        let ppath = "";
+        let extradata = "";
         let extraClass = "";
         for (let i = 0; i < items.length; i++) {
-            ppath = (items[i]["parentPath"])? '" data-ppath="' + items[i]["parentPath"]: ''
+            extradata = (items[i]["parentPath"])? '" data-ppath="' + items[i]["parentPath"]: '';
+            extradata += (items[i]["resume"])? '" data-resume="' + (items[i]["resume"].replace(/"/g, "&quot;")): '';
             extraClass =  ((items[i].image == undefined) && (items[i].path.indexOf("/getMore/") != -1))? " more": "";
-            result += `<div class="item focusable${extraClass}" data-name="${items[i]["name"]}" data-image="${items[i]["image"]}" data-path="${items[i]["path"] + ppath}"><img class="item__image" loading="lazy" src="${items[i]['image']}" alt=""> <h2 class="item__title">${items[i]['name']}</h2></div>`;
+            result += `<div class="item focusable${extraClass}" data-name="${items[i]["name"]}" data-image="${items[i]["image"]}" data-path="${items[i]["path"] + extradata}"><img class="item__image" loading="lazy" src="${items[i]['image']}" alt=""> <h2 class="item__title">${items[i]['name']}</h2></div>`;
         }
         return result + '</div></div>';
     };
