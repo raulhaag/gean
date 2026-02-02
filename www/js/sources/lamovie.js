@@ -123,7 +123,7 @@ export class LaMovie {
         try {
             let itemdata = JSON.parse(window.dec(path));
             if(itemdata.kind == "movies"){    
-                after({ "name": itemdata.name, "path": itemdata.path, "image": itemdata.image, 
+                after({ "name": itemdata.name, "path": this.name + "/getDescription/" + path, "image": itemdata.image, 
                     "items": [itemdata.resume], "chapters": [{ "name": "Ver película", 
                     "path": this.name + "/getLinks/" + window.enc("m_" + itemdata.id)}] });
             }else{
@@ -150,7 +150,7 @@ export class LaMovie {
                         }
                     }
                 }
-                after({ "name": itemdata.name, "path": itemdata.path, "image": itemdata.image, 
+                after({ "name": itemdata.name, "path": this.name + "/getDescription/" + path, "image": itemdata.image, 
                     "items": [itemdata.resume], "chapters": chapters});
             }
 
