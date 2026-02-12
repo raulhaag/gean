@@ -10,3 +10,5 @@ cache/*
 temp/*
 *.ini
 www/js/vservers/vidgd.js
+cport/*
+*.exe
