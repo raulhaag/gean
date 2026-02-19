@@ -119,6 +119,6 @@ export class SceneSettings extends Scene{
     }
 
     dispose(){
-        window.selectPlayerHome()
+        this.saveSetting(this.settings);
     }
 }
