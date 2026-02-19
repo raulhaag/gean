@@ -75,15 +75,15 @@ export class SceneHome extends Scene{
             videoContent += this.generateCategory(titles[i], videos[titles[i]]);
         }
         if(favorites.length > 0){
-            videoContent += ("<div id='favlist'>" + this.generateCategory("Favoritos", favorites) + "</div>")
+            videoContent += ("<div class='no-border' id='favlist'>" + this.generateCategory("Favoritos", favorites) + "</div>")
         }else{
-            videoContent += "<div id='favlist'></div>";
+            videoContent += "<div class='no-border' id='favlist'></div>";
         }
         if((recent.length > 0) && (!window.appSettings["srecent"][0])) {videoContent += ("<div id='reclist'>" + this.generateCategory("Recientes", recent) + "</div>")
         }else{
-            videoContent += "<div id='reclist'></div>";
+            videoContent += "<div class='no-border' id='reclist'></div>";
         };
-        document.getElementsByClassName("videos")[0].innerHTML= "<div class='initial-gap'></div>" + videoContent + "<div class='initial-gap'></div>";
+        document.getElementsByClassName("videos")[0].innerHTML= "<div class='initial-gap no-border'></div>" + videoContent + "<div class='initial-gap'></div>";
         this.updatePositions("videos");
         hideLoading();
         changeKeyManager();
@@ -315,7 +315,7 @@ export class SceneHome extends Scene{
 
     generateCategory(title, items) {
         if(items == null) return "";
-        let result = '<div class="items demitransparent"><h2 class="items__title">' + title + '</h2><div class="items__list" value="0"><div class="item_gap"></div>';
+        let result = '<div class="items demitransparent no-border"><h2 class="items__title">' + title + '</h2><div class="items__list no-border" value="0"><div class="item_gap"></div>';
         let extradata = "";
         let extraClass = "";
         for (let i = 0; i < items.length; i++) {
