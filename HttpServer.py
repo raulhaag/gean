@@ -1,6 +1,6 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
-import ssl, urllib, contextlib, base64, os, json, time, shutil
+import socket, ssl, urllib, contextlib, base64, os, json, time, shutil
 from threading import Thread
 from zipfile import ZipFile
 from urllib import request, parse
@@ -337,7 +337,7 @@ def getResponseFile(path=[], server=None):
             custom_headers["Range"] = pet_range
         try:
             request = Request(url, headers=custom_headers)
-            with urlopen(request) as inputStream:
+            with urlopen(request, timeout=30) as inputStream:
                 content_length = inputStream.headers.get("Content-Length")
                 tlength = int(content_length) if content_length else 0
                 content_type = inputStream.headers.get("Content-Type")
@@ -377,11 +377,11 @@ def getResponseFile(path=[], server=None):
                     server.end_headers()
                     server.wfile.write(b"Unsupported response: " + str(inputStream.status).encode('utf-8'))
 
-        except (HTTPError, URLError) as e:
+        except (HTTPError, URLError, socket.timeout) as e:
             server.send_response(404)
             #server.send_header('Access-Control-Allow-Origin', '*')  # CORS también para errores
             server.end_headers()
-            server.wfile.write(f"File not found: {e}".encode('utf-8'))
+            server.wfile.write(f"File not found or timed out: {e}".encode('utf-8'))
         except (ConnectionAbortedError, ConnectionResetError) as e:
             print("Conección abortada o reseteada por el cliente.")
 
