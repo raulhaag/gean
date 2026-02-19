@@ -8,6 +8,7 @@
     height: 100%;
     background: #000;
 }
+
 .player-container{
     position: relative;
     padding: 3px;
@@ -16,6 +17,7 @@
     flex-direction: column;
     max-height: 100vh;
 }
+
 .player video{
     position: absolute;
     height: 100%;
@@ -24,9 +26,11 @@
     outline: 0px !important;
     border: 0px !important;
 }
+
 .player-options{
     display: flex;
 }
+
 .player-video-container{
     position: relative;
     width: 100%;
@@ -34,6 +38,7 @@
     flex-grow: 1;
     background-color: #000;
 }
+
 .player-option-list{
     flex-grow: 1;
     min-width: calc(25vw - 25px) ;
@@ -45,11 +50,13 @@
     padding-bottom: 20px;
     outline: 1px solid lightgrey;
 }
+
 .player-option-list:after{
     content: "▾";
     position: absolute;
     right: 5px;
 }
+
 .player-option-title{
     flex-grow: 1;
     min-width: calc(25vw - 25px) ;
@@ -60,6 +67,7 @@
     padding-bottom: 20px;
     height: 50px;
 }
+
 .player-option-list.selected{
     background-color: #FFF4;
 }
@@ -74,28 +82,36 @@
     height: 100%;
     z-index: 1010;
 }
+
 .vjs-control-bar{
     z-index: 1010;
 }
+
 .vjs-texttrack-settings, .vjs-subs-caps-button, .vjs-picture-in-picture-control{
     display: none;
 }
+
 .jw-media video{
     z-index: 0 !important;
 }
+
 #player-container_1_0 {
     width: 100% !important;
     height: 100% !important;
 }
+
 .video-js .vjs-current-time{
     display: block !important;
 }
+
 .video-js .vjs-duration{
     display: block !important;
 }
+
 .plyr{
     height: 100%;
 }
+
 video::cue {
     position: relative;
     font-size: min(7vh, 7vw); /* Tamaño de la fuente */
@@ -103,6 +119,7 @@ video::cue {
     background-color: transparent; /* Fondo transparente */
     text-shadow: -1px -1px 0 black, 2px -1px 0 black, -1px 2px 0 black, 2px 2px 0 black; /* Contorno */
 }
+
 .seek-preview {
     position: absolute;
     top: 50%;

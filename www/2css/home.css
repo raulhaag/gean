@@ -569,3 +569,11 @@ body {
 .more h2{
   top: 0px;
 }
+
+.no-border, .no-border:focus, .no-border:active, .no-border:focus-visible{
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-focus-ring-color: transparent !important;
+}

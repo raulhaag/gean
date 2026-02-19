@@ -40,7 +40,7 @@ export class ScenePlayer extends Scene {
   }
   
   initBody() {
-    let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options" tabindex="-1">`;
+    let innerHtml = `<div class="player" id="player"><div class="player-container"><div class="player-options no-border" tabindex="-1">`;
     let cc = 0;
     let sItems = {};
     let vdata = this.options["video"].split("|||");
@@ -96,9 +96,9 @@ export class ScenePlayer extends Scene {
       `'>` +
       getName(this.items[0]) +
       `</div>
-            </div><div class="player-video-container">
+            </div><div class="player-video-container no-border">
                     <div class="seek-preview" style="display: none;"></div>
-                    <video id="player-container_1_0" class="video-js" controls>
+                    <video id="player-container_1_0 no-border" class="video-js" controls>
                     <source src="` +
       videoSrc +
       `" />` + extraSub + `

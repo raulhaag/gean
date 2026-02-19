@@ -16,6 +16,7 @@ export function generateCategory(title, items) {
       `;
       for (let i = 0; i < items.length; i++) {
         if(items[i]['image']){
+          items[i]['name'] = items[i]['name'].replace(/"/gm, "`");
           out += `
               <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="{mediaClick(this, \'${items[i]["path"] + "/" + items[i]["name"]}')}">
                 <div class="card text-bg-dark" style="width:100%; aspect-ratio:0.65;">
@@ -154,7 +155,7 @@ export function getPlayer(options, items = [], videoSrc, subtitles = "", title='
     </div>
       <div class="mt-3 h-auto">
         <video
-          id="video_placeholder_2_0 m-3"
+          id="video_placeholder_2_0"
           style="max-height: calc(100vh - 130px);"
           class="w-100 videoview"
           controls="controls"
