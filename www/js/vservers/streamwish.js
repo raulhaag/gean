@@ -1,7 +1,13 @@
 import { Hglink } from "./hglink.js";
+import { VideoServer } from "./videoserver.js";
 
-export class StreamWish {
-    constructor() {}
+export class StreamWish extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "StreamWish";
+    }
     async getDDL(after, onError, web){
         try{
             let content = await fGet(web);
@@ -26,5 +32,9 @@ export class StreamWish {
         }catch(error){
             onError(error);
         }
+    }
+    can(www){
+        if ((www.indexOf("wish") != -1) || www.indexOf("ghbrisk.com") != -1) return true;
+        return true;
     }
 }

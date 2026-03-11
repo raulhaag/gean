@@ -1,5 +1,11 @@
-export class ZPlayer {
-  constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class ZPlayer extends VideoServer {
+  constructor() {
+    super();
+  }
+  name() {
+    return "ZPlayer";
+  }
   getDDL(after, onError, web, customReferer = "") {
     try{
       let id = web.split("\?")[0].split("/").pop();
@@ -28,5 +34,11 @@ export class ZPlayer {
     }catch(e){
       onError(e);
     }
+  }
+  can(www) {
+    if (www.indexOf("zplayer.live") == -1) {
+      return false;
+    }
+    return true;
   }
 }

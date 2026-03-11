@@ -1,3 +1,4 @@
+import { VideoServer } from "./videoserver";
 //based on https://github.com/recloudstream/cloudstream/blob/master/app/src/main/java/com/lagradost/cloudstream3/extractors/Vidguard.kt
 function aadecode(text) {
     // Extraer cuerpo principal del código
@@ -56,8 +57,13 @@ function aadecode(text) {
     return result;
 }
 
-export class Vidguard{
-    constructor() {}
+export class Vidguard extends VideoServer{
+    constructor() {
+        super();
+    }
+    name(){
+        return "Vidguard";
+    }
     async getDDL(after, onError, web) {
         try{
             aadecode('')
@@ -149,5 +155,8 @@ export class Vidguard{
     
         // Reemplazar el valor original de 'sig' en la URL con el valor modificado y retornar la URL actualizada
         return url.replace(sig, modifiedSig);
+    }
+    can(www){
+        throw Error("TODO")
     }
 }

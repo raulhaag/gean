@@ -1,6 +1,12 @@
 
-export class Vimeos{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Vimeos extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Vimeos";
+    }
     async getDDL(after, onError, web) {
         try{
             const urlw = new URL(web);
@@ -12,5 +18,11 @@ export class Vimeos{
         }catch(e){
             onError(e);
         }
+    }
+    can(www){
+        if(www.indexOf("vimeos") != -1){
+            return true;
+        }
+        return false;
     }
 }

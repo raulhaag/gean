@@ -1,5 +1,11 @@
-export class Hexload {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Hexload extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Hexload";
+    }
     async getDDL(after, onError, web){
         try{
             let vid = getFirstMatch(/embed-(.+?)\//gm, web);
@@ -25,5 +31,11 @@ export class Hexload {
         }catch(e){
             onError(e);
         }
+    }
+    can(www){
+        if(www.indexOf("hexload") == -1){
+            return false;
+        }
+        return true;
     }
 }

@@ -1,7 +1,11 @@
-export class VidHidepro {
-    constructor() {}
-
-
+import { VideoServer } from "./videoserver.js";
+export class VidHidepro extends VideoServer {
+    constructor() {
+      super();
+    }
+    name() {
+        return "VidHidepro";
+    }
     async getDDL(after, onError, web) {
         try {
             let data = await fGet(web);
@@ -30,5 +34,11 @@ export class VidHidepro {
             console.error("Error en VidHidepro getDDL:", e);
             onError("Ocurrió un error al procesar el video de VidHidepro: " + e.message);
         }
+    }
+    can(www) {
+        if(/vidhide|dintezuvio|callistanise/.test(www)){
+            return true;
+        }
+        return false;
     }
 }

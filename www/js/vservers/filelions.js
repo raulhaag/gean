@@ -1,5 +1,11 @@
-export class FileLions{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class FileLions extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "FileLions";
+    }
     async getDDL(after, onError, web){
         try{
             let content = await fGet(web);
@@ -25,5 +31,11 @@ export class FileLions{
         }catch(error){
             onError(error);
         }
+    }
+    can(www){
+        if(www.indexOf("filelions.") == -1){
+            return false;
+        }
+        return true;
     }
 }

@@ -1,5 +1,11 @@
-export class VK{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class VK extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "VK";
+    }
     async getDDL(after, onError, web) {
         try{
             let headers = { "User-Agent": window.navigator.userAgent};
@@ -29,5 +35,11 @@ export class VK{
             //ignore
         }      
         onError(`can't find video (${web})` );
+    }
+    can(www){
+        if(www.indexOf("vk.com") != -1){
+            return true;
+        }
+        return false;
     }
 }

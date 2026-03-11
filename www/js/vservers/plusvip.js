@@ -1,5 +1,11 @@
-export class Plusvip {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Plusvip extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Plusvip";
+    }
     async getDDL(after, onError, web){
         try{
             var link = web.split("data=")[1]; 
@@ -15,5 +21,11 @@ export class Plusvip {
         }catch(error){
             onError(error);
         }
+    }
+    can(www){
+        if(www.indexOf("plusvip.net") == -1){
+            return false;
+        }
+        return true;
     }
 }

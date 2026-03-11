@@ -1,6 +1,12 @@
 
-export class Plustr {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Plustr extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Plustr";
+    }
     async getDDL(after, onError, web){
             try{
                 var data = await fGet(web, {"User-Agent": navigator.userAgent, Referer:'https://streamsito.com/'});
@@ -15,6 +21,12 @@ export class Plustr {
             }catch(error){
                 onError(error);
             }
+    }
+    can(www){
+        if(www.indexOf("plustr") == -1){
+            return false;
+        }
+        return true;
     }
 }
 
