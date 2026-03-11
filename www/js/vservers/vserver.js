@@ -25,11 +25,6 @@ import { Hglink } from "./hglink.js";
 import { Uqload } from "./uqload.js";
 import { Hexload } from "./hexload.js";
 import { Vimeos } from "./vimeos.js";
-let interceptors = []
-
-export function registerInterceptor(contains, callback){
-    interceptors.push({"contains": contains, "callback": callback});
-}
 
 let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new ReSololatino(), new SololatinoXYZ(),
@@ -43,6 +38,14 @@ let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new MaRu(), new Hglink(), new Uqload(),
                 new Hexload(), new Vimeos(), new StreamWish(),
             ];
+let prefered = loadPreferenced();
+orderServersByPrefered();
+
+let interceptors = [];
+
+export function registerInterceptor(contains, callback){
+    interceptors.push({"contains": contains, "callback": callback});
+}
 
 export async function getDDL(after, onError, web) {
     for(let a in interceptors){
@@ -79,7 +82,7 @@ function cleanInfo(data){
 }
 
 export function getName(web) {
-    let info = " " + getFirstMatch(/\|\|info_(.+)/gm, web);
+    let info = " " + window.getFirstMatch(/\|\|info_(.+)/gm, web);
     let name = "";
     /*if(web.startsWith("{")){
         return JSON.parse(web)["name"];
@@ -100,10 +103,10 @@ export function getName(web) {
 
 export function getPreferer(list){
     let ordered = [];
-    for(let i = 0; i < list.length; i++){
-        for(let j = 0; j < servers.length; j++){
-            if(servers[j].can(list[i])){
-                ordered.push(list[i]);
+    for(let i = 0; i < servers.length; i++){
+        for(let j = 0; j < list.length; j++){
+            if(servers[i].can(list[j])){
+                ordered.push(list[j]);
                 break;
             }
         }
@@ -111,12 +114,57 @@ export function getPreferer(list){
     return ordered;
 }
 
-
-let serverPreferencesCache = null;
-
-export function setServerAsLast(server){
+function orderServersByPrefered(){
+    //ordena los servidores segun la lista de prefered
+    let ordered = [];
+    for(let i = 0; i < prefered.length; i++){
+        for(let j = 0; j < servers.length; j++){
+            if(servers[j].name() == prefered[i]){
+                ordered.push(servers[j]);
+                break;
+            }
+        }
+    }
+    //agrega al final los que no estan en prefered
+    for(let i = 0; i < servers.length; i++){
+        if(ordered.indexOf(servers[i]) == -1){
+            ordered.push(servers[i]);
+        }
+    }
+    servers = ordered;
 }
 
-function getServerPreferences(){
 
+export function setServerAsLast(url){
+    let name = "";
+    for(let i = 0; i < servers.length; i++){
+        if(servers[i].can(cleanInfo(url))){
+            name = servers[i].name();
+            break;
+        }
+    }
+    if(name == ""){
+        return;
+    }
+    if(prefered.indexOf(name) == 0){
+        return;
+    }else if(prefered.indexOf(name) == -1){
+        prefered.unshift(name);
+    }else{
+        prefered.splice(prefered.indexOf(name), 1);
+        prefered.unshift(name);
+    }
+    savePrefered();
+    orderServersByPrefered();
+}
+
+function savePrefered(){
+    localStorage.setItem("prefered", JSON.stringify(prefered));
+}
+
+function loadPreferenced(){
+    if(localStorage.getItem("prefered") != null){
+        return JSON.parse(localStorage.getItem("prefered"));
+    }
+    return [];
 }
