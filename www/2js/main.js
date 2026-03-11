@@ -752,7 +752,7 @@ function loadSettings() {
       "Dejarme elegir la resolución antes de abrir el video.",
     ],
     vsource_select: [
-      false,
+      true,
       "Dejarme elegir el servidor de video antes de abrir el video.",
     ],
     cache: [
