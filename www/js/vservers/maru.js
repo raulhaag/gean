@@ -1,5 +1,11 @@
-export class MaRu {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class MaRu extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "MaRu";
+    }
     async getDDL(after, onError, web){
         try{
             let content = await fGet(web);
@@ -15,6 +21,12 @@ export class MaRu {
         }catch(e){
             onError(e);
         }
+    }
+    can(www){
+        if(www.indexOf("mail.ru") == -1){
+            return false;
+        }
+        return true;
     }
 }
 

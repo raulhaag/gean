@@ -1,5 +1,11 @@
-export class JKAPI {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class JKAPI extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "JKAPI";
+    }
     getDDL(after, onError, web, rt = true) {
       if(web.indexOf("https://jkanime.net/") == -1 ){
         web = "https://jkanime.net/" + web;
@@ -47,30 +53,60 @@ export class JKAPI {
           onError(error);
         });
     }
+    can(www){
+        if(www.indexOf("/um2.php?e=") == -1){
+            return false;
+        }
+        return true;
+    }
 }
 
-export class JKXtreme{
-    constructor() {}
+export class JKXtreme extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "JKXtreme";
+    }
     getDDL(after, onError, web) {
       if(web.indexOf("https://jkanime.net/") == -1 ){
         web = "https://jkanime.net/" + web;
       }
       after({"video": web.replace("jk.php?u=", "")});
     }
+    can(www){
+        if(www.indexOf("jkxtreme") == -1){
+            return false;
+        }
+        return true;
+      }
 }
 
-export class Desu{
-  async getDDL(after, onError, web) {
-    try{
-      let link = "https://jkanime.net/" + web;
-      let content = await fGet(link, {"Referer":
-                    "https://jkanime.net/"});
-      var match = getFirstMatch(/url:\s*'(.+?)'/gm, content);
-      if (match) {
-        after({"video": match});
-        return;
-      }
-    }catch(e){};
-    onError("Error al obtener video")
-  }
+export class Desu extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Desu";
+    }
+    async getDDL(after, onError, web) {
+      try{
+        let link = "https://jkanime.net/" + web;
+        let content = await fGet(link, {"Referer":
+                      "https://jkanime.net/"});
+        var match = getFirstMatch(/url:\s*'(.+?)'/gm, content);
+        if (match) {
+          after({"video": match});
+          return;
+        }
+      }catch(e){};
+      onError("Error al obtener video")
+    }
+    can(www){
+        if(www.indexOf("um.php?e=") == -1){
+            return false;
+        }
+        return true;
+    }
+
 }

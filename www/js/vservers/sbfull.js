@@ -1,5 +1,9 @@
-export class SbFull{
+import { VideoServer } from "./videoserver.js";
+export class SbFull extends VideoServer {
     constructor(){}
+    name(){
+        return "SbFull";
+    }
     async getDDL(after, onError, web){
         try{
             let data = await fGet(web, {Referer: "https://sololatino.net/"});
@@ -12,5 +16,12 @@ export class SbFull{
         }catch(e){
             onError(e);
         }
-    }    
+    }
+    can(www){
+        if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
+            return true;
+        }
+        return false;
+    }
+   
 }

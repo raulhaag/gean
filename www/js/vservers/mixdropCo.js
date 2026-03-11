@@ -1,6 +1,12 @@
 
-export class Mixdrop{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Mixdrop extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Mixdrop";
+    }
     async getDDL(after, onError, web) {
         const urlw = new URL(web);
         let headers = { "User-Agent": window.navigator.userAgent};
@@ -18,4 +24,11 @@ export class Mixdrop{
             onError("Mixdrop: video no encontrado")
         }
     }
+    can(www){
+        if(www.indexOf("mixdrop") == -1 && www.indexOf("mxdrop") == -1){
+            return false;
+        }
+        return true;
+    }
+
 }

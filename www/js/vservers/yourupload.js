@@ -1,5 +1,11 @@
-export class YourUpload {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class YourUpload extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "YourUpload";
+    }
     async getDDL(after, onError, web) {
         try{                                
           let headers = { "Referer": web, "User-Agent": window.navigator.userAgent};
@@ -42,5 +48,11 @@ export class YourUpload {
         let pw = window.serverHost + "file/" + enc(result) + "/" + enc(JSON.stringify(headers));
         console.log(pw);/*/
         //onError("Error");
+    }
+    can(www){
+        if(www.indexOf("yourupload") != -1){
+            return true;
+        }
+        return false;
     }
 }

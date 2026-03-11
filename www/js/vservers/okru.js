@@ -1,5 +1,11 @@
-export class OkRu{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class OkRu extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "OkRu";
+    }
     async getDDL(after, onError, web) {
         try{        
             let headers = { "User-Agent": window.navigator.userAgent};
@@ -29,5 +35,11 @@ export class OkRu{
             //ignore
         }      
         onError(`can't find video (${web})` );
+    }
+    can(www){
+        if(www.indexOf("ok.ru") == -1){
+            return false;
+        }
+        return true;
     }
 }

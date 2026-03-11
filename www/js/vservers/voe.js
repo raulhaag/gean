@@ -1,5 +1,11 @@
-export class Voe {
-  constructor() {}
+import  { VideoServer } from "./videoserver.js";
+export class Voe extends VideoServer {
+  constructor() {
+    super();
+  }
+  name() {
+    return "Voe";
+  }
   async getDDL(after, onError, web) {
     try {
       let data = await fGet(web, { "User-Agent": navigator.userAgent });
@@ -101,4 +107,10 @@ export class Voe {
     }
     return jsonData;
   };
+  can(www){
+    if(www.indexOf("voe") == -1){// too generic?
+      return false;
+    }
+    return true;
+  }
 }

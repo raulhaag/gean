@@ -1,5 +1,11 @@
-export class BurstCloud{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class BurstCloud extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "BurstCloud";
+    }
     async getDDL(after, onError, web){
         try{
             let content = await fGet(web);
@@ -16,5 +22,11 @@ export class BurstCloud{
         }catch(error){
             onError(error);
         }
+    }
+    can(www){
+        if(www.indexOf("https://www.burstcloud.co/") == -1){
+            return false;
+        }
+        return true;
     }
 }

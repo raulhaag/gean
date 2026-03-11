@@ -1,5 +1,11 @@
-export class Mp4Upload {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Mp4Upload extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Mp4Upload";
+    }
     async getDDL(after, onError, web){
         try{
             let data = await fGet(web, {"User-Agent": window.navigator.userAgent});
@@ -14,5 +20,11 @@ export class Mp4Upload {
         }catch(e){
             onError(e);
         }
+    }
+    can(www){
+        if(www.indexOf("mp4upload.com") == -1){
+            return false;
+        }
+        return true;
     }
 }

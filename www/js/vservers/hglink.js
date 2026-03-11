@@ -1,5 +1,11 @@
-export class Hglink {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Hglink extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "StreamWish";
+    }
     async getDDL(after, onError, web){
         try{
             const main = [
@@ -41,5 +47,24 @@ export class Hglink {
         }catch(error){
             onError(error);
         }
+    }
+    can(www){
+        const locations = [
+                'kravaxxa.com',
+                'davioad.com',
+                'haxloppd.com',
+                'auvexiug.com',
+                'dumbalag.com',
+                'dhcplay.com',
+                'hglink.to',
+                'test.hglink.to',
+                'wish-redirect.aiavh.com',
+                'hglink'];
+        for (let i = 0; i < locations.length; i++) {
+            if(www.indexOf(locations[i]) != -1){
+                return true;
+            }
+        }
+        return false;
     }
 }

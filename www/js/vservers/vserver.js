@@ -1,5 +1,5 @@
 import {JKAPI, JKXtreme, Desu} from "./jkapi.js";
-import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, EmbedsitoNet, MamazonPlayer} from "./re_sololatino.js";
+import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, MamazonPlayer} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
 import {YourUpload}from "./yourupload.js";
 import {OkRu}from "./okru.js";
@@ -8,7 +8,6 @@ import {Mediafire} from "./mfire.js"
 import { Plusvip } from "./plusvip.js";
 import { Streamlare } from "./streamlare.js";
 import { Streamtape } from "./streamtape.js";
-import { StreamSB } from "./streamsb.js";
 import { Mixdrop } from "./mixdropCo.js";
 import { Voe } from "./voe.js";
 import { StreamWish } from "./streamwish.js";
@@ -32,42 +31,18 @@ export function registerInterceptor(contains, callback){
     interceptors.push({"contains": contains, "callback": callback});
 }
 
-let servers = {
-                "jkapi": new JKAPI(),
-                "jkxtreme": new JKXtreme(),
-                "desu": new Desu(),
-                "re_sololatino": new ReSololatino(),
-                "sololatinoxyz": new SololatinoXYZ(),
-                "zplayer.live": new ZPlayer(),
-                "yourupload": new YourUpload(),
-                "okru": new OkRu(),
-                "owodeuwu.xyz" : new OwodeuwuXYZ(),
-                "zippy": new ZippyShare(),
-                "mediafire.com": new Mediafire(),
-                "plusvip.net": new Plusvip(),
-                "streamlare.com": new Streamlare(),
-                "embedsito.net/reproamz": new EmbedsitoNet(),
-                "/reproamz/": new MamazonPlayer(),
-                "mixdrop": new Mixdrop(),
-                "streamsb": new StreamSB(),
-                "streamtape.com": new Streamtape(),
-                "voe": new Voe(),
-                "streamwish": new StreamWish(),
-                "filemoon": new FileMoon(),
-                "filelions": new FileLions(),
-                "plustr": new Plustr(),
-                "vk.com/": new VK(),
-                "dailymotion.com": new DailyMotion(),
-                "vidhide": new VidHidepro(),
-                "doodstream": new DoodStream(),
-                "burstcloud.co": new BurstCloud(),
-                "mp4upload.com": new Mp4Upload(),
-                'mail.ru': new MaRu(),
-                'hglink': new Hglink(),
-                'uqload': new Uqload(),
-                'hexload': new Hexload(),
-                'vimeos': new Vimeos(),
-            };
+let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
+                new ReSololatino(), new SololatinoXYZ(),
+                new ZPlayer(), new YourUpload(), new OkRu(),
+                new OwodeuwuXYZ(), new ZippyShare(), new Mediafire(), 
+                new Plusvip(), new Streamlare(), new MamazonPlayer(),
+                new Mixdrop(), new Streamtape(), new Voe(), 
+                new FileMoon(), new FileLions(), new Plustr(),
+                new VK(), new DailyMotion(), new VidHidepro(),
+                new DoodStream(), new BurstCloud(), new Mp4Upload(),
+                new MaRu(), new Hglink(), new Uqload(),
+                new Hexload(), new Vimeos(), new StreamWish(),
+            ];
 
 export async function getDDL(after, onError, web) {
     for(let a in interceptors){
@@ -89,75 +64,14 @@ export async function getDDL(after, onError, web) {
     if(web.indexOf("server_name_EnlaceDirecto") != -1) {
         after({video: cleanInfo(web)}); 
         return;
-    }else if(web.indexOf("jk.php?u=stream") != -1) {
-        servers["jkxtreme"].getDDL(after, onError, web);
-    }else if(web.indexOf("vimeos") != -1) {
-        servers["vimeos"].getDDL(after, onError, cleanInfo(web));
-    }else if(web.indexOf("plusvip.net") != -1) {
-        servers["plusvip.net"].getDDL(after, onError, web);
-    }else if(web.indexOf("um.php?e=") != -1) {
-        servers["desu"].getDDL(after, onError, web);
-    }else if(web.indexOf("/um2.php?e=") != -1) {
-        servers["jkapi"].getDDL(after, onError, web);
-    }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
-        servers["re_sololatino"].getDDL(after, onError, web);
-    }else if(web.startsWith("https://sololatino.xyz/v/")){
-        servers["sololatinoxyz"].getDDL(after, onError, web);
-    }else if(web.indexOf("zplayer.live") != -1) {
-        servers["zplayer.live"].getDDL(after, onError, web);
-    }else if(web.indexOf("yourupload") != -1) {
-        servers["yourupload"].getDDL(after, onError, web);
-    }else if(web.indexOf("ok.ru") != -1) {
-        servers["okru"].getDDL(after, onError, web);
-    }else if(web.indexOf("owodeuwu.xyz") != -1) {
-        servers["owodeuwu.xyz"].getDDL(after, onError, web);
-    }else if(web.indexOf("/reproamz/") != -1) {
-        servers["/reproamz/"].getDDL(after, onError, web);
-    }else if(web.indexOf("zippishare") != -1){
-        servers["zippishare"].getDDL(after, onError, web);
-    }else if(web.indexOf("mediafire.com") != -1) {
-        servers["mediafire.com"].getDDL(after, onError, web);
-    }else if(web.indexOf("embedsito.net/reproamz") != -1){
-        return servers["embedsito.net/reproamz"].getDDL (after, onError, web);
-    }else if((web.indexOf("mixdrop") != -1) || (web.indexOf('mxdrop') != -1)){
-            return servers["mixdrop"].getDDL (after, onError, cleanInfo(web));
-    }else if(web.indexOf("streamtape.com") != -1){
-        return servers["streamtape.com"].getDDL(after,onError, web);
-    }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
-        return servers["streamsb"].getDDL (after, onError, web);
-    }else if ((web.indexOf("voe") != -1)) {
-        return servers["voe"].getDDL (after, onError, cleanInfo(web));
-    }else if((web.indexOf("vidhide") != -1)|| (web.indexOf('ryderjet.com') != -1)) {
-        return servers["vidhide"].getDDL (after, onError, cleanInfo(web));
-    }else if (((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) ) {
-        return servers["streamwish"].getDDL (after, onError, cleanInfo(web));
-    }else if ((web.indexOf("filemoon.") != -1)) {
-        return servers["filemoon"].getDDL (after, onError, cleanInfo(web));
-    }else if ((web.indexOf("filelions.") != -1)) {
-        return servers["filelions"].getDDL(after, onError, cleanInfo(web));
-    }else if ((web.indexOf("plustr") != -1)) {
-        return servers["plustr"].getDDL(after, onError, cleanInfo(web));
-    }else if ((web.indexOf("vk.com/") != -1)){
-        return servers["vk.com/"].getDDL(after, onError, cleanInfo(web))
-    }else if(web.indexOf("dailymotion.com") != -1){
-        return servers["dailymotion.com"].getDDL(after, onError, cleanInfo(web));
-    }else if((web.indexOf("doodstream") != -1) || (web.indexOf('dsvplay') != -1)){
-        return servers["doodstream"].getDDL(after, onError, cleanInfo(web));
-    }else if(web.indexOf("burstcloud.co") != -1){
-        return servers["burstcloud.co"].getDDL(after, onError, cleanInfo(web));
-    }else if(web.indexOf("mp4upload.com") != -1){
-        return servers["mp4upload.com"].getDDL(after, onError, cleanInfo(web));
-    }else if(web.indexOf("mail.ru") != -1){
-        return servers["mail.ru"].getDDL(after, onError, cleanInfo(web));
-    }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
-        return servers["hglink"].getDDL(after, onError, cleanInfo(web));
-    }else if((web.indexOf("uqload") != -1)){
-        return servers["uqload"].getDDL(after, onError, cleanInfo(web));
-    }else if((web.indexOf("hexload") != -1)){
-        return servers["hexload"].getDDL(after, onError, cleanInfo(web));
-    }else{
-        onError("Not supported server");
     }
+    for(let i = 0; i < servers.length; i++){
+        if(servers[i].can(cleanInfo(web))){
+            servers[i].getDDL(after, onError, cleanInfo(web));
+            return;
+        }
+    }
+    onError("Not supported server");
 }
 
 function cleanInfo(data){
@@ -172,162 +86,37 @@ export function getName(web) {
     }else*/ 
     if(web.indexOf("server_name_EnlaceDirecto") != -1) {
         name = "Directo";
-    }else if(web.indexOf("jk.php?u=stream") != -1) {
-        name = "jkxtreme";
-    }else if(web.indexOf("um.php?e=") != -1) {
-        name = "Desu";
-    }else if(web.indexOf("vimeos") != -1) {
-        name = "Vimeos";
-    }else if(web.indexOf("/um2.php?e=") != -1) {
-        name = "Gdrive_JKAPI";
-    }else if(web.startsWith("https://sololatino.xyz/v/")){
-        name = "ReSololatino";
-    }else if(web.startsWith("https://re.sololatino.net/p/embed.php")){
-        name = "ReSololatino";
-    }else if(web.indexOf("yourupload") != -1) {
-        name = "YourUpload";
-    }else if(web.indexOf("ok.ru") != -1) {
-        name = "OkRu";
-    }else if(web.indexOf("/reproamz/") != -1){
-        name = "AMZ ReSololatino" ;
-    }else if(web.indexOf("zippishare") != -1) {
-        name = "Zippishare";
-    }else if(web.indexOf("zplayer.live") != -1) {
-        name = "ZPlayer live"
-    }else if(web.indexOf("mediafire.com") != -1) {
-        name = "MediaFire";
-    }else if(web.indexOf("plusvip.net") != -1) {
-        name = "Plusvip";
-    }else if(web.indexOf("mp4upload.com") != -1) {
-            name = "Mp4Upload.com";
-    }else if((web.indexOf("streamlare.com") != -1) || (web.indexOf("slmaxed.com") != -1) || (web.indexOf("slwatch.c") != -1)) {
-        name = "StreamLare";
-    }else if(web.indexOf("embedsito.net/reproamz") != -1) {
-        name = "Embedsito(Amz)";
-    }else if (/sbfull\.|sbfast\.|sbembed\.com|sbembed1\.com|sbplay\.org|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/.test(web)) {
-        name = "StreamSB";
-    }else if((web.indexOf("mixdrop") != -1) || (web.indexOf('mxdrop') != -1)){
-        name = "Mixdrop";
-    }else if(web.indexOf("streamtape.com") != -1){
-        name = "Streamtape";
-    }else if(web.indexOf("filemoon") != -1){
-        name = "FileMoon";
-    }else if(web.indexOf("filelions") != -1){
-        name = "FileLions";
-    }else if((web.indexOf("voe") != -1)){
-        name = "VOE";
-    }else if ((web.indexOf("wish") != -1) || web.indexOf("ghbrisk.com") != -1) {
-        name = "StreamWish";
-    }else if (web.indexOf("plustr") != -1) {
-        name = "Plustream (Solo reproductor interno android)";
-    }else if ((web.indexOf("vk.com/") != -1)){
-        name =  "VK";
-    }else if(web.indexOf("dailymotion.com") != -1){
-        name =  "DailyMotion";
-    }else if((web.indexOf("vidhide") != -1) || (web.indexOf('ryderjet.com') != -1)){
-        name =  "vidhide";
-    }else if((web.indexOf("doodstream") != -1) || (web.indexOf('dsvplay') != -1)){
-        name =  "doodstream";
-    }else if(web.indexOf("burstcloud.co") != -1){
-        name =  "BurstCloud";    
-    }else if(web.indexOf("mail.ru") != -1){
-            name =  "mail.ru";
-    }else if((web.indexOf("dhcplay.com") != -1) || (web.indexOf('hglink.to') != -1)){
-        name =  "hglinkwish";
-    }else if((web.indexOf("uqload") != -1)){
-        name = "Uqload";
-    }else if((web.indexOf("hexload") != -1)){
-        name = "Hexload";
-    }else {
-        name = "";
     }
+    name = "";
+    for(let i = 0; i < servers.length; i++){
+        if(servers[i].can(cleanInfo(web))){
+            name = servers[i].name();
+            break;
+        }
+    }
+
     return name + info;
 }
 
 export function getPreferer(list){
-    let preferer = getServerPreferences();
-    
     let ordered = [];
-    for(let i = 0; i < preferer.length; i++){
-        for(let j = 0; j < list.length; j++){
-            if(list[j].indexOf(preferer[i]) != -1){
-                ordered.push(list[j]);
+    for(let i = 0; i < list.length; i++){
+        for(let j = 0; j < servers.length; j++){
+            if(servers[j].can(list[i])){
+                ordered.push(list[i]);
+                break;
             }
-          }
         }
-
+    }
     return ordered;
 }
 
-const defaultPreferences = ["/um2.php?e=",
-    "vimeos",
-    "server_name_EnlaceDirecto",
-    "jk.php?u=stream",
-    "mediafire.com",
-    "plusvip.net",
-    "streamtape.com",
-    "ghbrisk.com",
-    "voe",
-    'ryderjet.com',
-    "embedsito.net/reproamz",
-    "https://re.sololatino.net/p/embed.php",
-    "https://sololatino.xyz/v/",
-    "owodeuwu.xyz" ,
-    "ok.ru" ,
-    "zippishare",
-    "/reproamz/",
-    "zplayer.live",
-    "wish",
-    "filemoon",
-    "filelions",
-    "mp4upload.com",
-    "burstcloud.co",
-    "yourupload",
-    "mixdrop","mxdrop",
-    "um.php?e=",
-    "vk.com/",
-    "dailymotion.com",
-    "vidhide",
-    "doodstream",
-    "mail.ru",
-    'dhcplay.com',
-    'hglink.to',
-    'hexload',
-    'uqload',
-    'dsvplay'
-];
 
 let serverPreferencesCache = null;
 
 export function setServerAsLast(server){
-    let serverPreferences = getServerPreferences();
-    const index = serverPreferences.indexOf(server);
-    if (index > -1) {
-        serverPreferences.splice(index, 1);
-    }
-    serverPreferences.unshift(server);
-    localStorage.setItem("server_preferences", JSON.stringify(serverPreferences));
 }
 
 function getServerPreferences(){
-    if (serverPreferencesCache) {
-        return serverPreferencesCache;
-    }
 
-    let serverPreferences;
-    const savedPreferencesStr = localStorage.getItem("server_preferences");
-
-    if (!savedPreferencesStr) {
-        serverPreferences = defaultPreferences;
-    } else {
-        const savedPreferences = JSON.parse(savedPreferencesStr);
-        const filteredPrefs = savedPreferences.filter(p => defaultPreferences.includes(p));
-        const newServers = defaultPreferences.filter(p => !savedPreferences.includes(p));
-        serverPreferences = newServers.concat(filteredPrefs);
-    }
-
-    localStorage.setItem("server_preferences", JSON.stringify(serverPreferences));
-    
-    serverPreferencesCache = serverPreferences;
-    return serverPreferencesCache;
 }

@@ -1,6 +1,12 @@
+import { VideoServer } from "./videoserver.js";
 // based in https://github.com/kodiondemand/addon/blob/master/servers/doodstream.py
-export class DoodStream {
-    constructor() {}
+export class DoodStream extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "DoodStream";
+    }
     async getDDL(after, onError, web){
         try{
             let rlink = await window.fRGet(web,{},true);
@@ -26,5 +32,11 @@ export class DoodStream {
             randomString += t.charAt(Math.floor(Math.random() * t.length));
         }
         return data + randomString;
+    }
+    can(www){
+        if(www.indexOf("doodstream") == -1 && www.indexOf("dsvplay") == -1){
+            return false;
+        }
+        return true;
     }
 }

@@ -1,5 +1,12 @@
-export class DailyMotion{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+
+export class DailyMotion extends VideoServer {
+    constructor() {
+      super();
+    }       
+    name(){
+        return "DailyMotion";
+    }
     async getDDL(after, onError, web) {
         try{
             let id = getFirstMatch(/dailymotion.com\/(?:video\/|swf\/video\/|swf\/|embed\/video\/|)([A-z0-9]+)/g, web)
@@ -22,5 +29,11 @@ export class DailyMotion{
             onError(e);
         }      
         onError(`can't find video (${web})` );
+    }
+    can(www){
+        if(www.indexOf("https://www.dailymotion.com/") == -1){
+            return false;
+        }
+        return true;
     }
 }

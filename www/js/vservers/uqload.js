@@ -1,6 +1,11 @@
-
-export class Uqload{
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Uqload extends VideoServer{
+    constructor() {
+        super();
+    }
+    name(){
+        return "Uqload";
+    }
     async getDDL(after, onError, web) {
         try{
             const urlw = new URL(web);
@@ -14,10 +19,17 @@ export class Uqload{
                 after(videos);
                 return;
             }else{
-                onError("Mixdrop: video no encontrado")
+                onError("Uqload: video no encontrado")
             }
         }catch(e){
             onError(e);
         }
     }
+    can(www){
+        if(www.indexOf("uqload") != -1){
+            return true;
+        }
+        return false;
+    }
+
 }

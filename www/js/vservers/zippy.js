@@ -1,11 +1,15 @@
 
 
-export class ZippyShare {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class ZippyShare extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "ZippyShare";
+    }
     async getDDL(after, onError, web) {
-        
-
-        try{
+       try{
             let headers = { Referer: "https://www.zippyshare.com"};
             let result = await fGet(web, headers);
             let zout = {"omg":"", "href": ""};
@@ -30,5 +34,11 @@ export class ZippyShare {
         }catch(e){
             onError("Error getting video from server: " + e.message);
         }
+    }
+    can(www){
+        if(www.indexOf("zippyshare") != -1){
+            return true;
+        }
+        return false;
     }
 }

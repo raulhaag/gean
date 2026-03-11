@@ -1,5 +1,11 @@
-export class Mediafire {
-    constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Mediafire extends VideoServer {
+    constructor() {
+      super();
+    }
+    name(){
+        return "Mediafire";
+    }
     async getDDL(after, onError, web){
         try{
             let data = await fGet(web);
@@ -15,5 +21,11 @@ export class Mediafire {
         }
         onError("No se encontro el enlace");
         return;
+    }
+    can(www){
+        if(www.indexOf("mediafire.com") == -1){
+            return false;
+        }
+        return true;
     }
 }

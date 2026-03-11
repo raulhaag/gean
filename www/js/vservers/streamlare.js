@@ -1,5 +1,11 @@
-export class Streamlare {
-  constructor() {}
+import { VideoServer } from "./videoserver.js";
+export class Streamlare extends VideoServer {
+  constructor() {
+    super();
+  }
+  name() {
+    return "Streamlare";
+  }
   async getDDL(after, onError, web) {
     try{
       let id = web.split("?")[0].split("/").pop();
@@ -31,5 +37,11 @@ export class Streamlare {
     }catch(e){
       onError(e)
     }
+  }
+  can(www) {
+    if (/slmaxed.com|slwatch.c|streamlare.com/.test(www)) {
+      return true;
+    }
+    return false;
   }
 }
