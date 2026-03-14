@@ -144,6 +144,7 @@ class handler(SimpleHTTPRequestHandler):
                             continue
                         else:
                             encnl = False
+                        
                         if ".m3u8" in l:
                             if l.startswith("http"):
                                 content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + headers)

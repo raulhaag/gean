@@ -25,6 +25,7 @@ import { Hglink } from "./hglink.js";
 import { Uqload } from "./uqload.js";
 import { Hexload } from "./hexload.js";
 import { Vimeos } from "./vimeos.js";
+import { GoodStream } from "./goodstream.js";
 
 let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new ReSololatino(), new SololatinoXYZ(),
@@ -37,6 +38,7 @@ let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new DoodStream(), new BurstCloud(), new Mp4Upload(),
                 new MaRu(), new Hglink(), new Uqload(),
                 new Hexload(), new Vimeos(), new StreamWish(),
+                new GoodStream()
             ];
 let prefered = loadPreferenced();
 orderServersByPrefered();
@@ -107,6 +109,7 @@ export function getPreferer(list){
         for(let j = 0; j < list.length; j++){
             if(servers[i].can(list[j])){
                 ordered.push(list[j]);
+                list.splice(j, 1);
                 break;
             }
         }

@@ -34,7 +34,7 @@ export class StreamWish extends VideoServer {
         }
     }
     can(www){
-        if ((www.indexOf("wish") != -1) || www.indexOf("ghbrisk.com") != -1) return true;
+        if ((www.indexOf("wish") == -1) && www.indexOf("ghbrisk.com") == -1) return false;
         return true;
     }
 }
