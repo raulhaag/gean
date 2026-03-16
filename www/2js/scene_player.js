@@ -135,6 +135,9 @@ export class ScenePlayer extends Scene {
         error("Hls no es soportado por este navegador.");
       } else {
         this.hlsObj = new Hls(hls_config);
+        this.hlsObj.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+          this.updateHlsOptions(data);
+        });
         this.hlsObj.loadSource(this.options["video"].split("|||")[0]);
         this.hlsObj.attachMedia(this.player);
       }
@@ -150,6 +153,59 @@ export class ScenePlayer extends Scene {
     document.addEventListener('webkitfullscreenchange', this._onFullScreenChange.bind(this));
 
     changeKeyManager();
+  }
+
+  updateHlsOptions(data) {
+    let container = document.getElementsByClassName("player-options")[0];
+    let existing = container.getElementsByClassName("player-option-list");
+    let cc = existing.length;
+
+    if (data.levels.length > 1) {
+      let options = { "Auto": -1 };
+      data.levels.forEach((level, index) => {
+        let name = (level.height ? level.height + "p" : "Level " + index);
+        if (level.bitrate) name += ` (${Math.round(level.bitrate / 1000)}k)`;
+        options[name] = index;
+      });
+      this.createOptionElement(container, "Calidad", options, cc++, (val) => {
+        this.hlsObj.currentLevel = val;
+      });
+    }
+
+    if (data.audioTracks.length > 1) {
+      let options = {};
+      data.audioTracks.forEach((track, index) => {
+        options[track.name || `Audio ${index + 1}`] = index;
+      });
+      this.createOptionElement(container, "Audio", options, cc++, (val) => {
+        this.hlsObj.audioTrack = val;
+      });
+    }
+
+    if (data.subtitles.length > 0) {
+      let options = { "Desactivado": -1 };
+      data.subtitles.forEach((track, index) => {
+        options[track.name || `Subtitulo ${index + 1}`] = index;
+      });
+      this.createOptionElement(container, "Subtitulos", options, cc++, (val) => {
+        this.hlsObj.subtitleTrack = val;
+      });
+    }
+  }
+
+  createOptionElement(container, title, options, cc, callback) {
+    let titleDiv = document.createElement("div");
+    titleDiv.className = "player-option-title";
+    titleDiv.innerText = title;
+    container.appendChild(titleDiv);
+
+    let listDiv = document.createElement("div");
+    listDiv.className = "player-option-list";
+    listDiv.id = "player-container_0_" + cc;
+    listDiv.dataset.options = JSON.stringify(options);
+    listDiv.innerText = Object.keys(options)[0];
+    listDiv.hlsCallback = callback;
+    container.appendChild(listDiv);
   }
 
   _formatTime(timeInSeconds) {
@@ -331,6 +387,18 @@ export class ScenePlayer extends Scene {
       case "NumpadEnter":
       case "Space":
       case " ":
+        if (this.last.hlsCallback) {
+          let options = JSON.parse(this.last.dataset["options"]);
+          generateSelectorDialog(
+            (value, key) => {
+              this.last.innerText = key;
+              this.last.hlsCallback(value);
+            },
+            this.last.previousElementSibling.innerText,
+            options
+          );
+          return;
+        }
         let options = JSON.parse(this.last.dataset["options"]);
         if (options.hasOwnProperty("video")) {
           delete options.video;
