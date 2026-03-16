@@ -10,14 +10,12 @@ export  class  GoodStream extends VideoServer{
 
     async getDDL(after, onError, url){
         try{
-            let data = await window.fGet(url);
+            let data = await window.fGet(url,{"Accept-Language": "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7","User-Agent": window.navigator.userAgent});
             let dlink = window.getFirstMatch(/file:"(.+?)"/gm, data);
             if(dlink != ""){
                 after({"video": window.serverHost + "m3u8/" + enc(dlink) + "/" + enc(JSON.stringify({
-                    "Referer": url,
-                    "Sec-Fetch-Mode": "cors",
-                    "Sec-Fetch-Site": "same-origin",
-                    "origin": new URL(url).origin
+                    "Accept-Language": "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "User-Agent": window.navigator.userAgent,
                 })) + "/maskfile.m3u8" });
                 return;
             }else{

@@ -124,38 +124,33 @@ class handler(SimpleHTTPRequestHandler):
                         return url
                     return url[0:last_slash_index + 1]
                 
-                def eliminar_path_relativos(url):
-                    url = url[0:8] + url[8:].replace("//", "/")
-                    parsed_url = parse.urlparse(url)
-                    url_absoluta = parse.urljoin(parsed_url.geturl(), parsed_url.path)
-                    return url_absoluta
-                      
                 def transform(content, baseUrl, headers):
-                    contentLines = content.split("\n")
-                    encnl = False
-                    for l in contentLines:
-                        if encnl:
-                            if l.startswith("http"):
-                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + headers)
-                            else:
-                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(eliminar_path_relativos(baseUrl + l)) + headers)
-                        if l.startswith("#EXT-X-STREAM"):
-                            encnl = True
+                    new_lines = []
+                    for l in content.splitlines():
+                        l = l.strip()
+                        if not l:
                             continue
-                        else:
-                            encnl = False
+                        if l.startswith("#"):
+                            if "URI=" in l:
+                                def repl(match):
+                                    uri = match.group(1)
+                                    full = parse.urljoin(baseUrl, uri)
+                                    ptype = "file"
+                                    if ".m3u8" in full.split("?")[0]:
+                                        ptype = "m3u8"
+                                    return f'URI="http://127.0.0.1:8080/{ptype}/{encode(full)}{headers}"'
+                                l = re.sub(r'URI="([^"]+)"', repl, l)
+                            new_lines.append(l)
+                            continue
                         
-                        if ".m3u8" in l:
-                            if l.startswith("http"):
-                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(l) + headers)
-                            else:
-                                content = content.replace(l, "http://127.0.0.1:8080/m3u8/" + encode(eliminar_path_relativos(baseUrl + l)) + headers)
-                        elif (re.match(".+\.\w{2,4}$", l) != None):
-                            if l.startswith("http"):
-                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(l) + headers)
-                            else:
-                                content = content.replace(l, "http://127.0.0.1:8080/file/" + encode(eliminar_path_relativos(baseUrl + l)) + headers)
-                    return content
+                        full = parse.urljoin(baseUrl, l)
+                        ptype = "file"
+                        if (len(new_lines) > 0 and new_lines[-1].startswith("#EXT-X-STREAM-INF")) or (".m3u8" in full.split("?")[0]):
+                            ptype = "m3u8"
+                        
+                        new_lines.append(f"http://127.0.0.1:8080/{ptype}/{encode(full)}{headers}")
+                    
+                    return "\n".join(new_lines)
                 content_t = ""
                 message = None
                 if(".key" in path[3]):
