@@ -1,5 +1,7 @@
-export class JKAnime {
+import { SourceBase } from "../sourcebase.js";
+export class JKAnime extends SourceBase {
   constructor() {
+    super();
     this.name = "jkanime";
     this.baseUrl = "https://jkanime.net"
   }
@@ -225,24 +227,6 @@ export class JKAnime {
     let reduce = function (v) { after({ "name": v.name, "image": v.image, "path": v.path }, path) };
     let dpath = (window.dec(path)).split("/");
     this.getDescription(reduce, console.log, window.enc(dpath.slice(0, dpath.length - 2).join("/")));
-  }
-
-  async getList(page, filter = "") {
-    if (filter == "") {
-      fetch(window.serverHost + "get/" + window.enc("https://jkanime.net/directorio?genero="))
-        .then((response) => response.text())
-        .then((result) => {
-          var parser = new DOMParser();
-          var doc = parser.parseFromString(result, "text/html");
-          let flis = doc.querySelectorAll("html body section.contenido.spad div.container div.row div.col-lg-12 div.anime__page__content section#dirmenu div.menupc div.genre-list.addmenu ul li a");
-          let glist = [];
-          for (var i = 0; i < flis.length; i++) {
-            glist.push({ "name": flis[i].textContent.trim(), "path": this.name + "/getList/" + window.enc(flis[i].getAttribute("href")) });
-          }
-        }).catch((nerror) => {
-          console.log(nerror);
-        });
-    }
   }
 
   async getSearch(after, onError, query) {

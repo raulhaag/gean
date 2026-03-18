@@ -1,5 +1,7 @@
-export class TioAnime {
+import { SourceBase } from "../sourcebase.js";
+export class TioAnime extends SourceBase {
     constructor() {
+      super();
       this.name = "tioanime";
       this.baseUrl = "https://tioanime.com/";
     }
@@ -283,10 +285,6 @@ export class TioAnime {
       //let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path}, path)};
       //let dpath = (window.dec(path)).split("/");
       //this.getDescription(reduce, console.log, window.enc(dpath.slice(0, dpath.length - 2).join("/")));
-    }
-
-    async getList(page, filter = "") {
-
     }
 
     async getSearch(after, onError, query) {

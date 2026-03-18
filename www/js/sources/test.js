@@ -1,5 +1,7 @@
-export class NOTestServer {
+import { SourceBase } from "../sourcebase";
+export class NOTestServer extends SourceBase{
   constructor() {
+    super();
     this.name = "testserver";
   }
   wait(ms) {

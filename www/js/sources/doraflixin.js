@@ -1,7 +1,7 @@
-// player_.+?=({.+?})< player config
-// enc 1 unnescaper(atob(src))
-export class NODoraFlixIn {
+import { SourceBase } from "../sourcebase.js";
+export class NODoraFlixIn extends SourceBase {
     constructor() {
+      super();
       this.name = "DoraFlixIn";
       this.host = atob("aHR0cHM6Ly9kb3JhbWFzZmxpeC5pbi8=");//
     }
@@ -37,10 +37,7 @@ export class NODoraFlixIn {
   
     async getParent(after, path) {
     }
-  
-    async getList(page, filter = "") {
-    }
-  
+    
     async getSearch(after, onError, query) {
       let fres = [];
         let response = await fGet(`${this.host}/vodsearch/-------------/?wd=${encodeURIComponent(query)}&submit=`);

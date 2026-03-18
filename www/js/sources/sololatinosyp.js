@@ -9,7 +9,7 @@ export class SoloLatinoSyP extends SoloLatino {
     try {
       var out = {};
       //let result = await window.fGet("https://sololatino.net/animes/novedades/");
-      let result = await window.fGet("https://sololatino.net/series/");
+      let result = await window.fGet("https://sololatino.net");
       try{
         var parser = new DOMParser();
         var doc = parser.parseFromString(result, "text/html");

@@ -1,5 +1,7 @@
-export class SoloLatino {
+import { SourceBase } from "../sourcebase.js";
+export class SoloLatino extends SourceBase {
   constructor() {
+    super();
     this.name = "sololatino";
     this.baseUrl = "https://sololatino.net/animes/";
   }
@@ -169,8 +171,6 @@ export class SoloLatino {
     let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path}, path)};
     this.getDescription(reduce, console.log, window.enc(dpath));
   }
-
-  async getList(page, filter = "") {}
 
   async getSearch(after, onError, query) {
     try{

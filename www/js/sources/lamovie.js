@@ -1,5 +1,7 @@
-export class LaMovie {
+import { SourceBase } from "../sourcebase.js";
+export class LaMovie extends SourceBase {
     constructor() {
+        super();
         this.name = "lamovie";
         this.baseUrl = "https://la.movie";
         this.apiUrl = "https://la.movie/wp-api/v1/";
