@@ -135,9 +135,10 @@ export class ScenePlayer extends Scene {
         error("Hls no es soportado por este navegador.");
       } else {
         this.hlsObj = new Hls(hls_config);
-        this.hlsObj.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+        //TODO Hacer menu de pausa
+        /*this.hlsObj.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
           this.updateHlsOptions(data);
-        });
+        });/*/
         this.hlsObj.loadSource(this.options["video"].split("|||")[0]);
         this.hlsObj.attachMedia(this.player);
       }
