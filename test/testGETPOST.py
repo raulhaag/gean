@@ -1,6 +1,12 @@
 import tkinter as tk
 from tkinter import scrolledtext, ttk
 import requests
+import json, base64
+
+def encode(input):
+    encoded_bytes = base64.b64encode(input.encode("utf-8"))
+    encoded_string = encoded_bytes.decode("utf-8").replace("/", "_")
+    return encoded_string
 
 def send_request():
     # Obtener la URL
@@ -22,11 +28,17 @@ def send_request():
     body = body_text.get("1.0", tk.END).strip()
     
     try:
+        s = requests.Session()
+        s.headers.clear()
+
         if method == "GET":
-            response = requests.get(url, headers=headers)
+            response = s.get(url, headers=headers)
         elif method == "POST":
-            response = requests.post(url, headers=headers, data=body)
-        
+            response = s.post(url, headers=headers, data=body)
+        elif method == "PGET":
+            encodedHeaders = encode(json.dumps(headers))
+            response = s.get("http://127.0.0.1:8080/get/" + encode(url) + "/" + encodedHeaders)
+
         # Mostrar la respuesta
         response_text.delete("1.0", tk.END)
         response_text.insert(tk.END, f"Status Code: {response.status_code}\n\n")
@@ -60,7 +72,7 @@ url_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
 # Selección del método (GET o POST)
 method_var = tk.StringVar(value="GET")
-method_menu = ttk.Combobox(frame, textvariable=method_var, values=["GET", "POST"], state="readonly", width=8)
+method_menu = ttk.Combobox(frame, textvariable=method_var, values=["GET", "POST", "PGET", "PPOST"], state="readonly", width=8)
 method_menu.grid(row=0, column=2, padx=5, pady=5)
 
 # Botón para enviar la solicitud

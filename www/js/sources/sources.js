@@ -1,11 +1,10 @@
 import { AnimeFlvNet } from "./animeflv.js";
 import { JKAnime } from "./jkanime.js";
-import { SoloLatino } from "./sololatino.js";
-import { SoloLatinoSyP } from "./sololatinosyp.js";
 import { TioAnime } from "./tioanime.js";
 import { NOTestServer } from "./test.js";
 import { PanDramaTV } from "./pandrama.js";
 import { DeadServer } from "./deadserver.js";
+import { SoloLatino2 } from "./sololatino2.js";
 
 import { LaMovie } from "./lamovie.js";
 
@@ -14,13 +13,12 @@ export function openInNewTab(url) {
 }
 let servers = {"animeflv.net": new AnimeFlvNet(),
 "jkanime": new JKAnime(),
-"sololatino": new SoloLatino(),
-"sololatinosyp": new SoloLatinoSyP(),
 "tioanime": new TioAnime(),
 "PanDrama": new PanDramaTV(),
 "testserver": new NOTestServer(),
 "DeadServer": new DeadServer(),
 "lamovie": new LaMovie(),
+"sololatino2" : new SoloLatino2(),
 };
 export function getSource(name) {
     return (servers[name])? servers[name]:servers["DeadServer"]

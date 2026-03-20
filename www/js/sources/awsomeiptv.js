@@ -1,5 +1,7 @@
-export class NOAwsomeIPTV {
+import { SourceBase } from "../sourcebase.js";
+export class NOAwsomeIPTV extends SourceBase {
     constructor() {
+      super();
       this.name = "awsomeiptv";
     }
     async getFrontPage(after, error) {

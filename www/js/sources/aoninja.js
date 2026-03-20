@@ -1,5 +1,7 @@
-export class AnimeOnlineNinja {
+import { SourceBase } from "../sourcebase.js";
+export class AnimeOnlineNinja extends SourceBase{
     constructor() {
+      super();
       this.name = "AONinja";
       this.baseUrl = window.dec("aHR0cHM6Ly93dzMuYW5pbWVvbmxpbmUubmluamE=");
     }
@@ -180,10 +182,6 @@ export class AnimeOnlineNinja {
       //let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path}, path)};
       //let dpath = (window.dec(path)).split("/");
       //this.getDescription(reduce, console.log, window.enc(dpath.slice(0, dpath.length - 2).join("/")));
-    }
-
-    async getList(page, filter = "") {
-
     }
 
     async getSearch(after, onError, query) {

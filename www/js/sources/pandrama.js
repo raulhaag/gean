@@ -1,7 +1,7 @@
-// player_.+?=({.+?})< player config
-// enc 1 unnescaper(atob(src))
-export class PanDramaTV {
+import { SourceBase } from "../sourcebase.js";
+export class PanDramaTV extends SourceBase {
     constructor() {
+      super();
       this.name = "PanDrama";
       this.host = atob("aHR0cHM6Ly9wYW5kcmFtYS50di8=")
     }
@@ -36,9 +36,6 @@ export class PanDramaTV {
     }
   
     async getParent(after, path) {
-    }
-  
-    async getList(page, filter = "") {
     }
   
     async getSearch(after, onError, query) {

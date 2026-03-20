@@ -1,5 +1,7 @@
-export class AnimeFlvNet {
+import { SourceBase } from "../sourcebase.js";
+export class AnimeFlvNet extends SourceBase {
     constructor() {
+      super();
       this.name = "animeflv.net";
       this.baseUrl = "https://www3.animeflv.net";
     }
@@ -281,10 +283,6 @@ export class AnimeFlvNet {
       //let reduce = function(v){after({"name": v.name, "image": v.image, "path": v.path}, path)};
       //let dpath = (window.dec(path)).split("/");
       //this.getDescription(reduce, console.log, window.enc(dpath.slice(0, dpath.length - 2).join("/")));
-    }
-
-    async getList(page, filter = "") {
-
     }
 
     async getSearch(after, onError, query) {

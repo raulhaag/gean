@@ -36,7 +36,7 @@ export class VidHidepro extends VideoServer {
         }
     }
     can(www) {
-        if(/vidhide|dintezuvio|callistanise/.test(www)){
+        if(/vidhide|dintezuvio|callistanise|minochinos/.test(www)){
             return true;
         }
         return false;

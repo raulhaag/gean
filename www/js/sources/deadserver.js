@@ -1,5 +1,7 @@
-export class DeadServer {
+import { SourceBase } from "../sourcebase.js";
+export class DeadServer extends SourceBase {
     constructor() {
+      super();
       this.name = "DeadServer";
     }
     wait(ms) {
