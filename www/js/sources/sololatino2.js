@@ -4,6 +4,32 @@ export class SoloLatino2 extends SourceBase {
     super();
     this.name = "sololatino2";
     this.baseUrl = "https://sololatino.net/";
+    this.genres = {
+      Drama: "genero/drama",
+      Comedia: "genero/comedia",
+      Suspense: "genero/suspense",
+      Acción: "genero/accion",
+      Animación: "genero/animacion",
+      Crimen: "genero/crimen",
+      Terror: "genero/terror",
+      Aventura: "genero/aventura",
+      Familia: "genero/familia",
+      Romance: "genero/romance",
+      Misterio: "genero/misterio",
+      "Ciencia Ficción": "genero/ciencia-ficcion",
+      Fantasía: "genero/fantasia",
+      "Sci-Fi & Fantasy": "genero/sci-fi-fantasy",
+      "Action & Adventure": "genero/action-adventure",
+      Documental: "genero/documental",
+      Historia: "genero/historia",
+      "Película De Tv": "genero/pelicula-de-tv",
+      Música: "genero/musica",
+      Bélica: "genero/belica",
+      Kids: "genero/kids",
+      Western: "genero/western",
+      Reality: "genero/reality",
+      "War & Politics": "genero/war-politics",
+    };
   }
 
   parseCards(posts) {
@@ -39,6 +65,69 @@ export class SoloLatino2 extends SourceBase {
     return seccion;
   }
 
+  generateGenresList(){
+    const genres = [];
+    const keys = Object.keys(this.genres);
+    for (let i = 0; i < keys.length; i++) {
+      genres.push({
+        name: keys[i],
+        path: this.name + "/getMore/" + window.enc(this.baseUrl + this.genres[keys[i]])
+      })
+    }
+    return genres;
+  }
+
+  async getMore(after, onError, more, title = "") {
+    let web = window.dec(more);
+    if (web === "Homepage") {
+      this.getFrontPage(after, onError);
+      return;
+    }
+    let preLinks = [
+      {
+        name: "Home",
+        image: "./images/home_nav.png",
+        path: this.name + "/getMore/" + window.enc("Homepage"),
+      },
+    ];
+    let posLinks = [];
+    try {
+      let page = 1;
+      const cPage = web.match(/\d+$/);
+      if (cPage) {
+        page = parseInt(cPage[0]);
+      }
+
+      if (page > 1) {
+        preLinks.push({
+          name: "Pagina Anterior",
+          image: "./images/prev_nav.png",
+          path:
+            this.name +
+            "/getMore/" +
+            window.enc(web.split("?")[0] + "?page=" + (page - 1)),
+        });
+      }
+      posLinks.push({
+        name: "Pagina siguiente",
+        image: "./images/next_nav.png",
+        path:
+          this.name +
+          "/getMore/" +
+          window.enc(web.split("?")[0] + "?page=" + (page + 1)),
+      });
+      const data = await window.fGet(web);
+      const doc = new DOMParser().parseFromString(data, "text/html");
+      const posts = doc.getElementsByClassName("card");
+      const seccion = this.parseCards(posts);
+      after({
+        [title]: preLinks.concat(seccion, posLinks),
+      });
+    } catch (error) {
+      onError(error.toString());
+    }
+  }
+
   async getFrontPage(after, onError) {
     const sourceBase = await window.fGet(this.baseUrl, {});
     const doc = new DOMParser().parseFromString(sourceBase, "text/html");
@@ -48,11 +137,24 @@ export class SoloLatino2 extends SourceBase {
       onError("No se encontraron secciones");
       return;
     }
+        
     for (let i = 0; i < secciones.length; i++) {
       const cname = secciones[i].getElementsByClassName("section-title")[0];
       if (!cname) continue;
       const post = secciones[i].getElementsByClassName("card");
       if (!post) continue;
+      let more = null;
+      const moreObject = secciones[i].querySelector(".text-xs");
+      if (moreObject) {
+        more = {
+          name: moreObject.innerText,
+          image: "./images/next_nav.png",
+          path:
+            this.name +
+            "/getMore/" +
+            window.enc(moreObject.getAttribute("href")),
+        };
+      }
       if (post.length == 0) {
         const post2 = secciones[i].getElementsByClassName("ep-card");
         if (!post2) continue;
@@ -60,71 +162,105 @@ export class SoloLatino2 extends SourceBase {
       } else {
         out[cname.innerText] = this.parseCards(post);
       }
+      if (more) {
+        out[cname.innerText].push(more);
+      }
     }
+    out["Por género"] = this.generateGenresList();
+
     after(out);
   }
 
-  parseMovieDescription(doc, path){
-      const name = doc
-        .getElementsByClassName("text-3xl")[0]
-        .innerText.trim()
-        .replace(/"/g, "´´");
-      const image = doc.getElementsByClassName("w-44")[0].getAttribute("src");
-      const description = doc.querySelector(
-        "p.text-sm.leading-relaxed.mb-6",
-      ).innerText;
-      const genres = document.querySelectorAll("a.text-xs.rounded-full");
-      let genText = "";
-      for (let i = 0; i < genres.length; i++) {
-        genText += genres[i].innerText + ", ";
+  async getSearch(after, onError, query) {
+    try {
+      const data = await window.fGet(
+        "https://sololatino.net/buscar?q=" + query,
+      );
+      const doc = new DOMParser().parseFromString(data, "text/html");
+      const posts = doc.getElementsByClassName("card");
+      if (!posts) {
+        onError("No se encontraron resultados");
+        return;
       }
-      genText = genText.slice(0, -2);
-      const chapters = [{
-          name: "Ver película",
-          path: this.name + "/getLinks/" + path,
-        }];
-    return {
-        name: name,
-        path: this.name + "/getDescription/" + path,
-        image: image,
-        items: [description, genText],
-        chapters: chapters,
+      const seccion = this.parseCards(posts);
+      if (seccion.length == 0) {
+        onError("No se encontraron resultados");
+        return;
       }
+      after(seccion);
+    } catch (error) {
+      onError(error);
+    }
   }
 
-  paresSerieDescription(doc, path){
+  parseMovieDescription(doc, path) {
+    const name = doc
+      .getElementsByClassName("text-3xl")[0]
+      .innerText.trim()
+      .replace(/"/g, "´´");
+    const image = doc.getElementsByClassName("w-44")[0].getAttribute("src");
+    const description = doc.querySelector(
+      "p.text-sm.leading-relaxed.mb-6",
+    ).innerText;
+    const genres = document.querySelectorAll("a.text-xs.rounded-full");
+    let genText = "";
+    for (let i = 0; i < genres.length; i++) {
+      genText += genres[i].innerText + ", ";
+    }
+    genText = genText.slice(0, -2);
+    const chapters = [
+      {
+        name: "Ver película",
+        path: this.name + "/getLinks/" + path,
+      },
+    ];
+    return {
+      name: name,
+      path: this.name + "/getDescription/" + path,
+      image: image,
+      items: [description, genText],
+      chapters: chapters,
+    };
+  }
+
+  paresSerieDescription(doc, path) {
     const name = doc.getElementsByClassName("w-44")[0].getAttribute("alt");
     const image = doc.getElementsByClassName("w-44")[0].getAttribute("src");
     const sinopsis = doc.querySelector(
-        "p.text-sm.leading-relaxed.mb-5",
-      ).innerText;
+      "p.text-sm.leading-relaxed.mb-5",
+    ).innerText;
     const chapters = [];
     const chaptersObj = doc.getElementsByClassName("ep-item");
     for (let i = 0; i < chaptersObj.length; i++) {
-        if(!chaptersObj[i].getAttribute("href"))continue;
-        let pathParts = chaptersObj[i].getAttribute("href").replace(/-/g," ").split("/");
-        const episode = window.toTitleCase(pathParts.pop());
-        const season = window.toTitleCase(pathParts.pop());
-        let title = "";
-        if(chaptersObj[i].getElementsByClassName("text-sm").length > 0){
-            title = " - " + chaptersObj[i].getElementsByClassName("text-sm")[0].innerText.trim();
-        }
-        chapters.push({
-            name: season + " - " + episode + title,
-            path: this.name + "/getLinks/" + window.enc(chaptersObj[i].getAttribute("href")),
-        });
+      if (!chaptersObj[i].getAttribute("href")) continue;
+      let pathParts = chaptersObj[i]
+        .getAttribute("href")
+        .replace(/-/g, " ")
+        .split("/");
+      const episode = window.toTitleCase(pathParts.pop());
+      const season = window.toTitleCase(pathParts.pop());
+      let title = "";
+      if (chaptersObj[i].getElementsByClassName("text-sm").length > 0) {
+        title =
+          " - " +
+          chaptersObj[i].getElementsByClassName("text-sm")[0].innerText.trim();
+      }
+      chapters.push({
+        name: season + " - " + episode + title,
+        path:
+          this.name +
+          "/getLinks/" +
+          window.enc(chaptersObj[i].getAttribute("href")),
+      });
     }
     return {
-        name: name,
-        path: this.name + "/getDescription/" + path,
-        image: image,
-        items: [sinopsis],
-        chapters: chapters,
-    }
+      name: name,
+      path: this.name + "/getDescription/" + path,
+      image: image,
+      items: [sinopsis],
+      chapters: chapters,
+    };
   }
-
-
-
 
   async getDescription(after, onError, path) {
     try {
@@ -132,9 +268,9 @@ export class SoloLatino2 extends SourceBase {
       const doc = new DOMParser().parseFromString(sourceBase, "text/html");
       if (doc.getElementsByClassName("badge-movie").length > 0) {
         after(this.parseMovieDescription(doc, path));
-      } else if(doc.getElementsByClassName("badge-series").length > 0){
+      } else if (doc.getElementsByClassName("badge-series").length > 0) {
         after(this.paresSerieDescription(doc, path));
-      }else{
+      } else {
         //todo anime
       }
     } catch (error) {
