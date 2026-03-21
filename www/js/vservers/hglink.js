@@ -9,11 +9,9 @@ export class Hglink extends VideoServer {
     async getDDL(after, onError, web){
         try{
             const main = [
-                'kravaxxa.com',
-                'davioad.com',
-                'haxloppd.com',
-                'auvexiug.com',
-                'dumbalag.com',
+                'audinifer.com',
+                'masukestin.com',
+                'hanerix.com'
             ];
             const rules = [
                 'dhcplay.com',
