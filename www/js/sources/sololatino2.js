@@ -55,7 +55,7 @@ export class SoloLatino2 extends SourceBase {
         .innerText.replace(/\s+/g, " ")
         .trim();
       const path = posts[j].getAttribute("href");
-      const image = posts[0].getElementsByTagName("img")[0].getAttribute("src");
+      const image = posts[j].getElementsByTagName("img")[0].getAttribute("src");
       seccion.push({
         name: name,
         image: image,
