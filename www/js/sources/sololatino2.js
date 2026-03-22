@@ -4,32 +4,6 @@ export class SoloLatino2 extends SourceBase {
     super();
     this.name = "sololatino2";
     this.baseUrl = "https://sololatino.net/";
-    this.genres = {
-      Drama: "genero/drama",
-      Comedia: "genero/comedia",
-      Suspense: "genero/suspense",
-      Acción: "genero/accion",
-      Animación: "genero/animacion",
-      Crimen: "genero/crimen",
-      Terror: "genero/terror",
-      Aventura: "genero/aventura",
-      Familia: "genero/familia",
-      Romance: "genero/romance",
-      Misterio: "genero/misterio",
-      "Ciencia Ficción": "genero/ciencia-ficcion",
-      Fantasía: "genero/fantasia",
-      "Sci-Fi & Fantasy": "genero/sci-fi-fantasy",
-      "Action & Adventure": "genero/action-adventure",
-      Documental: "genero/documental",
-      Historia: "genero/historia",
-      "Película De Tv": "genero/pelicula-de-tv",
-      Música: "genero/musica",
-      Bélica: "genero/belica",
-      Kids: "genero/kids",
-      Western: "genero/western",
-      Reality: "genero/reality",
-      "War & Politics": "genero/war-politics",
-    };
   }
 
   parseCards(posts) {
@@ -65,13 +39,12 @@ export class SoloLatino2 extends SourceBase {
     return seccion;
   }
 
-  generateGenresList(){
+  parseGenres(posts){
     const genres = [];
-    const keys = Object.keys(this.genres);
-    for (let i = 0; i < keys.length; i++) {
+    for (let i = 0; i < posts.length; i++) {
       genres.push({
-        name: keys[i],
-        path: this.name + "/getMore/" + window.enc(this.baseUrl + this.genres[keys[i]])
+        name: posts[i].innerText.replace(/\s+/g, " ").trim(),
+        path: this.name + "/getMore/" + window.enc(posts[i].getAttribute("href"))
       })
     }
     return genres;
@@ -157,7 +130,12 @@ export class SoloLatino2 extends SourceBase {
       }
       if (post.length == 0) {
         const post2 = secciones[i].getElementsByClassName("ep-card");
-        if (!post2) continue;
+        if (!post2 || post2.length == 0){
+          const post3 =secciones[i].getElementsByClassName("px-4");
+          if(!post3)continue;
+          out[cname.innerText] = this.parseGenres(post3);
+          continue;
+        };
         out[cname.innerText] = this.parseEp_card(post2);
       } else {
         out[cname.innerText] = this.parseCards(post);
@@ -166,8 +144,6 @@ export class SoloLatino2 extends SourceBase {
         out[cname.innerText].push(more);
       }
     }
-    out["Por género"] = this.generateGenresList();
-
     after(out);
   }
 
