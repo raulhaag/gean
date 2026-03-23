@@ -51,13 +51,16 @@ export class SceneChange extends Scene{
                 break;
             case "Enter":
             case "NumpadEnter":
-            case "Space":            
-            case " ":
-                let sid = document.getElementById(this.servers[this.serverSelectedIdx]).id;
-                let sn = document.getElementById(this.servers[this.serverSelectedIdx]).textContent;
-                localStorage.setItem('lastServer', sid);
-                localStorage.setItem('lastServerName', sn);
-                location.reload();
+            case "Space":
+            case " ":               
+                window.debounce(() => {
+                    let sid = document.getElementById(this.servers[this.serverSelectedIdx]).id;
+                    let sn = document.getElementById(this.servers[this.serverSelectedIdx]).textContent;
+                    localStorage.setItem('lastServer', sid);
+                    localStorage.setItem('lastServerName', sn);
+                    location.reload();
+                }, "CHANGE_NAV");
+                break;
         }
     }
 

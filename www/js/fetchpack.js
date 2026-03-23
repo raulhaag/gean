@@ -157,4 +157,17 @@ window.__unpack = (data) => {
 //funcion para transformar string en titulo toTitleCase
 window.toTitleCase = (str) => {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}   
+}
+
+
+window.clickLocked = {};
+window.debounce = (callback, actionKey = "default", time = 1000) => {
+    const now = Date.now();
+    if (window.clickLocked[actionKey] && (now - window.clickLocked[actionKey] < time)) {
+        window.clickLocked[actionKey] = now; //to avoid key hold
+        return;
+    }
+    window.clickLocked[actionKey] = now;
+    console.log("debounce ", actionKey);
+    callback();
+}

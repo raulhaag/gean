@@ -172,46 +172,48 @@ export class SceneHome extends Scene{
             case "NumpadEnter":
             case "Space":
             case " ":
-                showLoading();
-                let node = document.getElementsByClassName('info-capitulos')[0];
-                if(node != null){
-                    document.getElementById("home").removeChild(node);
-                }
-                this.last.video.classList.remove("focus");
-                window.currentChapter = this.last.video.innerText;
-                route(this.last.video.dataset.path, this.last.video.dataset.ppath)
-                let fpath = this.last.video.dataset.path.split('/');
-                let server = getSource(fpath[0]);
-                let instance = this;
-                let ppf = function(item){
-                    instance.add_recent(item);
+                window.debounce(() => {
+                    showLoading();
+                    let node = document.getElementsByClassName('info-capitulos')[0];
+                    if(node != null){
+                        document.getElementById("home").removeChild(node);
+                    }
+                    this.last.video.classList.remove("focus");
+                    window.currentChapter = this.last.video.innerText;
+                    route(this.last.video.dataset.path, this.last.video.dataset.ppath)
+                    let fpath = this.last.video.dataset.path.split('/');
+                    let server = getSource(fpath[0]);
+                    let instance = this;
+                    let ppf = function(item){
+                        instance.add_recent(item);
+                        if("ppath" in instance.last.video.dataset)
+                            markViewed(null, instance.last.video.dataset.ppath, instance.last.video.dataset.path);
+                    };
+                    let idx = indexOfProperty(recent, 'path', this.last.video.dataset.path);
                     if("ppath" in instance.last.video.dataset)
-                        markViewed(null, instance.last.video.dataset.ppath, instance.last.video.dataset.path);
-                };
-                let idx = indexOfProperty(recent, 'path', this.last.video.dataset.path);
-                if("ppath" in instance.last.video.dataset)
-                    idx = indexOfProperty(recent, 'path', this.last.video.dataset.ppath);
-                if(idx == -1){
-                        setTimeout(() => {
-                            lockKeys = false;
-                            server.getParent(ppf, fpath[2]);
-                        }, 5000);
-                }else{
-                    let item = recent[idx];
-                    instance.add_recent(item);
+                        idx = indexOfProperty(recent, 'path', this.last.video.dataset.ppath);
+                    if(idx == -1){
+                            setTimeout(() => {
+                                lockKeys = false;
+                                server.getParent(ppf, fpath[2]);
+                            }, 5000);
+                    }else{
+                        let item = recent[idx];
+                        instance.add_recent(item);
 
-                    if("ppath" in instance.last.video.dataset)
-                        markViewed(null, this.last.video.dataset.ppath, this.last.video.dataset.path);
-                    if(this.last.video.parentElement.parentElement.outerText.startsWith("Recientes")){
-                        newselection = document.getElementById("videos_" + (cr) + "_0");
-                        if(newselection){
-                            this.setNewVideoSelected(newselection);
-                            document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - this.inigap - 32;
-                            this.last.video.parentNode.scrollLeft = newselection.offsetLeft - this.items_gap - 10;
-                            this.last.video.parentElement.parentElement.classList.remove("demitransparent");
+                        if("ppath" in instance.last.video.dataset)
+                            markViewed(null, this.last.video.dataset.ppath, this.last.video.dataset.path);
+                        if(this.last.video.parentElement.parentElement.outerText.startsWith("Recientes")){
+                            newselection = document.getElementById("videos_" + (cr) + "_0");
+                            if(newselection){
+                                this.setNewVideoSelected(newselection);
+                                document.getElementsByClassName("videos")[0].scrollTop = this.last.video.parentElement.offsetTop - this.inigap - 32;
+                                this.last.video.parentNode.scrollLeft = newselection.offsetLeft - this.items_gap - 10;
+                                this.last.video.parentElement.parentElement.classList.remove("demitransparent");
+                            }
                         }
                     }
-                }
+                }, "HOME_NAV");
                 break;
             default:
                 return;

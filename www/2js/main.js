@@ -137,8 +137,9 @@ const calcelLoad = (event) => {
       case "NumpadEnter":
       case "Space":
       case " ":
-      backClick();
-      window.onkeydown = stopPropagationForKeys
+        backClick();
+        window.onkeydown = stopPropagationForKeys
+        break;
   }
 }
 
@@ -311,32 +312,34 @@ let menu_nav = (event) => {
       selectedMenuIdx = lastMenuOpened;
       teaseMenu.classList.remove("menu-tease-only-icons");
       break;
-      case "Enter":
-      case "NumpadEnter":
-      case "Space":
-      case " ":
-      if (!currentScene.full_menu) {
-        popScene();
-        return;
-      }
-      if (selectedMenuIdx != lastMenuOpened) {
-        switch (selectedMenuIdx) {
-          case 0:
-            window.setScene(new SceneHome());
-            break;
-          case 1:
-            window.setScene(new SceneSearch());
-            break;
-          case 2:
-            window.setScene(new SceneChange());
-            break;
-          case 3:
-            window.setScene(new SceneSettings(window.appSettings));
-            break;
+    case "Enter":
+    case "NumpadEnter":
+    case "Space":
+    case " ":
+      window.debounce(() => {
+        if (!currentScene.full_menu) {
+          popScene();
+          return;
         }
-        lastMenuOpened = selectedMenuIdx;
-        menu.classList.add("menu-closed");
-      }
+        if (selectedMenuIdx != lastMenuOpened) {
+          switch (selectedMenuIdx) {
+            case 0:
+              window.setScene(new SceneHome());
+              break;
+            case 1:
+              window.setScene(new SceneSearch());
+              break;
+            case 2:
+              window.setScene(new SceneChange());
+              break;
+            case 3:
+              window.setScene(new SceneSettings(window.appSettings));
+              break;
+          }
+          lastMenuOpened = selectedMenuIdx;
+          menu.classList.add("menu-closed");
+        }
+      }, "MENU_NAV");
   }
 };
 
@@ -598,21 +601,24 @@ window.generateSelectorDialog = (
         case "Enter":
         case "NumpadEnter":
         case "Space":
-        case " ":   
-          window.backScenePoll.pop();
-          dialog = false;
-          document.onkeydown = document.__selectPrekeydown;
-          document.__selectPrekeydown = null;
-          document.body.removeChild(document.__optionsDiv);
-          if (!lOSelected.classList.contains("option-selector-cancel")) {
-            postAction(
-              window.dec(lOSelected.dataset["info"]),
-              lOSelected.innerHTML,
-            );
-          }else{
-            window.hideLoading();
-            window.changeKeyManager();
-          }
+        case " ":
+          window.debounce(() => {
+            window.backScenePoll.pop();
+            dialog = false;
+            document.onkeydown = document.__selectPrekeydown;
+            document.__selectPrekeydown = null;
+            document.body.removeChild(document.__optionsDiv);
+            if (!lOSelected.classList.contains("option-selector-cancel")) {
+              postAction(
+                window.dec(lOSelected.dataset["info"]),
+                lOSelected.innerHTML,
+              );
+            }else{
+              window.hideLoading();
+              window.changeKeyManager();
+            }
+        },"DIALOG");
+        break;
       }
   };
 };

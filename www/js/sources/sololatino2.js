@@ -9,6 +9,7 @@ export class SoloLatino2 extends SourceBase {
   parseCards(posts) {
     const seccion = [];
     for (let j = 0; j < posts.length; j++) {
+      try{
       const path = posts[j].getElementsByTagName("a")[0].getAttribute("href");
       const image = posts[j].getElementsByTagName("img")[0];
       const name = posts[j].getElementsByClassName("card__title")[0].innerText;
@@ -17,6 +18,7 @@ export class SoloLatino2 extends SourceBase {
         image: image.getAttribute("src"),
         path: this.name + "/getDescription/" + window.enc(path),
       });
+      }catch(e){}//pass
     }
     return seccion;
   }
@@ -24,17 +26,19 @@ export class SoloLatino2 extends SourceBase {
   parseEp_card(posts) {
     const seccion = [];
     for (let j = 0; j < posts.length; j++) {
-      const name = posts[j]
-        .getElementsByClassName("ep-card__info")[0]
-        .innerText.replace(/\s+/g, " ")
-        .trim();
-      const path = posts[j].getAttribute("href");
-      const image = posts[j].getElementsByTagName("img")[0].getAttribute("src");
-      seccion.push({
-        name: name,
-        image: image,
-        path: this.name + "/getLinks/" + window.enc(path),
-      });
+      try{
+        const name = posts[j]
+          .getElementsByClassName("ep-card__info")[0]
+          .innerText.replace(/\s+/g, " ")
+          .trim();
+        const path = posts[j].getAttribute("href");
+        const image = posts[j].getElementsByTagName("img")[0].getAttribute("src");
+        seccion.push({
+          name: name,
+          image: image,
+          path: this.name + "/getLinks/" + window.enc(path),
+        });
+      }catch(e){}//pass
     }
     return seccion;
   }
@@ -42,10 +46,12 @@ export class SoloLatino2 extends SourceBase {
   parseGenres(posts){
     const genres = [];
     for (let i = 0; i < posts.length; i++) {
-      genres.push({
-        name: posts[i].innerText.replace(/\s+/g, " ").trim(),
-        path: this.name + "/getMore/" + window.enc(posts[i].getAttribute("href"))
-      })
+      try{
+        genres.push({
+          name: posts[i].innerText.replace(/\s+/g, " ").trim(),
+          path: this.name + "/getMore/" + window.enc(posts[i].getAttribute("href"))
+        })
+      }catch(e){}
     }
     return genres;
   }
