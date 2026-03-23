@@ -86,28 +86,30 @@ export class SceneSearch extends Scene{
 
             case "Enter":
             case "NumpadEnter":
-                let c = this.lastkey.innerHTML;
-                switch(c){
-                    case '←':
-                        this.searchtext.innerHTML = this.searchtext.innerHTML.slice(0, -1);
-                        break;
-                    case ' ':
-                    case '':
-                        this.searchtext.innerHTML = this.searchtext.innerHTML + " ";
-                        break;
-                    case '✓':
-                        let st = this.searchtext.innerHTML.replace(' ', '+');
-                        if (st.length > 0){
-                            showLoading();
-                            this.updateSearchHistory(st);
-                            this.renderSearchHistory();
-                            let server = getSource(sid);
-                            server.getSearch((items) =>{this.searchDone(items, this)}, error, st)
-                        }
-                        break;
-                    default:
-                        this.searchtext.innerHTML = this.searchtext.innerHTML + this.lastkey.innerHTML;
-                }
+                window.debounce(() => {                    
+                    let c = this.lastkey.innerHTML;
+                    switch(c){
+                        case '←':
+                            this.searchtext.innerHTML = this.searchtext.innerHTML.slice(0, -1);
+                            break;
+                        case ' ':
+                        case '':
+                            this.searchtext.innerHTML = this.searchtext.innerHTML + " ";
+                            break;
+                        case '✓':
+                            let st = this.searchtext.innerHTML.replace(' ', '+');
+                            if (st.length > 0){
+                                showLoading();
+                                this.updateSearchHistory(st);
+                                this.renderSearchHistory();
+                                let server = getSource(sid);
+                                server.getSearch((items) =>{this.searchDone(items, this)}, error, st)
+                            }
+                            break;
+                        default:
+                            this.searchtext.innerHTML = this.searchtext.innerHTML + this.lastkey.innerHTML;
+                    }
+                }, "SEARCH_NAV");
                 break;
 
             case 'Backspace':
@@ -192,18 +194,20 @@ export class SceneSearch extends Scene{
             case "NumpadEnter":
             case 'Space':
             case ' ':
-                let query = this.lastSH.dataset.query;
-                if (query){
-                    showLoading();
-                    this.searchtext.innerHTML = query;
-                    let server = getSource(sid);
-                    server.getSearch((items) =>{this.searchDone(items, this)}, error, query)
-                    this.lastSH.classList.remove("focus");
-                    this.lastSH = document.getElementById("search-history-ph_0_0");
-                    this.lastkey.classList.remove("focus");
-                    this.lastkey = document.getElementById("search-box_0_2");
-                    tease_menu(false);
-                }
+                window.debounce(() => {
+                    let query = this.lastSH.dataset.query;
+                    if (query){
+                        showLoading();
+                        this.searchtext.innerHTML = query;
+                        let server = getSource(sid);
+                        server.getSearch((items) =>{this.searchDone(items, this)}, error, query)
+                        this.lastSH.classList.remove("focus");
+                        this.lastSH = document.getElementById("search-history-ph_0_0");
+                        this.lastkey.classList.remove("focus");
+                        this.lastkey = document.getElementById("search-box_0_2");
+                        tease_menu(false);
+                    }
+                }, "SEARCH_HISTORY_NAV");
                 break;
         }
     }
@@ -252,8 +256,10 @@ export class SceneSearch extends Scene{
             case "Enter":
             case "NumpadEnter":
             case "Space":                    
-            case " ":                    
-                route(this.lastMedia.dataset.path)
+            case " ": 
+                window.debounce(()=>{
+                    route(this.lastMedia.dataset.path)
+                });
                 break;
         }
     }

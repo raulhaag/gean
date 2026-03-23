@@ -144,7 +144,9 @@ export class SceneDetails extends Scene {
                 case "NumpadEnter":
                 case "Space":
                 case " ":
+                    window.debounce(() => {
                     this.switch_fab(this.info.fav);
+                    }, "DETAILS_NAV");
                     return;
             }
         }
@@ -196,12 +198,14 @@ export class SceneDetails extends Scene {
             case "NumpadEnter":
             case "Space":
             case " ":
-                this.lastChapter.classList.add("info-capitulo-viewed");
-                window.currentChapter = " - " + this.lastChapter.innerText;
-                markViewed(null, this.lastChapter.dataset.ppath, this.lastChapter.dataset.path);
-                //this.parent.add_recent(this.serie);
-                //this.parent.updateRecents();
-                route(this.lastChapter.dataset.path, this.lastChapter.dataset.ppath);
+                window.debounce(() => {
+                    this.lastChapter.classList.add("info-capitulo-viewed");
+                    window.currentChapter = " - " + this.lastChapter.innerText;
+                    markViewed(null, this.lastChapter.dataset.ppath, this.lastChapter.dataset.path);
+                    //this.parent.add_recent(this.serie);
+                    //this.parent.updateRecents();
+                    route(this.lastChapter.dataset.path, this.lastChapter.dataset.ppath);
+                }, "DETAILS_NAV_CHAPTER");
                 break;
             default:
                 return
