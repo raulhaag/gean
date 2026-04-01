@@ -263,10 +263,12 @@ export class SoloLatino2 extends SourceBase {
   async getLinks(after, onError, path) {
     try {
       let result = await window.fGet(dec(path));
-      const linkpage = getFirstMatch(/data-server-url="([^"]+)/gm, result);
-      result = await window.fGet(linkpage);
-      let links = ([] = this.parseLinks(result));
-
+      const linkpage = window.getAllMatches(/data-server-url="([^"]+)/gm, result);
+      let links = [];
+      for(let i = 0; i < linkpage.length; i++){
+        result = await window.fGet(linkpage[i][1], {"Referer": this.baseUrl});
+        links = links.concat(this.parseLinks(result));
+      }
       after(links);
     } catch (error) {
       onError(error);
