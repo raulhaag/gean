@@ -535,10 +535,19 @@ window.generateSelectorDialog = (
   title = "Elige una opcion",
   options = {}
 ) => {
+  if(dialog){
+    console.log("dialog already open");
+    console.trace();
+    return;
+  }
   if (Object.keys(options).length <= 1) {
     //si hay solo una opcion se ejecuta directamente
     let key = Object.keys(options)[0];
+    try{
     postAction(options[key], key);
+    }catch(e){
+      console.log("error on post dialog action " + e.message);
+    }
     return;
   }
 
@@ -604,16 +613,22 @@ window.generateSelectorDialog = (
         case " ":
           window.debounce(() => {
             window.backScenePoll.pop();
-            dialog = false;
             document.onkeydown = document.__selectPrekeydown;
             document.__selectPrekeydown = null;
             document.body.removeChild(document.__optionsDiv);
+            dialog = false;
+
             if (!lOSelected.classList.contains("option-selector-cancel")) {
-              postAction(
-                window.dec(lOSelected.dataset["info"]),
-                lOSelected.innerHTML,
-              );
+              try{
+                postAction(
+                  window.dec(lOSelected.dataset["info"]),
+                  lOSelected.innerHTML,
+                );
+              }catch(e){
+                console.log("error on post dialog action " + e.message);
+              }
             }else{
+              console.log("dialog canceled by user");
               window.hideLoading();
               window.changeKeyManager();
             }

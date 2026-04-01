@@ -28,14 +28,18 @@ export class Hglink extends VideoServer {
                 var dlink = JSON.parse(getFirstMatch(/var links\s*=\s*(.+?})/gm, res));
                 for(const key in dlink){
                     if((dlink[key].indexOf("http") != -1) && (dlink[key].indexOf(".m3u8") != -1)){
-                        after({"video":dlink[key]});
+                        after({"video":dlink[key],
+                                "videos_proxy": window.serverHost + "m3u8/" + enc(jsonData[key]) + "/" + enc(JSON.stringify({"Referer": finalURL, "User-Agent": window.navigator.userAgent, "origin":  new URL(finalURL).origin}))
+                        });
                         return;
                     }
                 }
             }else{
                 let dlink = getFirstMatch(/file:"(.+?)"/gm, content);
                 if(dlink != ""){
-                    after({"video": dlink});
+                    after({"video": dlink,
+                           "videos_proxy": window.serverHost + "m3u8/" + enc(jsonData[key]) + "/" + enc(JSON.stringify({"Referer": finalURL, "User-Agent": window.navigator.userAgent, "origin":  new URL(finalURL).origin}))
+                        });
                     return;
                 }else{
                     onError("No se encontro el enlace");
