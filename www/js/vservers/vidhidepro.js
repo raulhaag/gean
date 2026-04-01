@@ -16,16 +16,23 @@ export class VidHidepro extends VideoServer {
             }
             
             // Extraer el JSON de los enlaces del script desofuscado.
-            let jsonData = JSON.parse(getFirstMatch(/links=\s*?({[\s\S]+?});/gm, pf));
-            
+            const jsonData = JSON.parse(getFirstMatch(/links=\s*?({[\s\S]+?});/gm, pf));
+            const headers = { "Referer": web, "User-Agent": window.navigator.userAgent, "origin":  new URL(web).origin};
             // Encontrar el enlace del video.
+            const videos = {};
             if (jsonData) {
                 Object.keys(jsonData).forEach(key => {
-                    if(jsonData[key].indexOf("http") != -1){               
-                        after({ video: jsonData[key]});
+                    if(jsonData[key].indexOf("http") != -1){ 
+                        videos[key] = jsonData[key];
+                        //videos[key+ "proxy"] = window.serverHost + "m3u8/" + enc(jsonData[key]) + "/" + enc(JSON.stringify(headers)); //to test
                         return
+                    }else {
+                        videos[key] = window.serverHost + "m3u8/" + enc(new URL(web).origin + jsonData[key]) + "/" + enc(JSON.stringify(headers))  + "/maskfile.m3u8";
                     }
                 })
+                videos["video"] = videos[Object.keys(videos)[0]];
+                after(videos);
+                return;   
             } else {
                 onError("No se encontró una enlace de video válido.");
             }
