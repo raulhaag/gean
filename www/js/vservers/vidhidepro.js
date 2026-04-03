@@ -24,7 +24,6 @@ export class VidHidepro extends VideoServer {
                 Object.keys(jsonData).forEach(key => {
                     if(jsonData[key].indexOf("http") != -1){ 
                         videos[key] = jsonData[key];
-                        //videos[key+ "proxy"] = window.serverHost + "m3u8/" + enc(jsonData[key]) + "/" + enc(JSON.stringify(headers)); //to test
                         return
                     }else {
                         videos[key] = window.serverHost + "m3u8/" + enc(new URL(web).origin + jsonData[key]) + "/" + enc(JSON.stringify(headers))  + "/maskfile.m3u8";

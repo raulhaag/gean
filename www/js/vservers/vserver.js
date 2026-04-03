@@ -1,5 +1,5 @@
 import {JKAPI, JKXtreme, Desu} from "./jkapi.js";
-import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, MamazonPlayer} from "./re_sololatino.js";
+import {ReSololatino, SololatinoXYZ, OwodeuwuXYZ, MamazonPlayer, SL2_Direct} from "./re_sololatino.js";
 import {ZPlayer} from "./zplayer.js";
 import {YourUpload}from "./yourupload.js";
 import {OkRu}from "./okru.js";
@@ -38,7 +38,7 @@ let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new DoodStream(), new BurstCloud(), new Mp4Upload(),
                 new MaRu(), new Hglink(), new Uqload(),
                 new Hexload(), new Vimeos(), new StreamWish(),
-                new GoodStream() 
+                new GoodStream(), new SL2_Direct()
             ];
 let prefered = loadPreferenced();
 orderServersByPrefered();
@@ -110,7 +110,8 @@ export function getPreferer(list){
             if(servers[i].can(list[j])){
                 ordered.push(list[j]);
                 list.splice(j, 1);
-                break;
+                j--;// para reacomdar el indice actual
+                //si cortamos aca solo va sa dar un link por servidor
             }
         }
     }
