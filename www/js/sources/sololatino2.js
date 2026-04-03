@@ -9,16 +9,17 @@ export class SoloLatino2 extends SourceBase {
   parseCards(posts) {
     const seccion = [];
     for (let j = 0; j < posts.length; j++) {
-      try{
-      const path = posts[j].getElementsByTagName("a")[0].getAttribute("href");
-      const image = posts[j].getElementsByTagName("img")[0];
-      const name = posts[j].getElementsByClassName("card__title")[0].innerText;
-      seccion.push({
-        name: name,
-        image: image.getAttribute("src"),
-        path: this.name + "/getDescription/" + window.enc(path),
-      });
-      }catch(e){}//pass
+      try {
+        const path = posts[j].getElementsByTagName("a")[0].getAttribute("href");
+        const image = posts[j].getElementsByTagName("img")[0];
+        const name =
+          posts[j].getElementsByClassName("card__title")[0].innerText;
+        seccion.push({
+          name: name,
+          image: image.getAttribute("src"),
+          path: this.name + "/getDescription/" + window.enc(path),
+        });
+      } catch (e) {} //pass
     }
     return seccion;
   }
@@ -26,32 +27,35 @@ export class SoloLatino2 extends SourceBase {
   parseEp_card(posts) {
     const seccion = [];
     for (let j = 0; j < posts.length; j++) {
-      try{
+      try {
         const name = posts[j]
           .getElementsByClassName("ep-card__info")[0]
           .innerText.replace(/\s+/g, " ")
           .trim();
         const path = posts[j].getAttribute("href");
-        const image = posts[j].getElementsByTagName("img")[0].getAttribute("src");
+        const image = posts[j]
+          .getElementsByTagName("img")[0]
+          .getAttribute("src");
         seccion.push({
           name: name,
           image: image,
           path: this.name + "/getLinks/" + window.enc(path),
         });
-      }catch(e){}//pass
+      } catch (e) {} //pass
     }
     return seccion;
   }
 
-  parseGenres(posts){
+  parseGenres(posts) {
     const genres = [];
     for (let i = 0; i < posts.length; i++) {
-      try{
+      try {
         genres.push({
           name: posts[i].innerText.replace(/\s+/g, " ").trim(),
-          path: this.name + "/getMore/" + window.enc(posts[i].getAttribute("href"))
-        })
-      }catch(e){}
+          path:
+            this.name + "/getMore/" + window.enc(posts[i].getAttribute("href")),
+        });
+      } catch (e) {}
     }
     return genres;
   }
@@ -116,7 +120,7 @@ export class SoloLatino2 extends SourceBase {
       onError("No se encontraron secciones");
       return;
     }
-        
+
     for (let i = 0; i < secciones.length; i++) {
       const cname = secciones[i].getElementsByClassName("section-title")[0];
       if (!cname) continue;
@@ -136,12 +140,12 @@ export class SoloLatino2 extends SourceBase {
       }
       if (post.length == 0) {
         const post2 = secciones[i].getElementsByClassName("ep-card");
-        if (!post2 || post2.length == 0){
-          const post3 =secciones[i].getElementsByClassName("px-4");
-          if(!post3)continue;
+        if (!post2 || post2.length == 0) {
+          const post3 = secciones[i].getElementsByClassName("px-4");
+          if (!post3) continue;
           out[cname.innerText] = this.parseGenres(post3);
           continue;
-        };
+        }
         out[cname.innerText] = this.parseEp_card(post2);
       } else {
         out[cname.innerText] = this.parseCards(post);
@@ -263,11 +267,16 @@ export class SoloLatino2 extends SourceBase {
   async getLinks(after, onError, path) {
     try {
       let result = await window.fGet(dec(path));
-      const linkpage = window.getAllMatches(/data-server-url="([^"]+)/gm, result);
+      const linkpage = window.getAllMatches(
+        /data-server-url="([^"]+)/gm,
+        result,
+      );
       let links = [];
-      for(let i = 0; i < linkpage.length; i++){
-        result = await window.fGet(linkpage[i][1], {"Referer": this.baseUrl});
-        links = links.concat(this.parseLinks(result));
+      for (let i = 0; i < linkpage.length; i++) {
+        try {
+          result = await window.fGet(linkpage[i][1], { Referer: this.baseUrl });
+          links = links.concat(await this.parseLinks(result, linkpage[i][1]));
+        } catch (e) {}
       }
       after(links);
     } catch (error) {
@@ -288,7 +297,7 @@ export class SoloLatino2 extends SourceBase {
     }
   }
 
-  parseLinks(htmlContent) {
+  async parseLinks(htmlContent, web) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(htmlContent, "text/html");
     var lis = doc.getElementsByTagName("li");
@@ -375,6 +384,17 @@ export class SoloLatino2 extends SourceBase {
             }
           else
             links.push(items[i]["sortedEmbeds"][j]["link"] + "||info_" + lang);
+        }
+      }
+    }
+    const t = getFirstMatch(/_t\s*=\s*'([^']+)/gm, htmlContent);
+    if (t) {
+      const baseURL = new URL(web).origin;
+      const link_p = JSON.parse(await window.fPost(baseURL + "/s.php", { Referer: web }, { a: 1, tok: t }));
+      for(let key in Object.keys(link_p["langs_s"])){
+        const keyname = Object.keys(link_p["langs_s"])[key];
+        for(let i = 0; i < link_p["langs_s"][keyname].length; i++){
+          links.push(window.enc(link_p["langs_s"][keyname][i][1] + "||" + web) + "sl_direct" + "||info_" + keyname +"(" + i + ")");
         }
       }
     }

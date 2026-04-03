@@ -1,4 +1,4 @@
-import { SourceBase } from "../sourcebase";
+import { SourceBase } from "../sourcebase.js";
 export class NOTestServer extends SourceBase{
   constructor() {
     super();

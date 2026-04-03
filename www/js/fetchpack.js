@@ -168,6 +168,6 @@ window.debounce = (callback, actionKey = "default", time = 1000) => {
         return;
     }
     window.clickLocked[actionKey] = now;
-    console.log("debounce ", actionKey);
+    //console.log("debounce ", actionKey);
     callback();
 }

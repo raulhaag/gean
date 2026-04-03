@@ -28,13 +28,9 @@ export class ReSololatino extends VideoServer {
       });
   }
   can(www) {
-    if (
+    return !(
       www.indexOf("https://re.sololatino.net/p/embed.php") == -1 &&
-      www.indexOf("https://sololatino.xyz/v/") == -1
-    ) {
-      return false;
-    }
-    return true;
+      www.indexOf("https://sololatino.xyz/v/") == -1);
   }
 }
 
@@ -70,10 +66,7 @@ export class SololatinoXYZ extends VideoServer {
       });
   }
   can(www) {
-    if (www.indexOf("https://sololatino.xyz/v/") == -1) {
-      return false;
-    }
-    return true;
+    return(www.indexOf("https://sololatino.xyz/v/") != -1);
   }
 }
 
@@ -103,10 +96,7 @@ export class OwodeuwuXYZ extends VideoServer {
     }
   }
   can(www) {
-    if (www.indexOf("owodeuwu.xyz") == -1) {
-      return false;
-    }
-    return true;
+    return (www.indexOf("owodeuwu.xyz") != -1)
   }
 }
 
@@ -150,9 +140,35 @@ export class MamazonPlayer extends VideoServer {
     after({ video: thirdStep["data"][0]["tempLink"] });
   }
   can(www) {
-    if (www.indexOf("/reproamz/") == -1) {
-      return false;
+    return www.indexOf("/reproamz/") != -1
+  }
+}
+export class SL2_Direct extends VideoServer {
+  constructor() {
+    super();
+  }
+  name() {
+    return "SL2_Direct";
+  }
+  async getDDL(after, onError, web) {
+    try {
+      const dwvaluse = window.dec(web.replace("sl_direct", "")).split("||");
+      const oWeb = dwvaluse[1];
+      const id = dwvaluse[0];
+      const link_p = JSON.parse(
+        await window.fPost(
+          new URL(oWeb).origin + "/s.php",
+          { Referer: oWeb },
+          { a: 2, v: id },
+        ),
+      );
+      const link = "https://player.pelisserieshoy.com/p.php?url=" + encodeURIComponent(link_p["u"]) + "&sig=" + link_p["sig"] + "&src=" + link_p["src"];
+      after({video: window.serverHost + "m3u8/" + enc(link) + "/" + enc(JSON.stringify({Referer: oWeb, origin: new URL(oWeb).origin}))  + "/maskfile.m3u8"});
+    } catch (error) {
+      onError(error);
     }
-    return true;
+  }
+  can(web) {
+    return web.indexOf("sl_direct") != -1;
   }
 }
