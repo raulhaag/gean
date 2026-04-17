@@ -1,13 +1,26 @@
 import { SourceBase } from "../sourcebase.js";
-export class NODoraFlixIn extends SourceBase {
+export class DoraFlixIO extends SourceBase {
     constructor() {
       super();
-      this.name = "DoraFlixIn";
+      this.name = "DoraFlixIO";
       this.host = atob("aHR0cHM6Ly9kb3JhbWFzZmxpeC5pby8=");//
     }
     async getFrontPage(after, error) {
+      const dora = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
+        {"content-type": "application/json"},
+        {"RAW_GEAN":{"operationName":"listDoramas","variables":{"filter":{"isTVShow":false},"limit":18,"sort":"_ID_DESC"},"query":"query listDoramas($limit: Int, $skip: Int, $sort: SortFindManyDoramaInput, $filter: FilterFindManyDoramaInput) {\n  listDoramas(limit: $limit, skip: $skip, sort: $sort, filter: $filter) {\n    _id\n    name\n    name_es\n    slug\n    names\n    poster_path\n    first_air_date\n    backdrop_path\n    backdrop\n    isTVShow\n    poster\n    __typename\n  }\n}\n"}}
+      ));
+      let ncs = [];
+      for(let i = 0; i < dora["data"]["listDoramas"].length; i++){
+        ncs.push({
+          "name": dora["data"]["listDoramas"][i]["name"],
+          "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + dora["data"]["listDoramas"][i]["poster_path"],
+          "path": window.enc(dora["data"]["listDoramas"][i]["slug"])
+        });
+      }
       after({
-        "Solo búsqueda": {},
+        "Doramas": ncs,
+
       });
     }
   

@@ -38,6 +38,10 @@ def send_request():
         elif method == "PGET":
             encodedHeaders = encode(json.dumps(headers))
             response = s.get("http://127.0.0.1:8080/get/" + encode(url) + "/" + encodedHeaders)
+        elif method == "PPOST":
+            encodedHeaders = encode(json.dumps(headers))
+            response = s.get("http://127.0.0.1:8080/post/" + encode(url) + "/" + encodedHeaders + "/" + encode(body))
+
 
         # Mostrar la respuesta
         response_text.delete("1.0", tk.END)
