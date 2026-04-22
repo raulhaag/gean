@@ -7,8 +7,6 @@ export class LaMovie extends SourceBase {
         this.apiUrl = "https://la.movie/wp-api/v1/";
         this.imageBaseUrl = "https://la.movie/wp-content/uploads";
     }
-
-
     
     getSeries = (jsondata, onError = console.log) => {
         let items = [];

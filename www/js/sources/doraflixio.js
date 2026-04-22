@@ -8,41 +8,125 @@ export class DoraFlixIO extends SourceBase {
     async getFrontPage(after, error) {
       const dora = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
         {"content-type": "application/json"},
-        {"RAW_GEAN":{"operationName":"listDoramas","variables":{"filter":{"isTVShow":false},"limit":18,"sort":"_ID_DESC"},"query":"query listDoramas($limit: Int, $skip: Int, $sort: SortFindManyDoramaInput, $filter: FilterFindManyDoramaInput) {\n  listDoramas(limit: $limit, skip: $skip, sort: $sort, filter: $filter) {\n    _id\n    name\n    name_es\n    slug\n    names\n    poster_path\n    first_air_date\n    backdrop_path\n    backdrop\n    isTVShow\n    poster\n    __typename\n  }\n}\n"}}
-      ));
-      let ncs = [];
-      for(let i = 0; i < dora["data"]["listDoramas"].length; i++){
+        {"RAW_GEAN": {"operationName":"paginationDorama","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":1},"query":"query paginationDorama($page: Int, $perPage: Int, $sort: SortFindManyDoramaInput, $filter: FilterFindManyDoramaInput) {\n  paginationDorama(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      isTVShow\n      poster\n      poster_path\n      genres {\n        name\n        slug\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"}
+      }));
+      const ncs = [];
+      for(let i = 0; i < dora["data"]["paginationDorama"]["items"].length; i++){
+        const basepath = dora["data"]["paginationDorama"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
+
         ncs.push({
-          "name": dora["data"]["listDoramas"][i]["name"],
-          "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + dora["data"]["listDoramas"][i]["poster_path"],
-          "path": window.enc(dora["data"]["listDoramas"][i]["slug"])
+          "name": dora["data"]["paginationDorama"]["items"][i]["name"],
+          "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + dora["data"]["paginationDorama"]["items"][i]["poster_path"],
+          "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + dora["data"]["paginationDorama"]["items"][i]["slug"])
         });
       }
+      const movi = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
+        {"content-type": "application/json"},
+        {"RAW_GEAN": {"operationName":"paginationMovie","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":2},"query":"query paginationMovie($page: Int, $perPage: Int, $sort: SortFindManyMovieInput, $filter: FilterFindManyMovieInput) {\n  paginationMovie(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      poster_path\n      poster\n      __typename\n    }\n    __typename\n  }\n}\n"}
+      }));
+      
+      const movies = [];
+      for(let i = 0; i < movi["data"]["paginationMovie"]["items"].length; i++){
+        const basepath = movi["data"]["paginationMovie"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
+
+        movies.push({
+          "name": movi["data"]["paginationMovie"]["items"][i]["name"],
+          "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + movi["data"]["paginationMovie"]["items"][i]["poster_path"],
+          "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + movi["data"]["paginationMovie"]["items"][i]["slug"])
+        });
+      }
+
       after({
         "Doramas": ncs,
-
+        "Películas": movies
       });
+    }
+
+    getChapter(data){
+      return {"name": data.name , "path": this.name + "/getLinks/" + window.enc(JSON.stringify(data))};
+    }
+
+    async getSeason(season_number, id){
+        let episodes = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
+        {"content-type": "application/json"},
+        {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":1,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
+        ));
+        const chapters = [];
+        for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
+           if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
+            chapters.push(this.getChapter(episodes.data.paginationEpisode.items[i]));
+        }
+        let currentPage = 1
+        while(episodes.data.paginationEpisode.pageInfo.hasNextPage){
+          currentPage++;
+          episodes = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
+            {"content-type": "application/json"},
+            {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":currentPage,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
+          ));
+          for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
+              if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
+              chapters.push(this.getChapter(episodes.data.pagination.items[i]));
+          }
+        }
+        return chapters;
+    }
+
+    async getDorama(after, onError, path, page = 0,){
+        const result = JSON.parse(await fGet(`https://doramasflix.io/_next/data/HxpZkSJGId8_QDC2gonOI/${window.dec(path)}.json`));
+        let sname = result["pageProps"]["dorama"]["name"];
+        let info = [];
+        info.push(result["pageProps"]["dorama"]["overview"]);
+        info.concat(result["pageProps"]["dorama"]["genres"].map((g=>g.name)));
+        let image = "https://image.tmdb.org/t/p/w220_and_h330_face/" + result["pageProps"]["dorama"]["poster_path"];
+
+        const seasons = result["pageProps"]["seasons"].map((s)=> s["season_number"]);
+        const id = result["pageProps"]["dorama"]["_id"];
+
+        //https://sv5.fluxcedene.net/api/gql
+       let chapters = [];
+       for(let i = 0; i < seasons.length; i++){
+        chapters = chapters.concat(await this.getSeason(seasons[i], id));
+       }
+       return { "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": info, "chapters": chapters }
+    }
+
+    async getMovie(after, onError, path, page = 0,){
+        const result = JSON.parse(await fGet(`https://doramasflix.io/_next/data/HxpZkSJGId8_QDC2gonOI/${window.dec(path)}.json`));
+        let sname = result["pageProps"]["dorama"]["name"];
+        let info = [];
+        info.push(result["pageProps"]["dorama"]["overview"]);
+        info.concat(result["pageProps"]["dorama"]["genres"].map((g=>g.name)));
+        let image = "https://image.tmdb.org/t/p/w220_and_h330_face/" + result["pageProps"]["dorama"]["poster_path"];
+
+        const seasons = result["pageProps"]["seasons"].map((s)=> s["season_number"]);
+        const id = result["pageProps"]["dorama"]["_id"];
+
     }
   
     async getDescription(after, onError, path, page = 0,) {
       try {
-        let result = await fGet(window.dec(path));
-        if (result.indexOf("error") == 0) {
-          onError(result + ": " + window.dec(path));
+        const result = JSON.parse(await fGet(`https://doramasflix.io/_next/data/HxpZkSJGId8_QDC2gonOI/${window.dec(path)}.json`));
+        if("dorama" in result["pageProps"]){
+          after(await this.getDorama(after, onError, path, page));
           return;
         }
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(result, "text/html");
-        let sname = doc.querySelector(".hl-dc-title").innerText;
-        let description = doc.querySelector(".hl-content-text > em:nth-child(1)").textContent.trim();
-        let genres = doc.querySelector(".hl-full-box > ul:nth-child(2) > li:nth-child(5) > a:nth-child(4)").textContent.trim();
-        let image = doc.querySelector(".hl-dc-pic > span:nth-child(1)").getAttribute("data-original");
-        let chapters = [];
-        let chap = doc.querySelectorAll("li.hl-col-sm-2");
-        for (let i = 0; i < chap.length; i++) {
-          chapters.push({ "name": chap[i].innerText, "path": this.name + "/getLinks/" + window.enc(this.host + chap[i].childNodes[0].getAttribute("href")) });
-        }
-        after({ "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": [description, genres], "chapters": chapters });
+        after(await this.getMovie(after, onError, path, page));
+        let sname = result["pageProps"]["dorama"]["name"];
+        let info = [];
+        info.push(result["pageProps"]["dorama"]["overview"]);
+        info.concat(result["pageProps"]["dorama"]["genres"].map((g=>g.name)));
+        let image = "https://image.tmdb.org/t/p/w220_and_h330_face/" + result["pageProps"]["dorama"]["poster_path"];
+
+        const seasons = result["pageProps"]["seasons"].map((s)=> s["season_number"]);
+        const id = result["pageProps"]["dorama"]["_id"];
+
+        //https://sv5.fluxcedene.net/api/gql
+       let chapters = [];
+       for(let i = 0; i < seasons.length; i++){
+        chapters = chapters.concat(await this.getSeason(seasons[i], id));
+       }
+
+        after();
       } catch (error) {
         onError(error);
       }
@@ -52,56 +136,16 @@ export class DoraFlixIO extends SourceBase {
     }
     
     async getSearch(after, onError, query) {
-      let fres = [];
-        let response = await fGet(`${this.host}/vodsearch/-------------/?wd=${encodeURIComponent(query)}&submit=`);
-        if (response.indexOf("error") == 0) {
-          onError(response);
-          return;
-        }
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(response, "text/html");
-        let res = [];
-        try {
-          let flis = doc.querySelectorAll(".hl-item-thumb")
-          ;
-          for (var i = 0; i < flis.length; i++) {
-            res.push({
-              "name": flis[i].title,
-              "image": flis[i].dataset["original"],
-              "path":    this.name + "/getDescription/" + window.enc(this.host + flis[i].getAttribute("href")),
-            });
-          }
-        } catch (nerror) {
-          onError(nerror);
-        }
-        fres = fres.concat(res);
-      after(fres);
     }
   
     async getLinks(after, onError, path) {
       try {
-        let dpath = window.dec(path);
-        let result = await fGet(dpath);
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(result, "text/html");
-        let jsd = JSON.parse(doc.getElementById("__NEXT_DATA__").innerHTML);
-        if (result.indexOf("error") == 0) {
-          onError(result);
-          return;
+        const data = JSON.parse(window.dec(path));
+        const links = [];
+        for(let i = 0; i < data.links_online.length; i++){
+          links.push(data.links_online[i].link + "||info_" + data.links_online[i].language_code);
         }
-        let data = JSON.parse(getFirstMatch(/var player_\S+?=({.+?})</gm, result));
-        let count = (result.match(/hl-tabs-btn hl-slide-swiper/g) || []).length;
-        let links = [];
-        links.push(decodeURIComponent(atob(data.url)));        
-        let subtitles = window.serverHost + "get/" + window.enc('https://pandrama.com/subs/'+ data.vod_en_py + '/6/es/('+ data.nid +').vtt');
-        if(count > 1){
-          for(var i = 2; i <= count; i++){
-            result = await fGet(dpath.replace("-t1-", `-t${i}-`));
-            data = JSON.parse(getFirstMatch(/var player_\S+?=({.+?})</gm, result));
-            links.push(decodeURIComponent(atob(data.url)));        
-          }
-        }
-        after(links, subtitles);
+        after(links);
       } catch (error) {
         onError(error);
       }
