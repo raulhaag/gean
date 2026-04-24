@@ -5,6 +5,7 @@ import { NOTestServer } from "./test.js";
 import { PanDramaTV } from "./pandrama.js";
 import { DeadServer } from "./deadserver.js";
 import { SoloLatino2 } from "./sololatino2.js";
+import { DoraFlixIO } from "./doraflixio.js";
 
 import { LaMovie } from "./lamovie.js";
 
@@ -19,6 +20,7 @@ let servers = {"animeflv.net": new AnimeFlvNet(),
 "DeadServer": new DeadServer(),
 "lamovie": new LaMovie(),
 "sololatino2" : new SoloLatino2(),
+"DoraFlixIO" : new DoraFlixIO()
 };
 export function getSource(name) {
     return (servers[name])? servers[name]:servers["DeadServer"]

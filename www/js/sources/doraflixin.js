@@ -3,7 +3,7 @@ export class NODoraFlixIn extends SourceBase {
     constructor() {
       super();
       this.name = "DoraFlixIn";
-      this.host = atob("aHR0cHM6Ly9kb3JhbWFzZmxpeC5pbi8=");//
+      this.host = atob("aHR0cHM6Ly9kb3JhbWFzZmxpeC5pby8=");//
     }
     async getFrontPage(after, error) {
       after({

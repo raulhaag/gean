@@ -27,7 +27,6 @@ cachedir = "cache/"
 lastBase_m3u8 = ""
 last_m3u8_headers = ""
 
-
 def handle_308_redirect(self, req, fp, code, msg, headers):
     if code == 308:
         new_url = headers.get('Location')
@@ -39,21 +38,36 @@ def handle_308_redirect(self, req, fp, code, msg, headers):
             raise HTTPError(req.full_url, code, msg, headers, fp)
     else:
         return self.http_error_default(req, fp, code, msg, headers)
-
 # Monkey patching urllib.request.HTTPRedirectHandler
 urllib.request.HTTPRedirectHandler.http_error_308 = handle_308_redirect
-
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
 
-def bytesDecode(bytesString):
-    try:
-        return bytesString.decode("utf-8", errors="ignore")
-    except Exception as e:
-        print(e)
-        return bytesString.decode("latin-1")
+def extract_charset(content_type_header):
+    if not content_type_header:
+        return None
+    # Patrón para capturar charset, permitiendo comillas simples o dobles
+    match = re.search(r'charset=([^;\s"\']+|"[^"]+")', content_type_header, re.IGNORECASE)
+    if match:
+        return match.group(1).strip('"\'')
+    return None
 
+def decode_response(response):
+    """Decodifica el cuerpo de una respuesta HTTP usando su charset real."""
+    raw_data = response.read()
+    content_type = response.headers.get('Content-Type', '')
+    charset = extract_charset(content_type)
+    
+    if charset:
+        try:
+            return raw_data.decode(charset)
+        except (LookupError, UnicodeDecodeError):
+            # El charset no es válido o la decodificación falla
+            pass
+    
+    # Fallback: UTF-8 con reemplazo (nunca lanza excepción)
+    return raw_data.decode('utf-8', errors='replace')
 
 class handler(SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -157,7 +171,7 @@ class handler(SimpleHTTPRequestHandler):
                     lastBase_m3u8 = get_parent_path(decode(path[2]))
                     path2 = ["get", "get", encode(lastBase_m3u8 + path[3])]
                     message = getGet(path2)
-                    content_t = bytesDecode(message.read())
+                    content_t = decode_response(message)
                 else:
                     if len(path) == 4:
                         last_m3u8_headers = "/" + path[3]
@@ -165,7 +179,7 @@ class handler(SimpleHTTPRequestHandler):
                         last_m3u8_headers = ""
                     lastBase_m3u8 = get_parent_path(decode(path[2]))
                     message = getGet(path)
-                    content = bytesDecode(message.read())
+                    content = decode_response(message)
                     content_t = transform(content, lastBase_m3u8, last_m3u8_headers)
                 self.send_response(200)
                 for header in message.headers._headers:
@@ -238,20 +252,22 @@ class handler(SimpleHTTPRequestHandler):
         self.send_header("Expires", "0")
         pass
 
-    def return_response(self, code, message):
+    def return_response(self, code, response):
+        message = response
         self.send_response(code)
-        self.send_header("Content-type", "text/html")
+        self.send_header("Content-type", "text/html; charset=utf-8")
         self.end_headers()
         self.wfile.write(bytes(message, "utf8"))
 
     def return_response_whit_headers(self, code, message):
-        content = bytesDecode(message.read())
+        content = decode_response(message)
         self.send_response(code)
         for header in message.headers._headers:
             if header[0].lower() == "set-cookie":
                 self.send_header("gean_" + header[0], header[1])
             if "content" in header[0].lower():
                 self.send_header(header[0], header[1])
+        self.send_header("Content-type", "text/html; charset=utf-8")   # ← añadido charset
         self.end_headers()
         self.wfile.write(bytes(content, "utf8"))
 
@@ -260,7 +276,6 @@ class handler(SimpleHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
         self.wfile.write(message)
-
 
 def decode(input):
     return base64.b64decode(input.replace("_", "/").encode("utf-8")).decode("utf-8")
@@ -271,7 +286,7 @@ def encode(input):
     return encoded_string
 
 def getResponseGet(path=[]):
-    return bytesDecode(getGet(path).read())
+    return decode_response(getGet(path))
 
 def getFile(url, headers = {}, server=None):
     rcode = 200
@@ -381,72 +396,6 @@ def getResponseFile(path=[], server=None):
         except (ConnectionAbortedError, ConnectionResetError) as e:
             print("Conección abortada o reseteada por el cliente.")
 
-def getResponseFile0(path=[], server=None):
-    headers = {}
-    url = decode(path[2])
-    if len(path) == 4:
-        try:
-            headers = json.loads(decode(path[3]))
-        except (json.JSONDecodeError, UnicodeDecodeError) as e:
-            print(f"Error decoding headers: {e}")
-    getFile(url, headers, server)
-
-def getResponseFile1(path=[], server=None):
-    headers = {}
-    rcode = 200    
-    url = decode(path[2])
-    ho = []
-    
-    if len(path) == 4:
-        try:
-            headers = json.loads(decode(path[3]))
-        except (json.JSONDecodeError, UnicodeDecodeError) as e:
-            print(f"Error decoding headers: {e}")
-
-    rheaders = server.headers
-    for key in rheaders:
-        if not (("host" in key.lower()) or ("referer" in key.lower())):
-            ho.append((key, rheaders.get(key)))
-
-    range_header = server.headers.get("Range")
-    if range_header is not None:
-        headers["Range"] = range_header
-        rcode = 206
-    for key in headers:
-        ho.append((key, headers[key]))
-        
-    opener = urllib.request.build_opener()
-    opener.addheaders = ho
-    urllib.request.install_opener(opener)
-    
-    try:
-        with contextlib.closing(urlopen(url, None, context=ssl._create_unverified_context)) as fp:
-            headers = fp.info()
-            bs = 8192
-            size = -1
-            read = 0
-            blocknum = 0        
-            server.send_response(rcode)
-            for header in headers._headers:
-                if header[0].lower() == "connection":
-                    server.send_header(header[0], "keep-alive")
-                elif (header[0].lower() == "content-type") or (header[0].lower() == "content-length"):
-                    server.send_header(header[0], header[1])
-            server.end_headers()
-            if "content-length" in headers:
-                size = int(headers["Content-Length"])
-            while True:
-                block = fp.read(bs)
-                if not block:
-                    break
-                read += len(block)
-                server.wfile.write(block)
-                blocknum += 1
-    except:
-        pass
-    urllib.request.urlcleanup()
-        
-
 def getGet(path=[]):
     headers = {}
     if len(path) == 4:
@@ -457,16 +406,13 @@ def getGet(path=[]):
     req = request.Request(web, headers=headers)
     return request.urlopen(req)
 
-
 def getRedirectGet(path=[]):
     resp = getGet(path)
     return resp.url
 
-
 def getRedirectPost(path=[]):
     resp = getPost(path)
     return resp.url
-
 
 def getPost(path=[]):
     headers = {}
@@ -477,15 +423,15 @@ def getPost(path=[]):
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
-    data = parse.urlencode(data).encode()
+    if "RAW_GEAN" in data:
+        data =(json.dumps(data["RAW_GEAN"])).encode()
+    else:
+        data = parse.urlencode(data).encode()
     req = request.Request(web, data=data, headers=headers)
-    resp = request.urlopen(req)
-    return resp
-
+    return request.urlopen(req)
 
 def getResponsePost(path=[]):
-    return bytesDecode(getPost(path).read())
-
+    return decode_response(getPost(path))
 
 def parseRangeHeader(header, content_len):
     unit, range = header.split("=")
@@ -493,7 +439,6 @@ def parseRangeHeader(header, content_len):
     if end == "":
         end = content_len
     return int(start), int(end), unit
-
 
 def urlretrievecache(url, filename, cache, data=None):
     with contextlib.closing(urlopen(url, data)) as fp:
@@ -535,7 +480,6 @@ def urlretrievecache(url, filename, cache, data=None):
     cache[url]["status"] = 1
     return result
 
-
 def downloadCacheFile(cache, path):
     headers = {}
     web = decode(path[2])
@@ -558,8 +502,6 @@ def downloadCacheFile(cache, path):
         cache[web]["status"] = -2
         cache[web]["errdetails"] = str(e)
         traceback.format_exc()
-
-
 
 def cacheAndGet(path=[], server=None):
     web = decode(path[2])
@@ -722,7 +664,6 @@ def check_for_update():
         pass
     return True
 
-
 def download_file(url, filename):
     request.urlretrieve(url, filename)
 
@@ -735,7 +676,6 @@ else:
 def sf(path):
     web_path = path
     server.serve_forever()
-
 
 def generateSourceList():
     regex = r"class\s+(\S+)[\s|\S]+?this.name\s*=\s*([\S+]+)\s*;"
@@ -780,7 +720,6 @@ export function getSourceList(){
         file.write(sOut)
         file.close()
 
-
 def abrir_video_con_reproductor(ruta_o_url):
     sistema_operativo = platform.system()
 
@@ -792,7 +731,6 @@ def abrir_video_con_reproductor(ruta_o_url):
         subprocess.run(["xdg-open", ruta_o_url])
     else:
         print("Sistema operativo no compatible.")
-
 
 def main(page="http://127.0.0.1:8080/main.html", path="./www"):
     if os.path.exists(cachedir):
@@ -813,7 +751,6 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
             thread.join()
     except Exception as e:
         print(e)
-
 
 if __name__ == "__main__":
     main()
