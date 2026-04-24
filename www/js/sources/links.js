@@ -12,23 +12,21 @@ export class Links extends SourceBase{
           name: "SMG",
           image:
             "",
-          path: "links/getLinks/1",
-          parentPath:
-            "links/getDescription/1",
+          path: "links/getLinks/MQ==",
         }
       ]});
   }
   async getDescription(after, onError, path, page = 0) {
     after({
       name: "SMG",
-      path: "links/getDescription/1",
+      path: "links/getDescription/MQ==",
       image:
         "",
       items: ["SMG", "Tipo: Película"],
       chapters: [
         {
           name: "Pelicula",
-          path: "links/getLinks/1",
+          path: "links/getLinks/MQ==",
         }]
     });
   }
