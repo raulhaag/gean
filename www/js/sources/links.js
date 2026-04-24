@@ -11,8 +11,8 @@ export class Links extends SourceBase{
         {
           name: "SMG",
           image:
-            "https://cdn.jkdesu.com/assets/images/animes/image/dosanko-gal-wa-namara-menkoi.jpg",
-          path: "links/getLinks/aHR0cHM6Ly9qa2FuaW1lLm5ldC9kb3NhbmtvLWdhbC13YS1uYW1hcmEtbWVua29pLzgv",
+            "",
+          path: "links/getLinks/1",
           parentPath:
             "links/getDescription/1",
         }
@@ -23,7 +23,7 @@ export class Links extends SourceBase{
       name: "SMG",
       path: "links/getDescription/1",
       image:
-        "https://cdn.jkdesu.com/assets/images/animes/image/synduality-noir-part-2.jpg",
+        "",
       items: ["SMG", "Tipo: Película"],
       chapters: [
         {
