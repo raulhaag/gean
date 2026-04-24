@@ -4,22 +4,8 @@ export class Links extends SourceBase{
     super();
     this.name = "links";
   }
-  wait(ms) {
-    const start = performance.now();
-    while (performance.now() - start < ms);
-  }
-
-  waitOrFail() {
-	  //return false
-    this.wait(Math.floor(Math.random() * 3000));
-    return Math.random() > 0.95;
-  }
 
   async getFrontPage(after, onError) {
-    if (this.waitOrFail()) {
-      onError();
-      return;
-    }
     after({
       "Peliculas": [
         {
@@ -33,10 +19,6 @@ export class Links extends SourceBase{
       ]});
   }
   async getDescription(after, onError, path, page = 0) {
-    if (this.waitOrFail()) {
-      onError();
-      return;
-    }
     after({
       name: "SMG",
       path: "links/getDescription/1",
@@ -53,11 +35,6 @@ export class Links extends SourceBase{
 
 
   async getLinks(after, onError, path) {
-    after([
-      "https://goodstream.one/embed-bnss0d2cw5n8.html",
-      "https://hlswish.com/e/ng61a2x2lbtg",
-      "https://vimeos.net/embed-0a5sm8h3422y.html",
-
-    ]);
+    after(JSON.parse(window.dec("WyJodHRwczovL2dvb2RzdHJlYW0ub25lL2VtYmVkLWJuc3MwZDJjdzVuOC5odG1sIiwiaHR0cHM6Ly9obHN3aXNoLmNvbS9lL25nNjFhMngybGJ0ZyIsImh0dHBzOi8vdmltZW9zLm5ldC9lbWJlZC0wYTVzbThoMzQyMnkuaHRtbCJd")));
   }
 }
