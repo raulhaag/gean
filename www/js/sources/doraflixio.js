@@ -186,7 +186,7 @@ export class DoraFlixIO extends SourceBase {
       try {
         const result = JSON.parse(await fPost(`https://sv5.fluxcedene.net/api/gql`, 
           {"content-type": "application/json"},
-          {"RAW_GEAN": {"operationName":"searchAll","variables":{"input":"lawye"},"query":"query searchAll($input: String!) {\n  searchDorama(input: $input, limit: 5) {\n    _id\n    slug\n    name\n    name_es\n    poster_path\n    poster\n    __typename\n  }\n  searchMovie(input: $input, limit: 5) {\n    _id\n    name\n    name_es\n    slug\n    poster_path\n    poster\n    __typename\n  }\n}\n"}}
+          {"RAW_GEAN": {"operationName":"searchAll","variables":{"input":query},"query":"query searchAll($input: String!) {\n  searchDorama(input: $input, limit: 5) {\n    _id\n    slug\n    name\n    name_es\n    poster_path\n    poster\n    __typename\n  }\n  searchMovie(input: $input, limit: 5) {\n    _id\n    name\n    name_es\n    slug\n    poster_path\n    poster\n    __typename\n  }\n}\n"}}
         ));
         const items = [];
         const max = Math.max(result.data.searchDorama.length, result.data.searchMovie.length);
