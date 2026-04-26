@@ -131,7 +131,7 @@ export class DoraFlixIO extends SourceBase {
           ));
           for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
               if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
-              chapters.push(this.getChapter(episodes.data.pagination.items[i]));
+              chapters.push(this.getChapter(episodes.data.paginationEpisode.items[i]));
           }
         }
         return chapters;
