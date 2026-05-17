@@ -10,8 +10,8 @@ export class FileMoon extends VideoServer {
   async getDDL(after, onError, url) {
     try {
       const id = this.getVideoId(url);
-      const content = await fGet(
-        `https://f75s.com/api/videos/${id}/embed/playback`,
+      const content = await fPost(
+        `https://398fitus.com/api/videos/${id}/embed/playback`,
         {
           Accept: "*/*",
           "Accept-Language": "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -19,6 +19,7 @@ export class FileMoon extends VideoServer {
           Referer: `https://f75s.com/${id}`,
           "X-Embed-Parent": `https://filemoon.sx/e/${id}/`,
         },
+        {"RAW_GEAN": {"fingerprint":{}}}
       );
       const json = JSON.parse(content);
       if (json) {
