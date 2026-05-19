@@ -276,7 +276,7 @@ export class SoloLatino2 extends SourceBase {
         try {
           const nurl = JSON.parse(await window.fGet(`https://sololatino.net/api/player-url/${linkpage[i][2]}/${linkpage[i][1]}`, { Referer: this.baseUrl }));
           result = await window.fGet(nurl.url, { Referer: this.baseUrl })
-          links = links.concat(await this.parseLinks(result, nurl.ulr));
+          links = links.concat(await this.parseLinks(result, nurl.url));
         } catch (e) {}
       }
       after(links);
