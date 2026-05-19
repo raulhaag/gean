@@ -265,6 +265,7 @@ export class SoloLatino2 extends SourceBase {
   }
 
   async getLinks(after, onError, path) {
+    //https://embed69.org/f/tt14362262-4x05
     try {
       let result = await window.fGet(dec(path));
       const linkpage = window.getAllMatches(
@@ -369,13 +370,17 @@ export class SoloLatino2 extends SourceBase {
     let jslinks = getFirstMatch(/dataLink = (\[.+?\]);/gm, htmlContent);
     if (jslinks) {
       let items = JSON.parse(jslinks);
+      const data = parsePowData(htmlContent);
+      const aesKey = await solvePoWAndGetAesKey(data);
+
       for (let i = 0; i < items.length; i++) {
         let lang = items[i]["video_language"];
         for (let j = 0; j < items[i]["sortedEmbeds"].length; j++) {
           if (items[i]["sortedEmbeds"][j]["link"].indexOf("http") == -1)
             if (items[i]["sortedEmbeds"][j]["link"].indexOf(".") == -1) {
+              const decrypted = await decryptSingleAES(items[i]["sortedEmbeds"][j]["link"], aesKey);
               links.push(
-                dcl(items[i]["sortedEmbeds"][j]["link"]) + "||info_" + lang,
+                decrypted + "||info_" + lang,
               );
             } else {
               links.push(
@@ -412,6 +417,67 @@ function dcl3(edata) {
   return jdata.link;
 }
 
+async function sha256(str) {
+    const buf = new TextEncoder().encode(str);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function decryptSingleAES(encryptedBase64, aesKey) {
+    try {
+        const raw = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+        const iv = raw.slice(0, 16);
+        const ciphertext = raw.slice(16);
+        const key = await crypto.subtle.importKey('raw', aesKey.slice(0, 32), { name: 'AES-CBC' }, false, ['decrypt']);
+        const decrypted = await crypto.subtle.decrypt({ name: 'AES-CBC', iv: iv }, key, ciphertext);
+        return new TextDecoder().decode(decrypted);
+    } catch(e) {
+        console.error('Error al descifrar el valor:', e);
+        return null;
+    }
+}
+
+function parsePowData(htmlContent){
+  const data = {};
+  data.POW_CHALLENGE = window.getFirstMatch(/const POW_CHALLENGE = '([^']+)/gm, htmlContent);
+  data.POW_DIFFICULTY = window.getFirstMatch(/const POW_DIFFICULTY = (\d+)/gm, htmlContent);
+  data.POW_SALT = window.getFirstMatch(/const POW_SALT = '([^']+)/gm, htmlContent);
+  return data;
+}
+
+async function solvePoWAndGetAesKey(data) {
+    const challenge = data.POW_CHALLENGE;
+    const difficulty = data.POW_DIFFICULTY;
+    const salt = data.POW_SALT;
+    const prefix = '0'.repeat(difficulty);
+    
+    let nonce = 0;
+    const batchSize = 1000; // Lote controlado para no congelar la pestaña
+    let aesKeyBytes = null;
+
+    // Bucle para buscar el Nonce correcto sin bloquear la interfaz
+    while (true) {
+        let found = false;
+        for (let i = 0; i < batchSize; i++) {
+            const hash = await sha256(challenge + nonce);
+            
+            if (hash.startsWith(prefix)) {
+                const keyHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(challenge + nonce + salt));
+                aesKeyBytes = new Uint8Array(keyHash);
+                found = true;
+                break;
+            }
+            nonce++;
+        }
+
+        if (found) break; // Si lo encontró, sale del bucle principal
+        
+        // Cede el control al navegador por 1ms para mantener la web fluida
+        await new Promise(resolve => setTimeout(resolve, 1));
+    }
+    return aesKeyBytes;
+}
+
 function dcl(
   encryptedLinkBase64,
   secretKey = "Ak7qrvvH4WKYxV2OgaeHAEg2a5eh16vE",
@@ -427,10 +493,9 @@ function dcl(
 
   const decrypted = CryptoJS.AES.decrypt(
     { ciphertext: encryptedWordArray },
-    CryptoJS.enc.Utf8.parse(secretKey),
+     CryptoJS.enc.Utf8.parse(secretKey),
     { iv: ivWordArray, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 },
   );
-
   const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8);
 
   return decryptedStr;
