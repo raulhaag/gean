@@ -265,18 +265,18 @@ export class SoloLatino2 extends SourceBase {
   }
 
   async getLinks(after, onError, path) {
-    //https://embed69.org/f/tt14362262-4x05
     try {
       let result = await window.fGet(dec(path));
       const linkpage = window.getAllMatches(
-        /data-server-url="([^"]+)/gm,
+        /data-player-id="([^"]+)"\s+data-player-model="([^"]+)/gm,
         result,
       );
       let links = [];
       for (let i = 0; i < linkpage.length; i++) {
         try {
-          result = await window.fGet(linkpage[i][1], { Referer: this.baseUrl });
-          links = links.concat(await this.parseLinks(result, linkpage[i][1]));
+          const nurl = JSON.parse(await window.fGet(`https://sololatino.net/api/player-url/${linkpage[i][2]}/${linkpage[i][1]}`, { Referer: this.baseUrl }));
+          result = await window.fGet(nurl.url, { Referer: this.baseUrl })
+          links = links.concat(await this.parseLinks(result, nurl.ulr));
         } catch (e) {}
       }
       after(links);
