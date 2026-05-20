@@ -267,17 +267,30 @@ export class SoloLatino2 extends SourceBase {
   async getLinks(after, onError, path) {
     try {
       let result = await window.fGet(dec(path));
-      const linkpage = window.getAllMatches(
-        /data-player-id="([^"]+)"\s+data-player-model="([^"]+)/gm,
-        result,
-      );
+      let linkpage = window.getAllMatches(
+              /data-server-url="([^"]+)/gm,
+              result,
+            );
       let links = [];
       for (let i = 0; i < linkpage.length; i++) {
         try {
-          const nurl = JSON.parse(await window.fGet(`https://sololatino.net/api/player-url/${linkpage[i][2]}/${linkpage[i][1]}`, { Referer: this.baseUrl }));
-          result = await window.fGet(nurl.url, { Referer: this.baseUrl })
-          links = links.concat(await this.parseLinks(result, nurl.url));
+          result = await window.fGet(linkpage[i][1], { Referer: this.baseUrl });
+          links = links.concat(await this.parseLinks(result, linkpage[i][1]));
         } catch (e) {}
+      }
+
+      if(linkpage.length == 0){
+        linkpage = window.getAllMatches(
+          /data-player-id="([^"]+)"\s+data-player-model="([^"]+)/gm,
+          result,
+        );
+        for (let i = 0; i < linkpage.length; i++) {
+          try {
+            const nurl = JSON.parse(await window.fGet(`https://sololatino.net/api/player-url/${linkpage[i][2]}/${linkpage[i][1]}`, { Referer: this.baseUrl }));
+            result = await window.fGet(nurl.url, { Referer: this.baseUrl })
+            links = links.concat(await this.parseLinks(result, nurl.url));
+          } catch (e) {}
+        }
       }
       after(links);
     } catch (error) {
