@@ -141,7 +141,7 @@ export class SoloLatino2 extends SourceBase {
       if (post.length == 0) {
         const post2 = secciones[i].getElementsByClassName("ep-card");
         if (!post2 || post2.length == 0) {
-          const post3 = secciones[i].getElementsByClassName("px-4");
+          const post3 = secciones[i].getElementsByClassName("genre-pill");
           if (!post3) continue;
           out[cname.innerText] = this.parseGenres(post3);
           continue;
