@@ -292,6 +292,20 @@ export class SoloLatino2 extends SourceBase {
           } catch (e) {}
         }
       }
+
+      if(linkpage.length == 0){
+        linkpage = window.getAllMatches(/data-player-token="(.+?)"/gm, result);
+        for (let i = 0; i < linkpage.length; i++) {
+          try {
+            const nurl = JSON.parse(await window.fPost("https://sololatino.net/api/player-url",
+               { Referer: this.baseUrl, Accept: "application/json"},
+                {"RAW_GEAN":{ t: linkpage[i][1] }}));
+            result = await window.fGet(nurl.url, { Referer: this.baseUrl });
+            links = links.concat(await this.parseLinks(result, nurl.url));
+          } catch (e) {}
+        }
+      }
+
       after(links);
     } catch (error) {
       onError(error);
