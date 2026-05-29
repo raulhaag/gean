@@ -141,7 +141,7 @@ export class SoloLatino2 extends SourceBase {
       if (post.length == 0) {
         const post2 = secciones[i].getElementsByClassName("ep-card");
         if (!post2 || post2.length == 0) {
-          const post3 = secciones[i].getElementsByClassName("px-4");
+          const post3 = secciones[i].getElementsByClassName("genre-pill");
           if (!post3) continue;
           out[cname.innerText] = this.parseGenres(post3);
           continue;
@@ -292,6 +292,18 @@ export class SoloLatino2 extends SourceBase {
           } catch (e) {}
         }
       }
+
+      if(linkpage.length == 0){
+        linkpage = window.getAllMatches(/data-player-token="(.+?)"/gm, result);
+        for (let i = 0; i < linkpage.length; i++) {
+          try {
+            const [header, data] = generarHeaders(linkpage[i][1]);
+            const nurl = JSON.parse(await window.fPost("https://sololatino.net/api/player-url", header, data));            result = await window.fGet(nurl.url, { Referer: this.baseUrl });
+            links = links.concat(await this.parseLinks(result, nurl.url));
+          } catch (e) {}
+        }
+      }
+
       after(links);
     } catch (error) {
       onError(error);
@@ -513,3 +525,5 @@ function dcl(
 
   return decryptedStr;
 }
+
+function generarHeaders(_0x1b){const _0x4a={a:window.dec("QWNjZXB0"),b:window.dec("YXBwbGljYXRpb24vanNvbg=="),c:window.dec("Q29udGVudC1UeXBl"),d:window.dec("WC1YU1JGLVRPS0VO"),e:window.dec("Q29va2ll"),f:window.dec("WFNSRi1UT0tFTj0="),g:window.dec("c29sb2xhdGlub25ldC1zZXNzaW9uPQ==")},_0x2c=encodeURIComponent(_0x1b);return[{[_0x4a.a]:_0x4a.b,[_0x4a.c]:_0x4a.b,[_0x4a.d]:_0x1b,[_0x4a.e]:`${_0x4a.f}${_0x2c}; ${_0x4a.g}${_0x2c}`},{"RAW_GEAN":{t:_0x1b}}];}
