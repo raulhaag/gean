@@ -3,9 +3,9 @@ export class LaMovie extends SourceBase {
     constructor() {
         super();
         this.name = "lamovie";
-        this.baseUrl = "https://la.movie";
-        this.apiUrl = "https://la.movie/wp-api/v1/";
-        this.imageBaseUrl = "https://la.movie/wp-content/uploads";
+        this.baseUrl = "https://lamovie.org";
+        this.apiUrl = "https://lamovie.org/wp-api/v1/";
+        this.imageBaseUrl = "https://lamovie.org/wp-content/uploads";
     }
     
     getSeries = (jsondata, onError = console.log) => {
@@ -176,7 +176,7 @@ export class LaMovie extends SourceBase {
         }
 
         try {
-            let response = JSON.parse(await window.fGet(`https://la.movie/wp-api/v1/player?postId=${id}&demo=0`));
+            let response = JSON.parse(await window.fGet(`https://lamovie.org/wp-api/v1/player?postId=${id}&demo=0`));
             if (response.message != 'ok') {
                 onError(`Error: ${response.message}`);
                 return;
