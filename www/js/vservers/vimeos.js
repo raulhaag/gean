@@ -11,10 +11,10 @@ export class Vimeos extends VideoServer {
         try{
             const urlw = new URL(web);
             const headers = { "User-Agent": window.navigator.userAgent};
-            const result = await fGet(web, headers);
+            const result = await window.fGet(web, headers);
             const res = window.__unpack(result);
-            const dlink = getFirstMatch(/file:"(.+?)"/gm, res);
-            after({"video": dlink});
+            const dlink = window.getFirstMatch(/file:"(.+?)"/gm, res);
+            after({"video": window.serverHost + "m3u8/" + window.enc(dlink) + "/" + window.enc(JSON.stringify({"User-Agent": window.navigator.userAgent, "Referer": urlw.protocol + "//" +urlw.hostname, "origin": urlw.origin}))  + "/maskfile.m3u8", "direct": dlink, "proxy": window.serverHost + "m3u8/" + window.enc(dlink) + "/" + window.enc(JSON.stringify({"User-Agent": window.navigator.userAgent, "Referer": urlw.protocol + "//" +urlw.hostname, "origin": urlw.origin}))  + "/maskfile.m3u8"});
         }catch(e){
             onError(e);
         }
