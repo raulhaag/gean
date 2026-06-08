@@ -11,9 +11,9 @@ export class DoraFlixIO extends SourceBase {
 
     async checkBID(onError){
       if(this.bid != "") return;
-      const data = await window.fGet("https://doramasflix.io/");
+      const data = await window.fGet(this.host);
       this.bid = window.getFirstMatch(/_next\/static\/([^<]+)\/_buildManifest\.js/gm, data);
-      if(bid == "") onError("No BID found");
+      if(this.bid == "") onError("No BID found");
     }
 
     async getTag(labelid) {
@@ -244,5 +244,3 @@ export class DoraFlixIO extends SourceBase {
       }
     }
   }
-  
-  
