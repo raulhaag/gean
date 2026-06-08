@@ -86,7 +86,7 @@ export class SceneSearch extends Scene{
 
             case "Enter":
             case "NumpadEnter":
-                window.debounce(() => {                    
+                                    
                     let c = this.lastkey.innerHTML;
                     switch(c){
                         case '←':
@@ -97,19 +97,21 @@ export class SceneSearch extends Scene{
                             this.searchtext.innerHTML = this.searchtext.innerHTML + " ";
                             break;
                         case '✓':
-                            let st = this.searchtext.innerHTML.replace(' ', '+');
-                            if (st.length > 0){
-                                showLoading();
-                                this.updateSearchHistory(st);
-                                this.renderSearchHistory();
-                                let server = getSource(sid);
-                                server.getSearch((items) =>{this.searchDone(items, this)}, error, st)
-                            }
+                            window.debounce(() => {
+                                let st = this.searchtext.innerHTML.replace(' ', '+');
+                                if (st.length > 0){
+                                    showLoading();
+                                    this.updateSearchHistory(st);
+                                    this.renderSearchHistory();
+                                    let server = getSource(sid);
+                                    server.getSearch((items) =>{this.searchDone(items, this)}, error, st)
+                                }
+                            }, "SEARCH_NAV");
                             break;
                         default:
                             this.searchtext.innerHTML = this.searchtext.innerHTML + this.lastkey.innerHTML;
                     }
-                }, "SEARCH_NAV");
+                
                 break;
 
             case 'Backspace':
