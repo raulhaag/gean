@@ -41,6 +41,14 @@ def handle_308_redirect(self, req, fp, code, msg, headers):
 # Monkey patching urllib.request.HTTPRedirectHandler
 urllib.request.HTTPRedirectHandler.http_error_308 = handle_308_redirect
 
+orig_getaddrinfo = socket.getaddrinfo
+def patched_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+    if family == socket.AF_INET6 or family == 0:
+        family = socket.AF_INET
+    return orig_getaddrinfo(host, port, family, type, proto, flags)
+
+socket.getaddrinfo = patched_getaddrinfo
+
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
 
