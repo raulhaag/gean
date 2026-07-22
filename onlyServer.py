@@ -1,0 +1,3 @@
+from HttpServer import main
+if __name__ == "__main__":
+    main("","./www", False)

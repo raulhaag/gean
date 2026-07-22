@@ -115,24 +115,19 @@ export class DoraMp4 extends SourceBase {
           console.log(e);
         }
 
-        try{
-          const vari = JSON.parse(await window.fPost(this.api, 
+          const dora = JSON.parse(await window.fPost(this.api, 
             {"content-type": "application/json"},
             {"RAW_GEAN": {"operationName":"PaginationDorama","variables":{"page":1,"limit":24,"filter":{"isTVShow":true}},"extensions":{"clientLibrary":{"name":"@apollo/client","version":"4.0.7"}},"query":"query PaginationDorama($sort: SortDorama, $limit: Int, $filter: FilterDoramasInput, $page: Int, $excludedLabelSlugs: [String!]) {\n  paginationDorama(\n    sort: $sort\n    limit: $limit\n    filter: $filter\n    page: $page\n    excludedLabelSlugs: $excludedLabelSlugs\n  ) {\n    count\n    pageInfo {\n      currentPage\n      perPage\n      pageCount\n      itemCount\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      isTVShow\n      isFinish\n      premiere\n      first_air_date\n      number_of_episodes\n      number_of_episodes_online\n      poster_path\n      poster\n      backdrop_path\n      backdrop\n      subtitles_available\n      seasons {\n        season_number\n        emision\n        number_of_episodes\n        number_of_episodes_online\n        uploading\n        pause\n        commingSoon\n        status\n        status_source\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"}
           }));
-  
-          for(let i = 0; i < vari["data"]["paginationMovie"]["items"].length; i++){
-            const basepath = vari["data"]["paginationMovie"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
+          for(let i = 0; i < dora["data"]["paginationDorama"]["items"].length; i++){
+            const basepath = dora["data"]["paginationDorama"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
             variedad.push({
-              "name": vari["data"]["paginationMovie"]["items"][i]["name"]  + " [Variedad]",
-              "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + vari["data"]["paginationMovie"]["items"][i]["poster_path"],
-              "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + vari["data"]["paginationMovie"]["items"][i]["slug"])
+              "name": dora["data"]["paginationDorama"]["items"][i]["name"],
+              "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + dora["data"]["paginationDorama"]["items"][i]["poster_path"],
+              "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + dora["data"]["paginationDorama"]["items"][i]["slug"])
             });
           }
-        }catch(e){
-        //continue
-          console.log(e);
-        }
+
 
         const tags = [];
         const keys = Object.keys(this.tags);
@@ -148,8 +143,8 @@ export class DoraMp4 extends SourceBase {
         }
 
         after({
-          "Películas": movies,
           "Doramas": ncs,
+          "Películas": movies,
           "Variedad": variedad,
           "Por generos": tags
         });
@@ -162,11 +157,15 @@ export class DoraMp4 extends SourceBase {
       return {"name": data.name , "path": this.name + "/getLinks/" + window.enc(JSON.stringify(data))};
     }
 
-    async getSeason(season_number, id){
-        let episodes = JSON.parse(await window.fPost(this.api, 
-        {"content-type": "application/json"},
-        {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":1,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
-        ));
+    async getSeason(season_number, info){
+        const result = await window.fPost(`${this.host}${window.dec(info.path)}`, {
+            "rsc": 1,
+            "next-action": "404b003354044a9425a74feb0663cce2bcb3863e0c",
+            "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22the-apothecary-diaries%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D"
+          },
+            {"RAW_GEAN": [{"serie_id":info.id,"season_number":1,"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasmp4.io"}]}
+        );
+        let episodes = JSON.parse(window.getFirstMatch(/({"items":.+?Response"})/g), result);
         const chapters = [];
         for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
            if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
@@ -187,24 +186,18 @@ export class DoraMp4 extends SourceBase {
         return chapters;
     }
 
-    async getDorama(result, after, onError, path, page = 0,){
-        let sname = result["pageProps"]["dorama"]["name"];
-        let info = [];
-        info.push(result["pageProps"]["dorama"]["overview"]);
-        info.concat(result["pageProps"]["dorama"]["genres"].map((g=>g.name)));
-        let image = "https://image.tmdb.org/t/p/w220_and_h330_face/" + result["pageProps"]["dorama"]["poster_path"];
+    async getDorama(info, path, page = 0,){
+      
+      const seasons = info.seasons.map((s)=> s["season_number"]);
 
-        const seasons = result["pageProps"]["seasons"].map((s)=> s["season_number"]);
-        const id = result["pageProps"]["dorama"]["_id"];
-
-       let chapters = [];
-       for(let i = 0; i < seasons.length; i++){
-        chapters = chapters.concat(await this.getSeason(seasons[i], id));
-       }
-       return { "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": info, "chapters": chapters }
+      let chapters = [];
+      for(let i = 0; i < seasons.length; i++){
+        chapters = chapters.concat(await this.getSeason(seasons[i], info));
+      }
+      return { "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": info, "chapters": chapters }
     }
 
-    async getMovie(result, after, onError, path, page = 0,){
+    async getMovie(result, path, page = 0,){
         let sname = result["pageProps"]["movie"]["name"];
         let info = [];
         info.push(result["pageProps"]["movie"]["overview"]);
@@ -217,24 +210,27 @@ export class DoraMp4 extends SourceBase {
       try {
        // await this.checkBID(onError);
 
-        const result = await fGet(`${this.host}${window.dec(path)}`, {
+        const result = await window.fGet(`${this.host}${window.dec(path)}`, {
           "rsc": 1,
           "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22peliculas%22%2C%7B%22children%22%3A%5B%22(group)%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C4%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D"
         });
         const out = {};
         const fr = /{"id":"(.+?)","slug":"(.+?)","name":"(.+?)","name_es":"(.+?)"/;
         const frm = result.match(fr);
-
+        out.path = path;
         out.name = frm[3];
         out.id = frm[1];
-        out.image = getFirstMatch(/"image":"(.+?)"/, result);
-        out.info = frm[4] + "\n" + getFirstMatch(/"description":"(.+?)"/, result);
+        out.slug = frm[2];
+        out.image = window.getFirstMatch(/"image":"(.+?)"/, result);
+        out.info = frm[4] + "\n" + window.getFirstMatch(/"description":"(.+?)"/, result);
 
-        if("dorama" in result["pageProps"]){
-          after(await this.getDorama(result, after, onError, path, page));
+        if(window.dec(path).indexOf("dorama") != -1){
+          const data = JSON.parse(window.getFirstMatch(/({"serie_id":.+?}})]}]/g,result));
+          out.seasons = data.seasons;
+          after(await this.getDorama(out, path, page));
           return;
         }
-        after(await this.getMovie(result, onError, path, page));
+        after(await this.getMovie(result, path, page));
       } catch (error) {
         onError(error);
       }

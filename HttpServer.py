@@ -740,7 +740,7 @@ def abrir_video_con_reproductor(ruta_o_url):
     else:
         print("Sistema operativo no compatible.")
 
-def main(page="http://127.0.0.1:8080/main.html", path="./www"):
+def main(page="http://127.0.0.1:8080/main.html", path="./www", openwb=True):
     if os.path.exists(cachedir):
         shutil.rmtree(cachedir)
     os.makedirs(cachedir)
@@ -751,11 +751,12 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
 
             thread = Thread(target=sf, args=(path,))
             thread.start()
-            try:
-                import webbrowser
-                window = webbrowser.open(page)
-            except Exception as e:
-                print(e)
+            if openwb:
+                try:
+                    import webbrowser
+                    window = webbrowser.open(page)
+                except Exception as e:
+                    print(e)
             thread.join()
     except Exception as e:
         print(e)
