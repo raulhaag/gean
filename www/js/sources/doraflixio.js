@@ -70,51 +70,69 @@ export class DoraFlixIO extends SourceBase {
       onError("No more");
     }
 
-    async getFrontPage(after, error) {
-      const dora = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
-        {"content-type": "application/json"},
-        {"RAW_GEAN": {"operationName":"paginationDorama","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":1},"query":"query paginationDorama($page: Int, $perPage: Int, $sort: SortFindManyDoramaInput, $filter: FilterFindManyDoramaInput) {\n  paginationDorama(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      isTVShow\n      poster\n      poster_path\n      genres {\n        name\n        slug\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"}
-      }));
-      const ncs = [];
-      for(let i = 0; i < dora["data"]["paginationDorama"]["items"].length; i++){
-        const basepath = dora["data"]["paginationDorama"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
+    async getFrontPage(after, onError) {
+      try{
+        const ncs = [];
+        const movies = [];
 
-        ncs.push({
-          "name": dora["data"]["paginationDorama"]["items"][i]["name"],
-          "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + dora["data"]["paginationDorama"]["items"][i]["poster_path"],
-          "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + dora["data"]["paginationDorama"]["items"][i]["slug"])
-        });
-      }
-      const movi = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
-        {"content-type": "application/json"},
-        {"RAW_GEAN": {"operationName":"paginationMovie","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":2},"query":"query paginationMovie($page: Int, $perPage: Int, $sort: SortFindManyMovieInput, $filter: FilterFindManyMovieInput) {\n  paginationMovie(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      poster_path\n      poster\n      __typename\n    }\n    __typename\n  }\n}\n"}
-      }));
+        try{
+          const dora = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
+            {"content-type": "application/json"},
+            {"RAW_GEAN": {"operationName":"paginationDorama","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":1},"query":"query paginationDorama($page: Int, $perPage: Int, $sort: SortFindManyDoramaInput, $filter: FilterFindManyDoramaInput) {\n  paginationDorama(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      isTVShow\n      poster\n      poster_path\n      genres {\n        name\n        slug\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"}
+          }));
+          for(let i = 0; i < dora["data"]["paginationDorama"]["items"].length; i++){
+            const basepath = dora["data"]["paginationDorama"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
+            ncs.push({
+              "name": dora["data"]["paginationDorama"]["items"][i]["name"],
+              "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + dora["data"]["paginationDorama"]["items"][i]["poster_path"],
+              "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + dora["data"]["paginationDorama"]["items"][i]["slug"])
+            });
+          }
+        }catch(e){
+          //continue to movies
+          console.log(e);
+        }
+
+        try{
+          const movi = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
+            {"content-type": "application/json"},
+            {"RAW_GEAN": {"operationName":"paginationMovie","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":2},"query":"query paginationMovie($page: Int, $perPage: Int, $sort: SortFindManyMovieInput, $filter: FilterFindManyMovieInput) {\n  paginationMovie(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      poster_path\n      poster\n      __typename\n    }\n    __typename\n  }\n}\n"}
+          }));
+          for(let i = 0; i < movi["data"]["paginationMovie"]["items"].length; i++){
+            const basepath = movi["data"]["paginationMovie"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
+
+            movies.push({
+              "name": movi["data"]["paginationMovie"]["items"][i]["name"]  + " [Movie]",
+              "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + movi["data"]["paginationMovie"]["items"][i]["poster_path"],
+              "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + movi["data"]["paginationMovie"]["items"][i]["slug"])
+            });
+          }
+        }catch(e){
+        //continue
+          console.log(e);
+        }
+
+        const tags = [];
+        const keys = Object.keys(this.tags);
+        for(let key in keys){
+          tags.push({
+            "name": this.tags[keys[key]],
+            "path": this.name + "/getMore/" + window.enc(keys[key])
+          });
+        }
       
-      const movies = [];
-      for(let i = 0; i < movi["data"]["paginationMovie"]["items"].length; i++){
-        const basepath = movi["data"]["paginationMovie"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
+        if(ncs.length == 0 && movies.length == 0){
+          throw new Error("No data colected");
+        }
 
-        movies.push({
-          "name": movi["data"]["paginationMovie"]["items"][i]["name"]  + " [Movie]",
-          "image": "https://image.tmdb.org/t/p/w220_and_h330_face/" + movi["data"]["paginationMovie"]["items"][i]["poster_path"],
-          "path": this.name + "/getDescription/" +  window.enc(basepath + "/" + movi["data"]["paginationMovie"]["items"][i]["slug"])
+        after({
+          "Doramas": ncs,
+          "Películas": movies,
+          "Por generos": tags
         });
-      }
-
-      const tags = [];
-      const keys = Object.keys(this.tags);
-      for(let key in keys){
-        tags.push({
-          "name": this.tags[keys[key]],
-          "path": this.name + "/getMore/" + window.enc(keys[key])
-        });
-      }
-
-      after({
-        "Doramas": ncs,
-        "Películas": movies,
-        "Por generos": tags
-      });
+     }catch(e){
+        onError("Error al cargar la pagina principal");
+     }
     }
 
     getChapter(data){
