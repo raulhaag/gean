@@ -161,7 +161,7 @@ export class DoraMp4 extends SourceBase {
         const result = await window.fPost(`${this.host}${window.dec(info.path)}`, {
             "rsc": 1,
             "next-action": "404b003354044a9425a74feb0663cce2bcb3863e0c",
-            "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22the-apothecary-diaries%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D"
+            "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
           },
             {"RAW_GEAN": [{"serie_id":info.id,"season_number":1,"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasmp4.io"}]}
         );
