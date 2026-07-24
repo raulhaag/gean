@@ -424,18 +424,16 @@ def getRedirectPost(path=[]):
 
 def getPost(path=[]):
     headers = {}
-    data = {}
+    data = ""
     if len(path) == 5:
         headers = json.loads(decode(path[3]))
-        data = json.loads(decode(path[4]))
+        data = decode(path[4])
+        
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
-    if "RAW_GEAN" in data:
-        data =(json.dumps(data["RAW_GEAN"])).encode()
-    else:
-        data = parse.urlencode(data).encode()
-    req = request.Request(web, data=data, headers=headers)
+
+    req = request.Request(web, data=data.encode(), headers=headers)
     return request.urlopen(req)
 
 def getResponsePost(path=[]):

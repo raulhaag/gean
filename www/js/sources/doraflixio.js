@@ -21,11 +21,11 @@ export class DoraFlixIO extends SourceBase {
       const dobj = {"operationName":"listDoramasLabel","variables":{"labelId":labelid},"query":"query listDoramasLabel($labelId: MongoID!) {\n  listDoramas(filter: {labelId: $labelId}) {\n    _id\n    name\n    name_es\n    isTVShow\n    slug\n    overview\n    first_air_date\n    episode_run_time\n    poster_path\n    __typename\n  }\n}\n"}
       const series = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
         {"content-type": "application/json"},
-        {"RAW_GEAN": dobj}
+        dobj
       ));
       const pelis = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
         {"content-type": "application/json"},
-        {"RAW_GEAN": pobj}
+        pobj
       ));
       const max = Math.max(series.data.listDoramas.length, pelis.data.listMovies.length);
       const items = [];
@@ -78,8 +78,8 @@ export class DoraFlixIO extends SourceBase {
         try{
           const dora = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
             {"content-type": "application/json"},
-            {"RAW_GEAN": {"operationName":"paginationDorama","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":1},"query":"query paginationDorama($page: Int, $perPage: Int, $sort: SortFindManyDoramaInput, $filter: FilterFindManyDoramaInput) {\n  paginationDorama(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      isTVShow\n      poster\n      poster_path\n      genres {\n        name\n        slug\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"}
-          }));
+            {"operationName":"paginationDorama","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":1},"query":"query paginationDorama($page: Int, $perPage: Int, $sort: SortFindManyDoramaInput, $filter: FilterFindManyDoramaInput) {\n  paginationDorama(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      isTVShow\n      poster\n      poster_path\n      genres {\n        name\n        slug\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"}
+          ));
           for(let i = 0; i < dora["data"]["paginationDorama"]["items"].length; i++){
             const basepath = dora["data"]["paginationDorama"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
             ncs.push({
@@ -96,8 +96,8 @@ export class DoraFlixIO extends SourceBase {
         try{
           const movi = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
             {"content-type": "application/json"},
-            {"RAW_GEAN": {"operationName":"paginationMovie","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":2},"query":"query paginationMovie($page: Int, $perPage: Int, $sort: SortFindManyMovieInput, $filter: FilterFindManyMovieInput) {\n  paginationMovie(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      poster_path\n      poster\n      __typename\n    }\n    __typename\n  }\n}\n"}
-          }));
+            {"operationName":"paginationMovie","variables":{"perPage":24,"sort":"CREATEDAT_DESC","filter":{},"page":2},"query":"query paginationMovie($page: Int, $perPage: Int, $sort: SortFindManyMovieInput, $filter: FilterFindManyMovieInput) {\n  paginationMovie(page: $page, perPage: $perPage, sort: $sort, filter: $filter) {\n    count\n    pageInfo {\n      currentPage\n      hasNextPage\n      hasPreviousPage\n      __typename\n    }\n    items {\n      _id\n      name\n      name_es\n      slug\n      poster_path\n      poster\n      __typename\n    }\n    __typename\n  }\n}\n"}
+          ));
           for(let i = 0; i < movi["data"]["paginationMovie"]["items"].length; i++){
             const basepath = movi["data"]["paginationMovie"]["items"][i]["__typename"] == "Dorama" ? "doramas" : "peliculas";
 
@@ -142,7 +142,7 @@ export class DoraFlixIO extends SourceBase {
     async getSeason(season_number, id){
         let episodes = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
         {"content-type": "application/json"},
-        {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":1,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
+        {"operationName":"listEpisodesPagination","variables":{"page":1,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}
         ));
         const chapters = [];
         for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
@@ -154,7 +154,7 @@ export class DoraFlixIO extends SourceBase {
           currentPage++;
           episodes = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
             {"content-type": "application/json"},
-            {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":currentPage,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
+            {"operationName":"listEpisodesPagination","variables":{"page":currentPage,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}
           ));
           for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
               if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
@@ -212,7 +212,7 @@ export class DoraFlixIO extends SourceBase {
       try {
         const result = JSON.parse(await fPost(`https://sv5.fluxcedene.net/api/gql`, 
           {"content-type": "application/json"},
-          {"RAW_GEAN": {"operationName":"searchAll","variables":{"input":query},"query":"query searchAll($input: String!) {\n  searchDorama(input: $input, limit: 5) {\n    _id\n    slug\n    name\n    name_es\n    poster_path\n    poster\n    __typename\n  }\n  searchMovie(input: $input, limit: 5) {\n    _id\n    name\n    name_es\n    slug\n    poster_path\n    poster\n    __typename\n  }\n}\n"}}
+          {"operationName":"searchAll","variables":{"input":query},"query":"query searchAll($input: String!) {\n  searchDorama(input: $input, limit: 5) {\n    _id\n    slug\n    name\n    name_es\n    poster_path\n    poster\n    __typename\n  }\n  searchMovie(input: $input, limit: 5) {\n    _id\n    name\n    name_es\n    slug\n    poster_path\n    poster\n    __typename\n  }\n}\n"}
         ));
         const items = [];
         const max = Math.max(result.data.searchDorama.length, result.data.searchMovie.length);
@@ -245,7 +245,7 @@ export class DoraFlixIO extends SourceBase {
         if(decpath.startsWith("slug:")){
             let links = JSON.parse(await window.fPost("https://sv5.fluxcedene.net/api/gql", 
               {"content-type": "application/json"},
-              {"RAW_GEAN": {"operationName":"GetMovieLinks","variables":{"slug": decpath.split(":")[1],"app":"com.asiapp.doramasgo"},"query":"query GetMovieLinks($id: MongoID, $slug: String, $app: String, $iosapp: String, $externalLink: String) {\n  getMovieLinks(\n    id: $id\n    slug: $slug\n    app: $app\n    iosapp: $iosapp\n    externalLink: $externalLink\n  ) {\n    links_online\n    __typename\n  }\n}\n"}}
+              {"operationName":"GetMovieLinks","variables":{"slug": decpath.split(":")[1],"app":"com.asiapp.doramasgo"},"query":"query GetMovieLinks($id: MongoID, $slug: String, $app: String, $iosapp: String, $externalLink: String) {\n  getMovieLinks(\n    id: $id\n    slug: $slug\n    app: $app\n    iosapp: $iosapp\n    externalLink: $externalLink\n  ) {\n    links_online\n    __typename\n  }\n}\n"}
             ));
             data = links.data.getMovieLinks;
         }else{
