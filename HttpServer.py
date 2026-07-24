@@ -424,18 +424,16 @@ def getRedirectPost(path=[]):
 
 def getPost(path=[]):
     headers = {}
-    data = {}
+    data = ""
     if len(path) == 5:
         headers = json.loads(decode(path[3]))
-        data = json.loads(decode(path[4]))
+        data = decode(path[4])
+        
     if "User-Agent" not in headers:
         headers["User-Agent"] = defaultUserAgent
     web = decode(path[2])
-    if "RAW_GEAN" in data:
-        data =(json.dumps(data["RAW_GEAN"])).encode()
-    else:
-        data = parse.urlencode(data).encode()
-    req = request.Request(web, data=data, headers=headers)
+
+    req = request.Request(web, data=data.encode(), headers=headers)
     return request.urlopen(req)
 
 def getResponsePost(path=[]):
@@ -740,7 +738,7 @@ def abrir_video_con_reproductor(ruta_o_url):
     else:
         print("Sistema operativo no compatible.")
 
-def main(page="http://127.0.0.1:8080/main.html", path="./www"):
+def main(page="http://127.0.0.1:8080/main.html", path="./www", openwb=True):
     if os.path.exists(cachedir):
         shutil.rmtree(cachedir)
     os.makedirs(cachedir)
@@ -751,11 +749,12 @@ def main(page="http://127.0.0.1:8080/main.html", path="./www"):
 
             thread = Thread(target=sf, args=(path,))
             thread.start()
-            try:
-                import webbrowser
-                window = webbrowser.open(page)
-            except Exception as e:
-                print(e)
+            if openwb:
+                try:
+                    import webbrowser
+                    window = webbrowser.open(page)
+                except Exception as e:
+                    print(e)
             thread.join()
     except Exception as e:
         print(e)
