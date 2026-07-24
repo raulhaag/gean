@@ -12,7 +12,7 @@ export class SbFull extends VideoServer {
             let web2 = "https://sbfull.com/dl?op=download_orig&id=" + res[0][1] + "&mode=" + res[0][2] + "&hash=" + res[0][3];
             data = await fGet(web2, headers);
             // then recaptcha f***
-            let data2 = await fPost(web2, {"Referer":web},{"op":"download_orig", "id":res[0][1], "mode":res[0][2] , "hash":res[0][3]});
+            let data2 = await fPost(web2, {"Referer":web}, `op=download_orig&id=${res[0][1]}&mode=${res[0][2]}&hash=${res[0][3]}`);
         }catch(e){
             onError(e);
         }

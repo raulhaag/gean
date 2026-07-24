@@ -9,10 +9,9 @@ export class Streamlare extends VideoServer {
   async getDDL(after, onError, web) {
     try{
       let id = web.split("?")[0].split("/").pop();
-      let postData = { id: id };
       let headers = { Referer: web, "X-Requested-With": "XMLHttpRequest" };
       let x = JSON.parse(
-        await fPost("https://slmaxed.com/api/video/stream/get", headers, postData)
+        await fPost("https://slmaxed.com/api/video/stream/get", headers, `id=${encodeURI(id)}`)
       );
       let link = "";
       if (x.result.playlist) {

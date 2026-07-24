@@ -13,13 +13,13 @@ export class FileMoon extends VideoServer {
       const content = await fPost(
         `https://398fitus.com/api/videos/${id}/embed/playback`,
         {
-          Accept: "*/*",
+          "Accept": "*/*",
           "Accept-Language": "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7",
           "Accept-Encoding": "deflate",
-          Referer: `https://f75s.com/${id}`,
+          "Referer": `https://f75s.com/${id}`,
           "X-Embed-Parent": `https://filemoon.sx/e/${id}/`,
         },
-        {"RAW_GEAN": {"fingerprint":{}}}
+        {"fingerprint":{}}
       );
       const json = JSON.parse(content);
       if (json) {

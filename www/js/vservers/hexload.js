@@ -17,14 +17,8 @@ export class Hexload extends VideoServer {
                         Accept:"*/*",
                         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                         "X-Requested-With": "XMLHttpRequest"
-                    },
-                    {
-                        op:	"download3",
-                        id:	vid,
-                        ajax:	"1",
-                        method_free:	"1",
-                        dataType:	"json"
-                    }
+                    },  `op=download3&id=${vid}&ajax=1&method_free=1&dataType=json`
+                    
                 ));
             }
             after({video: data['result']['url']});

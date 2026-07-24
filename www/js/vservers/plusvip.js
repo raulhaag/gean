@@ -16,7 +16,7 @@ export class Plusvip extends VideoServer {
             var R = CryptoJS.enc.Utf8.parse('d41d8cd98f00b204e9800998ecf8427e');
             var N = CryptoJS.AES.decrypt(u, R, { mode: CryptoJS.mode.ECB });
             var web2 = "https://plusvip.net" + N.toString(CryptoJS.enc.Utf8);
-            var webC1 = await fPost(web2, {"User-Agent":navigator.userAgent}, {"link":link});
+            var webC1 = await fPost(web2, {"User-Agent":navigator.userAgent}, "link=" + encodeURI(link));
             after({video: JSON.parse(webC1).link});
         }catch(error){
             onError(error);
