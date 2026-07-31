@@ -1,5 +1,5 @@
 import { SourceBase } from "../sourcebase.js";
-export class AnimeFlvNet extends SourceBase {
+export class NoAnimeFlvNet extends SourceBase {
     constructor() {
       super();
       this.name = "animeflv.net";
