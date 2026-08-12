@@ -147,25 +147,26 @@ export class DoraFlixIO extends SourceBase {
             "next-action": "402fbf5040dc380544392d3f77fe836722d4fa95c3","Content-Type": "text/plain;charset=UTF-8",
             "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
           },
-          '[{"serie_id":"6a7a6eb456e57b5ffbb175bc","season_number":1,"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]'
-            //`[{"serie_id":${info.id},"season_number":1,"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
+            `[{"serie_id":"${info.id}","season_number":${season_number},"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
         );
         let episodes = JSON.parse(window.getFirstMatch(/({"items":[\S\s]+?)$/gm, result));
         const chapters = [];
         for (let i = 0; i < episodes.items.length; i++) {
-           if(episodes.items[i].links_online.length == 0) continue;
-            chapters.push(this.getChapter(episodes.data.paginationEpisode.items[i]));
+          if(episodes.items[i].count_links > 0) chapters.push(this.getChapter(episodes.items[i]));
         }
         let currentPage = 1
         while(episodes.pageInfo.hasNextPage){
           currentPage++;
-          episodes = JSON.parse(await window.fPost(this.api, 
-            {"content-type": "application/json"},
-            {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":currentPage,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
-          ));
+          const result = await window.fPost(`${this.host}${window.dec(info.path)}`
+            , {
+                "next-action": "402fbf5040dc380544392d3f77fe836722d4fa95c3","Content-Type": "text/plain;charset=UTF-8",
+                "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
+              },
+                `[{"serie_id":"${info.id}","season_number":${season_number},"page":${currentPage},"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
+            );
+          episodes = episodes = JSON.parse(window.getFirstMatch(/({"items":[\S\s]+?)$/gm, result));
           for (let i = 0; i < episodes.items.length; i++) {
-              if(episodes.items[i].links_online.length == 0) continue;
-              chapters.push(this.getChapter(episodes.items[i]));
+            if(episodes.items[i].count_links > 0) chapters.push(this.getChapter(episodes.items[i]));
           }
         }
         return chapters;
@@ -179,7 +180,7 @@ export class DoraFlixIO extends SourceBase {
       for(let i = 0; i < seasons.length; i++){
         chapters = chapters.concat(await this.getSeason(seasons[i], info));
       }
-      return { "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": info, "chapters": chapters }
+      return { "name": info.name, "path": this.name + "/getDescription/" + info.path, "image": info.image, "items": [info.info], "chapters": chapters }
     }
 
     async getMovie(result, after, onError, path, page = 0,){
@@ -256,22 +257,23 @@ export class DoraFlixIO extends SourceBase {
   
     async getLinks(after, onError, path) {
       try {
-        const decpath = window.dec(path);
-        let data = {};
-        if(decpath.startsWith("slug:")){
-            let links = JSON.parse(await window.fPost(this.api, 
-              {"content-type": "application/json"},
-              {"operationName":"GetMovieLinks","variables":{"slug": decpath.split(":")[1],"app":"com.asiapp.doramasgo"},"query":"query GetMovieLinks($id: MongoID, $slug: String, $app: String, $iosapp: String, $externalLink: String) {\n  getMovieLinks(\n    id: $id\n    slug: $slug\n    app: $app\n    iosapp: $iosapp\n    externalLink: $externalLink\n  ) {\n    links_online\n    __typename\n  }\n}\n"}
-            ));
-            data = links.data.getMovieLinks;
-        }else{
-          data = JSON.parse(decpath);
-        }
         const links = [];
-        for(let i = 0; i < data.links_online.length; i++){
-          if("link" in data.links_online[i])  links.push(data.links_online[i].link + "||info_" + data.links_online[i].language_code);
-          if("embed" in data.links_online[i]) links.push(data.links_online[i].embed + "||info_" + data.links_online[i].language_code);
+        const decpath = window.dec(path);
+        const data = JSON.parse(decpath);
+        const result = await window.fPost(`${this.host}capitulos/${data.slug}`
+          , {
+              "next-action": "40029b7568610a4e2e65963079a4d5f5d1cff1e6e3","Content-Type": "text/plain;charset=UTF-8",
+              "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22capitulos%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${data.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C0%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
+            },
+            `[{"episode_id":"${data._id}"}]`
+          );
+        const lpg = JSON.parse(window.getFirstMatch(/(\[{"server".+?$)/gm, result));
+        for(let i = 0; i < lpg.length; i++){
+          const pl = lpg[i].link.replace("https://embedshortener.co/e/","").split(".")[1];
+          links.push(dec(JSON.parse(dec(pl)).link));
         }
+
+
         after(links);
       } catch (error) {
         onError(error);
