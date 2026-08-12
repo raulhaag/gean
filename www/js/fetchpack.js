@@ -65,7 +65,8 @@ window.fGet = async function (url, header = {}, returnHeaders = false) {
 }
 
 window.fPost = async function (url, header, post) {
-    return await mFetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(JSON.stringify(post)));  
+    if(window.isObject(post)) post = JSON.stringify(post)
+    return await mFetch(window.serverHost + "post/" + enc(url) + "/" + enc(JSON.stringify(header)) + "/" + enc(post));  
 }
 
 window.fetchRedirectPost = async function (url, header) {
@@ -171,3 +172,9 @@ window.debounce = (callback, actionKey = "default", time = 1000) => {
     //console.log("debounce ", actionKey);
     callback();
 }
+
+window.isObject = (value) => {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+window.startsWith = (str, prefix) => {return str.indexOf(prefix) === 0}

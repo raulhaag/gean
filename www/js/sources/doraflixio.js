@@ -1,3 +1,4 @@
+import { NJP } from "../lib/njp.js";
 import { SourceBase } from "../sourcebase.js";
 export class DoraFlixIO extends SourceBase {
     constructor() {
@@ -136,50 +137,49 @@ export class DoraFlixIO extends SourceBase {
      }
     }
 
-    getChapter(data){
+   getChapter(data){
       return {"name": data.name , "path": this.name + "/getLinks/" + window.enc(JSON.stringify(data))};
     }
 
-    async getSeason(season_number, id){
-        let episodes = JSON.parse(await window.fPost(this.api, 
-        {"content-type": "application/json"},
-        {"operationName":"listEpisodesPagination","variables":{"page":1,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}
-        ));
+    async getSeason(season_number, info){
+        const result = await window.fPost(`${this.host}${window.dec(info.path)}`
+        , {
+            "next-action": "402fbf5040dc380544392d3f77fe836722d4fa95c3","Content-Type": "text/plain;charset=UTF-8",
+            "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
+          },
+          '[{"serie_id":"6a7a6eb456e57b5ffbb175bc","season_number":1,"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]'
+            //`[{"serie_id":${info.id},"season_number":1,"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
+        );
+        let episodes = JSON.parse(window.getFirstMatch(/({"items":[\S\s]+?)$/gm, result));
         const chapters = [];
-        for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
-           if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
+        for (let i = 0; i < episodes.items.length; i++) {
+           if(episodes.items[i].links_online.length == 0) continue;
             chapters.push(this.getChapter(episodes.data.paginationEpisode.items[i]));
         }
         let currentPage = 1
-        while(episodes.data.paginationEpisode.pageInfo.hasNextPage){
+        while(episodes.pageInfo.hasNextPage){
           currentPage++;
           episodes = JSON.parse(await window.fPost(this.api, 
             {"content-type": "application/json"},
-            {"operationName":"listEpisodesPagination","variables":{"page":currentPage,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}
+            {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":currentPage,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
           ));
-          for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
-              if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
-              chapters.push(this.getChapter(episodes.data.paginationEpisode.items[i]));
+          for (let i = 0; i < episodes.items.length; i++) {
+              if(episodes.items[i].links_online.length == 0) continue;
+              chapters.push(this.getChapter(episodes.items[i]));
           }
         }
         return chapters;
     }
 
-    async getDorama(result, after, onError, path, page = 0,){
-        let sname = result["pageProps"]["dorama"]["name"];
-        let info = [];
-        info.push(result["pageProps"]["dorama"]["overview"]);
-        info.concat(result["pageProps"]["dorama"]["genres"].map((g=>g.name)));
-        let image = "https://image.tmdb.org/t/p/w220_and_h330_face/" + result["pageProps"]["dorama"]["poster_path"];
+    async getDorama(info, path, page = 0,){
+      
+      const seasons = info.seasons.map((s)=> s["season_number"]);
 
-        const seasons = result["pageProps"]["seasons"].map((s)=> s["season_number"]);
-        const id = result["pageProps"]["dorama"]["_id"];
-
-       let chapters = [];
-       for(let i = 0; i < seasons.length; i++){
-        chapters = chapters.concat(await this.getSeason(seasons[i], id));
-       }
-       return { "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": info, "chapters": chapters }
+      let chapters = [];
+      for(let i = 0; i < seasons.length; i++){
+        chapters = chapters.concat(await this.getSeason(seasons[i], info));
+      }
+      return { "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": info, "chapters": chapters }
     }
 
     async getMovie(result, after, onError, path, page = 0,){
@@ -193,13 +193,29 @@ export class DoraFlixIO extends SourceBase {
   
     async getDescription(after, onError, path, page = 0,) {
       try {
-        await this.checkBID(onError);
-        const result = JSON.parse(await fGet(`${this.host}_next/data/${this.bid}/${window.dec(path)}.json`));
-        if("dorama" in result["pageProps"]){
-          after(await this.getDorama(result, after, onError, path, page));
+        const result = await fGet(`${this.host}${window.dec(path)}`, 
+        {
+          "rsc": 1,
+          "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D"
+        });
+
+                const out = {};
+        const fr = /{"id":"(.+?)","slug":"(.+?)","name":"(.+?)","name_es":"(.+?)"/;
+        const frm = result.match(fr);
+        out.path = path;
+        out.name = frm[3];
+        out.id = frm[1];
+        out.slug = frm[2];
+        out.image = window.getFirstMatch(/"image":"(.+?)"/, result);
+        out.info = frm[4] + "\n" + window.getFirstMatch(/"description":"(.+?)"/, result);
+
+        if(window.dec(path).indexOf("dorama") != -1){
+          const data = JSON.parse(window.getFirstMatch(/({"serie_id":.+?}})]}]/g,result));
+          out.seasons = data.seasons;
+          after(await this.getDorama(out, path, page));
           return;
         }
-        after(await this.getMovie(result, onError, path, page));
+        after(await this.getMovie(result, path, page));
       } catch (error) {
         onError(error);
       }

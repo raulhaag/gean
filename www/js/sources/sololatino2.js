@@ -418,14 +418,21 @@ export class SoloLatino2 extends SourceBase {
         }
       }
     }
-    const t = getFirstMatch(/_t\s*=\s*'([^']+)/gm, htmlContent);
+    const t = window.getFirstMatch(/_t\s*=\s*'([^']+)/gm, htmlContent);
     if (t) {
       const baseURL = new URL(web).origin;
-      const link_p = JSON.parse(await window.fPost(baseURL + "/s.php", { Referer: web }, { a: 1, tok: t }));
+      const rt = extractRt(htmlContent);
+      const _qc = window.getFirstMatch(/var _qc="(.+?)"/gm, htmlContent);
+      const link_p = JSON.parse(await window.fPost(baseURL + "/s.php", 
+        { "User-Agent": navigator.userAgent,
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          "Origin": baseURL,
+        }, `a=1&tok=${t}&rt=${rt}&tk=`));
+      const tk = _qh((rt||'')+'|clk|'+_qc);
       for(let key in Object.keys(link_p["langs_s"])){
         const keyname = Object.keys(link_p["langs_s"])[key];
         for(let i = 0; i < link_p["langs_s"][keyname].length; i++){
-          links.push(window.enc(link_p["langs_s"][keyname][i][1] + "||" + web) + "sl_direct" + "||info_" + keyname +"(" + i + ")");
+          links.push(window.enc(link_p["langs_s"][keyname][i][1] + "||" + web + "||" + t + "||" + rt + "||" + tk) + "sl_direct" + "||info_" + keyname +"(" + i + ")");
         }
       }
     }
@@ -471,6 +478,8 @@ function parsePowData(htmlContent){
   return data;
 }
 
+function _qh(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return (h>>>0).toString(16);}
+
 async function solvePoWAndGetAesKey(data) {
     const challenge = data.POW_CHALLENGE;
     const difficulty = data.POW_DIFFICULTY;
@@ -502,6 +511,15 @@ async function solvePoWAndGetAesKey(data) {
         await new Promise(resolve => setTimeout(resolve, 1));
     }
     return aesKeyBytes;
+}
+
+function extractRt(scriptContent) {
+    const qkMatch = scriptContent.match(/var\s+_qk\s*=\s*\[(.*?)\];/);
+    if (!qkMatch) {
+        throw new Error("No se encontró la definición de _qk en el script.");
+    }
+    const qk = JSON.parse(`[${qkMatch[1]}]`);
+    return qk[1] + qk[3] + qk[0] + qk[2];
 }
 
 function dcl(
