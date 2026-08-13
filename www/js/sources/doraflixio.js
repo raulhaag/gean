@@ -11,13 +11,6 @@ export class DoraFlixIO extends SourceBase {
       this.bid = "";
     }
 
-    async checkBID(onError){
-      if(this.bid != "") return;
-      const data = await window.fGet(this.host);
-      this.bid = window.getFirstMatch(/_next\/static\/([^<]+)\/_buildManifest\.js/gm, data);
-      if(this.bid == "") onError("No BID found");
-    }
-
     async getTag(labelid) {
       const pobj = {"operationName":"listMoviesLabel","variables":{"labelId":labelid},"query":"query listMoviesLabel($labelId: MongoID!) {\n  listMovies(filter: {labelId: $labelId}) {\n    _id\n    name\n    name_es\n    slug\n    overview\n    release_date\n    runtime\n    poster_path\n    __typename\n  }\n}\n"}
       const dobj = {"operationName":"listDoramasLabel","variables":{"labelId":labelid},"query":"query listDoramasLabel($labelId: MongoID!) {\n  listDoramas(filter: {labelId: $labelId}) {\n    _id\n    name\n    name_es\n    isTVShow\n    slug\n    overview\n    first_air_date\n    episode_run_time\n    poster_path\n    __typename\n  }\n}\n"}
@@ -192,7 +185,7 @@ export class DoraFlixIO extends SourceBase {
 
     async getDescription(after, onError, path, page = 0,) {
       try {
-        const result = await fGet(`${this.host}${window.dec(path)}`, 
+        const result = await window.fGet(`${this.host}${window.dec(path)}`, 
         {
           "rsc": 1,
           "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D"
@@ -226,7 +219,7 @@ export class DoraFlixIO extends SourceBase {
     
     async getSearch(after, onError, query) {
       try {
-        const result = JSON.parse(await fPost(this.api, 
+        const result = JSON.parse(await window.fPost(this.api, 
           {"content-type": "application/json"},
           {"operationName":"searchAll","variables":{"input":query},"query":"query searchAll($input: String!) {\n  searchDorama(input: $input, limit: 5) {\n    _id\n    slug\n    name\n    name_es\n    poster_path\n    poster\n    __typename\n  }\n  searchMovie(input: $input, limit: 5) {\n    _id\n    name\n    name_es\n    slug\n    poster_path\n    poster\n    __typename\n  }\n}\n"}
         ));
@@ -256,7 +249,7 @@ export class DoraFlixIO extends SourceBase {
 
     cleanLink(dirty){
       const c1 = dirty.replace("https://embedshortener.co/e/","").split(".")[1];
-      return (dec(JSON.parse(dec(c1)).link));
+      return (window.dec(JSON.parse(window.dec(c1)).link));
     }
   
     async getLinks(after, onError, path) {

@@ -10,4 +10,7 @@ export  class  VideoServer {//abstract
         id = id.split("/").pop();
         return id;
     }
+    getProxyHLS(url, headers){
+        return  window.serverHost + "m3u8/" + window.enc(url) + "/" + window.enc(JSON.stringify(headers)) + "/maskfile.m3u8"
+    }
 }   

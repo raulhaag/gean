@@ -26,6 +26,7 @@ import { Uqload } from "./uqload.js";
 import { Hexload } from "./hexload.js";
 import { Vimeos } from "./vimeos.js";
 import { GoodStream } from "./goodstream.js";
+import { Primeload } from "./primeload.js";
 
 let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new ReSololatino(), new SololatinoXYZ(),
@@ -38,7 +39,7 @@ let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new DoodStream(), new BurstCloud(), new Mp4Upload(),
                 new MaRu(), new Hglink(), new Uqload(),
                 new Hexload(), new Vimeos(), new StreamWish(),
-                new GoodStream(), new SL2_Direct()
+                new GoodStream(), new SL2_Direct(), new Primeload()
             ];
 let prefered = loadPreferenced();
 orderServersByPrefered();

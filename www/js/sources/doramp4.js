@@ -14,11 +14,11 @@ export class NoDoraMp4 extends SourceBase {
       const dobj = {"operationName":"listDoramasLabel","variables":{"labelId":labelid},"query":"query listDoramasLabel($labelId: MongoID!) {\n  listDoramas(filter: {labelId: $labelId}) {\n    _id\n    name\n    name_es\n    isTVShow\n    slug\n    overview\n    first_air_date\n    episode_run_time\n    poster_path\n    __typename\n  }\n}\n"}
       const series = JSON.parse(await window.fPost(this.api, 
         {"content-type": "application/json"},
-        {"RAW_GEAN": dobj}
+        dobj
       ));
       const pelis = JSON.parse(await window.fPost(this.api, 
         {"content-type": "application/json"},
-        {"RAW_GEAN": pobj}
+        pobj
       ));
       const max = Math.max(series.data.listDoramas.length, pelis.data.listMovies.length);
       const items = [];
@@ -145,37 +145,46 @@ export class NoDoraMp4 extends SourceBase {
      }
     }
 
-    getChapter(data){
+getChapter(data){
       return {"name": data.name , "path": this.name + "/getLinks/" + window.enc(JSON.stringify(data))};
     }
 
     async getSeason(season_number, info){
-        const result = await window.fPost(`${this.host}${window.dec(info.path)}`, {
-            "rsc": 1,
-            "next-action": "404b003354044a9425a74feb0663cce2bcb3863e0c",
+        const result = await window.fPost(`${this.host}${info.path}`
+        , {
+            "next-action": "402fbf5040dc380544392d3f77fe836722d4fa95c3","Content-Type": "text/plain;charset=UTF-8",
             "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
           },
-            {"RAW_GEAN": [{"serie_id":info.id,"season_number":1,"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasmp4.io"}]}
-        );
-        let episodes = JSON.parse(window.getFirstMatch(/({"items":.+?Response"})/g), result);
+            `[{"serie_id":"${info.id}","season_number":${season_number},"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
+        );        
         const chapters = [];
-        for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
-           if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
-            chapters.push(this.getChapter(episodes.data.paginationEpisode.items[i]));
+
+        try{ 
+        let episodes = JSON.parse(window.getFirstMatch(/({"items":[\S\s]+?)$/gm, result));
+        for (let i = 0; i < episodes.items.length; i++) {
+          if(episodes.items[i].count_links > 0) chapters.push(this.getChapter(episodes.items[i]));
         }
         let currentPage = 1
-        while(episodes.data.paginationEpisode.pageInfo.hasNextPage){
+        while(episodes.pageInfo.hasNextPage){
           currentPage++;
-          episodes = JSON.parse(await window.fPost(this.api, 
-            {"content-type": "application/json"},
-            {"RAW_GEAN": {"operationName":"listEpisodesPagination","variables":{"page":currentPage,"perPage":10,"serie_id":id,"season_number":season_number},"query":"query listEpisodesPagination($page: Int!, $serie_id: MongoID!, $season_number: Float!, $perPage: Int!) {\n  paginationEpisode(\n    page: $page\n    perPage: $perPage\n    sort: NUMBER_ASC\n    filter: {type_serie: \"dorama\", serie_id: $serie_id, season_number: $season_number}\n  ) {\n    count\n    items {\n      _id\n      name\n      still_path\n      episode_number\n      season_number\n      air_date\n      slug\n      serie_id\n      links_online\n      season_poster\n      serie_poster\n      poster\n      backdrop\n      __typename\n    }\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n"}}
-          ));
-          for (let i = 0; i < episodes.data.paginationEpisode.items.length; i++) {
-              if(episodes.data.paginationEpisode.items[i].links_online.length == 0) continue;
-              chapters.push(this.getChapter(episodes.data.paginationEpisode.items[i]));
+          const result = await window.fPost(`${this.host}${info.path}`
+            , {
+                "next-action": "402fbf5040dc380544392d3f77fe836722d4fa95c3","Content-Type": "text/plain;charset=UTF-8",
+                "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
+              },
+                `[{"serie_id":"${info.id}","season_number":${season_number},"page":${currentPage},"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
+            );
+          episodes = episodes = JSON.parse(window.getFirstMatch(/({"items":[\S\s]+?)$/gm, result));
+          for (let i = 0; i < episodes.items.length; i++) {
+            if(episodes.items[i].count_links > 0) chapters.push(this.getChapter(episodes.items[i]));
           }
         }
+        }catch(e){
+          console.log("cached");
+          console.log(e);
+        }
         return chapters;
+
     }
 
     async getDorama(info, path, page = 0,){
@@ -186,7 +195,7 @@ export class NoDoraMp4 extends SourceBase {
       for(let i = 0; i < seasons.length; i++){
         chapters = chapters.concat(await this.getSeason(seasons[i], info));
       }
-      return { "name": sname, "path": this.name + "/getDescription/" + path, "image": image, "items": info, "chapters": chapters }
+      return { "name": info.name, "path": this.name + "/getDescription/" + window.enc(info.path), "image": info.image, "items": [info.info], "chapters": chapters }
     }
 
     async getMovie(result, path, page = 0,){
@@ -233,9 +242,9 @@ export class NoDoraMp4 extends SourceBase {
     
     async getSearch(after, onError, query) {
       try {
-        const result = JSON.parse(await fPost(this.api, 
+        const result = JSON.parse(await window.fPost(this.api, 
           {"content-type": "application/json"},
-          {"RAW_GEAN": {"operationName":"searchAll","variables":{"input":query},"query":"query searchAll($input: String!) {\n  searchDorama(input: $input, limit: 5) {\n    _id\n    slug\n    name\n    name_es\n    poster_path\n    poster\n    __typename\n  }\n  searchMovie(input: $input, limit: 5) {\n    _id\n    name\n    name_es\n    slug\n    poster_path\n    poster\n    __typename\n  }\n}\n"}}
+          '{"operationName":"searchAll","variables":{"input":query},"query":"query searchAll($input: String!) {\n  searchDorama(input: $input, limit: 5) {\n    _id\n    slug\n    name\n    name_es\n    poster_path\n    poster\n    __typename\n  }\n  searchMovie(input: $input, limit: 5) {\n    _id\n    name\n    name_es\n    slug\n    poster_path\n    poster\n    __typename\n  }\n}\n"}'
         ));
         const items = [];
         const max = Math.max(result.data.searchDorama.length, result.data.searchMovie.length);
@@ -268,7 +277,7 @@ export class NoDoraMp4 extends SourceBase {
         if(decpath.startsWith("slug:")){
             let links = JSON.parse(await window.fPost(this.api, 
               {"content-type": "application/json"},
-              {"RAW_GEAN": {"operationName":"GetMovieLinks","variables":{"slug": decpath.split(":")[1],"app":"com.asiapp.doramasgo"},"query":"query GetMovieLinks($id: MongoID, $slug: String, $app: String, $iosapp: String, $externalLink: String) {\n  getMovieLinks(\n    id: $id\n    slug: $slug\n    app: $app\n    iosapp: $iosapp\n    externalLink: $externalLink\n  ) {\n    links_online\n    __typename\n  }\n}\n"}}
+              `{"operationName":"GetMovieLinks","variables":{"slug": ${decpath.split(":")[1]},"app":"com.asiapp.doramasgo"},"query":"query GetMovieLinks($id: MongoID, $slug: String, $app: String, $iosapp: String, $externalLink: String) {\n  getMovieLinks(\n    id: $id\n    slug: $slug\n    app: $app\n    iosapp: $iosapp\n    externalLink: $externalLink\n  ) {\n    links_online\n    __typename\n  }\n}\n"}`
             ));
             data = links.data.getMovieLinks;
         }else{

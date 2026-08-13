@@ -8,10 +8,10 @@ export class Hexload extends VideoServer {
     }
     async getDDL(after, onError, web){
         try{
-            let vid = getFirstMatch(/embed-(.+?)\//gm, web);
+            let vid = window.getFirstMatch(/embed-(.+?)\//gm, web);
             let data = "";
             if(vid){
-                 data = JSON.parse(await fPost("https://hexload.com/download",
+                 data = JSON.parse(await window.fPost("https://hexload.com/download",
                     {
                         referer: web,
                         Accept:"*/*",
