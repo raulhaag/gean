@@ -34,7 +34,9 @@ export class DoodStream extends VideoServer {
         return data + randomString;
     }
     can(www){
-        if(www.indexOf("doodstream") == -1 && www.indexOf("dsvplay") == -1){
+        if(www.indexOf("doodstream") == -1 
+        && www.indexOf("dsvplay") == -1
+        && www.indexOf("do7go") == -1){
             return false;
         }
         return true;

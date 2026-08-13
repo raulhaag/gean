@@ -108,7 +108,7 @@ export class Voe extends VideoServer {
     return jsonData;
   };
   can(www){
-    if(www.indexOf("voe") == -1){// too generic?
+    if(www.indexOf("voe") == -1 || /markstyleall|cindyeyefinal|shannonpersonalcost/.test(www)){// too generic?
       return false;
     }
     return true;
