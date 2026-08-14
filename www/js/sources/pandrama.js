@@ -1,5 +1,5 @@
 import { SourceBase } from "../sourcebase.js";
-export class PanDramaTV extends SourceBase {
+export class NoPanDramaTV extends SourceBase {
     constructor() {
       super();
       this.name = "PanDrama";

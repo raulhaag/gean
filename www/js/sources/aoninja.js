@@ -1,5 +1,5 @@
 import { SourceBase } from "../sourcebase.js";
-export class AnimeOnlineNinja extends SourceBase{
+export class NoAnimeOnlineNinja extends SourceBase{
     constructor() {
       super();
       this.name = "AONinja";

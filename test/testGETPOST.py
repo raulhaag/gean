@@ -1,7 +1,16 @@
 import tkinter as tk
 from tkinter import scrolledtext, ttk
 import requests
-import json, base64
+import json, base64, socket
+
+orig_getaddrinfo = socket.getaddrinfo
+def patched_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+    if family == socket.AF_INET6 or family == 0:
+        family = socket.AF_INET
+    return orig_getaddrinfo(host, port, family, type, proto, flags)
+
+socket.getaddrinfo = patched_getaddrinfo
+
 
 def encode(input):
     encoded_bytes = base64.b64encode(input.encode("utf-8"))
