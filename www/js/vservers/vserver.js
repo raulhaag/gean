@@ -39,7 +39,7 @@ let servers = [ new JKAPI(), new JKXtreme(), new Desu(),
                 new DoodStream(), new BurstCloud(), new Mp4Upload(),
                 new MaRu(), new Hglink(), new Uqload(),
                 new Hexload(), new Vimeos(), new StreamWish(),
-                new GoodStream(), new SL2_Direct(), new Primeload()
+                new GoodStream(), new SL2_Direct()//, new Primeload()
             ];
 let prefered = loadPreferenced();
 orderServersByPrefered();
