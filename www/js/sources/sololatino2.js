@@ -419,7 +419,7 @@ export class SoloLatino2 extends SourceBase {
       }
     }
     const t = window.getFirstMatch(/_t\s*=\s*'([^']+)/gm, htmlContent);
-    if (t) {
+    /*if (t) {
       const baseURL = new URL(web).origin;
       const rt = extractRt(htmlContent);
       const _qc = window.getFirstMatch(/var _qc="(.+?)"/gm, htmlContent);
@@ -435,7 +435,7 @@ export class SoloLatino2 extends SourceBase {
           links.push(window.enc(link_p["langs_s"][keyname][i][1] + "||" + web + "||" + t + "||" + rt + "||" + tk) + "sl_direct" + "||info_" + keyname +"(" + i + ")");
         }
       }
-    }
+    } */
     return links;
   }
 }
