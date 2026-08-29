@@ -40,10 +40,7 @@ export class FileMoon extends VideoServer {
     }
   }
   can(www) {
-    if (www.indexOf("filemoon") == -1 && www.indexOf("bysedikamoum.") == -1) {
-      return false;
-    }
-    return true;
+    return /filemoon|bysedikamoum|bysefujedu/.test(www)
   }
 
   generateId() {
