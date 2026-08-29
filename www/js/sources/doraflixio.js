@@ -134,9 +134,10 @@ export class DoraFlixIO extends SourceBase {
     }
 
     async getSeason(season_number, info){
+    
         const result = await window.fPost(`${this.host}${info.path}`
         , {
-            "next-action": "402fbf5040dc380544392d3f77fe836722d4fa95c3","Content-Type": "text/plain;charset=UTF-8",
+            "next-action": "4068ec77101f1c103027324b78324197be38696139","Content-Type": "text/plain;charset=UTF-8",
             "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
           },
             `[{"serie_id":"${info.id}","season_number":${season_number},"page":1,"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
@@ -153,7 +154,7 @@ export class DoraFlixIO extends SourceBase {
           currentPage++;
           const result = await window.fPost(`${this.host}${info.path}`
             , {
-                "next-action": "402fbf5040dc380544392d3f77fe836722d4fa95c3","Content-Type": "text/plain;charset=UTF-8",
+                "next-action": "4068ec77101f1c103027324b78324197be38696139","Content-Type": "text/plain;charset=UTF-8",
                 "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22doramas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${info.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
               },
                 `[{"serie_id":"${info.id}","season_number":${season_number},"page":${currentPage},"limit":8,"sort":"NUMBER_ASC","excludedLabelSlugs":"$undefined","brandHost":"doramasflix.io"}]`
@@ -190,7 +191,7 @@ export class DoraFlixIO extends SourceBase {
           "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D"
         });
 
-                const out = {};
+        const out = {};
         const frm = (/{"id":"([^"]+?)","slug":"([^"]+?)","name":"([^"]+?)","name_es":"([^"]+?)"/gm).exec(result);
         out.path = window.dec(path);
         out.name = frm[3];
@@ -259,7 +260,7 @@ export class DoraFlixIO extends SourceBase {
           const data = JSON.parse(decpath.replace("slug:",""));
           const result = await window.fPost(`${this.host}peliculas/${data.slug}`
           , {
-              "next-action": "40a02cfc02b593c2ec630b4cd6c4ee48509defe57a","Content-Type": "text/plain;charset=UTF-8",
+              "next-action": "408fb075bac2ab80c3597d3c6d43b790df3b0b8417","Content-Type": "text/plain;charset=UTF-8",
               "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22peliculas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${data.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D`
             },
             `[{"movie_id":"${data.id}"}]`
@@ -275,7 +276,7 @@ export class DoraFlixIO extends SourceBase {
         const data = JSON.parse(decpath);
         const result = await window.fPost(`${this.host}capitulos/${data.slug}`
           , {
-              "next-action": "40029b7568610a4e2e65963079a4d5f5d1cff1e6e3","Content-Type": "text/plain;charset=UTF-8",
+              "next-action": "406bdec544eeb53cbefa09322cbda67963eb850496","Content-Type": "text/plain;charset=UTF-8",
               "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22capitulos%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${data.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C0%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C24%5D`
             },
             `[{"episode_id":"${data._id}"}]`

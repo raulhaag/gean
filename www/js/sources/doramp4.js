@@ -1,5 +1,5 @@
 import { SourceBase } from "../sourcebase.js";
-export class NoDoraMp4 extends SourceBase {
+export class DoraMp4 extends SourceBase {
     constructor() {
       super();
       this.name = "DoraMp4";

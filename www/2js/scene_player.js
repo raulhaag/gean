@@ -515,9 +515,13 @@ export class ScenePlayer extends Scene {
 
   dispose() {
     if (this.player) {
-      this.checkAndSaveProgress();
-      this.player.pause();
-      this.player.src = "";
+      try{
+        this.checkAndSaveProgress();
+        this.player.pause();
+        this.player.src = "";
+      }catch{
+        //ignore
+      }
     }
     if(this.hls) this.hlsObj.destroy();
     this._removeIdleMouseHider();
