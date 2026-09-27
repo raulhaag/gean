@@ -260,7 +260,7 @@ export class DoraFlixIO extends SourceBase {
           const data = JSON.parse(decpath.replace("slug:",""));
           const result = await window.fPost(`${this.host}peliculas/${data.slug}`
           , {
-              "next-action": "408fb075bac2ab80c3597d3c6d43b790df3b0b8417","Content-Type": "text/plain;charset=UTF-8",
+              "next-action": "4045b96c9ad026e963b56455c319e925fbbdc07282","Content-Type": "text/plain;charset=UTF-8",
               "next-router-state-tree": `%5B%22%22%2C%7B%22children%22%3A%5B%22peliculas%22%2C%7B%22children%22%3A%5B%5B%22slug%22%2C%22${data.slug}%22%2C%22d%22%2Cnull%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D%7D%2Cnull%2Cnull%2C8%5D%2C%22modal%22%3A%5B%22__DEFAULT__%22%2C%7B%7D%2Cnull%2Cnull%2C0%5D%7D%2Cnull%2Cnull%2C16%5D`
             },
             `[{"movie_id":"${data.id}"}]`
