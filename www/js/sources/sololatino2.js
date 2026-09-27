@@ -160,20 +160,22 @@ export class SoloLatino2 extends SourceBase {
   async getSearch(after, onError, query) {
     try {
       const data = await window.fGet(
-        "https://sololatino.net/buscar?q=" + query,
+        "https://sololatino.net/api/search/suggest?q=" + query, {Accept: "*/*", Referer: "https://sololatino.net"}
       );
-      const doc = new DOMParser().parseFromString(data, "text/html");
-      const posts = doc.getElementsByClassName("card");
-      if (!posts) {
+      const doc = JSON.parse(data);
+      if (doc.length == 0) {
         onError("No se encontraron resultados");
         return;
       }
-      const seccion = this.parseCards(posts);
-      if (seccion.length == 0) {
-        onError("No se encontraron resultados");
-        return;
+      const out = [];
+      for(let i = 0; i < doc.length; i++){
+        out.push({
+          name: doc[i].title,
+          image: doc[i].poster,
+          path: this.name + "/getDescription/" + window.enc(doc[i].url)
+        });
       }
-      after(seccion);
+      after(out);
     } catch (error) {
       onError(error);
     }
