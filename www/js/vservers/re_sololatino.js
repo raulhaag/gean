@@ -155,25 +155,37 @@ export class SL2_Direct extends VideoServer {
       const dwvaluse = window.dec(web.replace("sl_direct", "")).split("||");
       const oWeb = dwvaluse[1];
       const id = dwvaluse[0];
-      const link_p = JSON.parse(
+      const origin = new URL(oWeb).origin;
+      const ck_p = 
         await window.fPost(
-          new URL(oWeb).origin + "/s.php",
+          origin + "/s.php",
           { "User-Agent": navigator.userAgent,
           "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-          Origin: new URL(oWeb).origin },
+          Origin: origin },
+          `a=click&tok=${dwvaluse[2]}&ts=1&rt=${dwvaluse[3]}&tk=${dwvaluse[4]}`,
+        );
+      console.log(ck_p);
+      const link_p = JSON.parse(
+        await window.fPost(
+          origin + "/s.php",
+          { "User-Agent": navigator.userAgent,
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          Origin: origin },
           `a=2&v=${id}&tok=${dwvaluse[2]}&rt=${dwvaluse[3]}&tk=${dwvaluse[4]}`,
         ),
       );
-      let link = encodeURIComponent(link_p["u"]) + "&sig=" + link_p["sig"] + "&src=" + link_p["src"];
+      let link = encodeURIComponent(link_p["u"]) + "&sig=" + link_p["sig"];// + "&src=" + link_p["src"];
       if(!window.startsWith(link_p["u"],"http")){
-        link = await window.fRGet("https://player.pelisserieshoy.com" + encodeURIComponent(link_p["u"]),
-        {
+        link = await window.fRGet("https://player.pelisserieshoy.com" + link_p["u"],
+          {
             "Accept": "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
             "Referer": oWeb
-        }
-      );
+          }
+        );
+        after({video: link})
+        return;
       }
-      after({video: window.serverHost + "m3u8/" + enc(link) + "/" + enc(JSON.stringify({Referer: oWeb, origin: new URL(oWeb).origin}))  + "/maskfile.m3u8"});
+      after({video: window._m3u8("https://player.pelisserieshoy.com/p.php?url=" + link, {"User-Agent": navigator.userAgent, origin: origin, Referer: origin}), direct:link});
     } catch (error) {
       onError(error);
     }

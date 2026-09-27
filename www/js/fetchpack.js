@@ -127,7 +127,6 @@ window.cancelAllPetitions = () => {
     return rv;
 }
 
-
 // Función segura para desofuscar el "packer" de JavaScript.
 // Reimplementa la lógica de `eval(function(p,a,c,k,e,d){...})` de forma segura.
 window.__unpack = (data) => {
@@ -178,3 +177,11 @@ window.isObject = (value) => {
 }
 
 window.startsWith = (str, prefix) => {return str.indexOf(prefix) === 0}
+
+window._m3u8 = (url, headers) => {
+    return window.serverHost + "m3u8/" + enc(url) + "/" + enc(JSON.stringify(headers))  + "/maskfile.m3u8";
+}
+
+window._file = (url, headers) => {
+    return window.serverHost + "file/" + enc(url) + "/" + enc(JSON.stringify(headers));
+}
