@@ -185,3 +185,7 @@ window._m3u8 = (url, headers) => {
 window._file = (url, headers) => {
     return window.serverHost + "file/" + enc(url) + "/" + enc(JSON.stringify(headers));
 }
+
+window._nextParseInst = async(url)=>{
+    /"(.{42})"[^f]+findSourceMapURL,"(.+?)"/g //todo
+}
